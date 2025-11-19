@@ -1,0 +1,120 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    background: rgb(16, 17, 19);
+    position: fixed;
+    width: 100%;
+
+}
+.title{
+    font-weight: 600px;
+    font-size: 60px ;
+    color: rgb(255, 255, 255);
+}
+
+.navbar{
+    padding-top: 20px;
+}
+
+.unlist li{
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+}
+
+.list {
+    position: relative;
+    color: beige;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 18px;
+    
+}
+
+.list::after{
+    content: "";
+    position: absolute;
+    left: 0; 
+    bottom:-8px;  
+    width: 0;
+    height: 3px;
+    background-color: aqua;
+    transition: 0.5s ease;
+}
+
+a:hover::after {
+    width: 100%;
+}
+
+.subtitle {
+    display: flex;
+    justify-content: center;
+    padding-top: 80px;
+}
+
+img{
+    float:left;
+    margin-left: 15px;
+    width: 200px;
+}
+
+p{
+    font-size:22px;
+    padding: 20px;
+}
+
+ol{
+    padding-left: 40px;
+    font-size: 20px;
+}
+
+ol li{
+    list-style-type: circle;
+    padding: 5px;
+}
+
+@media screen and (max-width: 900px){
+        .header{
+        flex-direction: column;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 10;
+    }
+
+    .navbar .unlist {
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        gap: 5px;
+        margin: 0;
+        padding: 0;
+    }
+    .title{
+        font-size: 50px;
+        margin-bottom: 10px;
+        padding-right: 400px;
+    }
+
+    .list{
+        justify-content: space-evenly;
+        margin: 5px 10px;
+    }
+
+    .container{
+        padding-top: 50px;
+    }
+}
+
+@media screen and (max-width: 600px){
+
+    .container{
+        padding-top: 40px;
+    }
+}

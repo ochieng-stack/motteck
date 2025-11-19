@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1761470247658,
+        "category": "cars",
+        "title": "BMW",
+        "image": "images/bmw_wagon.jpg",
+        "description": "GOOOD CAR FOR RACING"
+    },
+    {
+        "id": 2,
+        "category": "car",
+        "title": "mazda 6",
+        "image": "images/mazda_6.jpg",
+        "description": "hoes car",
+        "likes": 0
+    },
+    {
+        "id": 3,
+        "category": "car",
+        "title": "BMW WAGON",
+        "image": "images/bmw_wagon.jpg",
+        "description": "GOOD CAR",
+        "likes": 0
+    }
+]

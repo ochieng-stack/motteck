@@ -1,0 +1,361 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0 auto;
+    max-width: 100%;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    background: rgb(16, 17, 19);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+}
+.title{
+    font-weight: 600px;
+    font-size: 60px ;
+    color: rgb(255, 255, 255);
+}
+
+.navbar{
+    padding-top: 20px;
+}
+
+.unlist li{
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+}
+
+.list {
+    position: relative;
+    color: beige;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 18px;
+    
+}
+
+.list::after{
+    content: "";
+    position: absolute;
+    left: 0; 
+    bottom:-8px;  
+    width: 0;
+    height: 3px;
+    background-color: #2196f3;;
+    transition: 0.5s ease;
+}
+
+a:hover::after {
+    width: 100%;
+}
+
+.pageone {
+    position: relative;
+    background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url(images/ferrari.jpg);
+    background-position: center bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.subtitle {
+    position: relative;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+    z-index: 2;
+}
+
+.pageone::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 1;
+}
+
+.brows {
+    display:flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 20px;
+}
+
+.unlisttwo {
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    justify-content: space-evenly;
+    padding-top: 20px;
+}
+
+.linkup{
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    color: rgb(2,2,2);
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 2px solid #2196f3;;
+    border-radius: 20px;
+    transition: color 0.3s ease, border 0.3s ease;  
+}
+
+.linkup::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background-color: #2196f3;;
+    z-index: -1;
+    transition: width 0.4s ease;
+    border-radius: 20px;
+}
+
+/* hover animation*/
+.linkup:hover::before {
+    width: 100%;
+}
+
+.linkup:hover{
+    color: white;
+    border: none;
+}
+
+h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    gap: 10px;
+}
+
+input, textarea, button {
+    padding: 10px;
+    font-size: 1em;
+}
+
+/* container holding all posts */
+.post-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* each individual post card*/
+.post-card {
+    display: flex;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* Image on the left */
+.post-card img {
+    width: 30%;
+    height: auto;
+    margin-right: 20px;
+    border-radius: 8px;
+}
+
+/* content on the right */
+ .post-description{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+}
+
+/*title */
+ .post-title{
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: black;
+}
+/* description */
+ .post-description{
+    font-size: 16px;
+    color: #444;
+    line-height: 1.5;
+}
+.post-category{
+    color: blue;
+    font-size: 20px;
+}
+
+
+.like-btn {
+    background: #2196f3;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.like-btn:hover {
+    background: #1976d2;
+}
+.like-btn.liked {
+    background-color: #1976d2;
+    color: white;
+}
+.delete-btn, .see-more-btn {
+    margin-right: 8px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.delete-btn{
+    background-color: red;
+    color:white;
+}
+
+.see-more-btn:hover {
+    background-color: #0056b3;
+}
+
+
+/*===== responsive design ====*/
+
+/* Tablets */
+@media (max-width: 992px) {
+    header {
+        padding: 15px 25px;
+        width: 100%;
+    }
+
+    .navbar .unlist {
+        gap: 15px
+    }
+
+    .subtitle{
+        font-size: 1.5rem;
+    }
+
+
+}
+
+/* mobile phones */
+@media screen and (max-width: 900px){
+
+    .header{
+        flex-direction: column;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 10;
+    }
+
+    .navbar .unlist {
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        gap: 5px;
+        margin: 0;
+        padding: 0;
+    }
+    .title{
+        font-size: 50px;
+        margin-bottom: 10px;
+        padding-right: 400px;
+    }
+
+    .list{
+        justify-content: space-evenly;
+        margin: 5px 10px;
+    }
+
+    .pageone{
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        left: 0;
+        right: 0;
+    }
+    
+    .linkup {
+        font-size: 15px;
+    }
+
+    .post-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .post-card {
+        flex-direction: column;
+        width: 95%;
+    }
+
+    .post-card img {
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid #ddd;
+    }
+    .post-content {
+        text-align: left;
+    }
+
+    .post-actions{
+        justify-content: flex-start;
+    }
+
+    .post-title, .post-text {
+        width: 100%
+    }
+
+}
+
+/* small phones */
+
+@media screen and (max-width: 600px){
+    .linkup{
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .linkup{
+        font-size: 8px;
+    }
+}
+
+

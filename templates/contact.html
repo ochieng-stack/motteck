@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>motteck</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <section>
+        <div>
+            <h1 class="title">
+                <a href="{{ url_for('home') }}" style="text-decoration: none; color: inherit ;"><i>HOME</i></a>
+            </h1> 
+        </div>
+        <div class="contact">
+        <form action="{{ url_for('contact')}}" method="POST" class="form">
+            <div class="row">
+            <div class="input-group">
+            <label for="firstname">FIRST NAME</label>
+            <input type="text" id="firstname" name="firstname" placeholder="firstname" required autocomplete="given-name">
+            </div>
+
+            <div class="input-group">
+            <label for="lastname">LAST NAME</label>
+            <input type="text" id="lastname" name="lastname"  placeholder="lastname" required autocomplete="family-name">
+            </div>                  
+            </div>
+            
+            <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email"  placeholder="email" required autocomplete="email">
+            </div>
+            <div class="input-group">
+            <label for="text">TEXT</label>
+            <textarea name="text" id="text" rows="8" placeholder="write something....." required autocomplete="off"></textarea>
+            </div>
+            <button type="submit">SUBMIT</button>
+        </form>
+        </div>
+    </section>
+    <footer>
+        <h2>INFO</h2>
+        <P>Follow as all the social media platfoms</P>
+        <ul class="list">
+            <li>
+                <a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            </li>
+
+            <li>
+                <a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a>
+            </li>
+
+            <li>
+                <a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+            </li>
+        </ul>
+        <div class="container">
+            <ul class="terms">
+                <li class="info"><a href="{{ url_for('privacy') }}">Privacy policy</a></li>
+                <li class="info"><a href="{{ url_for('Terms') }}">Terms and condition</a></li>
+            </ul>
+        </div>
+    </footer>
+    <script>
+        document.querySelector('.form').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop the form from reloading the page
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch(this.action, {
+                    method:'POST',
+                    body: formData
+                });
+
+                const result = await response.json;
+
+                if (result.success) {
+                    alert(result.success); // show success alert
+                    this.reset(); // optional: clear form
+                } else if (result.error) {
+                    alert(result.error); // show error message
+
+                }
+            } catch (err) {
+                alert('something went wrong. please try again later.');
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>  

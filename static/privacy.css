@@ -1,0 +1,29 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+h1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+}
+
+.p{
+    font-size: 20px;
+    margin: 20px;
+    padding: 20px;
+}
+
+a {
+    text-decoration: none;
+    font-size: 30px;
+    color: blue;
+}
+
+a:hover{
+    color: rgb(16, 73, 231);
+}

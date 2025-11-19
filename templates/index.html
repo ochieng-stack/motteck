@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>motteck</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+   <header>
+        <div class="header">
+            <h1 class="title">
+                <a href="{{ url_for('home') }}" style="text-decoration: none; color: inherit ;"><i>MOTTECK</i></a>
+            </h1>    
+            <nav class="navbar">
+                <ul class="unlist">
+                    <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
+                    <li><a href="{{ url_for('services') }}" class="list">SERVICES</a></li>
+                    <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section>
+        <div class="pageone">
+            <h2 class="subtitle">INNOVATION,TECHNOLOGY IN AUTOMOTIVE ENGINEERING</h2>           
+        </div>
+    </section>
+    <section class="pagetwo">
+        <h2 class="brows">BROWSING TYPE</h2>
+        <ul class="unlisttwo">
+            <li><a href="/cars" class="linkup">CARS</a></li>
+            <li><a href="/trucks" class="linkup">TRUCKS</a></li>
+            <li><a href="/motobikes" class="linkup">MOTOBIKES</a></li>
+            <li><a href="/trains" class="linkup">TRAINS</a></li>
+            <li><a href="/plane" class="linkup">AEROPLANE</a></li>
+        </ul>
+    </section>
+    <section class="pagethree">
+            <h2 class="brows">Trending Topics/Recent Posts</h2>  
+            <div id="trending-posts" class="post-container"></div>      
+    </section>
+    <script>
+            // see more button function
+            function setupSeeMoreButtons(){
+            const card = document.querySelectorAll('.post-card');
+            card.forEach(card => {
+                const seeMoreBtn = card.querySelector('.see-more-btn');
+                const postText = card.querySelector('.post-text');
+
+                if (!seeMoreBtn || !postText) return;
+
+                const fullText = postText.innerHTML.trim();
+
+                //if text is short,hide the see more button
+                if (postText.scrollHeight <= 250) {
+                    seeMoreBtn.style.display = "none";
+                    return;
+                }
+
+                const shortText = fullText.slice(0,250) + '...';
+                let expanded = false;
+                postText.innerHTML = shortText;
+
+                seeMoreBtn.addEventListener("click", () => {
+                    expanded = !expanded;
+                    
+                    card.classList.toggle("expanded");
+                    postText.innerHTML = expanded ? fullText : shortText;
+                    seeMoreBtn.textContent = expanded ? "see less" : "see more";
+                });
+            });
+        }
+
+        fetch('/posts.json')
+        .then(response => response.json())
+        .then(posts => {
+
+            // sort newest first
+            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Select the trending container
+            const container = document.getElementById('trending-posts');
+
+            // Show only the latest 50 posts
+            posts.slice(0,50).forEach(post => {
+                const card = document.createElement('div');
+                card.classList.add('post-card');
+
+                //post structure (same layout you already have)
+
+                card.innerHTML = `<img src="static/${post.image}" alt="$post.title">
+                <div class="post-content">
+                    <h3 class="post-title">${post.title}</h3>
+                    <p class="post-text">${post.description.replace(/\n/g, '<br>')}</p>
+                    <div class="post-actions">
+                    <button id="like-btn-${post.id}" class="like-btn" onclick="likePost(1)" data-id="1" data-likes="0">Like</button> 
+
+                    <button class="see-more-btn"> See more</button>
+                    </div>
+                    </div>`;
+                    container.prepend(card);       
+            });
+
+            setupSeeMoreButtons();
+
+            // Restore like colors for already liked posts
+            posts.forEach(post => {
+                const likedKey = `liked-${post.id}`;
+                const button = document.getElementById(`like-btn-${post.id}`);
+                if (localStorage.getItem(likedKey)&& button) {
+                    button.style.backgroundColor = "#d6eefd";
+                }
+            });
+        })
+
+        .catch(error => console.error("error loading posts:", error));
+
+        function likedPost(postId) {
+            const button = document.getElementById(`like-btn-${postId}`);
+            const countSpan = document.getElementById(`like-count-${postId}`);
+            const likedKey = `liked-${postId}`;
+
+            // prevent double liking
+            if (localStorage.getItem(likedKey)) {
+                alert("You already liked this post!");
+                return;
+            }
+            fetch(`/like/${postId}`, {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    //update like count
+                    countSpan.textContent = data.likes;
+                    // change button color
+                    button.style.backgroundColor = "#66efc";
+                    // mark as liked
+                    localStorage.setItem(likedKey, "true");
+                } else {
+                    console.error("Error:", data.error);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+    <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
+</body>
+</html>

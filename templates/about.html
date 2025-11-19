@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>motteck</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+</head>
+<body>
+   <header>
+        <div class="header">
+            <h1 class="title">
+                <a href="{{ url_for('home') }}" style="text-decoration: none; color: inherit ;"><i>MOTTECK</i></a>
+            </h1>  
+            <nav class="navbar">
+                <ul class="unlist">
+                    <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
+                    <li><a href="{{ url_for('services') }}" class="list">SERVICES</a></li>
+                    <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section>
+        <div class="container">
+            <h2 class="subtitle">ABOUT US</h2>
+            <img src="{{ url_for('static' , filename='images/tech1.jpg')}}" alt="tech1" height="500" width="500">
+            <p>Welcome to Motteck, the ultimate destination for innovation,technology, and engineering in the automotive world.</p>
+            <p>MOTTECK is multi facinated website  dedicated for  enthusiast and experts who share a passion for everything on wheels from cars, trucks,
+                trains,motobikes and planes to the latest advancements in electric vehichles and hybrid technology.</p>
+            <p> Our mission is to explore and share the cutting-edge trends shaping morden transpotation,from smart mobility systems
+                and sustainability engines to design breakthroughs and perfomance upgrades.</p>         
+            <p>In addition to automotive technology,our services section dives deep into vehichles maintenance, engine care, oil selection and repair 
+                helping readers keep their machines running efficiently and safely
+            </p>
+            <p>AI as the new technology being explored new machinery are being used to tackle the advanced technology and as MOTTECK thats where we come in provide new infomation to see what new technology 
+                 is used in CARS,TRUCKS,MOTOBIKE, Trains and Plane and publish it on our site.</p>
+            <p>Whether your a car lover, a truck driver, a rail enthusiast, or a motobike rider,Motteck is your 
+                your trusted source for reliable insights, reviews and innovation in the automotive industry.
+            </p>
+            <h2 class="subtitle">OUR FOCUS AREAS</h2>
+            <ol>
+                <li>CARS,TRUCKS and Motobikes.</li>
+                <li>Electric and Hybrid vehichles.</li>
+                <li>Trains and transpotation systems.</li>
+                <li>Automotive Engineering and Design.</li>
+                <li>Engine maintenance & oil guidlines.</li>
+                <li>Technology, Trends and Reviews.</li>
+            </ol>
+            <h2 class="subtitle">VISION</h2>
+            <p>To inspire and educate automotive enthusiasts by showcasing how technology continues to transform 
+                the vehichles we drive and the future we're building on the road.
+            </p>     
+        </div>
+    </section>    
+</body>
+</html>
