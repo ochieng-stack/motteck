@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>motteck</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
    <header>
@@ -14,6 +15,7 @@
             </h1>    
             <nav class="navbar">
                 <ul class="unlist">
+                    <li><a href="{{ url_for('home') }}" class="list"><i class="fa-regular fa-house"></i></a></li>
                     <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
                     <li><a href="{{ url_for('services') }}" class="list">SERVICES</a></li>
                     <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>

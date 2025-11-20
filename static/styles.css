@@ -317,6 +317,10 @@ input, textarea, button {
         padding: 5px;
     }
 
+    .fa-regular {
+        font-size: 20px;
+    }
+
     .pageone{
         width: 100%;
         margin: 0;
