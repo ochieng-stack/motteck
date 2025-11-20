@@ -277,28 +277,44 @@ input, textarea, button {
 
     .header{
         flex-direction: column;
-        text-align: center;
-        padding: 10px 0;
-        z-index: 10;
+        align-items: flex-start;
+        padding: 10px;
     }
 
     .navbar .unlist {
         display: flex;
         justify-content:center;
         align-items: center;
-        gap: 5px;
+        gap: 10px;
+        margin: 5px 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .navbar {
+        width: 100%;
+    }
+
+    .title{
+        font-size: 26px;
         margin: 0;
         padding: 0;
+        width: 100%;
+        text-align: left;
     }
-    .title{
-        font-size: 50px;
-        margin-bottom: 10px;
-        padding-right: 400px;
+
+    .title a{
+        font-size: inherit;
     }
 
     .list{
         justify-content: space-evenly;
         margin: 5px 10px;
+    }
+
+    .navbar .unlist li a {
+        font-size: 15px;
+        padding: 5px;
     }
 
     .pageone{
@@ -309,6 +325,13 @@ input, textarea, button {
         right: 0;
     }
     
+    .subtitle{
+        font-size: 20px;
+        line-height: 28px;
+        padding: 0 15px;
+        text-align: center;
+    }
+
     .linkup {
         font-size: 15px;
     }
