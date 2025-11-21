@@ -133,9 +133,10 @@ ol li{
 
     .container img {
         width: 100%;
-        max-width: 100%;
+        max-height: 300px;
         height: auto;
-        display: block;
+        object-fit: cover;
+        border-radius: 8px;
         margin-bottom: 15px;
     }
 
