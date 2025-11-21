@@ -93,7 +93,7 @@ ol li{
         display: flex;
         justify-content:center;
         align-items: center;
-        gap: 8px;
+        gap: 0;
         width: 100%;
         margin: 0;
         padding: 0;
