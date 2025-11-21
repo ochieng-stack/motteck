@@ -1,6 +1,7 @@
 from flask import Flask, render_template,request, redirect, url_for, session, flash
 from flask import Flask, jsonify, request
 import smtplib
+import time
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from flask import send_from_directory
@@ -211,13 +212,16 @@ def contact():
         msg['To'] = GMAIL_USER # send to yourself
         msg.set_content(f""" Name: {firstname} {lastname} Email: {email} message: {message}""")
 
-        try:
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-                smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-                smtp.send_message(msg)
-            return jsonify({'success': 'Message sent successfully!'})
-        except Exception as e:
-            print("Error sending email:", e)
+        for attempt in range(3):
+            try:
+                with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+                    smtp.starttls()
+                    smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+                    smtp.send_message(msg)
+                return jsonify({'success': 'Message sent successfully!'})
+            except Exception as e:
+                print(f"Email send error(attempt {attempt+1}):", e)
+                time.sleep(2)
 
             return jsonify({'error': 'Failed to send message'}), 500
         
