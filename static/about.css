@@ -93,9 +93,10 @@ ol li{
         display: flex;
         justify-content:flex-start;
         align-items: center;
-        gap: 1px;
-        margin: 5px 0;
+        gap: 5px;
+        margin: 0;
         padding: 0;
+        flex-wrap: nowrap;
     }
 
     .navbar {
@@ -129,11 +130,31 @@ ol li{
     .fa-regular {
         font-size: 20px;
     }
+
+    .container img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    .container p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
 }
 
 @media screen and (max-width: 600px){
 
     .container{
-        padding-top: 40px;
+        padding: 0 15px;
+        width: 100%;
+    }
+
+    .container img {
+        width: 100%;
+        height: auto;
     }
 }
