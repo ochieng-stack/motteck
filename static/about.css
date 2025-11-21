@@ -143,7 +143,8 @@ ol li{
         object-fit: cover;
         border-radius: 8px;
         margin-bottom: 15px;
-        align-items: center;
+        margin: 0 auto 15px auto;
+        display: block;
     }
 
     .container p {
