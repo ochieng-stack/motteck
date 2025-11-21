@@ -80,26 +80,40 @@ ol li{
     padding: 5px;
 }
 
+/* mobile phone*/
+
 @media screen and (max-width: 900px){
-        .header{
+    .header{
         flex-direction: column;
-        text-align: center;
-        padding: 10px 0;
-        z-index: 10;
+        align-items: flex-start;
+        padding: 5px 10px;
     }
 
     .navbar .unlist {
         display: flex;
-        justify-content:center;
+        justify-content:flex-start;
         align-items: center;
         gap: 5px;
+        margin: 5px 0;
+        padding: 0;
+    }
+
+    .navbar {
+        width: 100%;
         margin: 0;
         padding: 0;
     }
+
     .title{
-        font-size: 50px;
-        margin-bottom: 10px;
-        padding-right: 400px;
+        font-size: 26px;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        text-align: left;
+    }
+
+    .title a{
+        font-size: inherit;
     }
 
     .list{
@@ -107,8 +121,13 @@ ol li{
         margin: 5px 10px;
     }
 
-    .container{
-        padding-top: 50px;
+    .navbar .unlist li a {
+        font-size: 15px;
+        padding: 3px 0;
+    }
+
+    .fa-regular {
+        font-size: 20px;
     }
 }
 
