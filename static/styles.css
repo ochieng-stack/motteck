@@ -376,8 +376,17 @@ input, textarea, button {
 /* small phones */
 
 @media screen and (max-width: 600px){
-    .linkup{
-        font-size: 10px;
+    .navbar .list a {
+        font-size: 13px;
+        padding: 5px 6px;
+    }
+
+    .navbar ul {
+        gap: 10px;
+    }
+
+    .title h1 {
+        font-size: 20px;
     }
 }
 

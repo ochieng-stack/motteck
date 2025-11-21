@@ -148,6 +148,19 @@ ol li{
 
 @media screen and (max-width: 600px){
 
+    .navbar .list a {
+        font-size: 13px;
+        padding: 5px 6px;
+    }
+
+    .navbar ul {
+        gap: 10px;
+    }
+
+    .title h1 {
+        font-size: 20px;
+    }
+
     .container{
         padding: 0 15px;
         width: 100%;
