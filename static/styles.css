@@ -285,7 +285,7 @@ input, textarea, button {
         display: flex;
         justify-content:flex-start;
         align-items: center;
-        gap: 5px;
+        gap: 1px;
         margin: 5px 0;
         padding: 0;
     }
