@@ -212,8 +212,7 @@ def contact():
         msg.set_content(f""" Name: {firstname} {lastname} Email: {email} message: {message}""")
 
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-                smtp.starttls()
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
                 smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
                 smtp.send_message(msg)
             return jsonify({'success': 'Message sent successfully!'})
