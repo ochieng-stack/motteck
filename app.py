@@ -23,7 +23,7 @@ ADMIN_PASS = os.getenv("ADMIN_PASS")
 #firebase setup
 firebase_key = json.loads(os.environ["FIREBASE_KEY"])
 
-cred = credentials.Cerificate(firebase_key)
+cred = credentials.Certificate(firebase_key)
 firebase_admin.initialize_app(cred)
 
 from firebase_admin import firestore
