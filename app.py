@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 import smtplib
 import time
 import firebase_admin
-from firebase_admin import credentials,initialize_app
+from firebase_admin import credentials,firestore
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from flask import send_from_directory
@@ -21,7 +21,7 @@ ADMIN_USER = os.getenv("ADMIN_USER")
 ADMIN_PASS = os.getenv("ADMIN_PASS")
 
 #firebase setup
-cred = credentials.certificate("firebase_key.json")
+cred = credentials.Certificate("firebase_key.json")
 firebase_admin.initialize_app(cred)
 
 firebase_config = json.loads(os.environ.get("FIREBASE_CREDENTIALS"))
