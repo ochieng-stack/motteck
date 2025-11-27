@@ -2,6 +2,8 @@ from flask import Flask, render_template,request, redirect, url_for, session, fl
 from flask import Flask, jsonify, request
 import smtplib
 import time
+import firebase_admin
+from firebase_admin import credentials,initialize_app
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from flask import send_from_directory
@@ -14,6 +16,20 @@ load_dotenv() # loads Gmail credentials from .env file
 
 GMAIL_USER = os.getenv("GMAIL_USER")
 GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
+
+ADMIN_USER = os.getenv("ADMIN_USER")
+ADMIN_PASS = os.getenv("ADMIN_PASS")
+
+#firebase setup
+cred = credentials.certificate("firebase_key.json")
+firebase_admin.initialize_app(cred)
+
+firebase_config = json.loads(os.environ.get("FIREBASE_CREDENTIALS"))
+
+from firebase_admin import firestore
+db = firestore.client()
+
+
 
 app.secret_key = 'motteck_super_secret_key'
 
@@ -80,7 +96,7 @@ def login():
         password = request.form['password']               
 
         #Replace this with your real admin credentials
-        if username == 'Brian_Ochieng215' and password == 'Ochiengb215@g':
+        if username == ADMIN_USER and password == ADMIN_PASS:
             session['logged_in'] = True      
             return redirect(url_for('home'))            
         else:
@@ -99,49 +115,32 @@ def logout():
 def add_post():
     data = request.get_json()
 
-        # Load existing posts
-    if os.path.exists(POSTS_FILE):
-        with open(POSTS_FILE, 'r') as f:
-            posts = json.load(f)
-    else:
-        posts = []
-
-
     new_post = {
-        "id": len(posts) + 1,
         "category": data.get('category'),
         "title": data.get('title'),
         "image": data.get('image'),
         "description": data.get('description'),
-        "likes": 0
+        "likes": 0,
+        "timestamp": firestore.SEVER_TIMESTAMP
     }
 
-    #Add to list
-    posts.append(new_post)
-
-    # save back to file
-    with open(POSTS_FILE, 'w') as f:
-        json.dump(posts, f, indent=4)
+    # save to firestore
+    db.collection("posts").add(new_post)
 
     return jsonify({"success": True})  
-
-# Route to handle likes 
-def load_posts():
-    with open(POSTS_FILE,'r') as f:
-        return json.load(f)   
-
-def save_posts(posts):
-    with open(POSTS_FILE,'w') as f:
-        json.dump(posts, f, indent=4)
 
 
 @app.route('/get_posts')
 def get_posts():
-    if os.path.exists(POSTS_FILE):
-        with open(POSTS_FILE, 'r') as f:
-            posts = json.load(f)
-    else:
-        posts = []
+    posts_ref = db.collection("posts").order_by("timestamp", direction=firestore.Query.DESCENDING)
+    docs = posts_ref.stream()
+
+    posts = []
+    for doc in docs:
+        post = doc.to_dict()
+        post["id"] = doc.id # firestore document ID
+        posts.append(post)
+
     return jsonify(posts)  
 
 @app.route('/posts.json')
@@ -150,49 +149,35 @@ def get_posts_json():
 
 @app.route('/like/<int:post_id>', methods=['POST'])
 def like_post(post_id):
-    posts = load_posts()
-    #load posts
-    if os.path.exists(POSTS_FILE):
-        with open(POSTS_FILE, 'r') as f:
-            posts = json.load(f)
-    else:
-        return jsonify({"error": "No posts found"}), 404
-    # Find the post by ID
-    for post in posts:
-        if post["id"] == post_id:
-            post["likes"] = post.get("likes", 0) + 1
+    try:
+        post_ref = db.collection("posts") .document(post_id)
+        post = post_ref.get()
 
-            # Save updated posts back to posts.json
-            with open(POSTS_FILE, 'w') as f:
-                json.dump(posts, f, indent=4)
-            #Return json response
-            return jsonify({"success": True, "likes": post["likes"]})
-    # If no post found
-    return jsonify({"error": "Post not found"}), 404      
+        if not post.exists:
+            return jsonify({"error": "Post not found"}), 404
         
-@app.route('/like/<int:post_id>')
-def get_likes(post_id):
-    posts = load_posts()
-    for post in posts:
-        if int(post['id']) == int(post_id):
-            return jsonify({'likes': post.get('likes', 0)})
-        return jsonify({'likes': 0})
+        # get current likes
+        current_likes = post.to_dict().get("likes", 0)
 
+        # Increment likes
+        post_ref.update({"likes": current_likes + 1})
 
-
+        return jsonify({"success": True, "likes": current_likes + 1})
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}),500
 
 # delete post
 @app.route('/delete_post/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
-    with open(POSTS_FILE, 'r') as f:
-        posts = json.load(f)
+    try:
+        post_ref = db.collection('posts').document(post_id)
+        post_ref.delete()
 
-    updated_posts = [p for p in posts if p['id'] != post_id]            
+        return jsonify({"success": True})
+    except Exception as e:
 
-    with open(POSTS_FILE, 'w') as f:
-        json.dump(updated_posts, f, indent=4)
-
-    return jsonify({"success": True})    
+        return jsonify({"error": str(e)}), 500   
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
