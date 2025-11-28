@@ -25,14 +25,15 @@
         </div>
     </header>
     <section>
-        <h2>Car</h2>
-
         <!-- Post form-->
          {% if logged_in %}
-         <form id="postform">
-            <input type="text" id="title" placeholder="Car Title" required>
-            <input type="text" id="image" placeholder="Image url (e.g., images/ ferrari.jpg)" required>
-            <textarea  name="text" id="description" placeholder="short description" required></textarea>
+         <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data">
+            <input type="text" name="category" value="car" hidden>
+            <input type="text" id="title" name="title" placeholder="Car Title" required>
+
+            <!-- FIXED: REAL IMAGE UPLOAD -->
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <textarea  name="description" id="description" placeholder="short description" required></textarea>
             <button type="submit">publish Post</button>
          </form>
          {% endif %}
@@ -89,7 +90,7 @@
             posts.forEach(post => {
                 const card = document.createElement('div');
                 card.classList.add('post-card');
-                card.innerHTML = `<img src="static/${post.image}" alt="${post.title}" class="post-image">
+                card.innerHTML = `<img src="${post.image}" alt="${post.title}" class="post-image">
                 <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
                 <p class="post-text">${post.description.replace(/\n/g, '<br>')}</p>

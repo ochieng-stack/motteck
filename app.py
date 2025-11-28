@@ -8,6 +8,7 @@ from email.message import EmailMessage
 from dotenv import load_dotenv
 from flask import send_from_directory
 import json, os
+from firebase_admin import storage
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -113,15 +114,26 @@ def logout():
 #create post
 @app.route('/add_post' , methods=['POST'])
 def add_post():
-    data = request.get_json()
+    category = request.form.get('category')
+    title = request.form.get('title')
+    image = request.files.get('image')
+    description = request.form.get('description')
+
+    # UPLOAD FILE TO FIREBASE STORAGE
+    image_url = None
+    if image:
+        bucket = storage.bucket()
+        blob = bucket.blob(f"posts/image.filename")
+        blob.upload_from_file(image, content_type=image.content_type)
+        image_url = blob.public_url
 
     new_post = {
-        "category": data.get('category'),
-        "title": data.get('title'),
-        "image": data.get('image'),
-        "description": data.get('description'),
+        "category": category,
+        "title": title,
+        "image": image_url,
+        "description": description,
         "likes": 0,
-        "timestamp": firestore.SEVER_TIMESTAMP
+        "timestamp": firestore.SERVER_TIMESTAMP
     }
 
     # save to firestore

@@ -1,33 +1,31 @@
 // ======= post-manager.js ======
 
 //save a new post
-function savePost(category, title,image,description) {
-    const post = {
-        id: Date.now(),
-        category,
-        title,
-        image,
-        description,
-        date: new Date().toISOString()
-    };
-    // Get existing posts from localstorage
-    const allPosts = JSON.parse(localStorage.getItem('motteckPosts')) || [];
+async function savePost(category, title,image,description) {
 
-    // Add new post
-    allPosts.push(post);
+    const formdata = new FormData();
+    formdata.append("category", category);
+    formdata.append("title", title);
+    formdata.append("image", image);
+    formdata.append("description", description);
 
-    // save back to localstorage
-    localStorage.setItem('motteckPosts',JSON.stringify(allPosts));
+    const response = await fetch('/add_post', {
+        method: 'POST',
+        body: formdata
+    });
+
+    return await response.json();
 }
 
-//Get all posts
+// Get all posts from firestore (through flask)
 
-function getAllPosts(){
-    return JSON.parse(localStorage.getItem('motteckPosts')) || [];
+async function getAllPosts(){
+    const response = await fetch('/get_posts');
+    return await response.json();
 }
 
 // Get posts by category
-function getPostByCategory(category){
+async function getPostByCategory(category){
     const posts = getAllPosts();
     return posts.filter(p => p.category === category);
 }
@@ -57,9 +55,11 @@ function likePost(postId){
     likeBtn.classList.add('liked');
 
     // send updated to server (optional)
+    /*
     fetch('/like', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify({ post_id: postId})
     });
+    */
 }
