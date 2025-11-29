@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 import smtplib
 import time
 import firebase_admin
-from firebase_admin import credentials,firestore
+from firebase_admin import credentials,firestore, storage
 from email.message import EmailMessage
 from dotenv import load_dotenv
 from flask import send_from_directory
@@ -25,7 +25,7 @@ ADMIN_PASS = os.getenv("ADMIN_PASS")
 firebase_key = json.loads(os.environ["FIREBASE_KEY"])
 
 cred = credentials.Certificate(firebase_key)
-firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred, { "storageBucket": "motteck-f5aa2.appspot.com"})
 
 from firebase_admin import firestore
 db = firestore.client()
@@ -123,7 +123,7 @@ def add_post():
     image_url = None
     if image:
         bucket = storage.bucket()
-        blob = bucket.blob(f"posts/image.filename")
+        blob = bucket.blob(f"posts/{image.filename}")
         blob.upload_from_file(image, content_type=image.content_type)
         image_url = blob.public_url
 
