@@ -4,6 +4,7 @@ import smtplib
 import time
 from dotenv import load_dotenv
 import firebase_admin
+from firebase_admin import firestore
 from firebase_admin import credentials,firestore, storage
 from email.message import EmailMessage
 
@@ -32,7 +33,7 @@ firebase_key = json.loads(firebase_key_raw)
 cred = credentials.Certificate(firebase_key)
 firebase_admin.initialize_app(cred, { "storageBucket": "motteck-f5aa2.appspot.com"})
 
-from firebase_admin import firestore
+bucket = storage.bucket()
 db = firestore.client()
 
 
