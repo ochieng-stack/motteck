@@ -2,10 +2,11 @@ from flask import Flask, render_template,request, redirect, url_for, session, fl
 from flask import Flask, jsonify, request
 import smtplib
 import time
+from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials,firestore, storage
 from email.message import EmailMessage
-from dotenv import load_dotenv
+
 from flask import send_from_directory
 import json, os
 from firebase_admin import storage
@@ -22,7 +23,11 @@ ADMIN_USER = os.getenv("ADMIN_USER")
 ADMIN_PASS = os.getenv("ADMIN_PASS")
 
 #firebase setup
-firebase_key = json.loads(os.environ["FIREBASE_KEY"])
+firebase_key_raw = os.getenv("FIREBASE_KEY")
+if not firebase_key_raw:
+    raise Exception("FIREBASE_KEY not found in environment")
+
+firebase_key = json.loads(firebase_key_raw)
 
 cred = credentials.Certificate(firebase_key)
 firebase_admin.initialize_app(cred, { "storageBucket": "motteck-f5aa2.appspot.com"})
@@ -118,14 +123,15 @@ def add_post():
     title = request.form.get('title')
     image = request.files.get('image')
     description = request.form.get('description')
-
+    
     # UPLOAD FILE TO FIREBASE STORAGE
     image_url = None
-    if image:
-        bucket = storage.bucket()
-        blob = bucket.blob(f"posts/{image.filename}")
-        blob.upload_from_file(image, content_type=image.content_type)
-        image_url = blob.public_url
+    if image and image.filename != "":
+     bucket = storage.bucket()
+    blob  = bucket.blob(f"posts/{image.filename}")
+    blob.upload_from_file(image, content_type=image.content_type)
+    blob.make_public()
+    image_url = blob.public_url
 
     new_post = {
         "category": category,
@@ -139,7 +145,7 @@ def add_post():
     # save to firestore
     db.collection("posts").add(new_post)
 
-    return jsonify({"success": True})  
+    return jsonify({"success": True})
 
 
 @app.route('/get_posts')
