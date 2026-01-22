@@ -127,12 +127,13 @@ def add_post():
     
     # UPLOAD FILE TO FIREBASE STORAGE
     image_url = None
-    if image and image.filename != "":
-     bucket = storage.bucket()
-    blob  = bucket.blob(f"posts/{image.filename}")
-    blob.upload_from_file(image, content_type=image.content_type)
-    blob.make_public()
-    image_url = blob.public_url
+    bucket = storage.bucket()
+
+    if image and image.filename:
+        blob  = bucket.blob(f"posts/{image.filename}")
+        blob.upload_from_file(image, content_type=image.content_type)
+        blob.make_public()
+        image_url = blob.public_url
 
     new_post = {
         "category": category,
