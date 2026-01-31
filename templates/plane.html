@@ -30,7 +30,7 @@
         <!-- Post form-->
          {% if logged_in %}
          <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data">
-            <input type="text" name="category" value="plane" hidden>
+            <input type="hidden" name="category" value="plane">
             <input type="text" id="title" name="title" placeholder="plane Title" required>
 
             <!-- IMAGE UPLOAD -->
@@ -131,7 +131,6 @@
         // only add form listener if admin is logged in (form exists)
         if (form) {
             form.addEventListener('submit', e => {
-                e.preventDefault();
 
                 const title = document.getElementById('title').value;
                 const image = document.getElementById('image').value;

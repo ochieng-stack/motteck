@@ -26,7 +26,7 @@ async function getAllPosts(){
 
 // Get posts by category
 async function getPostByCategory(category){
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     return posts.filter(p => p.category === category);
 }
 // load liked posts from localStorage (so users cant like twice)
