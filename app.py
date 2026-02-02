@@ -167,7 +167,7 @@ def get_posts():
 def get_posts_json():
     return send_from_directory('.','posts.json')       
 
-@app.route('/like/<int:post_id>', methods=['POST'])
+@app.route('/like/<post_id>', methods=['POST'])
 def like_post(post_id):
     try:
         post_ref = db.collection("posts") .document(post_id)

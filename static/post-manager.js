@@ -21,7 +21,13 @@ async function savePost(category, title,image,description) {
 
 async function getAllPosts(){
     const response = await fetch('/get_posts');
-    return await response.json();
+    const data = await response.json();
+
+    // convert object of posts into array
+    return Object.keys(data).map(id => ({
+        id:id,
+        ...data[id]
+    }));
 }
 
 // Get posts by category
