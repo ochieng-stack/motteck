@@ -126,19 +126,19 @@ def add_post():
     description = request.form.get('description')
     
     # UPLOAD FILE TO FIREBASE STORAGE
-    image_url = None
+    image = None
     bucket = storage.bucket()
 
     if image and image.filename:
         blob  = bucket.blob(f"posts/{image.filename}")
         blob.upload_from_file(image, content_type=image.content_type)
         blob.make_public()
-        image_url = blob.public_url
+        image = blob.public_url
 
     new_post = {
         "category": category,
         "title": title,
-        "image": image_url,
+        "image": image,
         "description": description,
         "likes": 0,
         "timestamp": firestore.SERVER_TIMESTAMP
