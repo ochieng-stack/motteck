@@ -158,7 +158,8 @@ def get_posts():
     posts = []
     for doc in docs:
         post = doc.to_dict()
-        post["id"] = doc.id # firestore document ID
+        post["id"] = doc.id # firestore document 
+        print(post)
         posts.append(post)
 
     return jsonify(posts)  
