@@ -90,7 +90,7 @@
             posts.forEach(post => {
                 const card = document.createElement('div');
                 card.classList.add('post-card');
-                card.innerHTML = `<img src="${post.image}" alt="${post.title}" class="post-image">
+                card.innerHTML = `<img src="${post.image_url}" alt="${post.title}" class="post-image_url">
                 <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
                 <p class="post-text">${post.description.replace(/\n/g, '<br>')}</p>
@@ -131,10 +131,10 @@
             form.addEventListener('submit', e => {
 
                 const title = document.getElementById('title').value;
-                const image = document.getElementById('image').value;
+                const image_url = document.getElementById('image_url').value;
                 const description = document.getElementById('description').value;
 
-                savePost(category, title, image, description);
+                savePost(category, title, image_url, description);
                 showPosts();
                 form.reset();
                 alert('Post published successfully!');
@@ -192,11 +192,11 @@
             });
         }
 
-        function savePost(category, title, image, description) {
+        function savePost(category, title, image_url, description) {
             const postData = {
                 category: category,
                 title: title,
-                image: image,
+                image_url: image_url,
                 description: description
             };
 

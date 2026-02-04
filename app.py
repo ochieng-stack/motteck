@@ -122,23 +122,23 @@ def logout():
 def add_post():
     category = request.form.get('category')
     title = request.form.get('title')
-    image = request.files.get('image')
+    image_url = request.files.get('image_url')
     description = request.form.get('description')
     
     # UPLOAD FILE TO FIREBASE STORAGE
-    image = None
+    image_url = None
     bucket = storage.bucket()
 
-    if image and image.filename:
-        blob  = bucket.blob(f"posts/{image.filename}")
-        blob.upload_from_file(image, content_type=image.content_type)
+    if image_url and image_url.filename:
+        blob  = bucket.blob(f"posts/{image_url.filename}")
+        blob.upload_from_file(image_url, content_type=image_url.content_type)
         blob.make_public()
-        image = blob.public_url
+        image_url = blob.public_url
 
     new_post = {
         "category": category,
         "title": title,
-        "image": image,
+        "image_url": image_url,
         "description": description,
         "likes": 0,
         "timestamp": firestore.SERVER_TIMESTAMP
