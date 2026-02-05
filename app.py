@@ -7,6 +7,7 @@ import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials,firestore, storage
 from email.message import EmailMessage
+from flask import redirect, url_for
 
 from flask import send_from_directory
 import json, os
@@ -147,7 +148,7 @@ def add_post():
     # save to firestore
     db.collection("posts").add(new_post)
 
-    return jsonify({"success": True})
+    return redirect(url_for('home'))
 
 
 @app.route('/get_posts')
