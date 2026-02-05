@@ -1,12 +1,12 @@
 // ======= post-manager.js ======
 
 //save a new post
-async function savePost(category, title,image,description) {
+async function savePost(category, title,image_url,description) {
 
     const formdata = new FormData();
     formdata.append("category", category);
     formdata.append("title", title);
-    formdata.append("image", image);
+    formdata.append("image_url", image_url);
     formdata.append("description", description);
 
     const response = await fetch('/add_post', {
