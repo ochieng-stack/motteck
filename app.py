@@ -8,6 +8,7 @@ from firebase_admin import firestore
 from firebase_admin import credentials,firestore, storage
 from email.message import EmailMessage
 from flask import redirect, url_for
+from datetime import datetime
 
 from flask import send_from_directory
 import json, os
@@ -119,20 +120,20 @@ def logout():
     return redirect(url_for('home'))
 
 #create post
-@app.route('/add_post' , methods=['POST'])
+@app.route('/add_post', methods=['POST'])
 def add_post():
     category = request.form.get('category')
     title = request.form.get('title')
-    image_url = request.files.get('image_url')
+    image_file = request.files.get('image')   # rename variable
     description = request.form.get('description')
-    
-    # UPLOAD FILE TO FIREBASE STORAGE
+
     image_url = None
     bucket = storage.bucket()
 
-    if image_url and image_url.filename:
-        blob  = bucket.blob(f"posts/{image_url.filename}")
-        blob.upload_from_file(image_url, content_type=image_url.content_type)
+    # UPLOAD FILE TO FIREBASE STORAGE
+    if image_file and image_file.filename:
+        blob = bucket.blob(f"posts/{image_file.filename}")
+        blob.upload_from_file(image_file, content_type=image_file.content_type)
         blob.make_public()
         image_url = blob.public_url
 
@@ -145,7 +146,6 @@ def add_post():
         "timestamp": firestore.SERVER_TIMESTAMP
     }
 
-    # save to firestore
     db.collection("posts").add(new_post)
 
     return redirect(url_for('home'))
@@ -159,10 +159,17 @@ def get_posts():
     posts = []
     for doc in docs:
         post = doc.to_dict()
-        post["id"] = doc.id # firestore document 
+        post["id"] = doc.id
+
+        # 🔥 Convert Firestore timestamp to milliseconds
+        if "timestamp" in post and post["timestamp"]:
+            post["timestamp"] = int(post["timestamp"].timestamp() * 1000)
+        else:
+            post["timestamp"] = 0
+
         posts.append(post)
 
-    return jsonify(posts)  
+    return jsonify(posts)
 
 @app.route('/posts.json')
 def get_posts_json():

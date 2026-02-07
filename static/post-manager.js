@@ -1,12 +1,12 @@
 // ======= post-manager.js ======
 
 //save a new post
-async function savePost(category, title,image_url,description) {
+async function savePost(category, title, imageFile, description) {
 
     const formdata = new FormData();
     formdata.append("category", category);
     formdata.append("title", title);
-    formdata.append("image_url", image_url);
+    formdata.append("image", imageFile);   // 🔥 THIS MUST MATCH FLASK
     formdata.append("description", description);
 
     const response = await fetch('/add_post', {
@@ -14,21 +14,19 @@ async function savePost(category, title,image_url,description) {
         body: formdata
     });
 
-    return await response.json();
+    return response; // no .json() because Flask redirects
 }
+
 
 // Get all posts from firestore (through flask)
 
 async function getAllPosts(){
     const response = await fetch('/get_posts');
-    const data = await response.json();
+    const posts = await response.json();
 
-    // convert object of posts into array
-    return Object.keys(data).map(id => ({
-        id:id,
-        ...data[id]
-    }));
+    return posts; // already an array
 }
+
 
 // Get posts by category
 async function getPostByCategory(category){
