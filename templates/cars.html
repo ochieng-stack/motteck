@@ -85,8 +85,12 @@
                     container.innerHTML = `<p style="color:white;">No posts found.</p>`;
                     return;
                 }
+                posts.sort((a, b) => {
+                    const ta = a.timestamp?._seconds || 0;
+                    const tb = b.timestamp?._seconds || 0;
+                    return tb - ta;
+                });
 
-                posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             posts.forEach(post => {
                 const card = document.createElement('div');

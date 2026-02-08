@@ -14,7 +14,13 @@ async function savePost(category, title, imageFile, description) {
         body: formdata
     });
 
-    return response; // no .json() because Flask redirects
+    const data = await response.json();
+
+    if (data.success) {
+        window.location.href = "/";
+    } else {
+        alert("Post failed");
+    }
 }
 
 
@@ -57,13 +63,4 @@ function likePost(postId){
     likeBtn.innerText = `${count}`;
     likeBtn.setAttribute('data-likes', count);
     likeBtn.classList.add('liked');
-
-    // send updated to server (optional)
-    /*
-    fetch('/like', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({ post_id: postId})
-    });
-    */
 }

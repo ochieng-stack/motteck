@@ -147,8 +147,9 @@ def add_post():
     }
 
     db.collection("posts").add(new_post)
+    
+    return jsonify({"success": True})
 
-    return redirect(url_for('home'))
 
 
 @app.route('/get_posts')
