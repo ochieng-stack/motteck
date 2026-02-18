@@ -131,18 +131,7 @@
                 return[];
             });
         } 
-         form.addEventListener('submit', async e => {
-            e.preventDefault();
 
-            const title = document.getElementById('title').value;
-            const imageFile = document.getElementById('image').files[0];
-            const description = document.getElementById('description').value;
-
-            await savePost(category, title, imageFile, description);
-
-            showPosts();
-            form.reset();
-        });
 
 
         function likePost(postId){
@@ -193,37 +182,6 @@
                         }
                     });
                 });
-            });
-        }
-
-        function savePost(category, title, image_url, description) {
-            const postData = {
-                category: category,
-                title: title,
-                image: image_url,
-                description: description
-            };
-
-            fetch('/add_post', {
-                method: 'POST', headers: {'content-type':'application/json'},body: JSON.stringify(postData)
-            })
-            .then(response => {
-                if (!response.ok){
-                    throw new Error("Failed to save post");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success){
-                    alert('post saved successfully!');
-                    showPosts(); // refresh displayed posts
-                } else {
-                    alert('Failed to save post.');
-                }
-            })
-            .catch(error => {
-                console.error('Error saving post:', error);
-                alert('Error occurred while saving the post.');
             });
         }
 
