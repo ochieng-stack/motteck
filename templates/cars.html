@@ -86,16 +86,13 @@
                     return;
                 }
                 posts.sort((a, b) => {
-                    const ta = a.timestamp?._seconds || 0;
-                    const tb = b.timestamp?._seconds || 0;
-                    return tb - ta;
-                });
+    return (b.timestamp || 0) - (a.timestamp || 0);
+    });
 
-
-            posts.forEach(post => {
+    posts.forEach(post => {
                 const card = document.createElement('div');
                 card.classList.add('post-card');
-                card.innerHTML = `<img src="${post.image}" alt="${post.title}" class="post-image">
+                card.innerHTML = `<img src="${post.image_url}" alt="${post.title}" class="post-image">
                 <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
                 <p class="post-text">${post.description.replace(/\n/g, '<br>')}</p>

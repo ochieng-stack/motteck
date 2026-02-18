@@ -197,7 +197,7 @@ def like_post(post_id):
         return jsonify({"error": str(e)}),500
 
 # delete post
-@app.route('/delete_post/<int:post_id>', methods=['DELETE'])
+@app.route('/delete_post/<post_id>', methods=['DELETE'])
 def delete_post(post_id):
     try:
         post_ref = db.collection('posts').document(post_id)
