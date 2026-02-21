@@ -3,16 +3,15 @@ from flask import Flask, jsonify, request
 import smtplib
 import time
 from dotenv import load_dotenv
-import firebase_admin
-from firebase_admin import firestore
-from firebase_admin import credentials,firestore, storage
+import cloudinary
+import cloudinary.uploader
 from email.message import EmailMessage
 from flask import redirect, url_for
 from datetime import datetime
 
 from flask import send_from_directory
 import json, os
-from firebase_admin import storage
+
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -25,18 +24,12 @@ GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
 ADMIN_USER = os.getenv("ADMIN_USER")
 ADMIN_PASS = os.getenv("ADMIN_PASS")
 
-#firebase setup
-firebase_key_raw = os.getenv("FIREBASE_KEY")
-if not firebase_key_raw:
-    raise Exception("FIREBASE_KEY not found in environment")
-
-firebase_key = json.loads(firebase_key_raw)
-
-cred = credentials.Certificate(firebase_key)
-firebase_admin.initialize_app(cred, { "storageBucket": "motteck-f5aa2.appspot.com"})
-
-bucket = storage.bucket()
-db = firestore.client()
+#cloudinary setup
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET")
+)
 
 
 
@@ -127,15 +120,11 @@ def add_post():
     image_file = request.files.get('image')   # rename variable
     description = request.form.get('description')
 
-    image_url = None
-    bucket = storage.bucket()
+ image_url = None
 
-    # UPLOAD FILE TO FIREBASE STORAGE
-    if image_file and image_file.filename:
-        blob = bucket.blob(f"posts/{image_file.filename}")
-        blob.upload_from_file(image_file, content_type=image_file.content_type)
-        blob.make_public()
-        image_url = blob.public_url
+if image_file and image_file.filename:
+    upload_result = cloudinary.uploader.upload(image_file)
+    image_url = upload_result.get("secure_url")
 
     new_post = {
         "category": category,
