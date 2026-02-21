@@ -119,12 +119,12 @@ def add_post():
     title = request.form.get('title')
     image_file = request.files.get('image')   # rename variable
     description = request.form.get('description')
+    
+    image_url = None
 
- image_url = None
-
-if image_file and image_file.filename:
-    upload_result = cloudinary.uploader.upload(image_file)
-    image_url = upload_result.get("secure_url")
+    if image_file and image_file.filename:
+        upload_result = cloudinary.uploader.upload(image_file)
+        image_url = upload_result.get("secure_url")
 
     new_post = {
         "category": category,
@@ -132,7 +132,7 @@ if image_file and image_file.filename:
         "image_url": image_url,
         "description": description,
         "likes": 0,
-        "timestamp": firestore.SERVER_TIMESTAMP
+        "timestamp": int(datetime.utcnow().timestamp() * 1000)
     }
 
     db.collection("posts").add(new_post)
