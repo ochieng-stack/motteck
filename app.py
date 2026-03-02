@@ -8,6 +8,7 @@ import cloudinary.uploader
 from email.message import EmailMessage
 from flask import redirect, url_for
 from datetime import datetime
+from supabase import create_client
 
 from flask import send_from_directory
 import json, os
@@ -30,6 +31,12 @@ cloudinary.config(
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET")
 )
+
+#supabase setup
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 
@@ -117,9 +124,9 @@ def logout():
 def add_post():
     category = request.form.get('category')
     title = request.form.get('title')
-    image_file = request.files.get('image')   # rename variable
+    image_file = request.files.get('image')
     description = request.form.get('description')
-    
+
     image_url = None
 
     if image_file and image_file.filename:
@@ -131,35 +138,33 @@ def add_post():
         "title": title,
         "image_url": image_url,
         "description": description,
-        "likes": 0,
-        "timestamp": int(datetime.utcnow().timestamp() * 1000)
+        "likes": 0
     }
 
-    db.collection("posts").add(new_post)
-    
-    return jsonify({"success": True})
+    response = supabase.table("posts").insert(new_post).execute()
+
+    if response.data:
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "error": response.error}), 500
 
 
 
 @app.route('/get_posts')
+@app.route('/get_posts')
 def get_posts():
-    posts_ref = db.collection("posts").order_by("timestamp", direction=firestore.Query.DESCENDING)
-    docs = posts_ref.stream()
+    response = (
+        supabase
+        .table("posts")
+        .select("*")
+        .order("id", desc=True)
+        .execute()
+    )
 
-    posts = []
-    for doc in docs:
-        post = doc.to_dict()
-        post["id"] = doc.id
-
-        # 🔥 Convert Firestore timestamp to milliseconds
-        if "timestamp" in post and post["timestamp"]:
-            post["timestamp"] = int(post["timestamp"].timestamp() * 1000)
-        else:
-            post["timestamp"] = 0
-
-        posts.append(post)
-
-    return jsonify(posts)
+    if response.data:
+        return jsonify(response.data)
+    else:
+        return jsonify([]), 500
 
 @app.route('/posts.json')
 def get_posts_json():
