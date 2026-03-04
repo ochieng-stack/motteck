@@ -17,24 +17,24 @@
         <div class="contact">
         <form action="{{ url_for('contact')}}" method="POST" class="form">
             <div class="row">
-            <div class="input-group">
-            <label for="firstname">FIRST NAME</label>
-            <input type="text" id="firstname" name="firstname" placeholder="firstname" required autocomplete="given-name">
-            </div>
+                <div class="input-group">
+                    <label for="firstname">FIRST NAME</label>
+                    <input type="text" id="firstname" name="firstname" placeholder="firstname" required autocomplete="given-name">
+                </div>
 
-            <div class="input-group">
-            <label for="lastname">LAST NAME</label>
-            <input type="text" id="lastname" name="lastname"  placeholder="lastname" required autocomplete="family-name">
-            </div>                  
+                <div class="input-group">
+                    <label for="lastname">LAST NAME</label>
+                    <input type="text" id="lastname" name="lastname"  placeholder="lastname" required autocomplete="family-name">
+                </div>                  
             </div>
             
             <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email"  placeholder="email" required autocomplete="email">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email"  placeholder="email" required autocomplete="email">
             </div>
             <div class="input-group">
-            <label for="text">TEXT</label>
-            <textarea name="text" id="text" rows="8" placeholder="write something....." required autocomplete="off"></textarea>
+                <label for="text">TEXT</label>
+                <textarea name="text" id="text" rows="8" placeholder="write something....." required autocomplete="off"></textarea>
             </div>
             <button type="submit">SUBMIT</button>
         </form>
@@ -42,7 +42,7 @@
     </section>
     <footer>
         <h2>INFO</h2>
-        <P>Follow as all the social media platfoms</P>
+        <p>Follow us on all the social media platforms</p>
         <ul class="list">
             <li>
                 <a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a>
@@ -63,6 +63,7 @@
             </ul>
         </div>
     </footer>
+    
     <script>
         document.querySelector('.form').addEventListener('submit', async function(e) {
             e.preventDefault(); // Stop the form from reloading the page
@@ -71,23 +72,23 @@
 
             try {
                 const response = await fetch(this.action, {
-                    method:'POST',
+                    method: 'POST',
                     body: formData
                 });
 
-                const result = await response.json;
+                const result = await response.json(); // ✅ Fix here
 
                 if (result.success) {
-                    alert("Message sent successfully"); // show success alert
-                    this.reset(); // optional: clear form
+                    alert("Message sent successfully!"); // show success alert
+                    this.reset(); // clear form
                 } else  {
-                    alert(result.error || "Something went wrong."); // show error message
+                    alert(result.error || "Something went wrong."); // show server error
                 }
             } catch (err) {
-                alert('something went wrong. please try again later.');
-                console.error(err);
+                console.error("Contact form error:", err);
+                alert('Something went wrong. Please try again later.');
             }
         });
     </script>
 </body>
-</html>  
+</html>
