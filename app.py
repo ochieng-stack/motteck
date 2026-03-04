@@ -119,6 +119,29 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('home'))
 
+@app.route("/get_home_posts")
+def get_home_posts():
+    try:
+        trending = supabase.table("posts") \
+            .select("*") \
+            .order("likes", desc=True) \
+            .limit(6) \
+            .execute()
+
+        recent = supabase.table("posts") \
+            .select("*") \
+            .order("created_at", desc=True) \
+            .limit(6) \
+            .execute()
+
+        return jsonify({
+            "trending": trending.data,
+            "recent": recent.data
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 #create post
 @app.route('/add_post', methods=['POST'])
 def add_post():

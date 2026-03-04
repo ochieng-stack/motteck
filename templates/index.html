@@ -3,151 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>motteck</title>
+    <title>MOTTECK</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 <body>
-   <header>
-        <div class="header">
-            <h1 class="title">
-                <a href="{{ url_for('home') }}" style="text-decoration: none; color: inherit ;"><i>MOTTECK</i></a>
-            </h1>    
-            <nav class="navbar">
-                <ul class="unlist">
-                    <li><a href="{{ url_for('home') }}" class="list"><i class="fa-regular fa-house"></i></a></li>
-                    <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
-                    <li><a href="{{ url_for('services') }}" class="list">SERVICES</a></li>
-                    <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    <section>
-        <div class="pageone">
-            <h2 class="subtitle">INNOVATION,TECHNOLOGY IN AUTOMOTIVE ENGINEERING</h2>           
-        </div>
-    </section>
-    <section class="pagetwo">
-        <h2 class="brows">BROWSING TYPE</h2>
-        <ul class="unlisttwo">
-            <li><a href="/cars" class="linkup">CARS</a></li>
-            <li><a href="/trucks" class="linkup">TRUCKS</a></li>
-            <li><a href="/motobikes" class="linkup">MOTOBIKES</a></li>
-            <li><a href="/trains" class="linkup">TRAINS</a></li>
-            <li><a href="/plane" class="linkup">AEROPLANE</a></li>
-        </ul>
-    </section>
-    <section class="pagethree">
-            <h2 class="brows">Trending Topics/Recent Posts</h2>  
-            <div id="trending-posts" class="post-container"></div>      
-    </section>
-    <script>
-            // see more button function
-            function setupSeeMoreButtons(){
-            const card = document.querySelectorAll('.post-card');
-            card.forEach(card => {
-                const seeMoreBtn = card.querySelector('.see-more-btn');
-                const postText = card.querySelector('.post-text');
 
-                if (!seeMoreBtn || !postText) return;
+<header>
+    <div class="header">
+        <h1 class="title">
+            <a href="{{ url_for('home') }}" style="text-decoration:none; color:inherit;">
+                <i>MOTTECK</i>
+            </a>
+        </h1>
 
-                const fullText = postText.innerHTML.trim();
+        <nav class="navbar">
+            <ul class="unlist">
+                <li><a href="{{ url_for('home') }}" class="list"><i class="fa-regular fa-house"></i></a></li>
+                <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
+                <li><a href="{{ url_for('services') }}" class="list">SERVICES</a></li>
+                <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-                //if text is short,hide the see more button
-                if (postText.scrollHeight <= 250) {
-                    seeMoreBtn.style.display = "none";
-                    return;
-                }
+<section>
+    <div class="pageone">
+        <h2 class="subtitle">INNOVATION, TECHNOLOGY IN AUTOMOTIVE ENGINEERING</h2>
+    </div>
+</section>
 
-                const shortText = fullText.slice(0,250) + '...';
-                let expanded = false;
-                postText.innerHTML = shortText;
+<section class="pagetwo">
+    <h2 class="brows">BROWSING TYPE</h2>
+    <ul class="unlisttwo">
+        <li><a href="/cars" class="linkup">CARS</a></li>
+        <li><a href="/trucks" class="linkup">TRUCKS</a></li>
+        <li><a href="/motobikes" class="linkup">MOTOBIKES</a></li>
+        <li><a href="/trains" class="linkup">TRAINS</a></li>
+        <li><a href="/plane" class="linkup">AEROPLANE</a></li>
+    </ul>
+</section>
 
-                seeMoreBtn.addEventListener("click", () => {
-                    expanded = !expanded;
-                    
-                    card.classList.toggle("expanded");
-                    postText.innerHTML = expanded ? fullText : shortText;
-                    seeMoreBtn.textContent = expanded ? "see less" : "see more";
-                });
-            });
+<!-- 🔥 Trending Section -->
+<section class="pagethree">
+    <h2 class="brows">🔥 Trending Posts</h2>
+    <div id="trending-posts" class="post-container"></div>
+</section>
+
+<!-- 🆕 Recent Section -->
+<section class="pagethree">
+    <h2 class="brows">🆕 Recent Posts</h2>
+    <div id="recent-posts" class="post-container"></div>
+</section>
+
+<script>
+
+function setupSeeMoreButtons(){
+    const cards = document.querySelectorAll('.post-card');
+
+    cards.forEach(card => {
+        const seeMoreBtn = card.querySelector('.see-more-btn');
+        const postText = card.querySelector('.post-text');
+
+        if (!seeMoreBtn || !postText) return;
+
+        const fullText = postText.innerHTML.trim();
+
+        if (fullText.length <= 250) {
+            seeMoreBtn.style.display = "none";
+            return;
         }
 
-        fetch('/posts.json')
-        .then(response => response.json())
-        .then(posts => {
+        const shortText = fullText.slice(0, 250) + "...";
+        let expanded = false;
+        postText.innerHTML = shortText;
 
-            // sort newest first
-            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        seeMoreBtn.addEventListener("click", () => {
+            expanded = !expanded;
+            postText.innerHTML = expanded ? fullText : shortText;
+            seeMoreBtn.textContent = expanded ? "See Less" : "See More";
+        });
+    });
+}
 
-            // Select the trending container
-            const container = document.getElementById('trending-posts');
+function createPostCard(post) {
+    return `
+        <div class="post-card">
+            <img src="${post.image_url}" alt="${post.title}">
+            <div class="post-content">
+                <h3 class="post-title">${post.title}</h3>
+                <p class="post-text">${post.content.replace(/\n/g, '<br>')}</p>
 
-            // Show only the latest 50 posts
-            posts.slice(0,50).forEach(post => {
-                const card = document.createElement('div');
-                card.classList.add('post-card');
+                <div class="post-actions">
+                    <button id="like-btn-${post.id}" 
+                            class="like-btn" 
+                            onclick="likePost(${post.id})">
+                        ❤️ <span id="like-count-${post.id}">
+                            ${post.likes || 0}
+                        </span>
+                    </button>
 
-                //post structure (same layout you already have)
+                    <button class="see-more-btn">See More</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
-                card.innerHTML = `<img src="static/${post.image}" alt="$post.title">
-                <div class="post-content">
-                    <h3 class="post-title">${post.title}</h3>
-                    <p class="post-text">${post.description.replace(/\n/g, '<br>')}</p>
-                    <div class="post-actions">
-                    <button id="like-btn-${post.id}" class="like-btn" onclick="likePost(1)" data-id="1" data-likes="0">Like</button> 
+function likePost(postId) {
 
-                    <button class="see-more-btn"> See more</button>
-                    </div>
-                    </div>`;
-                    container.prepend(card);       
-            });
+    const likedKey = `liked-${postId}`;
 
-            setupSeeMoreButtons();
+    if (localStorage.getItem(likedKey)) {
+        alert("You already liked this post!");
+        return;
+    }
 
-            // Restore like colors for already liked posts
-            posts.forEach(post => {
-                const likedKey = `liked-${post.id}`;
-                const button = document.getElementById(`like-btn-${post.id}`);
-                if (localStorage.getItem(likedKey)&& button) {
-                    button.style.backgroundColor = "#d6eefd";
-                }
-            });
-        })
-
-        .catch(error => console.error("error loading posts:", error));
-
-        function likedPost(postId) {
-            const button = document.getElementById(`like-btn-${postId}`);
-            const countSpan = document.getElementById(`like-count-${postId}`);
-            const likedKey = `liked-${postId}`;
-
-            // prevent double liking
-            if (localStorage.getItem(likedKey)) {
-                alert("You already liked this post!");
-                return;
-            }
-            fetch(`/like/${postId}`, {
-                method: 'POST',
-                headers: { 'Content-type': 'application/json'}
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    //update like count
-                    countSpan.textContent = data.likes;
-                    // change button color
-                    button.style.backgroundColor = "#66efc";
-                    // mark as liked
-                    localStorage.setItem(likedKey, "true");
-                } else {
-                    console.error("Error:", data.error);
-                }
-            })
-            .catch(error => console.error("Error:", error));
+    fetch(`/like/${postId}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`like-count-${postId}`).textContent = data.likes;
+            document.getElementById(`like-btn-${postId}`).style.backgroundColor = "#d6eefd";
+            localStorage.setItem(likedKey, "true");
         }
-    </script>
-    <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
+    })
+    .catch(err => console.error("Like error:", err));
+}
+
+/* 🔥 FETCH FROM DATABASE */
+fetch("/get_home_posts")
+.then(res => res.json())
+.then(data => {
+
+    const trendingContainer = document.getElementById("trending-posts");
+    const recentContainer = document.getElementById("recent-posts");
+
+    trendingContainer.innerHTML = "";
+    recentContainer.innerHTML = "";
+
+    // Trending
+    data.trending.forEach(post => {
+        trendingContainer.innerHTML += createPostCard(post);
+    });
+
+    // Recent
+    data.recent.forEach(post => {
+        recentContainer.innerHTML += createPostCard(post);
+    });
+
+    setupSeeMoreButtons();
+
+})
+.catch(err => console.error("Fetch error:", err));
+
+</script>
+
+<script src="{{ url_for('static', filename='post-manager.js')}}"></script>
+
 </body>
 </html>
