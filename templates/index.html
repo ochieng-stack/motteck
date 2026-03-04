@@ -59,18 +59,15 @@
 </section>
 
 <script>
-
-function setupSeeMoreButtons(){
+// See more button logic
+function setupSeeMoreButtons() {
     const cards = document.querySelectorAll('.post-card');
-
     cards.forEach(card => {
         const seeMoreBtn = card.querySelector('.see-more-btn');
         const postText = card.querySelector('.post-text');
-
         if (!seeMoreBtn || !postText) return;
 
         const fullText = postText.innerHTML.trim();
-
         if (fullText.length <= 250) {
             seeMoreBtn.style.display = "none";
             return;
@@ -88,23 +85,18 @@ function setupSeeMoreButtons(){
     });
 }
 
+// Create post card HTML
 function createPostCard(post) {
     return `
-        <div class="post-card">
-            <img src="${post.image_url}" alt="${post.title}">
+        <div class="post-card" id="post-${post.id}">
+            <img src="static/${post.image}" alt="${post.title}">
             <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
-                <p class="post-text">${post.content.replace(/\n/g, '<br>')}</p>
-
+                <p class="post-text">${post.description.replace(/\n/g, '<br>')}</p>
                 <div class="post-actions">
-                    <button id="like-btn-${post.id}" 
-                            class="like-btn" 
-                            onclick="likePost(${post.id})">
-                        ❤️ <span id="like-count-${post.id}">
-                            ${post.likes || 0}
-                        </span>
+                    <button id="like-btn-${post.id}" class="like-btn" onclick="likePost(${post.id})">
+                        ❤️ <span id="like-count-${post.id}">${post.likes || 0}</span>
                     </button>
-
                     <button class="see-more-btn">See More</button>
                 </div>
             </div>
@@ -112,18 +104,15 @@ function createPostCard(post) {
     `;
 }
 
+// Like a post
 function likePost(postId) {
-
     const likedKey = `liked-${postId}`;
-
     if (localStorage.getItem(likedKey)) {
         alert("You already liked this post!");
         return;
     }
 
-    fetch(`/like/${postId}`, {
-        method: "POST"
-    })
+    fetch(`/like/${postId}`, { method: "POST" })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
@@ -135,29 +124,36 @@ function likePost(postId) {
     .catch(err => console.error("Like error:", err));
 }
 
-/* 🔥 FETCH FROM DATABASE */
+// Fetch posts for homepage
 fetch("/get_home_posts")
 .then(res => res.json())
 .then(data => {
-
     const trendingContainer = document.getElementById("trending-posts");
     const recentContainer = document.getElementById("recent-posts");
 
     trendingContainer.innerHTML = "";
     recentContainer.innerHTML = "";
 
-    // Trending
+    // Trending posts
     data.trending.forEach(post => {
         trendingContainer.innerHTML += createPostCard(post);
     });
 
-    // Recent
+    // Recent posts
     data.recent.forEach(post => {
         recentContainer.innerHTML += createPostCard(post);
     });
 
     setupSeeMoreButtons();
 
+    // Restore liked buttons
+    data.trending.concat(data.recent).forEach(post => {
+        const likedKey = `liked-${post.id}`;
+        const btn = document.getElementById(`like-btn-${post.id}`);
+        if (btn && localStorage.getItem(likedKey)) {
+            btn.style.backgroundColor = "#d6eefd";
+        }
+    });
 })
 .catch(err => console.error("Fetch error:", err));
 
