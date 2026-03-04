@@ -1,66 +1,95 @@
-// ======= post-manager.js ======
+// ======= post-manager.js (Supabase + Flask) ======
 
-//save a new post
+// Save a new post with Cloudinary image upload
 async function savePost(category, title, imageFile, description) {
-
     const formdata = new FormData();
     formdata.append("category", category);
     formdata.append("title", title);
-    formdata.append("image", imageFile);   // 🔥 THIS MUST MATCH FLASK
+    formdata.append("image", imageFile); // must match Flask key
     formdata.append("description", description);
 
-    const response = await fetch('/add_post', {
-        method: 'POST',
-        body: formdata
-    });
+    try {
+        const response = await fetch('/add_post', {
+            method: 'POST',
+            body: formdata
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (data.success) {
-        window.location.href = "/";
-    } else {
-        alert("Post failed");
+        if (data.success) {
+            window.location.href = "/";
+        } else {
+            alert("Post failed: " + (data.error || ""));
+        }
+    } catch (err) {
+        console.error("Error saving post:", err);
+        alert("An error occurred while saving the post.");
     }
 }
 
-
-// Get all posts from firestore (through flask)
-
-async function getAllPosts(){
-    const response = await fetch('/get_posts');
-    const posts = await response.json();
-
-    return posts; // already an array
+// Fetch all posts from Supabase via Flask
+async function getAllPosts() {
+    try {
+        const response = await fetch('/get_posts');
+        const posts = await response.json();
+        return posts; // array of posts
+    } catch (err) {
+        console.error("Error fetching posts:", err);
+        return [];
+    }
 }
 
-
-// Get posts by category
-async function getPostByCategory(category){
+// Fetch posts by category
+async function getPostByCategory(category) {
     const posts = await getAllPosts();
     return posts.filter(p => p.category === category);
 }
-// load liked posts from localStorage (so users cant like twice)
+
+// Load liked posts from localStorage to prevent double likes
 let likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || {};
 
-// Function to handle liking a post
-function likePost(postId){
-    //if the post is already liked, ignore it
-    if ( likedPosts[postId]) return;
+// Handle liking a post (persistent in Supabase)
+async function likePost(postId) {
+    if (likedPosts[postId]) return; // already liked
 
-    // mark post as liked
-    likedPosts[postId] = true;
-    localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
+    try {
+        const response = await fetch(`/like/${postId}`, { method: 'POST' });
+        const data = await response.json();
 
-    // Find the button
-    const likeBtn = document.querySelector(`button[data-id='${postId}']`);
-    if (!likeBtn) return; // stop if button not found
+        if (data.success) {
+            likedPosts[postId] = true;
+            localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
 
-    // get current like count
-    let count = parseInt(likeBtn.getAttribute('data-likes')) || 0;
-    count++;
+            // Update like button in UI
+            const likeBtn = document.querySelector(`button[data-id='${postId}']`);
+            if (likeBtn) {
+                let count = parseInt(likeBtn.getAttribute('data-likes')) || 0;
+                count++;
+                likeBtn.innerText = `${count}`;
+                likeBtn.setAttribute('data-likes', count);
+                likeBtn.classList.add('liked');
+            }
+        } else {
+            console.error("Failed to like post:", data.error);
+        }
+    } catch (err) {
+        console.error("Error liking post:", err);
+    }
+}
 
-    // update display
-    likeBtn.innerText = `${count}`;
-    likeBtn.setAttribute('data-likes', count);
-    likeBtn.classList.add('liked');
+// Optional: Delete a post (for admin)
+async function deletePost(postId) {
+    try {
+        const response = await fetch(`/delete_post/${postId}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) {
+            // Remove post from UI
+            const postEl = document.getElementById(`post-${postId}`);
+            if (postEl) postEl.remove();
+        } else {
+            console.error("Failed to delete post:", data.error);
+        }
+    } catch (err) {
+        console.error("Error deleting post:", err);
+    }
 }

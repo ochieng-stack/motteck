@@ -149,8 +149,6 @@ def add_post():
         return jsonify({"success": False, "error": response.error}), 500
 
 
-
-@app.route('/get_posts')
 @app.route('/get_posts')
 def get_posts():
     response = (
@@ -164,43 +162,33 @@ def get_posts():
     if response.data:
         return jsonify(response.data)
     else:
-        return jsonify([]), 500
+        return jsonify([]), 500      
 
-@app.route('/posts.json')
-def get_posts_json():
-    return send_from_directory('.','posts.json')       
-
-@app.route('/like/<post_id>', methods=['POST'])
+@app.route('/like/<int:post_id>', methods=['POST'])
 def like_post(post_id):
     try:
-        post_ref = db.collection("posts") .document(post_id)
-        post = post_ref.get()
+        # increment likes atomically
+        response = supabase.table("posts").update({
+            "likes": supabase.raw("likes + 1")
+        }).eq("id", post_id).execute()
 
-        if not post.exists:
-            return jsonify({"error": "Post not found"}), 404
+        if response.error:
+            return jsonify({"error": response.error}), 500
         
-        # get current likes
-        current_likes = post.to_dict().get("likes", 0)
-
-        # Increment likes
-        post_ref.update({"likes": current_likes + 1})
-
-        return jsonify({"success": True, "likes": current_likes + 1})
-    
+        return jsonify({"success": True})
     except Exception as e:
         return jsonify({"error": str(e)}),500
 
 # delete post
-@app.route('/delete_post/<post_id>', methods=['DELETE'])
+@app.route('/delete_post/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
     try:
-        post_ref = db.collection('posts').document(post_id)
-        post_ref.delete()
-
+        response = supabase.table("posts").delete().eq("id", post_id).execute()
+        if response.error:
+            return jsonify({"error": response.error}), 500
         return jsonify({"success": True})
     except Exception as e:
-
-        return jsonify({"error": str(e)}), 500   
+        return jsonify({"error": str(e)}),500  
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
