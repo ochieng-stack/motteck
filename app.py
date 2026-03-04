@@ -164,20 +164,36 @@ def get_posts():
     else:
         return jsonify([]), 500      
 
-@app.route('/like/<int:post_id>', methods=['POST'])
+@app.route('/like/<int:post_id>', methods=['POST', 'GET'])
 def like_post(post_id):
     try:
-        # increment likes atomically
-        response = supabase.table("posts").update({
-            "likes": supabase.raw("likes + 1")
+        # GET → return current likes
+        if request.method == "GET":
+            response = supabase.table("posts").select("likes").eq("id", post_id).execute()
+
+            if response.data:
+                return jsonify({"likes": response.data[0]["likes"] or 0})
+            return jsonify({"likes": 0})
+
+        # POST → increment likes
+        response = supabase.table("posts").select("likes").eq("id", post_id).execute()
+
+        if not response.data:
+            return jsonify({"success": False, "error": "Post not found"}), 404
+
+        current_likes = response.data[0]["likes"] or 0
+
+        supabase.table("posts").update({
+            "likes": current_likes + 1
         }).eq("id", post_id).execute()
 
-        if response.error:
-            return jsonify({"error": response.error}), 500
-        
-        return jsonify({"success": True})
+        return jsonify({
+            "success": True,
+            "likes": current_likes + 1
+        })
+
     except Exception as e:
-        return jsonify({"error": str(e)}),500
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # delete post
 @app.route('/delete_post/<int:post_id>', methods=['DELETE'])
