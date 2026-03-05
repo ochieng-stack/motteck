@@ -3,92 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>motteck</title>
+    <title>Contact MOTTECK</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <section>
-        <div>
-            <h1 class="title">
-                <a href="{{ url_for('home') }}" style="text-decoration: none; color: inherit ;"><i>HOME</i></a>
-            </h1> 
-        </div>
-        <div class="contact">
+<section>
+    <div>
+        <h1 class="title">
+            <a href="{{ url_for('home') }}" style="text-decoration: none; color: inherit;"><i>HOME</i></a>
+        </h1> 
+    </div>
+
+    <div class="contact">
         <form action="{{ url_for('contact')}}" method="POST" class="form">
             <div class="row">
                 <div class="input-group">
                     <label for="firstname">FIRST NAME</label>
-                    <input type="text" id="firstname" name="firstname" placeholder="firstname" required autocomplete="given-name">
+                    <input type="text" id="firstname" name="firstname" placeholder="Firstname" required autocomplete="given-name">
                 </div>
 
                 <div class="input-group">
                     <label for="lastname">LAST NAME</label>
-                    <input type="text" id="lastname" name="lastname"  placeholder="lastname" required autocomplete="family-name">
+                    <input type="text" id="lastname" name="lastname" placeholder="Lastname" required autocomplete="family-name">
                 </div>                  
             </div>
             
             <div class="input-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email"  placeholder="email" required autocomplete="email">
+                <input type="email" id="email" name="email" placeholder="Email" required autocomplete="email">
             </div>
             <div class="input-group">
-                <label for="text">TEXT</label>
-                <textarea name="text" id="text" rows="8" placeholder="write something....." required autocomplete="off"></textarea>
+                <label for="text">Message</label>
+                <textarea name="text" id="text" rows="8" placeholder="Write something..." required autocomplete="off"></textarea>
             </div>
-            <button type="submit">SUBMIT</button>
+
+            <button type="submit" id="submit-btn">SUBMIT</button>
+
+            <!-- Place to show messages -->
+            <span id="form-message" style="margin-left:10px; font-weight:bold;"></span>
+            <span id="loader" class="loader" style="display:none;"></span>
         </form>
-        </div>
-    </section>
-    <footer>
-        <h2>INFO</h2>
-        <p>Follow us on all the social media platforms</p>
-        <ul class="list">
-            <li>
-                <a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-            </li>
+    </div>
+</section>
 
-            <li>
-                <a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a>
-            </li>
+<footer>
+    <h2>INFO</h2>
+    <p>Follow us on all the social media platforms</p>
+    <ul class="list">
+        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+    </ul>
+</footer>
 
-            <li>
-                <a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-            </li>
-        </ul>
-        <div class="container">
-            <ul class="terms">
-                <li class="info"><a href="{{ url_for('privacy') }}">Privacy policy</a></li>
-                <li class="info"><a href="{{ url_for('Terms') }}">Terms and condition</a></li>
-            </ul>
-        </div>
-    </footer>
-    
-    <script>
-        document.querySelector('.form').addEventListener('submit', async function(e) {
-            e.preventDefault(); // Stop the form from reloading the page
+<script>
+document.querySelector('.form').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-            const formData = new FormData(this);
+    const formMessage = document.getElementById('form-message');
+    const loader = document.getElementById('loader');
+    const submitBtn = document.getElementById('submit-btn');
 
-            try {
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    body: formData
-                });
+    formMessage.textContent = '';
+    formMessage.style.color = 'black';
+    loader.style.display = 'inline-block';
+    submitBtn.disabled = true; // prevent multiple clicks
 
-                const result = await response.json(); // ✅ Fix here
+    const formData = new FormData(this);
 
-                if (result.success) {
-                    alert("Message sent successfully!"); // show success alert
-                    this.reset(); // clear form
-                } else  {
-                    alert(result.error || "Something went wrong."); // show server error
-                }
-            } catch (err) {
-                console.error("Contact form error:", err);
-                alert('Something went wrong. Please try again later.');
-            }
+    try {
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: formData
         });
-    </script>
+
+        const result = await response.json();
+
+        loader.style.display = 'none';
+        submitBtn.disabled = false;
+
+        if (result.success) {
+            formMessage.style.color = 'green';
+            formMessage.textContent = "✅ Message sent successfully!";
+            this.reset();
+        } else {
+            formMessage.style.color = 'red';
+            formMessage.textContent = result.error || "❌ Something went wrong. Please try again.";
+        }
+    } catch (err) {
+        console.error("Contact form error:", err);
+        loader.style.display = 'none';
+        submitBtn.disabled = false;
+        formMessage.style.color = 'red';
+        formMessage.textContent = "❌ Something went wrong. Please try again later.";
+    }
+});
+</script>
 </body>
 </html>

@@ -266,31 +266,35 @@ def contact():
         lastname = request.form.get('lastname')
         email = request.form.get('email')
         message = request.form.get('text')
+
         # Validate fields
         if not all([firstname, lastname, email, message]):
-            return jsonify({'error': 'please fill out all fields'}), 400
-        
+            return jsonify({'error': 'Please fill out all fields'}), 400
+
         # Create the email content
         msg = EmailMessage()
         msg['Subject'] = f'Contact form message from {firstname} {lastname}'
         msg['From'] = GMAIL_USER
-        msg['To'] = GMAIL_USER # send to yourself
-        msg.set_content(f""" Name: {firstname} {lastname} Email: {email} message: {message}""")
+        msg['To'] = GMAIL_USER  # send to yourself
+        msg.set_content(f"Name: {firstname} {lastname}\nEmail: {email}\nMessage: {message}")
 
+        # Try sending email up to 3 times
         for attempt in range(3):
             try:
                 with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                     smtp.starttls()
                     smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
                     smtp.send_message(msg)
-                return jsonify({'success': 'Message sent successfully!'})
+                return jsonify({'success': True})  # ✅ Success
             except Exception as e:
-                print(f"Email send error(attempt {attempt+1}):", e)
+                print(f"Email send error (attempt {attempt+1}):", e)
                 time.sleep(2)
 
-            return jsonify({'error': 'Failed to send message'}), 500
-        
-    return render_template ('contact.html')   
+        # If all attempts fail
+        return jsonify({'error': 'Failed to send message. Please try again later.'}), 500
+
+    # GET → just render the page
+    return render_template('contact.html')   
                  
 
 
