@@ -267,15 +267,15 @@ def contact():
         email = request.form.get('email')
         message = request.form.get('text')
 
-        # Validate fields
+        # Validate all fields
         if not all([firstname, lastname, email, message]):
             return jsonify({'error': 'Please fill out all fields'}), 400
 
-        # Create the email content
+        # Create email
         msg = EmailMessage()
         msg['Subject'] = f'Contact form message from {firstname} {lastname}'
         msg['From'] = GMAIL_USER
-        msg['To'] = GMAIL_USER  # send to yourself
+        msg['To'] = GMAIL_USER
         msg.set_content(f"Name: {firstname} {lastname}\nEmail: {email}\nMessage: {message}")
 
         # Try sending email up to 3 times
@@ -285,16 +285,16 @@ def contact():
                     smtp.starttls()
                     smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
                     smtp.send_message(msg)
-                return jsonify({'success': True})  # ✅ Success
+                # Success
+                return jsonify({'success': 'Message sent successfully!'})
             except Exception as e:
                 print(f"Email send error (attempt {attempt+1}):", e)
                 time.sleep(2)
 
-        # If all attempts fail
-        return jsonify({'error': 'Failed to send message. Please try again later.'}), 500
+        return jsonify({'error': 'Failed to send message after multiple attempts'}), 500
 
-    # GET → just render the page
-    return render_template('contact.html')   
+    # GET → render contact page
+    return render_template('contact.html')
                  
 
 
