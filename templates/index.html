@@ -59,6 +59,8 @@
 </section>
 
 <script>
+// ======= Post Manager ======
+
 // See more button logic
 function setupSeeMoreButtons() {
     const cards = document.querySelectorAll('.post-card');
@@ -85,33 +87,29 @@ function setupSeeMoreButtons() {
     });
 }
 
-// Create post card HTML
+// Create a post card
 function createPostCard(post) {
-
-    // Safe image handling
-    let image = post.image || post.image_url || "";
-
-    // If image missing use default
-    if (!image) {
-        image = "/static/images/ferrari.jpg";
-    }
-
-    // If image is local path fix it
-    if (!image.startsWith("http")) {
-        image = "/static/" + image;
-    }
+    let image = post.image || post.image_url || "/static/images/ferrari.jpg";
+    if (!image.startsWith("http")) image = "/static/" + image;
 
     return `
         <div class="post-card" id="post-${post.id}">
             <img src="${image}" alt="${post.title}">
-            
             <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
-                <p class="post-text">${post.description}</p>
+                <p class="post-text">${post.description || ''}</p>
 
-                <button onclick="likePost(${post.id})">
-                    ❤️ ${post.likes || 0}
-                </button>
+                <div class="post-actions">
+                    <button id="like-btn-${post.id}" onclick="likePost(${post.id})">
+                        ❤️ <span id="like-count-${post.id}">${post.likes || 0}</span>
+                    </button>
+
+                    <span class="views">
+                        👁️ <span id="view-count-${post.id}">${post.views || 0}</span>
+                    </span>
+
+                    <button class="see-more-btn">See More</button>
+                </div>
             </div>
         </div>
     `;
@@ -137,39 +135,59 @@ function likePost(postId) {
     .catch(err => console.error("Like error:", err));
 }
 
-// Fetch posts for homepage
-fetch("/get_home_posts")
-.then(res => res.json())
-.then(data => {
-    const trendingContainer = document.getElementById("trending-posts");
-    const recentContainer = document.getElementById("recent-posts");
-
-    trendingContainer.innerHTML = "";
-    recentContainer.innerHTML = "";
-
-    // Trending posts
-    data.trending.forEach(post => {
-        trendingContainer.innerHTML += createPostCard(post);
-    });
-
-    // Recent posts
-    data.recent.forEach(post => {
-        recentContainer.innerHTML += createPostCard(post);
-    });
-
-    setupSeeMoreButtons();
-
-    // Restore liked buttons
-    data.trending.concat(data.recent).forEach(post => {
-        const likedKey = `liked-${post.id}`;
-        const btn = document.getElementById(`like-btn-${post.id}`);
-        if (btn && localStorage.getItem(likedKey)) {
-            btn.style.backgroundColor = "#d6eefd";
+// Increment view count (called on page load for each post)
+function incrementView(postId) {
+    fetch(`/view/${postId}`, { method: "POST" })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`view-count-${postId}`).textContent = data.views;
         }
-    });
-})
-.catch(err => console.error("Fetch error:", err));
+    })
+    .catch(err => console.error("View error:", err));
+}
 
+// Load posts for homepage
+async function loadHomePosts() {
+    try {
+        const res = await fetch("/get_home_posts");
+        const data = await res.json();
+
+        const trendingContainer = document.getElementById("trending-posts");
+        const recentContainer = document.getElementById("recent-posts");
+        trendingContainer.innerHTML = "";
+        recentContainer.innerHTML = "";
+
+        data.trending.forEach(post => {
+            trendingContainer.innerHTML += createPostCard(post);
+            incrementView(post.id);
+        });
+
+        data.recent.forEach(post => {
+            recentContainer.innerHTML += createPostCard(post);
+            incrementView(post.id);
+        });
+
+        setupSeeMoreButtons();
+
+        // Restore liked buttons
+        data.trending.concat(data.recent).forEach(post => {
+            const likedKey = `liked-${post.id}`;
+            const btn = document.getElementById(`like-btn-${post.id}`);
+            if (btn && localStorage.getItem(likedKey)) {
+                btn.style.backgroundColor = "#d6eefd";
+            }
+        });
+
+    } catch (err) {
+        console.error("Error loading homepage posts:", err);
+    }
+}
+
+// Load on DOM ready
+document.addEventListener("DOMContentLoaded", () => {
+    loadHomePosts();
+});
 </script>
 
 <script src="{{ url_for('static', filename='post-manager.js')}}"></script>

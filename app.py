@@ -119,33 +119,28 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('home'))
 
+from flask import jsonify
+
 @app.route("/get_home_posts")
 def get_home_posts():
     try:
-        # Fetch trending posts (top 6 by likes)
-        trending_res = supabase.table("posts") \
-            .select("*") \
-            .order("likes", desc=True) \
-            .limit(6) \
-            .execute()
-        trending = trending_res.data
+        all_posts = supabase.table("posts").select("*").execute().data or []
 
-        # Get IDs of trending posts to exclude them from recent
-        trending_ids = [post['id'] for post in trending]
+        if not all_posts:
+            return jsonify({"trending": [], "recent": []})
 
-        # Fetch recent posts excluding trending posts
-        recent_res = supabase.table("posts") \
-            .select("*") \
-            .order("created_at", desc=True) \
-            .not_("id", "in", trending_ids) \
-            .limit(6) \
-            .execute()
-        recent = recent_res.data
+        # Sort all posts by likes descending
+        sorted_by_likes = sorted(all_posts, key=lambda x: x.get("likes", 0), reverse=True)
 
-        return jsonify({
-            "trending": trending,
-            "recent": recent
-        })
+        # Top 6 are trending
+        trending = sorted_by_likes[:6]
+        trending_ids = {post["id"] for post in trending}
+
+        # Remaining posts go to recent, sorted by created_at descending
+        recent = [post for post in all_posts if post["id"] not in trending_ids]
+        recent.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+
+        return jsonify({"trending": trending, "recent": recent})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -169,7 +164,9 @@ def add_post():
         "title": title,
         "image_url": image_url,
         "description": description,
-        "likes": 0
+        "likes": 0,
+        "views": 0,
+        "created_at": datetime.utcnow().isoformat()
     }
 
     response = supabase.table("posts").insert(new_post).execute()
@@ -177,9 +174,9 @@ def add_post():
     if response.data:
         return jsonify({"success": True})
     else:
-        return jsonify({"success": False, "error": response.error}), 500
+        return jsonify({"success": False})
 
-
+#get post
 @app.route('/get_posts')
 def get_posts():
     response = (
@@ -193,8 +190,9 @@ def get_posts():
     if response.data:
         return jsonify(response.data)
     else:
-        return jsonify([]), 500      
-
+        return jsonify([]), 500
+    
+# like post
 @app.route('/like/<int:post_id>', methods=['POST', 'GET'])
 def like_post(post_id):
     try:
@@ -225,7 +223,30 @@ def like_post(post_id):
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    
+   # View post 
+@app.route('/view/<int:post_id>', methods=['POST'])
+def view_post(post_id):
+    try:
+        response = supabase.table("posts").select("views").eq("id", post_id).execute()
 
+        if not response.data:
+            return jsonify({"success": False}), 404
+
+        current_views = response.data[0]["views"] or 0
+
+        supabase.table("posts").update({
+            "views": current_views + 1
+        }).eq("id", post_id).execute()
+
+        return jsonify({
+            "success": True,
+            "views": current_views + 1
+        })
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    
 # delete post
 @app.route('/delete_post/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
@@ -236,7 +257,8 @@ def delete_post(post_id):
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"error": str(e)}),500  
-
+    
+#contact form
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
