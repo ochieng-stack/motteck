@@ -122,25 +122,39 @@ def logout():
 @app.route("/get_home_posts")
 def get_home_posts():
     try:
-        trending = supabase.table("posts") \
+        trending_response = supabase.table("posts") \
             .select("*") \
             .order("likes", desc=True) \
             .limit(6) \
             .execute()
 
-        recent = supabase.table("posts") \
+        recent_response = supabase.table("posts") \
             .select("*") \
             .order("created_at", desc=True) \
             .limit(6) \
             .execute()
 
+        trending = trending_response.data or []
+        recent = recent_response.data or []
+
+        # Ensure fields are never null
+        for post in trending + recent:
+            post["content"] = post.get("content") or ""
+            post["image_url"] = post.get("image_url") or ""
+            post["likes"] = post.get("likes") or 0
+
         return jsonify({
-            "trending": trending.data,
-            "recent": recent.data
+            "trending": trending,
+            "recent": recent
         })
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("ERROR in /get_home_posts:", e)
+        return jsonify({
+            "trending": [],
+            "recent": [],
+            "error": str(e)
+        })
 
 #create post
 @app.route('/add_post', methods=['POST'])
