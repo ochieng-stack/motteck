@@ -9,6 +9,7 @@ from email.message import EmailMessage
 from flask import redirect, url_for
 from datetime import datetime
 from supabase import create_client
+from flask import session
 
 from flask import send_from_directory
 import json, os
@@ -228,6 +229,14 @@ def like_post(post_id):
 @app.route('/view/<int:post_id>', methods=['POST'])
 def view_post(post_id):
     try:
+        if 'viewed_posts' not in session:
+            session['viewed_posts'] = []
+
+        # Skip if post already viewed this session
+        if post_id in session['viewed_posts']:
+            return jsonify({"success": True, "views": "already counted"})
+
+        # Fetch current views
         response = supabase.table("posts").select("views").eq("id", post_id).execute()
 
         if not response.data:
@@ -235,9 +244,13 @@ def view_post(post_id):
 
         current_views = response.data[0]["views"] or 0
 
+        # Increment views
         supabase.table("posts").update({
             "views": current_views + 1
         }).eq("id", post_id).execute()
+
+        # Mark as viewed in session
+        session['viewed_posts'].append(post_id)
 
         return jsonify({
             "success": True,
@@ -273,7 +286,7 @@ def contact():
                 return jsonify({'error': 'Please fill out all fields'}), 400
 
             msg = EmailMessage()
-            msg['Subject'] = f'Contact form message from {firstname} {lastname}'
+            msg['Subject'] = f'Motteck Contact {firstname} {lastname}'
             msg['From'] = GMAIL_USER
             msg['To'] = GMAIL_USER
             msg.set_content(
