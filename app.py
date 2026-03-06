@@ -262,38 +262,35 @@ def delete_post(post_id):
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        firstname = request.form.get('firstname')
-        lastname = request.form.get('lastname')
-        email = request.form.get('email')
-        message = request.form.get('text')
+        try:
+            firstname = request.form.get('firstname')
+            lastname = request.form.get('lastname')
+            email = request.form.get('email')
+            message = request.form.get('text')
 
-        # Validate all fields
-        if not all([firstname, lastname, email, message]):
-            return jsonify({'error': 'Please fill out all fields'}), 400
+            # Validate fields
+            if not all([firstname, lastname, email, message]):
+                return jsonify({'error': 'Please fill out all fields'}), 400
 
-        # Create email
-        msg = EmailMessage()
-        msg['Subject'] = f'Contact form message from {firstname} {lastname}'
-        msg['From'] = GMAIL_USER
-        msg['To'] = GMAIL_USER
-        msg.set_content(f"Name: {firstname} {lastname}\nEmail: {email}\nMessage: {message}")
+            msg = EmailMessage()
+            msg['Subject'] = f'Contact form message from {firstname} {lastname}'
+            msg['From'] = GMAIL_USER
+            msg['To'] = GMAIL_USER
+            msg.set_content(
+                f"Name: {firstname} {lastname}\nEmail: {email}\nMessage: {message}"
+            )
 
-        # Try sending email up to 3 times
-        for attempt in range(3):
-            try:
-                with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-                    smtp.starttls()
-                    smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-                    smtp.send_message(msg)
-                # Success
-                return jsonify({'success': 'Message sent successfully!'})
-            except Exception as e:
-                print(f"Email send error (attempt {attempt+1}):", e)
-                time.sleep(2)
+            with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+                smtp.starttls()
+                smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+                smtp.send_message(msg)
 
-        return jsonify({'error': 'Failed to send message after multiple attempts'}), 500
+            return jsonify({'success': 'Message sent successfully!'})
 
-    # GET → render contact page
+        except Exception as e:
+            print("Contact form error:", e)
+            return jsonify({'error': 'Server error sending message'}), 500
+
     return render_template('contact.html')
                  
 

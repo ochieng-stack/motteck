@@ -18,7 +18,7 @@
     </div>
 
     <div class="contact">
-        <form action="{{ url_for('contact')}}" method="POST" class="form">
+        <form id="contact-form" action="{{ url_for('contact')}}" method="POST" class="form">
             <div class="row">
                 <div class="input-group">
                     <label for="firstname">FIRST NAME</label>
@@ -60,7 +60,7 @@
 </footer>
 
 <script>
-document.querySelector('.form').addEventListener('submit', async function(e) {
+document.querySelector('#contact-form').addEventListener('submit', async function(e)  {
     e.preventDefault();
 
     const formMessage = document.getElementById('form-message');
