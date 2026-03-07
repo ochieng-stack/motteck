@@ -76,7 +76,7 @@ input, textarea, button {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding-top: 60px;
+    padding-top: 80px;
 }
 
 /* each individual post card*/
