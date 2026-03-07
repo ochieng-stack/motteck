@@ -232,11 +232,6 @@ def view_post(post_id):
         if 'viewed_posts' not in session:
             session['viewed_posts'] = []
 
-        # Skip if post already viewed this session
-        if post_id in session['viewed_posts']:
-            return jsonify({"success": True, "views": "already counted"})
-
-        # Fetch current views
         response = supabase.table("posts").select("views").eq("id", post_id).execute()
 
         if not response.data:
@@ -244,17 +239,18 @@ def view_post(post_id):
 
         current_views = response.data[0]["views"] or 0
 
-        # Increment views
-        supabase.table("posts").update({
-            "views": current_views + 1
-        }).eq("id", post_id).execute()
+        # Only increment if not viewed this session
+        if post_id not in session['viewed_posts']:
+            supabase.table("posts").update({
+                "views": current_views + 1
+            }).eq("id", post_id).execute()
 
-        # Mark as viewed in session
-        session['viewed_posts'].append(post_id)
+            session['viewed_posts'].append(post_id)
+            current_views += 1  # reflect increment
 
         return jsonify({
             "success": True,
-            "views": current_views + 1
+            "views": current_views
         })
 
     except Exception as e:
