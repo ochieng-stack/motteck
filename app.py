@@ -225,6 +225,21 @@ def like_post(post_id):
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
     
+@app.route('/post/<int:post_id>')
+def single_post(post_id):
+    try:
+        response = supabase.table("posts").select("*").eq("id", post_id).execute()
+
+        if not response.data:
+            return "Post not found", 404
+
+        post = response.data[0]
+
+        return render_template("single_post.html", post=post)
+
+    except Exception as e:
+        return f"Error: {str(e)}", 500
+       
    # View post 
 @app.route('/view/<int:post_id>', methods=['POST'])
 def view_post(post_id):

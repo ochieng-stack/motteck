@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} | Motteck</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='cars.css') }}">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header">
+        <h1 class="title">
+            <a href="{{ url_for('home') }}" style="text-decoration:none; color:inherit;">
+                <i>MOTTECK</i>
+            </a>
+        </h1>
+    </div>
+
+    <!-- CATEGORY NAV -->
+    <nav class="category-nav">
+        <a href="{{ url_for('cars') }}">CARS</a>
+        <a href="{{ url_for('trucks') }}">TRUCKS</a>
+        <a href="{{ url_for('motobikes') }}">MOTOBIKE</a>
+        <a href="{{ url_for('trains') }}">TRAIN</a>
+        <a href="{{ url_for('plane') }}">PLANE</a>
+        <a href="{{ url_for('services') }}">SERVICES</a>
+    </nav>
+</header>
+
+<!-- SINGLE POST -->
+<section class="post-container" style="max-width:900px; margin:40px auto; padding:20px;">
+
+    <!-- TITLE -->
+    <h1 style="margin-bottom:20px;">{{ post.title }}</h1>
+
+    <!-- IMAGE -->
+    {% if post.image_url %}
+    <img src="{{ post.image_url }}" 
+         alt="{{ post.title }}" 
+         style="width:100%; border-radius:10px; margin-bottom:20px;">
+    {% endif %}
+
+    <!-- CATEGORY -->
+    <p style="color:gray; margin-bottom:10px;">
+        Category: {{ post.category.upper() }}
+    </p>
+
+    <!-- CONTENT -->
+    <p style="line-height:1.8; font-size:16px;">
+        {{ post.description | replace('\n', '<br>') | safe }}
+    </p>
+
+    <!-- ACTIONS -->
+    <div style="margin-top:30px; display:flex; gap:15px; flex-wrap:wrap;">
+
+        <!-- BACK BUTTON -->
+        <a href="/{{ post.category }}s" 
+           style="padding:10px 15px; background:black; color:white; text-decoration:none; border-radius:5px;">
+           {% if post.category == 'car' %}
+           <a href="/cars">← Back to Cars</a>
+           {% elif post.category == 'truck' %}
+           <a href="/trucks">← Back to Trucks</a>
+           {% elif post.category == 'motobike' %}
+           <a href="/motobikes">← Back to Motobikes</a>
+           {% elif post.category == 'train' %}
+           <a href="/trains">← Back to Trains</a>
+           {% elif post.category == 'plane' %}
+           <a href="/plane">← Back to Planes</a>
+           {% endif %}
+        </a>
+
+        <!-- HOME BUTTON -->
+        <a href="/" 
+           style="padding:10px 15px; background:#ddd; color:black; text-decoration:none; border-radius:5px;">
+            Home
+        </a>
+
+    </div>
+
+</section>
+
+</body>
+</html>

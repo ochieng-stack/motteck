@@ -37,7 +37,7 @@
             <button type="submit">publish Post</button>
          </form>
          {% endif %}
-         <h2>service</h2>
+         <h2> service </h2>
          <div id="servicePost" class="post-container"></div>
     </section>
     <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
@@ -50,7 +50,7 @@
             const card = document.querySelectorAll('.post-card');
             card.forEach(card => {
                 const seeMoreBtn = card.querySelector('.see-more-btn');
-                const postText = container.querySelector('.post-text');
+                const postText = card.querySelector('.post-text');
 
                 if (!seeMoreBtn || !postText) return;
 
@@ -90,8 +90,12 @@
     });
 
     posts.forEach(post => {
-                const card = document.createElement('div');
+                const card = document.createElement('a');
+                card.href = `/post/${post.id}`;
+                card.style.textDecoration = "none";
+                card.style.color = "inherit";
                 card.classList.add('post-card');
+
                 card.innerHTML = `<img src="${post.image_url}" alt="${post.title}" class="post-image">
                 <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
@@ -105,6 +109,21 @@
                     <button class="see-more-btn"> See more</button>
                 </div>    
                 </div>`;
+
+                card.querySelectorAll("button").forEach(btn => {
+                    btn.addEventListener("click", (e)=> {
+                        e.stopPropagation();
+                    });
+                });
+                //LIKE BUTTON
+                card.querySelector(`#like-btn-${post.id}`).onclick = () => likePost(post.id);
+
+                //DELETE BUTTON
+                const deleteBtn = card.querySelector(".delete-btn");
+                if(deleteBtn){
+                    deleteBtn.onclick = () => deletePost(post.id);
+                }
+                
                 container.prepend(card);
             });
             // setup see more after all posts are added
