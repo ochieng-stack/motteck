@@ -144,7 +144,7 @@ function createPostCard(post) {
             <img src="${image}" alt="${post.title}">
             <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
-                <div class="post-text">${post.description || ""}</div>
+                <div class="post-text">${formatText(post.description) || ""}</div>
 
                 <div class="post-actions">
 
@@ -165,6 +165,14 @@ function createPostCard(post) {
 }
 
 
+function formatText(text) {
+    if (!text) return "";
+
+    return text
+        .split("\n")
+        .map(line => `<p>${line.trim()}</p>`)
+        .join("");
+}
 
 // Load homepage posts
 async function loadHomePosts() {

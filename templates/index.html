@@ -97,7 +97,7 @@ function createPostCard(post) {
             <img src="${image}" alt="${post.title}">
             <div class="post-content">
                 <h3 class="post-title">${post.title}</h3>
-                <div class="post-text">${post.description || ""}</div>
+                <div class="post-text">${formatText(post.description) || ""}</div>
 
                 <div class="post-actions">
                     <button id="like-btn-${post.id}" onclick="likePost(${post.id})">
@@ -113,6 +113,15 @@ function createPostCard(post) {
             </div>
         </div>
     `;
+}
+
+function formatText(text) {
+    if (!text) return "";
+
+    return text
+        .split("\n")
+        .map(line => `<p>${line.trim()}</p>`)
+        .join("");
 }
 
 // Like a post
