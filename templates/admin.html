@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin login - Motteck</title>
+    <title>Admin Login - MOTTECK</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <!-- Google reCAPTCHA script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <h2>Admin Login</h2>
@@ -12,9 +14,14 @@
     {% if error %}
     <p class="error">{{ error }}</p>
     {% endif %}
+
     <form method="POST">
         <input type="text" name="username" placeholder="Enter Username" required>
-        <input type="text" name="password" placeholder="Enter Password" required>
+        <input type="password" name="password" placeholder="Enter Password" required>
+
+        <!-- Google reCAPTCHA -->
+        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
+
         <button type="submit">Login</button>
     </form>
 </body>

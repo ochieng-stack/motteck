@@ -10,6 +10,10 @@ from flask import redirect, url_for
 from datetime import datetime
 from supabase import create_client
 from flask import session
+import bcrypt
+import requests
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from flask import send_from_directory
 import json, os
@@ -99,17 +103,64 @@ def Terms():
 
 
 # Admin login page
-@app.route('/login', methods=['GET','POST'])
+
+app = Flask(__name__)
+app.secret_key = "YOUR_SECRET_KEY"  # keep this secret!
+
+# Rate limiter
+limiter = Limiter(get_remote_address, app=app)
+
+# Example admin credentials (hashed password)
+ADMIN_USER = "admin"
+# Generate once: bcrypt.hashpw("yourpassword".encode(), bcrypt.gensalt())
+ADMIN_PASS_HASH = os.getenv("ADMIN_PASS_HASH").encode()
+
+# Track failed login attempts
+FAILED_ATTEMPTS = {}
+LOCK_TIME = 600  # seconds (10 minutes)
+
+# reCAPTCHA secret key
+RECAPTCHA_SECRET = "YOUR_RECAPTCHA_SECRET"
+
+def verify_recaptcha(token):
+    response = requests.post(
+        "https://www.google.com/recaptcha/api/siteverify",
+        data={"secret": RECAPTCHA_SECRET, "response": token}
+    )
+    return response.json().get("success", False)
+
+@app.route('/login-goodwill254@', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")  # max 5 attempts per minute per IP
 def login():
+    ip = get_remote_address()
+
+    # Check lockout
+    if ip in FAILED_ATTEMPTS and FAILED_ATTEMPTS[ip]['locked_until'] > time.time():
+        return render_template('admin.html', error="Too many failed attempts. Try again later.")
+
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']               
+        password = request.form['password']
+        recaptcha_token = request.form.get("g-recaptcha-response")
 
-        #Replace this with your real admin credentials
-        if username == ADMIN_USER and password == ADMIN_PASS:
-            session['logged_in'] = True      
-            return redirect(url_for('home'))            
+        # Verify reCAPTCHA
+        if not verify_recaptcha(recaptcha_token):
+            return render_template('admin.html', error="reCAPTCHA verification failed.")
+
+        # Check credentials
+        if username == ADMIN_USER and bcrypt.checkpw(password.encode(), ADMIN_PASS_HASH):
+            session['logged_in'] = True
+            if ip in FAILED_ATTEMPTS:
+                FAILED_ATTEMPTS.pop(ip)  # reset attempts after successful login
+            return redirect(url_for('home'))
         else:
+            # Track failed attempts
+            if ip not in FAILED_ATTEMPTS:
+                FAILED_ATTEMPTS[ip] = {'count': 1, 'locked_until': 0}
+            else:
+                FAILED_ATTEMPTS[ip]['count'] += 1
+                if FAILED_ATTEMPTS[ip]['count'] >= 5:
+                    FAILED_ATTEMPTS[ip]['locked_until'] = time.time() + LOCK_TIME
             return render_template('admin.html', error="Invalid username or password")
 
     return render_template('admin.html')
