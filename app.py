@@ -53,6 +53,7 @@ CONTACT_FILE = 'contacts.json'
 
 # Homepage
 @app.route('/')
+@app.route('/home')
 def home():
     logged_in = session.get('logged_in', False)
     return render_template('index.html', logged_in=logged_in)
