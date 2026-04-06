@@ -1,5 +1,8 @@
-Flask
+flask
 gunicorn
+bcrypt
+requests
+flask-limiter
 python-dotenv
-cloudinary
 supabase
+cloudinary
