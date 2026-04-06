@@ -1,8 +1,0 @@
-flask
-gunicorn
-bcrypt
-requests
-flask-limiter
-python-dotenv
-supabase
-cloudinary
