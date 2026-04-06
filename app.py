@@ -118,7 +118,7 @@ FAILED_ATTEMPTS = {}
 LOCK_TIME = 600  # seconds (10 minutes)
 
 # reCAPTCHA secret key
-RECAPTCHA_SECRET = "YOUR_RECAPTCHA_SECRET"
+RECAPTCHA_SECRET = os.getenv("RECAPTCHA_SECRET")
 
 def verify_recaptcha(token):
     response = requests.post(
