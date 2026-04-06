@@ -105,9 +105,6 @@ def Terms():
 
 # Admin login page
 
-app = Flask(__name__)
-app.secret_key = "YOUR_SECRET_KEY"  # keep this secret!
-
 # Rate limiter
 limiter = Limiter(get_remote_address, app=app)
 
