@@ -24,11 +24,8 @@ app = Flask(__name__)
 POSTS_FILE = os.path.join(os.path.dirname(__file__),'posts.json')
 load_dotenv() # loads Gmail credentials from .env file
 
-GMAIL_USER = os.getenv("GMAIL_USER")
-GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
 
-ADMIN_USER = os.getenv("ADMIN_USER")
-ADMIN_PASS = os.getenv("ADMIN_PASS")
+
 
 #cloudinary setup
 cloudinary.config(
@@ -109,7 +106,8 @@ def Terms():
 limiter = Limiter(get_remote_address, app=app)
 
 # Example admin credentials (hashed password)
-ADMIN_USER = "admin"
+ADMIN_USER = os.getenv("ADMIN_USER")
+ADMIN_PASS = os.getenv("ADMIN_PASS")
 # Generate once: bcrypt.hashpw("yourpassword".encode(), bcrypt.gensalt())
 ADMIN_PASS_HASH = os.getenv("ADMIN_PASS_HASH").encode()
 
