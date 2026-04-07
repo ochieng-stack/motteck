@@ -62,7 +62,9 @@ body {
 a:hover::after {
     width: 100%;
 }
-
+.pagetwo{
+    padding-top: 80px;
+}
 .brows {
     display:flex;
     align-items: center;
