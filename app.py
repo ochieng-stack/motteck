@@ -110,9 +110,7 @@ limiter = Limiter(get_remote_address, app=app)
 #ADMIN_PASS = os.getenv("ADMIN_PASS")
 # Generate once: bcrypt.hashpw("yourpassword".encode(), bcrypt.gensalt())
 #ADMIN_PASS_HASH = os.getenv("ADMIN_PASS_HASH").encode()
-print("INPUT USER:", username)
-print("ENV USER:", ADMIN_USER)
-print("PASSWORD MATCH:", bcrypt.checkpw(password.encode(), ADMIN_PASS_HASH))
+
 
 # Track failed login attempts
 FAILED_ATTEMPTS = {}
@@ -141,6 +139,10 @@ def login():
         username = request.form['username']
         password = request.form['password']
         recaptcha_token = request.form.get("g-recaptcha-response")
+
+        print("INPUT USER:", username)
+        print("ENV USER:", ADMIN_USER)
+        print("PASSWORD MATCH:", bcrypt.checkpw(password.encode(), ADMIN_PASS_HASH))
 
         # Verify reCAPTCHA
         if not verify_recaptcha(recaptcha_token):
