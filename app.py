@@ -106,11 +106,10 @@ def Terms():
 limiter = Limiter(get_remote_address, app=app)
 
 # Example admin credentials (hashed password)
-#ADMIN_USER = os.getenv("ADMIN_USER")
-#ADMIN_PASS = os.getenv("ADMIN_PASS")
+ADMIN_USER = os.getenv("ADMIN_USER")
+ADMIN_PASS = os.getenv("ADMIN_PASS")
 # Generate once: bcrypt.hashpw("yourpassword".encode(), bcrypt.gensalt())
-#ADMIN_PASS_HASH = os.getenv("ADMIN_PASS_HASH").encode()
-
+ADMIN_PASS_HASH = os.getenv("ADMIN_PASS_HASH").encode()
 
 # Track failed login attempts
 FAILED_ATTEMPTS = {}
@@ -141,7 +140,7 @@ def login():
         recaptcha_token = request.form.get("g-recaptcha-response")
 
         print("INPUT USER:", username)
-        print("ENV USER:", ADMIN_USER)
+        print("ENV USER:", os.getenv("ADMIN_USER"))
         print("PASSWORD MATCH:", bcrypt.checkpw(password.encode(), ADMIN_PASS_HASH))
 
         # Verify reCAPTCHA
