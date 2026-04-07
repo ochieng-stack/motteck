@@ -64,18 +64,15 @@ a:hover::after {
 }
 
 .pageone {
-    position: relative;
-    background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url(images/ferrari.jpg);
-    background-position: center bottom;
-    background-size: cover;
-    background-repeat: no-repeat;
     height: 60vh;
+    background: linear-gradient(135deg, #000000, #1a1a1a);
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    color: white;
     text-align: center;
-    width: 100%;
 }
+
 
 .subtitle {
     position: relative;
