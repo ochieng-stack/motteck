@@ -63,34 +63,6 @@ a:hover::after {
     width: 100%;
 }
 
-.pageone {
-    height: 60vh;
-    background: linear-gradient(135deg, #000000, #1a1a1a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-}
-
-
-.subtitle {
-    position: relative;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.75);
-    z-index: 2;
-}
-
-.pageone::before{
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-    z-index: 1;
-}
-
 .brows {
     display:flex;
     align-items: center;
@@ -321,13 +293,6 @@ input, textarea, button {
         font-size: 18px;
     }
 
-    .pageone{
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        left: 0;
-        right: 0;
-    }
     
     .subtitle{
         font-size: 20px;
