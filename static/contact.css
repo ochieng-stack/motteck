@@ -107,42 +107,64 @@ h2, p {
     100% { transform: rotate(360deg);}
 }
 
+/* FOOTER */
 .footer {
-    background: #111;
+    background: #0f0f0f;
     color: white;
     text-align: center;
-    padding: 30px 15px;
+    padding: 35px 15px;
+    border-top: 1px solid #222;
 }
 
-/* social icons */
+/* ICON CONTAINER */
 .list {
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding: 10px 0;
+    gap: 25px;
+    padding: 15px 0;
     margin: 0;
 }
 
+/* ICON LINKS */
+.big {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+/* ICON STYLE */
 .big i {
-    font-size: 22px;
+    font-size: 20px;
+    color: #ffffff;
+    transition: 0.3s ease;
+}
+
+/* HOVER EFFECT (IMPORTANT UPGRADE) */
+.big:hover {
+    background: #ff3b3b;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 59, 59, 0.4);
+}
+
+.big:hover i {
     color: white;
-    transition: 0.3s;
 }
 
-.big i:hover {
-    color: #ff3b3b;
-    transform: scale(1.2);
-}
-
-/* LEGAL LINKS SECTION */
+/* LEGAL LINKS */
 .legal-links {
     margin-top: 15px;
     font-size: 14px;
 }
 
 .legal-links a {
-    color: #bbb;
+    color: #aaa;
     text-decoration: none;
     margin: 0 8px;
     transition: 0.3s;
@@ -154,5 +176,5 @@ h2, p {
 }
 
 .legal-links span {
-    color: #555;
+    color: #444;
 }
