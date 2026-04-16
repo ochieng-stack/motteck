@@ -148,9 +148,8 @@ h2, p {
 
 /* HOVER EFFECT (IMPORTANT UPGRADE) */
 .big:hover {
-    background: #ff3b3b;
+    background: blue;
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(255, 59, 59, 0.4);
 }
 
 .big:hover i {
