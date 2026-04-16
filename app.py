@@ -95,9 +95,9 @@ def plane():
 def privacy():
     return render_template('privacy.html')
 
-@app.route('/Terms')
+@app.route('/terms')
 def Terms():
-    return render_template('Terms.html')
+    return render_template('terms.html')
 
 
 # Admin login page
