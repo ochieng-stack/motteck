@@ -1,17 +1,78 @@
-*{
+/* RESET */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-h1{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* BODY */
+body {
+    font-family: Arial, sans-serif;
+    background: #0f0f0f;
+    color: #eaeaea;
+    line-height: 1.7;
 }
 
-a {
-    text-decoration: none;
-    color: rgb(19, 58, 235);
+/* HEADER */
+.page-header {
+    text-align: center;
+    padding: 30px 20px;
+    background: #111;
+    border-bottom: 1px solid #222;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+/* MAIN CONTENT */
+.content {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* PARAGRAPHS */
+.content p {
+    margin-bottom: 15px;
+    color: #ccc;
+}
+
+/* HEADINGS */
+.content h2 {
+    margin-top: 25px;
+    margin-bottom: 10px;
     font-size: 20px;
+    color: #ffffff;
+    border-left: 3px solid #ff3b3b;
+    padding-left: 10px;
+}
+
+/* LINKS */
+a {
+    color: #4da3ff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* LEGAL FOOTER (optional cross-links) */
+.legal-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 15px;
+    border-top: 1px solid #222;
+    font-size: 14px;
+}
+
+.legal-footer a {
+    margin: 0 10px;
+    color: #aaa;
+}
+
+.legal-footer a:hover {
+    color: white;
 }

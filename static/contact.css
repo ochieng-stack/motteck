@@ -107,27 +107,52 @@ h2, p {
     100% { transform: rotate(360deg);}
 }
 
-footer {
-    background-color: black;
+.footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
 }
-.container {
+
+/* social icons */
+.list {
+    list-style: none;
     display: flex;
     justify-content: center;
-    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+    margin: 0;
 }
 
-.terms {
-    display: flex;
-    list-style: none;
-    gap: 15px;
-}
-
-.info a {
-    text-decoration: none;
+.big i {
+    font-size: 22px;
     color: white;
-    cursor:pointer;
+    transition: 0.3s;
 }
 
-.info:hover{
-    color: rgb(11, 106, 231);
+.big i:hover {
+    color: #ff3b3b;
+    transform: scale(1.2);
+}
+
+/* LEGAL LINKS SECTION */
+.legal-links {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.legal-links a {
+    color: #bbb;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: 0.3s;
+}
+
+.legal-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.legal-links span {
+    color: #555;
 }
