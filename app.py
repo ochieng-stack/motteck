@@ -96,7 +96,7 @@ def privacy():
     return render_template('privacy.html')
 
 @app.route('/terms')
-def Terms():
+def terms():
     return render_template('terms.html')
 
 
