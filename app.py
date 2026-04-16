@@ -360,11 +360,16 @@ def contact():
                 smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
                 smtp.send_message(msg)
 
-            return jsonify({'success': 'Message sent successfully!'})
+            return jsonify({
+                'status': 'success',
+                'message': 'Message sent successfully!'
+                })
 
         except Exception as e:
             print("Contact form error:", e)
-            return jsonify({'error': 'Server error sending message'}), 500
+            return jsonify({
+                'status': 'error',
+                'message': 'Server error sending message'}), 500
 
     return render_template('contact.html')
                  
