@@ -71,7 +71,7 @@
 </footer>
 
 <script>
-document.querySelector('#contact-form').addEventListener('submit', async function(e)  {
+document.querySelector('#contact-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const formMessage = document.getElementById('form-message');
@@ -79,16 +79,13 @@ document.querySelector('#contact-form').addEventListener('submit', async functio
     const submitBtn = document.getElementById('submit-btn');
 
     formMessage.textContent = '';
-    formMessage.style.color = 'black';
     loader.style.display = 'inline-block';
-    submitBtn.disabled = true; // prevent multiple clicks
-
-    const formData = new FormData(this);
+    submitBtn.disabled = true;
 
     try {
         const response = await fetch(this.action, {
             method: 'POST',
-            body: formData
+            body: new FormData(this)
         });
 
         const result = await response.json();
@@ -96,20 +93,21 @@ document.querySelector('#contact-form').addEventListener('submit', async functio
         loader.style.display = 'none';
         submitBtn.disabled = false;
 
-        if (result.success) {
+        if (result.status === 'success') {
             formMessage.style.color = 'green';
-            formMessage.textContent = "✅ Message sent successfully!";
+            formMessage.textContent = "✅ " + result.message;
             this.reset();
         } else {
             formMessage.style.color = 'red';
-            formMessage.textContent = result.error || "❌ Something went wrong. Please try again.";
+            formMessage.textContent = "❌ " + result.message;
         }
+
     } catch (err) {
-        console.error("Contact form error:", err);
+        console.error(err);
         loader.style.display = 'none';
         submitBtn.disabled = false;
         formMessage.style.color = 'red';
-        formMessage.textContent = "❌ Something went wrong. Please try again later.";
+        formMessage.textContent = "❌ Network error. Try again later.";
     }
 });
 </script>
