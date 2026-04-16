@@ -10,7 +10,7 @@
 }
 
 .contact {
-    background-image:linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),url("static/images/one.jpg");
+    background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),url("images/one.jpg");
     background-position: center;
     background-size: cover;
     height: 100vh;
