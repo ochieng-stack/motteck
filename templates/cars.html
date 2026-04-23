@@ -18,64 +18,50 @@
     </h1>
 
     <div class="top-actions">
-
         <a href="{{ url_for('listings') }}" class="listings-btn">
             🚗 Listings
         </a>
 
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
     </div>
 
 </header>
 
 <!-- ================= CATEGORY NAV ================= -->
 <nav class="category-nav">
-
     <a href="{{ url_for('cars') }}" class="{% if active_page == 'cars'%}active{% endif %}">CARS</a>
     <a href="{{ url_for('trucks') }}">TRUCKS</a>
     <a href="{{ url_for('motobikes') }}">BIKES</a>
     <a href="{{ url_for('trains') }}">RAIL</a>
     <a href="{{ url_for('plane') }}">AVIATION</a>
     <a href="{{ url_for('services') }}">SERVICES</a>
-
 </nav>
 
 <!-- ================= MOBILE MENU ================= -->
 <div id="mobileMenu" class="mobile-menu">
-
     <a href="{{ url_for('home') }}">Home</a>
     <a href="{{ url_for('listings') }}">Listings</a>
     <a href="{{ url_for('services') }}">Services</a>
     <a href="{{ url_for('about') }}">About</a>
     <a href="{{ url_for('contact') }}">Contact</a>
-
 </div>
 
 <!-- ================= MAIN CONTENT ================= -->
 <section class="main-section">
 
-    <!-- POST FORM -->
     {% if logged_in %}
     <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data">
-
         <input type="hidden" name="category" value="car">
-
         <input type="text" name="title" placeholder="Car Title" required>
-
         <input type="file" name="image" accept="image/*" required>
-
         <textarea name="description" placeholder="Write your post..." required></textarea>
-
         <button type="submit">Publish Post</button>
-
     </form>
     {% endif %}
 
-    <!-- SECTION TITLE -->
     <h2 class="section-title">CARS</h2>
 
-    <!-- SEARCH BAR (INSIDE SECTION ONLY) -->
+    <!-- SEARCH -->
     <div class="category-search">
         <input type="text" id="carSearch" placeholder="Search cars...">
     </div>
@@ -86,13 +72,13 @@
 </section>
 
 <!-- ================= JS ================= -->
+
 <script>
 function toggleMenu(){
     const menu = document.getElementById("mobileMenu");
-
     if(!menu) return;
 
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
 }
 
 document.addEventListener("click", function(e){
@@ -112,6 +98,9 @@ document.addEventListener("click", function(e){
 <script>
 const category = 'car';
 const container = document.getElementById('carPost');
+const searchInput = document.getElementById('carSearch');
+
+let allPosts = [];
 
 function formatParagraphs(text){
     return text
@@ -128,66 +117,107 @@ function getPostBycategory(category){
     .catch(() => []);
 }
 
-function showPosts(){
-    getPostBycategory(category).then(posts => {
+function renderPosts(posts){
+    container.innerHTML = '';
 
-        container.innerHTML = '';
+    if(!posts || posts.length === 0){
+        container.innerHTML = `<p>No posts found.</p>`;
+        return;
+    }
 
-        if(!posts || posts.length === 0){
-            container.innerHTML = `<p>No posts found.</p>`;
-            return;
-        }
+    posts.forEach(post => {
 
-        posts.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+        const card = document.createElement('div');
+        card.classList.add('post-card');
 
-        posts.forEach(post => {
+        const formattedText = formatParagraphs(post.description);
 
-            const card = document.createElement('div');
-            card.classList.add('post-card');
+        card.innerHTML = `
+            <a href="/post/${post.id}" class="post-link">
+                <img src="${post.image_url}">
+            </a>
 
-            const formattedText = formatParagraphs(post.description);
+            <div class="post-content">
 
-            card.innerHTML = `
-                <a href="/post/${post.id}">
-                    <img src="${post.image_url}">
+                <a href="/post/${post.id}" class="post-link">
+                    <h3 class="post-title">${post.title}</h3>
                 </a>
 
-                <div class="post-content">
+                <div class="post-text">${formattedText}</div>
 
-                    <h3 class="post-title">${post.title}</h3>
+                <div class="post-actions">
 
-                    <div class="post-text">${formattedText}</div>
+                    <button class="like-btn" id="like-${post.id}">
+                        Like (<span id="count-${post.id}">${post.likes || 0}</span>)
+                    </button>
 
-                    <div class="post-actions">
+                    {% if logged_in %}
+                    <button class="delete-btn">Delete</button>
+                    {% endif %}
 
-                        <button class="like-btn" id="like-${post.id}">
-                            Like (<span id="count-${post.id}">${post.likes || 0}</span>)
-                        </button>
-
-                        {% if logged_in %}
-                        <button class="delete-btn">Delete</button>
-                        {% endif %}
-
-                        <button class="see-more-btn">See more</button>
-
-                    </div>
+                    <button class="see-more-btn">See more</button>
 
                 </div>
-            `;
 
-            // like
-            card.querySelector(`#like-${post.id}`).onclick = () => likePost(post.id);
+            </div>
+        `;
 
-            // delete
-            const del = card.querySelector(".delete-btn");
-            if(del){
-                del.onclick = () => deletePost(post.id);
-            }
-
-            container.appendChild(card);
+        // prevent buttons triggering link
+        card.querySelectorAll("button").forEach(btn => {
+            btn.addEventListener("click", e => e.stopPropagation());
         });
+
+        // like
+        card.querySelector(`#like-${post.id}`).onclick = () => likePost(post.id);
+
+        // delete
+        const del = card.querySelector(".delete-btn");
+        if(del){
+            del.onclick = () => deletePost(post.id);
+        }
+
+        // see more toggle
+        const textDiv = card.querySelector(".post-text");
+        const btn = card.querySelector(".see-more-btn");
+
+        let expanded = false;
+        const full = textDiv.innerHTML;
+        const short = textDiv.innerText.slice(0, 300) + "...";
+
+        if(textDiv.innerText.length > 300){
+            textDiv.innerHTML = `<p>${short}</p>`;
+
+            btn.onclick = () => {
+                expanded = !expanded;
+                textDiv.innerHTML = expanded ? full : `<p>${short}</p>`;
+                btn.textContent = expanded ? "See less" : "See more";
+            };
+        } else {
+            btn.style.display = "none";
+        }
+
+        container.appendChild(card);
     });
 }
+
+function showPosts(){
+    getPostBycategory(category).then(posts => {
+        allPosts = posts.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+        renderPosts(allPosts);
+    });
+}
+
+// SEARCH (THIS WAS MISSING BEFORE)
+searchInput.addEventListener("input", function(){
+    const value = this.value.toLowerCase();
+
+    const filtered = allPosts.filter(post =>
+        post.title.toLowerCase().includes(value) ||
+        post.description.toLowerCase().includes(value)
+    );
+
+    renderPosts(filtered);
+});
 
 function likePost(id){
     fetch(`/like/${id}`, {method:'POST'})
