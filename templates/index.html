@@ -8,29 +8,55 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
+
 <body>
 
-<header>
-    <div class="header">
-        <h1 class="title">
-            <a href="{{ url_for('home') }}" style="text-decoration:none; color:inherit;">
-                <i>MOTTECK</i>
-            </a>
-        </h1>
+<!-- ================= NAVBAR ================= -->
+<header class="site-header">
 
-        <nav class="navbar">
-            <ul class="unlist">
-                <li><a href="{{ url_for('home') }}" class="list"><i class="fa-regular fa-house"></i></a></li>
-                <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
-                <li><a href="{{ url_for('services') }}" class="list">SERVICES</a></li>
-                <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>
-            </ul> 
-        </nav>
+    <!-- LEFT: LOGO -->
+    <div class="nav-left">
+        <a href="{{ url_for('home') }}" class="logo">
+            🏠 MOTTECK
+        </a>
     </div>
+
+    <!-- CENTER: SEARCH -->
+    <div class="nav-center">
+        <input type="text" id="searchInput" placeholder="Search cars, trucks, guides...">
+    </div>
+
+    <!-- RIGHT: LINKS -->
+    <div class="nav-right">
+
+        <a href="/listings" class="nav-link highlight">
+            🚗 Listings
+        </a>
+
+        <button class="menu-btn" onclick="toggleMenu()">
+            ☰
+        </button>
+
+    </div>
+
 </header>
 
+<!-- MOBILE MENU -->
+<div id="mobileMenu" class="mobile-menu">
+
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="/listings">Listings</a>
+    <a href="{{ url_for('services') }}">Services</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+
+</div>
+
+
+<!-- ================= BROWSING ================= -->
 <section class="pagetwo">
     <h2 class="brows">BROWSING TYPE</h2>
+
     <ul class="unlisttwo">
         <li><a href="/cars" class="linkup">CARS</a></li>
         <li><a href="/trucks" class="linkup">TRUCKS</a></li>
@@ -40,61 +66,104 @@
     </ul>
 </section>
 
-<!-- 🔥 Trending Section -->
+
+<!-- ================= TRENDING ================= -->
 <section class="pagethree">
     <h2 class="brows">🔥 Trending Posts</h2>
     <div id="trending-posts" class="post-container"></div>
 </section>
 
-<!-- 🆕 Recent Section -->
+
+<!-- ================= RECENT ================= -->
 <section class="pagethree">
     <h2 class="brows">🆕 Recent Posts</h2>
     <div id="recent-posts" class="post-container"></div>
 </section>
 
+
+<!-- ================= SCRIPTS ================= -->
 <script>
-// ======= Post Manager ======
+function toggleMenu() {
+    const menu = document.getElementById("mobileMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
 
-// See more button logic
+/* Search ready hook (we connect later) */
+document.getElementById("searchInput")?.addEventListener("input", function(e) {
+    console.log("Search:", e.target.value);
+});
+</script>
+
+
+<script>
+const LIMIT = 300;
+
+/* FORMAT TEXT */
+function formatText(text) {
+    if (!text) return "";
+
+    return text
+        .split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => `<p>${line.trim()}</p>`)
+        .join('');
+}
+
+/* SEE MORE */
 function setupSeeMoreButtons() {
-    const cards = document.querySelectorAll('.post-card');
-    cards.forEach(card => {
-        const seeMoreBtn = card.querySelector('.see-more-btn');
-        const postText = card.querySelector('.post-text');
-        if (!seeMoreBtn || !postText) return;
+    document.querySelectorAll('.post-card').forEach(card => {
+        const btn = card.querySelector('.see-more-btn');
+        const textEl = card.querySelector('.post-text');
 
-        const fullText = postText.innerHTML.trim();
-        if (fullText.length <= 250) {
-            seeMoreBtn.style.display = "none";
+        if (!btn || !textEl) return;
+
+        const fullHTML = textEl.innerHTML;
+        const plainText = textEl.innerText;
+
+        if (plainText.length <= LIMIT) {
+            btn.style.display = "none";
             return;
         }
 
-        const shortText = fullText.slice(0, 250) + "...";
+        const shortText = plainText.slice(0, LIMIT) + "...";
         let expanded = false;
-        postText.innerHTML = shortText;
 
-        seeMoreBtn.addEventListener("click", () => {
+        textEl.innerHTML = `<p>${shortText}</p>`;
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
             expanded = !expanded;
-            postText.innerHTML = expanded ? fullText : shortText;
-            seeMoreBtn.textContent = expanded ? "See Less" : "See More";
+            textEl.innerHTML = expanded ? fullHTML : `<p>${shortText}</p>`;
+            btn.textContent = expanded ? "See Less" : "See More";
         });
     });
 }
 
-// Create a post card
+/* CARD */
 function createPostCard(post) {
-    let image = post.image || post.image_url || "/static/images/ferrari.jpg";
+    let image = post.image || post.image_url || "/static/images/default.jpg";
     if (!image.startsWith("http")) image = "/static/" + image;
 
     return `
         <div class="post-card" id="post-${post.id}">
-            <img src="${image}" alt="${post.title}">
+
+            <a href="/post/${post.id}">
+                <img src="${image}" class="post-image">
+            </a>
+
             <div class="post-content">
-                <h3 class="post-title">${post.title}</h3>
-                <div class="post-text">${formatText(post.description) || ""}</div>
+
+                <a href="/post/${post.id}" class="post-link">
+                    <h3 class="post-title">${post.title}</h3>
+                </a>
+
+                <div class="post-text">
+                    ${formatText(post.description)}
+                </div>
 
                 <div class="post-actions">
-                    <button id="like-btn-${post.id}" onclick="likePost(${post.id})">
+
+                    <button id="like-btn-${post.id}">
                         ❤️ <span id="like-count-${post.id}">${post.likes || 0}</span>
                     </button>
 
@@ -103,97 +172,78 @@ function createPostCard(post) {
                     </span>
 
                     <button class="see-more-btn">See More</button>
+
                 </div>
             </div>
         </div>
     `;
 }
 
-function formatText(text) {
-    if (!text) return "";
-
-    return text
-        .split("\n")
-        .map(line => `<p>${line.trim()}</p>`)
-        .join("");
-}
-
-// Like a post
+/* LIKE */
 function likePost(postId) {
-    const likedKey = `liked-${postId}`;
-    if (localStorage.getItem(likedKey)) {
+    const key = `liked-${postId}`;
+
+    if (localStorage.getItem(key)) {
         alert("You already liked this post!");
         return;
     }
 
     fetch(`/like/${postId}`, { method: "POST" })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById(`like-count-${postId}`).textContent = data.likes;
-            document.getElementById(`like-btn-${postId}`).style.backgroundColor = "#d6eefd";
-            localStorage.setItem(likedKey, "true");
-        }
-    })
-    .catch(err => console.error("Like error:", err));
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById(`like-count-${postId}`).textContent = data.likes;
+                localStorage.setItem(key, "true");
+            }
+        });
 }
 
-// Increment view count (called on page load for each post)
+/* VIEW */
 function incrementView(postId) {
     fetch(`/view/${postId}`, { method: "POST" })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById(`view-count-${postId}`).textContent = data.views;
-        }
-    })
-    .catch(err => console.error("View error:", err));
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const el = document.getElementById(`view-count-${postId}`);
+                if (el) el.textContent = data.views;
+            }
+        });
 }
 
-// Load posts for homepage
+/* LOAD */
 async function loadHomePosts() {
     try {
         const res = await fetch("/get_home_posts");
         const data = await res.json();
 
-        const trendingContainer = document.getElementById("trending-posts");
-        const recentContainer = document.getElementById("recent-posts");
-        trendingContainer.innerHTML = "";
-        recentContainer.innerHTML = "";
+        const trending = document.getElementById("trending-posts");
+        const recent = document.getElementById("recent-posts");
+
+        trending.innerHTML = "";
+        recent.innerHTML = "";
+
+        const allPosts = [...data.trending, ...data.recent];
 
         data.trending.forEach(post => {
-            trendingContainer.innerHTML += createPostCard(post);
+            trending.innerHTML += createPostCard(post);
             incrementView(post.id);
         });
 
         data.recent.forEach(post => {
-            recentContainer.innerHTML += createPostCard(post);
+            recent.innerHTML += createPostCard(post);
             incrementView(post.id);
         });
 
-        setupSeeMoreButtons();
-
-        // Restore liked buttons
-        data.trending.concat(data.recent).forEach(post => {
-            const likedKey = `liked-${post.id}`;
-            const btn = document.getElementById(`like-btn-${post.id}`);
-            if (btn && localStorage.getItem(likedKey)) {
-                btn.style.backgroundColor = "#d6eefd";
-            }
-        });
+        initPostFeatures();
 
     } catch (err) {
-        console.error("Error loading homepage posts:", err);
+        console.error(err);
     }
 }
 
-// Load on DOM ready
-document.addEventListener("DOMContentLoaded", () => {
-    loadHomePosts();
-});
+/* INIT */
+document.addEventListener("DOMContentLoaded", loadHomePosts);
 </script>
-
-<script src="{{ url_for('static', filename='post-manager.js')}}"></script>
 
 </body>
 </html>
