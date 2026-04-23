@@ -5,9 +5,17 @@
     font-family: sans-serif;
 }
 
+body{
+    overflow-x: hidden;
+}
+
+/* =========================
+   HEADER
+========================= */
 .header{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background: rgb(16, 17, 19);
     position: fixed;
     width: 100%;
@@ -15,36 +23,41 @@
     left: 0;
     padding: 10px 20px;
     z-index: 1000;
-
 }
+
 .title{
-    font-weight: 600px;
-    font-size: 60px ;
-    color: rgb(255, 255, 255);
+    font-size: 40px; /* FIX: desktop was too large */
+    font-weight: bold;
+    color: white;
 }
 
+/* =========================
+   CATEGORY NAV
+========================= */
 .category-nav {
     display: flex;
     justify-content: center;
-    justify-content: space-evenly;
+    align-items: center;
     gap: 12px;
     background-color: rgb(16, 17, 19);
-    padding: 12px 0;
+    padding: 12px 10px;
     position: fixed;
-    top: 80px;
+    top: 70px;
     width: 100%;
     z-index: 999;
-
+    flex-wrap: wrap; /* FIX: prevents breaking on small screens */
 }
 
 .category-nav a {
     text-decoration: none;
-    padding: 8px 18px;
+    padding: 8px 14px;
     background-color: #444;
     color: white;
     border-radius: 6px;
     font-weight: bold;
     transition: 0.3s;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 .category-nav a:hover {
@@ -52,18 +65,16 @@
 }
 
 .category-nav a.active {
-    background-color: rgb(17, 15, 15);
+    background-color: #2196f3;
 }
 
-h2 {
-    text-align: center;
-}
-
-
+/* =========================
+   FORM
+========================= */
 form {
     display: flex;
     flex-direction: column;
-    padding-top: 130px;
+    padding-top: 140px;
     max-width: 400px;
     margin: 0 auto 20px;
     gap: 10px;
@@ -74,73 +85,69 @@ input, textarea, button {
     font-size: 1em;
 }
 
-/* container holding all posts */
+/* =========================
+   POSTS CONTAINER
+========================= */
 .post-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding-top: 80px;
+    padding-top: 20px;
 }
 
-/* each individual post card*/
+/* =========================
+   POST CARD (DESKTOP FIXED)
+========================= */
 .post-card {
     display: flex;
     align-items: flex-start;
+    gap: 20px;
     background: #fff;
-    border: 1px solid #ccc;
+    border: 1px solid #eee;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     padding: 20px;
-    margin: 15px 0;
-    position: relative;
 }
 
-/* Image on the left */
+/* IMAGE */
 .post-card img {
-    width: 450px;
-    height: auto;
-    margin-right: 20px;
+    width: 320px;   /* FIX: reduced from 450 → prevents spacing issue */
+    height: 220px;
+    object-fit: cover;
     border-radius: 8px;
+    flex-shrink: 0;
 }
 
-/* content on the right */
- .post-content{
+/* CONTENT */
+.post-content{
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     flex: 1;
-    overflow: hidden;
-    max-width: 100%;
+    gap: 8px;
 }
 
-/*title */
- .post-title{
-    font-size: 22px;
+/* TITLE */
+.post-title{
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 10px;
     color: black;
 }
-/* description */
- .post-text{
-    margin: 0;
-    line-height: 1.5;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap:break-word;
+
+/* TEXT */
+.post-text{
+    line-height: 1.6;
+    color: #444;
+
+    /* FIX: prevents messy overflow */
     overflow: hidden;
-    max-height: 120px;
-    transition: max-height 0.5s ease;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
 }
 
-.post-container .expanded .post-text {
-    max-height: none;
-}
-
-.post-action{
-    margin-top: 10px;
-}
-
+/* =========================
+   BUTTONS
+========================= */
 .like-btn {
     background: #2196f3;
     color: white;
@@ -148,86 +155,87 @@ input, textarea, button {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 .like-btn:hover {
     background: #1976d2;
 }
 
-.like-btn.liked {
-    background-color: #1976d2;
-    color: white;
-}
-
-.delete-btn, .see-more-btn {
+.delete-btn,
+.see-more-btn {
     margin-right: 8px;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
 }
 
 .delete-btn{
-    background-color: red;
-    color:white;
+    background: red;
+    color: white;
+}
+
+.see-more-btn{
+    background: #eee;
 }
 
 .see-more-btn:hover {
-    background-color: #0056b3;
+    background: #2196f3;
+    color: white;
 }
 
-/* smart phones */
+/* =========================
+   MOBILE FIX (IMPORTANT)
+========================= */
+@media screen and (max-width: 900px){
 
-@media screen and (max-width:900px){
-
+    /* HEADER */
     .header{
-        padding-top: 36px;
+        padding: 10px;
     }
+
     .title{
-        font-size: 30px;
+        font-size: 22px;
     }
+
+    /* CATEGORY NAV FIX (NO CRUSHING) */
     .category-nav {
-        gap: 3px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 10px;
     }
+
     .category-nav a {
-        font-size: 20px;
-        padding: 5px 10px;
+        font-size: 12px;
+        padding: 6px 10px;
+        flex-shrink: 0;
     }
 
-        .post-container{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
+    /* POST FIX */
     .post-card {
         flex-direction: column;
-        width: 95%;
     }
 
     .post-card img {
         width: 100%;
-        height: auto;
-        border-bottom: 1px solid #ddd;
-    }
-    .post-content {
-        text-align: left;
+        height: 200px;
     }
 
-    .post-actions{
-        justify-content: flex-start;
+    .post-text{
+        -webkit-line-clamp: 5;
     }
 
-    .post-title, .post-text {
-        width: 100%
+    form{
+        padding-top: 150px;
     }
 }
 
-@media screen and (max-width: 610px){
-        .category-nav a {
-        font-size: 10px;
+/* SMALL PHONES */
+@media screen and (max-width: 500px){
+    .category-nav a{
+        font-size: 11px;
         padding: 5px 8px;
     }
 }
