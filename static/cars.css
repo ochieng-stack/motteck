@@ -7,6 +7,7 @@
 
 body{
     overflow-x: hidden;
+    background: #f8f8f8;
 }
 
 /* =========================
@@ -26,7 +27,7 @@ body{
 }
 
 .title{
-    font-size: 40px; /* FIX: desktop was too large */
+    font-size: 36px;
     font-weight: bold;
     color: white;
 }
@@ -41,11 +42,14 @@ body{
     gap: 12px;
     background-color: rgb(16, 17, 19);
     padding: 12px 10px;
+
     position: fixed;
     top: 70px;
+    left: 0;
     width: 100%;
     z-index: 999;
-    flex-wrap: wrap; /* FIX: prevents breaking on small screens */
+
+    flex-wrap: wrap;
 }
 
 .category-nav a {
@@ -75,7 +79,7 @@ form {
     display: flex;
     flex-direction: column;
     padding-top: 140px;
-    max-width: 400px;
+    max-width: 450px;
     margin: 0 auto 20px;
     gap: 10px;
 }
@@ -92,33 +96,30 @@ input, textarea, button {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding-top: 20px;
+    padding: 20px;
 }
 
 /* =========================
-   POST CARD (DESKTOP FIXED)
+   POST CARD (DESKTOP)
 ========================= */
 .post-card {
     display: flex;
     align-items: flex-start;
     gap: 20px;
     background: #fff;
-    border: 1px solid #eee;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     padding: 20px;
 }
 
-/* IMAGE */
 .post-card img {
-    width: 320px;   /* FIX: reduced from 450 → prevents spacing issue */
+    width: 320px;
     height: 220px;
     object-fit: cover;
     border-radius: 8px;
     flex-shrink: 0;
 }
 
-/* CONTENT */
 .post-content{
     display: flex;
     flex-direction: column;
@@ -126,7 +127,6 @@ input, textarea, button {
     gap: 8px;
 }
 
-/* TITLE */
 .post-title{
     font-size: 20px;
     font-weight: bold;
@@ -138,7 +138,6 @@ input, textarea, button {
     line-height: 1.6;
     color: #444;
 
-    /* FIX: prevents messy overflow */
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 6;
@@ -185,26 +184,30 @@ input, textarea, button {
 }
 
 /* =========================
-   MOBILE FIX (IMPORTANT)
+   🔥 MOBILE FIX (CLEAN & SAFE)
 ========================= */
 @media screen and (max-width: 900px){
 
-    /* HEADER */
+    /* HEADER STAYS CLEAN */
     .header{
-        padding: 10px;
+        padding: 10px 15px;
     }
 
     .title{
         font-size: 22px;
     }
 
-    /* CATEGORY NAV FIX (NO CRUSHING) */
+    /* CATEGORY NAV SCROLL FIX */
     .category-nav {
         flex-wrap: nowrap;
         overflow-x: auto;
         justify-content: flex-start;
         gap: 8px;
         padding: 10px;
+    }
+
+    .category-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .category-nav a {
@@ -216,6 +219,7 @@ input, textarea, button {
     /* POST FIX */
     .post-card {
         flex-direction: column;
+        padding: 15px;
     }
 
     .post-card img {
@@ -229,6 +233,7 @@ input, textarea, button {
 
     form{
         padding-top: 150px;
+        max-width: 95%;
     }
 }
 
