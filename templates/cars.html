@@ -1,33 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motteck - Cars</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='cars.css') }}">
-</head>
-
-<body>
-
 <!-- ================= HEADER ================= -->
 <header class="header">
 
-    <!-- LOGO -->
     <h1 class="title">
         <a href="{{ url_for('home') }}">MOTTECK</a>
     </h1>
 
-    <!-- ACTIONS -->
     <div class="top-actions">
 
         <a href="{{ url_for('listings') }}" class="listings-btn">
             🚗 Listings
         </a>
 
-        <button class="menu-btn" onclick="toggleMenu()">
-            ☰
-        </button>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
     </div>
 
@@ -37,21 +21,23 @@
 <nav class="category-nav">
 
     <a href="{{ url_for('cars') }}" class="{% if active_page == 'cars'%}active{% endif %}">CARS</a>
-    <a href="{{ url_for('trucks') }}" class="{% if active_page == 'trucks'%}active{% endif %}">TRUCKS</a>
-    <a href="{{ url_for('motobikes') }}" class="{% if active_page == 'motobikes'%}active{% endif %}">BIKES</a>
-    <a href="{{ url_for('trains') }}" class="{% if active_page == 'trains'%}active{% endif %}">RAIL</a>
-    <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
-    <a href="{{ url_for('services') }}" class="{% if active_page == 'services'%}active{% endif %}">SERVICE</a>
+    <a href="{{ url_for('trucks') }}">TRUCKS</a>
+    <a href="{{ url_for('motobikes') }}">BIKES</a>
+    <a href="{{ url_for('trains') }}">RAIL</a>
+    <a href="{{ url_for('plane') }}">AVIATION</a>
+    <a href="{{ url_for('services') }}">SERVICES</a>
 
 </nav>
 
-<!-- ================= MOBILE MENU ================= -->
+<!-- ================= MOBILE MENU (HOME STYLE ONLY) ================= -->
 <div id="mobileMenu" class="mobile-menu">
+
     <a href="{{ url_for('home') }}">Home</a>
     <a href="{{ url_for('listings') }}">Listings</a>
-    <a href="{{ url_for('cars') }}">Cars</a>
-    <a href="{{ url_for('trucks') }}">Trucks</a>
     <a href="{{ url_for('services') }}">Services</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+
 </div>
 
 <!-- ================= MAIN ================= -->
@@ -73,10 +59,9 @@
     </form>
     {% endif %}
 
-    <!-- TITLE -->
     <h2 class="section-title">CARS</h2>
 
-    <!-- 🔍 SEARCH (CLEAN - ONLY CARS INSIDE) -->
+    <!-- SEARCH (CENTERED, CONTROLLED WIDTH - FIX LATER IN CSS) -->
     <div class="category-search">
         <input type="text" id="carSearch" placeholder="Search cars...">
     </div>
@@ -90,13 +75,12 @@
 <script>
 function toggleMenu() {
     const menu = document.getElementById("mobileMenu");
-
     if (!menu) return;
 
     menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
 }
 
-/* close menu when clicking outside */
+/* close when clicking outside */
 document.addEventListener("click", function (e) {
     const menu = document.getElementById("mobileMenu");
     const btn = document.querySelector(".menu-btn");
@@ -110,6 +94,3 @@ document.addEventListener("click", function (e) {
 </script>
 
 <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
-
-</body>
-</html>
