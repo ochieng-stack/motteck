@@ -8,11 +8,12 @@
 body {
     width: 100%;
     overflow-x: hidden;
-    background: #f5f5f5;
+    margin: 0 auto;
+    max-width: 100%;
 }
 
 /* =========================
-   NAVBAR (DESKTOP + BASE)
+   NAVBAR
 ========================= */
 
 .site-header {
@@ -28,7 +29,7 @@ body {
     z-index: 1000;
 }
 
-/* LEFT LOGO */
+/* LEFT */
 .nav-left .logo {
     color: white;
     font-size: 22px;
@@ -36,7 +37,7 @@ body {
     text-decoration: none;
 }
 
-/* CENTER SEARCH (DESKTOP ONLY) */
+/* CENTER SEARCH (DESKTOP) */
 .nav-center input {
     width: 320px;
     padding: 8px 12px;
@@ -82,7 +83,7 @@ body {
     top: 60px;
     right: 10px;
     background: #111;
-    width: 220px;
+    width: 200px;
     border-radius: 8px;
     z-index: 2000;
 }
@@ -99,7 +100,7 @@ body {
 }
 
 /* =========================
-   BROWSING SECTION
+   BROWSING
 ========================= */
 
 .pagetwo{
@@ -115,19 +116,18 @@ body {
 
 .unlisttwo {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
     align-items: center;
-    list-style: none;
-    justify-content: center;
+    list-style-type: none;
+    justify-content: space-evenly;
     padding-top: 20px;
 }
 
 .linkup{
     display: inline-block;
     position: relative;
+    overflow: hidden;
     color: rgb(2,2,2);
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 500;
     text-decoration: none;
     padding: 10px 20px;
@@ -167,11 +167,10 @@ input, textarea, button {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 10px;
 }
 
 /* =========================
-   CARD (FIXED DESKTOP + MOBILE)
+   POST CARD (DESKTOP)
 ========================= */
 
 .post-card {
@@ -185,7 +184,6 @@ input, textarea, button {
     overflow: hidden;
 }
 
-/* IMAGE */
 .post-card img {
     width: 240px;
     height: 170px;
@@ -194,7 +192,6 @@ input, textarea, button {
     flex-shrink: 0;
 }
 
-/* CONTENT */
 .post-content {
     flex: 1;
     display: flex;
@@ -202,24 +199,22 @@ input, textarea, button {
     gap: 8px;
 }
 
-/* TITLE */
 .post-title{
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
     color: black;
 }
 
 /* =========================
-   TEXT FIX (IMPORTANT)
+   TEXT FIX
 ========================= */
 
 .post-text {
-    font-size: 15px;
+    font-size: 16px;
     color: #444;
     line-height: 1.6;
 }
 
-/* paragraph spacing */
 .post-text p {
     margin-bottom: 10px;
 }
@@ -267,12 +262,27 @@ input, textarea, button {
 }
 
 /* =========================
-   RESPONSIVE FIX (MOBILE CORE ISSUE FIX)
+   🔥 MOBILE FIX (FULL SYSTEM)
 ========================= */
 
 @media screen and (max-width: 900px){
 
-    /* SHOW SEARCH AGAIN (FIX YOUR ISSUE) */
+    /* NAVBAR STACK FIX */
+    .site-header {
+        flex-wrap: wrap;
+        padding: 10px;
+    }
+
+    .nav-left {
+        width: 60%;
+    }
+
+    .nav-right {
+        width: 40%;
+        justify-content: flex-end;
+    }
+
+    /* 🔍 SEARCH NOW VISIBLE ON MOBILE */
     .nav-center {
         display: block;
         width: 100%;
@@ -281,21 +291,23 @@ input, textarea, button {
 
     .nav-center input {
         width: 100%;
+        font-size: 14px;
     }
 
-    /* STACK NAVBAR PROPERLY */
-    .site-header {
-        flex-direction: column;
-        align-items: flex-start;
+    /* BROWSING WRAP FIX */
+    .unlisttwo {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        padding: 10px;
     }
 
-    .nav-right {
-        width: 100%;
-        justify-content: space-between;
-        margin-top: 10px;
+    .linkup {
+        font-size: 14px;
+        padding: 8px 12px;
     }
 
-    /* FIX POST CARD MOBILE */
+    /* CARD FIX */
     .post-card {
         flex-direction: column;
         width: 100%;
@@ -303,36 +315,19 @@ input, textarea, button {
 
     .post-card img {
         width: 100%;
-        height: auto;
+        height: 200px;
     }
 
-    /* REMOVE SIDE SPACE ISSUE */
-    .post-container {
-        padding: 10px;
-    }
-
-    body {
-        overflow-x: hidden;
-    }
-}
-
-/* SMALL PHONES */
-@media screen and (max-width: 600px){
-
-    .nav-left .logo {
-        font-size: 18px;
-    }
-
-    .linkup{
-        font-size: 14px;
-        padding: 8px 14px;
-    }
-
-    .post-title {
-        font-size: 18px;
+    .post-content {
+        width: 100%;
     }
 
     .post-text {
-        font-size: 14px;
+        font-size: 15px;
+    }
+
+    /* REMOVE MOBILE OVERFLOW ISSUES */
+    body {
+        overflow-x: hidden;
     }
 }
