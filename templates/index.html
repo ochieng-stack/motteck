@@ -14,44 +14,29 @@
 <!-- ================= NAVBAR ================= -->
 <header class="site-header">
 
-    <!-- LEFT: LOGO -->
     <div class="nav-left">
-        <a href="{{ url_for('home') }}" class="logo">
-            🏠 MOTTECK
-        </a>
+        <a href="{{ url_for('home') }}" class="logo">🏠 MOTTECK</a>
     </div>
 
-    <!-- CENTER: SEARCH -->
     <div class="nav-center">
         <input type="text" id="searchInput" placeholder="Search cars, trucks, guides...">
     </div>
 
-    <!-- RIGHT: LINKS -->
     <div class="nav-right">
-
-        <a href="/listings" class="nav-link highlight">
-            🚗 Listings
-        </a>
-
-        <button class="menu-btn" onclick="toggleMenu()">
-            ☰
-        </button>
-
+        <a href="/listings" class="nav-link highlight">🚗 Listings</a>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
     </div>
 
 </header>
 
 <!-- MOBILE MENU -->
 <div id="mobileMenu" class="mobile-menu">
-
     <a href="{{ url_for('home') }}">Home</a>
     <a href="/listings">Listings</a>
     <a href="{{ url_for('services') }}">Services</a>
     <a href="{{ url_for('about') }}">About</a>
     <a href="{{ url_for('contact') }}">Contact</a>
-
 </div>
-
 
 <!-- ================= BROWSING ================= -->
 <section class="pagetwo">
@@ -66,13 +51,11 @@
     </ul>
 </section>
 
-
 <!-- ================= TRENDING ================= -->
 <section class="pagethree">
     <h2 class="brows">🔥 Trending Posts</h2>
     <div id="trending-posts" class="post-container"></div>
 </section>
-
 
 <!-- ================= RECENT ================= -->
 <section class="pagethree">
@@ -80,25 +63,19 @@
     <div id="recent-posts" class="post-container"></div>
 </section>
 
-
 <!-- ================= SCRIPTS ================= -->
 <script>
+
+/* ================= MENU ================= */
 function toggleMenu() {
     const menu = document.getElementById("mobileMenu");
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
-/* Search ready hook (we connect later) */
-document.getElementById("searchInput")?.addEventListener("input", function(e) {
-    console.log("Search:", e.target.value);
-});
-</script>
-
-
-<script>
+/* ================= CONFIG ================= */
 const LIMIT = 300;
 
-/* FORMAT TEXT */
+/* ================= FORMAT TEXT ================= */
 function formatText(text) {
     if (!text) return "";
 
@@ -109,38 +86,45 @@ function formatText(text) {
         .join('');
 }
 
-/* SEE MORE */
+/* ================= SEE MORE ================= */
 function setupSeeMoreButtons() {
     document.querySelectorAll('.post-card').forEach(card => {
+
         const btn = card.querySelector('.see-more-btn');
         const textEl = card.querySelector('.post-text');
 
         if (!btn || !textEl) return;
 
-        const fullHTML = textEl.innerHTML;
-        const plainText = textEl.innerText;
+        if (!textEl.dataset.fullText) {
+            textEl.dataset.fullText = textEl.innerText.trim();
+        }
 
-        if (plainText.length <= LIMIT) {
+        const fullText = textEl.dataset.fullText;
+
+        if (fullText.length <= LIMIT) {
             btn.style.display = "none";
             return;
         }
 
-        const shortText = plainText.slice(0, LIMIT) + "...";
+        const shortText = fullText.slice(0, LIMIT) + "...";
         let expanded = false;
 
-        textEl.innerHTML = `<p>${shortText}</p>`;
+        textEl.innerText = shortText;
 
         btn.addEventListener("click", (e) => {
+            e.preventDefault();
             e.stopPropagation();
+
             expanded = !expanded;
-            textEl.innerHTML = expanded ? fullHTML : `<p>${shortText}</p>`;
+            textEl.innerText = expanded ? fullText : shortText;
             btn.textContent = expanded ? "See Less" : "See More";
         });
     });
 }
 
-/* CARD */
+/* ================= POST CARD ================= */
 function createPostCard(post) {
+
     let image = post.image || post.image_url || "/static/images/default.jpg";
     if (!image.startsWith("http")) image = "/static/" + image;
 
@@ -153,7 +137,7 @@ function createPostCard(post) {
 
             <div class="post-content">
 
-                <a href="/post/${post.id}" class="post-link">
+                <a href="/post/${post.id}">
                     <h3 class="post-title">${post.title}</h3>
                 </a>
 
@@ -179,8 +163,27 @@ function createPostCard(post) {
     `;
 }
 
-/* LIKE */
+/* ================= INIT FEATURES ================= */
+function initPostFeatures() {
+
+    setupSeeMoreButtons();
+
+    document.querySelectorAll(".post-card").forEach(card => {
+        const likeBtn = card.querySelector("button[id^='like-btn-']");
+        if (!likeBtn) return;
+
+        const postId = likeBtn.id.replace("like-btn-", "");
+        const key = `liked-${postId}`;
+
+        if (localStorage.getItem(key)) {
+            likeBtn.style.backgroundColor = "#d6eefd";
+        }
+    });
+}
+
+/* ================= LIKE ================= */
 function likePost(postId) {
+
     const key = `liked-${postId}`;
 
     if (localStorage.getItem(key)) {
@@ -198,7 +201,7 @@ function likePost(postId) {
         });
 }
 
-/* VIEW */
+/* ================= VIEW ================= */
 function incrementView(postId) {
     fetch(`/view/${postId}`, { method: "POST" })
         .then(res => res.json())
@@ -210,9 +213,11 @@ function incrementView(postId) {
         });
 }
 
-/* LOAD */
+/* ================= LOAD HOME ================= */
 async function loadHomePosts() {
+
     try {
+
         const res = await fetch("/get_home_posts");
         const data = await res.json();
 
@@ -237,12 +242,13 @@ async function loadHomePosts() {
         initPostFeatures();
 
     } catch (err) {
-        console.error(err);
+        console.error("Home load error:", err);
     }
 }
 
-/* INIT */
+/* ================= START ================= */
 document.addEventListener("DOMContentLoaded", loadHomePosts);
+
 </script>
 
 </body>
