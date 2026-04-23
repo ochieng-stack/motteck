@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motteck - Cars</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='cars.css') }}">
+</head>
+
+<body>
+
 <!-- ================= HEADER ================= -->
 <header class="header">
 
@@ -29,7 +41,7 @@
 
 </nav>
 
-<!-- ================= MOBILE MENU (HOME STYLE ONLY) ================= -->
+<!-- ================= MOBILE MENU ================= -->
 <div id="mobileMenu" class="mobile-menu">
 
     <a href="{{ url_for('home') }}">Home</a>
@@ -40,11 +52,12 @@
 
 </div>
 
-<!-- ================= MAIN ================= -->
+<!-- ================= MAIN CONTENT ================= -->
 <section class="main-section">
 
+    <!-- POST FORM -->
     {% if logged_in %}
-    <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data" class="post-form">
+    <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data">
 
         <input type="hidden" name="category" value="car">
 
@@ -59,9 +72,10 @@
     </form>
     {% endif %}
 
+    <!-- SECTION TITLE -->
     <h2 class="section-title">CARS</h2>
 
-    <!-- SEARCH (CENTERED, CONTROLLED WIDTH - FIX LATER IN CSS) -->
+    <!-- SEARCH BAR (INSIDE SECTION ONLY) -->
     <div class="category-search">
         <input type="text" id="carSearch" placeholder="Search cars...">
     </div>
@@ -73,24 +87,125 @@
 
 <!-- ================= JS ================= -->
 <script>
-function toggleMenu() {
+function toggleMenu(){
     const menu = document.getElementById("mobileMenu");
-    if (!menu) return;
 
-    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    if(!menu) return;
+
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
-/* close when clicking outside */
-document.addEventListener("click", function (e) {
+document.addEventListener("click", function(e){
     const menu = document.getElementById("mobileMenu");
     const btn = document.querySelector(".menu-btn");
 
-    if (!menu || !btn) return;
+    if(!menu || !btn) return;
 
-    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+    if(!menu.contains(e.target) && !btn.contains(e.target)){
         menu.style.display = "none";
     }
 });
 </script>
 
 <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
+
+<script>
+const category = 'car';
+const container = document.getElementById('carPost');
+
+function formatParagraphs(text){
+    return text
+        .split('\n')
+        .filter(line => line.trim() !== '')
+        .map(line => `<p>${line}</p>`)
+        .join('');
+}
+
+function getPostBycategory(category){
+    return fetch('/get_posts?t=' + new Date().getTime())
+    .then(res => res.json())
+    .then(posts => posts.filter(p => p.category === category))
+    .catch(() => []);
+}
+
+function showPosts(){
+    getPostBycategory(category).then(posts => {
+
+        container.innerHTML = '';
+
+        if(!posts || posts.length === 0){
+            container.innerHTML = `<p>No posts found.</p>`;
+            return;
+        }
+
+        posts.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+        posts.forEach(post => {
+
+            const card = document.createElement('div');
+            card.classList.add('post-card');
+
+            const formattedText = formatParagraphs(post.description);
+
+            card.innerHTML = `
+                <a href="/post/${post.id}">
+                    <img src="${post.image_url}">
+                </a>
+
+                <div class="post-content">
+
+                    <h3 class="post-title">${post.title}</h3>
+
+                    <div class="post-text">${formattedText}</div>
+
+                    <div class="post-actions">
+
+                        <button class="like-btn" id="like-${post.id}">
+                            Like (<span id="count-${post.id}">${post.likes || 0}</span>)
+                        </button>
+
+                        {% if logged_in %}
+                        <button class="delete-btn">Delete</button>
+                        {% endif %}
+
+                        <button class="see-more-btn">See more</button>
+
+                    </div>
+
+                </div>
+            `;
+
+            // like
+            card.querySelector(`#like-${post.id}`).onclick = () => likePost(post.id);
+
+            // delete
+            const del = card.querySelector(".delete-btn");
+            if(del){
+                del.onclick = () => deletePost(post.id);
+            }
+
+            container.appendChild(card);
+        });
+    });
+}
+
+function likePost(id){
+    fetch(`/like/${id}`, {method:'POST'})
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById(`count-${id}`).textContent = data.likes;
+    });
+}
+
+function deletePost(id){
+    if(!confirm("Delete?")) return;
+
+    fetch(`/delete_post/${id}`, {method:'DELETE'})
+    .then(() => location.reload());
+}
+
+showPosts();
+</script>
+
+</body>
+</html>
