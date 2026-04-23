@@ -12,7 +12,7 @@ body {
 }
 
 /* =========================
-   NAVBAR
+   NAVBAR (DESKTOP STRONG)
 ========================= */
 
 .site-header {
@@ -24,44 +24,51 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 10px 18px;
+    padding: 14px 30px; /* 🔥 bigger for desktop */
     z-index: 1000;
 }
 
 /* LEFT */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .nav-left .logo {
     color: white;
-    font-size: 22px;
+    font-size: 24px; /* 🔥 increased */
     font-weight: bold;
     text-decoration: none;
 }
 
 /* SEARCH (DESKTOP) */
 .nav-center input {
-    width: 320px;
-    padding: 8px 12px;
+    width: 360px; /* 🔥 wider */
+    padding: 10px 14px;
     border-radius: 20px;
     border: none;
     outline: none;
+    font-size: 15px;
 }
 
 /* RIGHT */
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .nav-link {
     color: beige;
     text-decoration: none;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
 }
 
 .highlight {
     background: #2196f3;
-    padding: 6px 10px;
+    padding: 8px 12px;
     border-radius: 6px;
     color: white;
 }
@@ -70,7 +77,7 @@ body {
     background: none;
     border: none;
     color: white;
-    font-size: 22px;
+    font-size: 24px;
     cursor: pointer;
 }
 
@@ -79,7 +86,7 @@ body {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 60px;
+    top: 65px;
     right: 10px;
     background: #111;
     width: 200px;
@@ -94,31 +101,27 @@ body {
     border-bottom: 1px solid #222;
 }
 
-.mobile-menu a:hover {
-    background: #2196f3;
-}
-
 /* =========================
    BROWSING
 ========================= */
 
 .pagetwo{
-    padding-top: 90px;
+    padding-top: 110px; /* adjust for bigger navbar */
 }
 
 .brows {
     display:flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 22px;
 }
 
 .unlisttwo {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     list-style: none;
     justify-content: center;
-    padding: 15px 10px;
+    padding: 20px 10px;
 }
 
 .linkup{
@@ -126,7 +129,7 @@ body {
     font-size: 18px;
     font-weight: 500;
     text-decoration: none;
-    padding: 8px 16px;
+    padding: 10px 18px;
     border: 2px solid #2196f3;
     border-radius: 20px;
     transition: 0.3s;
@@ -145,42 +148,46 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 10px;
+    padding: 20px;
 }
 
+/* CARD */
 .post-card {
     display: flex;
     align-items: flex-start;
-    gap: 15px;
+    gap: 20px; /* 🔥 better spacing */
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    padding: 20px;
 }
 
+/* IMAGE */
 .post-card img {
-    width: 240px;
-    height: 170px;
+    width: 280px; /* 🔥 bigger */
+    height: 180px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
+/* CONTENT */
 .post-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
+/* TITLE */
 .post-title{
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
     color: black;
 }
 
 /* TEXT */
 .post-text {
-    font-size: 15px;
+    font-size: 16px;
     color: #444;
     line-height: 1.6;
 }
@@ -193,7 +200,7 @@ body {
 .like-btn {
     background: #2196f3;
     color: white;
-    padding: 6px 12px;
+    padding: 7px 14px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -206,7 +213,7 @@ body {
 .delete-btn,
 .see-more-btn {
     margin-right: 8px;
-    padding: 6px 10px;
+    padding: 6px 12px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -228,16 +235,14 @@ body {
 }
 
 /* =========================
-   🔥 MOBILE FIX (FINAL CLEAN VERSION)
+   🔥 MOBILE FIX (CLEAN)
 ========================= */
 
 @media screen and (max-width: 900px){
 
-    /* NAVBAR: SINGLE LINE */
+    /* NAVBAR */
     .site-header {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
+        flex-wrap: wrap;
         padding: 10px;
     }
 
@@ -249,25 +254,26 @@ body {
         gap: 8px;
     }
 
-    /* SEARCH BELOW NAVBAR (NOT FULL WIDTH) */
+    /* SEARCH BELOW */
     .nav-center {
+        width: 100%;
         display: flex;
         justify-content: center;
-        margin-top: 60px;
-        padding: 8px 0;
+        margin-top: 8px;
     }
 
     .nav-center input {
-        width: 80%;
-        max-width: 300px;
+        width: 75%;
+        max-width: 260px;
         font-size: 14px;
     }
 
-    /* CATEGORY: SCROLL IN ONE LINE */
+    /* CATEGORY SCROLL */
     .unlisttwo {
         flex-wrap: nowrap;
         overflow-x: auto;
         justify-content: flex-start;
+        gap: 10px;
     }
 
     .unlisttwo::-webkit-scrollbar {
@@ -279,7 +285,7 @@ body {
         font-size: 14px;
     }
 
-    /* CARD FIX */
+    /* CARDS */
     .post-card {
         flex-direction: column;
     }
