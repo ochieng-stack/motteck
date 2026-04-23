@@ -13,7 +13,7 @@ body {
 }
 
 /* =========================
-   NAVBAR (UPDATED SYSTEM)
+   NAVBAR (UNCHANGED - WORKING)
 ========================= */
 
 .site-header {
@@ -29,15 +29,13 @@ body {
     z-index: 1000;
 }
 
-/* LEFT - LOGO */
 .nav-left .logo {
-    color: rgb(255, 255, 255);
+    color: white;
     font-size: 22px;
     font-weight: bold;
     text-decoration: none;
 }
 
-/* CENTER - SEARCH */
 .nav-center input {
     width: 320px;
     padding: 8px 12px;
@@ -46,14 +44,12 @@ body {
     outline: none;
 }
 
-/* RIGHT */
 .nav-right {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* LINKS */
 .nav-link {
     color: beige;
     text-decoration: none;
@@ -61,7 +57,6 @@ body {
     font-weight: bold;
 }
 
-/* LISTINGS BUTTON */
 .highlight {
     background: #2196f3;
     padding: 6px 10px;
@@ -69,7 +64,6 @@ body {
     color: white;
 }
 
-/* HAMBURGER BUTTON */
 .menu-btn {
     background: none;
     border: none;
@@ -78,7 +72,6 @@ body {
     cursor: pointer;
 }
 
-/* MOBILE MENU */
 .mobile-menu {
     display: none;
     flex-direction: column;
@@ -100,70 +93,6 @@ body {
 
 .mobile-menu a:hover {
     background: #2196f3;
-}
-
-/* =========================
-   OLD HEADER (REMOVED STYLE SAFETY)
-   (kept only for fallback compatibility)
-========================= */
-
-.header{
-    display: flex;
-    justify-content: space-between;
-    background: rgb(16, 17, 19);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
-
-/* =========================
-   TITLE (LEGACY SUPPORT)
-========================= */
-
-.title{
-    font-weight: 600;
-    font-size: 60px;
-    color: rgb(255, 255, 255);
-}
-
-/* =========================
-   NAV OLD (SAFE TO IGNORE NOW)
-========================= */
-
-.navbar{
-    padding-top: 20px;
-}
-
-.unlist li{
-    list-style: none;
-    display: inline-block;
-    margin: 0 20px;
-}
-
-.list {
-    position: relative;
-    color: beige;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px 18px;
-}
-
-.list::after{
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom:-8px;
-    width: 0;
-    height: 3px;
-    background-color: #2196f3;
-    transition: 0.5s ease;
-}
-
-a:hover::after {
-    width: 100%;
 }
 
 /* =========================
@@ -200,38 +129,17 @@ a:hover::after {
     padding: 10px 20px;
     border: 2px solid #2196f3;
     border-radius: 20px;
-    transition: color 0.3s ease, border 0.3s ease;
-}
-
-.linkup::before{
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 0;
-    height: 100%;
-    background-color: #2196f3;
-    z-index: -1;
-    transition: width 0.4s ease;
-    border-radius: 20px;
-}
-
-.linkup:hover::before {
-    width: 100%;
+    transition: 0.3s;
 }
 
 .linkup:hover{
+    background: #2196f3;
     color: white;
-    border: none;
 }
 
 /* =========================
-   FORM
+   FORMS
 ========================= */
-
-h2 {
-    text-align: center;
-}
 
 form {
     display: flex;
@@ -248,7 +156,7 @@ input, textarea, button {
 }
 
 /* =========================
-   POSTS
+   POST CONTAINER
 ========================= */
 
 .post-container {
@@ -257,39 +165,58 @@ input, textarea, button {
     gap: 20px;
 }
 
+/* =========================
+   CARD FIX (IMPORTANT PART)
+========================= */
+
 .post-card {
     display: flex;
     align-items: flex-start;
+    gap: 15px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 15px;
     overflow: hidden;
-    padding: 20px;
 }
 
+/* IMAGE FIX */
 .post-card img {
-    width: 30%;
-    height: auto;
-    margin-right: 20px;
+    width: 240px;
+    height: 170px;
+    object-fit: cover;
     border-radius: 8px;
+    flex-shrink: 0;
 }
 
+/* CONTENT FIX */
+.post-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* TITLE */
 .post-title{
     font-size: 22px;
     font-weight: bold;
-    margin-bottom: 10px;
     color: black;
 }
 
-.post-description{
+/* =========================
+   PARAGRAPH FIX (CRITICAL)
+========================= */
+
+.post-text {
     font-size: 16px;
     color: #444;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
-.post-category{
-    color: blue;
-    font-size: 20px;
+/* spacing inside paragraphs */
+.post-text p {
+    margin-bottom: 10px;
 }
 
 /* =========================
@@ -303,24 +230,31 @@ input, textarea, button {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 .like-btn:hover {
     background: #1976d2;
 }
 
-.like-btn.liked {
-    background-color: #1976d2;
-    color: white;
-}
-
-.delete-btn, .see-more-btn {
+.delete-btn,
+.see-more-btn {
     margin-right: 8px;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
+}
+
+/* SEE MORE FIX */
+.see-more-btn {
+    background: #f1f1f1;
+    color: #333;
+    transition: 0.3s;
+}
+
+.see-more-btn:hover {
+    background: #2196f3;
+    color: white;
 }
 
 .delete-btn{
@@ -328,22 +262,10 @@ input, textarea, button {
     color:white;
 }
 
-.see-more-btn:hover {
-    background-color: #0056b3;
-}
-
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media (max-width: 992px) {
-    header {
-        padding: 15px 25px;
-        width: 100%;
-    }
-}
-
-/* TABLET + MOBILE */
 @media screen and (max-width: 900px){
 
     .nav-center {
@@ -352,23 +274,10 @@ input, textarea, button {
 
     .post-card {
         flex-direction: column;
-        width: 95%;
     }
 
     .post-card img {
         width: 100%;
-    }
-}
-
-/* SMALL PHONES */
-@media screen and (max-width: 600px){
-    .title h1 {
-        font-size: 20px;
-    }
-}
-
-@media screen and (max-width: 400px){
-    .linkup{
-        font-size: 8px;
+        height: auto;
     }
 }
