@@ -1,5 +1,4 @@
-from flask import Flask, render_template,request, redirect, url_for, session, flash
-from flask import Flask, jsonify, request
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 import smtplib
 import time
 from dotenv import load_dotenv
@@ -33,6 +32,12 @@ cloudinary.config(
     api_key=os.environ.get("CLOUDINARY_API_KEY"),
     api_secret=os.environ.get("CLOUDINARY_API_SECRET")
 )
+# gmail
+GMAIL_USER = os.environ.get("GMAIL_USER")
+GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD")
+
+if not GMAIL_USER or not GMAIL_APP_PASSWORD:
+    print("⚠️ Gmail env variables missing!")
 
 #supabase setup
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
@@ -98,6 +103,10 @@ def privacy():
 @app.route('/terms')
 def terms():
     return render_template('terms.html')
+    
+@app.route('/listings')
+def listings():
+    return render_template('listings.html')   
 
 
 # Admin login page
