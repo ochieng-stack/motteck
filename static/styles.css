@@ -233,25 +233,48 @@ body {
     background-color: red;
     color:white;
 }
-
 /* =========================
-   🔥 MOBILE FIX (CLEAN)
+   🔥 MOBILE FINAL (CLEAN + STABLE)
 ========================= */
 
 @media screen and (max-width: 900px){
 
-    /* NAVBAR */
+    /* NAVBAR STRUCTURE */
     .site-header {
+        display: flex;
         flex-wrap: wrap;
-        padding: 10px;
+        align-items: center;
+        padding: 10px 12px;
+    }
+
+    /* LEFT: HOME + LOGO */
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        order: 1;
     }
 
     .nav-left .logo {
         font-size: 18px;
     }
 
+    /* RIGHT: LISTING + MENU */
     .nav-right {
-        gap: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto; /* pushes right side */
+        order: 2;
+    }
+
+    .highlight {
+        padding: 5px 8px;
+        font-size: 13px;
+    }
+
+    .menu-btn {
+        font-size: 20px;
     }
 
     /* SEARCH BELOW */
@@ -259,33 +282,42 @@ body {
         width: 100%;
         display: flex;
         justify-content: center;
-        margin-top: 8px;
+        margin-top: 6px;
+        order: 3;
     }
 
     .nav-center input {
-        width: 75%;
-        max-width: 260px;
-        font-size: 14px;
+        width: 70%;
+        max-width: 240px;
+        font-size: 13px;
+        padding: 6px 10px;
     }
 
-    /* CATEGORY SCROLL */
+    /* =========================
+       BROWSING FIX (FIT SCREEN)
+    ========================= */
+
     .unlisttwo {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 10px 5px;
         flex-wrap: nowrap;
-        overflow-x: auto;
-        justify-content: flex-start;
-        gap: 10px;
-    }
-
-    .unlisttwo::-webkit-scrollbar {
-        display: none;
     }
 
     .linkup {
+        font-size: 11px;       /* 🔥 key fix */
+        padding: 6px 8px;      /* 🔥 smaller buttons */
+        border-radius: 15px;
         white-space: nowrap;
-        font-size: 14px;
+        flex: 1;               /* 🔥 makes them fit evenly */
+        text-align: center;
     }
 
-    /* CARDS */
+    /* =========================
+       CARDS
+    ========================= */
+
     .post-card {
         flex-direction: column;
     }
