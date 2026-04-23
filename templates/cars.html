@@ -9,22 +9,51 @@
 <body>
 
 <header>
+
+    <!-- TOP BAR -->
     <div class="header">
+
+        <!-- LOGO -->
         <h1 class="title">
             <a href="{{ url_for('home') }}">MOTTECK</a>
         </h1>
+
+        <!-- RIGHT SIDE ACTIONS (LISTINGS + HAMBURGER) -->
+        <div class="top-actions">
+
+            <a href="{{ url_for('listings') }}" class="listings-btn">
+                LISTINGS
+            </a>
+
+            <!-- HAMBURGER (FOR MOBILE MENU) -->
+            <button class="menu-btn" onclick="toggleMenu()">
+                ☰
+            </button>
+
+        </div>
+
     </div>
 
+    <!-- CATEGORY NAV -->
     <nav class="category-nav">
-        <a href="{{ url_for('cars') }}" class="{% if active_page == 'cars'%} active{% endif %}">CARS</a>
-        <a href="{{ url_for('trucks') }}" class="{% if active_page == 'trucks'%} active{% endif %}">TRUCKS</a>
-        <a href="{{ url_for('motobikes') }}" class="{% if active_page == 'motobikes'%} active{% endif %}">MOTORBIKE</a>
-        <a href="{{ url_for('trains') }}" class="{% if active_page == 'trains'%} active{% endif %}">TRAIN</a>
-        <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%} active{% endif %}">PLANE</a>
-        <a href="{{ url_for('services') }}" class="{% if active_page == 'services'%} active{% endif %}">SERVICES</a>
+
+        <a href="{{ url_for('cars') }}" class="{% if active_page == 'cars'%}active{% endif %}">CARS</a>
+
+        <a href="{{ url_for('trucks') }}" class="{% if active_page == 'trucks'%}active{% endif %}">TRUCKS</a>
+
+        <a href="{{ url_for('motobikes') }}" class="{% if active_page == 'motobikes'%}active{% endif %}">BIKES</a>
+
+        <a href="{{ url_for('trains') }}" class="{% if active_page == 'trains'%}active{% endif %}">RAIL</a>
+
+        <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
+
+        <a href="{{ url_for('services') }}" class="{% if active_page == 'services'%}active{% endif %}">SERVICE</a>
+
     </nav>
+
 </header>
 
+<!-- ================= MAIN CONTENT ================= -->
 <section class="main-section">
 
     {% if logged_in %}
@@ -37,9 +66,16 @@
     </form>
     {% endif %}
 
-    <h2 class="section-title">CAR</h2>
+    <h2 class="section-title">CARS</h2>
 
+    <!-- 🔍 SEARCH (NOW TOP OF CONTENT) -->
+    <div class="category-search">
+        <input type="text" id="carSearch" placeholder="Search cars...">
+    </div>
+
+    <!-- POSTS -->
     <div id="carPost" class="post-container"></div>
+
 </section>
 
 <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
