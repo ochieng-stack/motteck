@@ -101,30 +101,29 @@ function showPosts(){
 
             const formattedText = formatParagraphs(post.description);
 
-            const card = document.createElement('a');
-            card.href = `/post/${post.id}`;
+            const card = document.createElement('div');
             card.classList.add('post-card');
 
             card.innerHTML = `
+            <a href="/post/${post.id}">
                 <img src="${post.image_url}" class="post-image">
-                <div class="post-content">
+            </a>
+            <div class="post-content">
+                <a href="/post/${post.id}" class="post-link">
                     <h3 class="post-title">${post.title}</h3>
-
-                    <div class="post-text">${formattedText}</div>
-
-                    <div class="post-actions">
-                        <button id="like-btn-${post.id}" class="like-btn">
-                            Like (<span id="like-count-${post.id}">${post.likes || 0}</span>)
-                        </button>
-
-                        {% if logged_in %}
-                        <button class="delete-btn">Delete</button>
-                        {% endif %}
-
-                        <button class="see-more-btn">See more</button>
-                    </div>
+                </a>
+                <div class="post-text">${formattedText}</div>
+                <div class="post-actions">
+                    <button id="like-btn-${post.id}" class="like-btn">
+                        Like (<span id="like-count-${post.id}">${post.likes || 0}</span>)
+                    </button>
+                    {% if logged_in %}
+                    <button class="delete-btn">Delete</button>
+                    {% endif %}
+                    <button class="see-more-btn">See more</button>
                 </div>
-            `;
+            </div>
+        `;
 
             // Stop click from opening post
             card.querySelectorAll("button").forEach(btn => {
