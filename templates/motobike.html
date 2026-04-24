@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motteck - plane</title>
+    <title>Motteck - motobike</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='plane.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='motobike.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
@@ -46,8 +46,8 @@
 
     {% if logged_in %}
     <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data">
-        <input type="hidden" name="category" value="plane">
-        <input type="text" name="title" placeholder="plane Title" required>
+        <input type="hidden" name="category" value="motobike">
+        <input type="text" name="title" placeholder="motobike Title" required>
         <input type="file" name="image" accept="image/*" required>
         <textarea name="description" placeholder="Write your post..." required></textarea>
         <button type="submit">Publish Post</button>
@@ -56,11 +56,11 @@
 
     <!-- SEARCH -->
     <div class="category-search">
-        <input class="search-input" type="text" id="planeSearch" placeholder="Search plane...">
+        <input class="search-input" type="text" id="motobikeSearch" placeholder="Search bikes...">
     </div>
 
     <!-- POSTS -->
-    <div id="planePost" class="post-container"></div>
+    <div id="motobikePost" class="post-container"></div>
 
 </section>
 
@@ -89,9 +89,9 @@
 <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
 
 <script>
-const category = 'plane';
-const container = document.getElementById('planePost');
-const searchInput = document.getElementById('planeSearch');
+const category = 'motobike';
+const container = document.getElementById('motobikePost');
+const searchInput = document.getElementById('motobikeSearch');
 
 let allPosts = [];
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ post.title }} | Motteck</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='cars.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='car.css', filename='motobike.css', filename='plane.css', filename='truck.css', filename='service.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
     <style>
@@ -89,26 +89,36 @@
 
 <body>
 
-<!-- HEADER -->
-<header>
-    <div class="header">
-        <h1 class="title">
-            <a href="{{ url_for('home') }}" style="text-decoration:none; color:inherit;">
-                <i>MOTTECK</i>
-            </a>
-        </h1>
+<!-- ================= HEADER ================= -->
+<header class="header">
+
+    <h1 class="title">
+        <a href="{{ url_for('home') }}">MOTTECK</a>
+    </h1>
+
+    <div class="top-actions">
+        <!-- ✅ removed onclick -->
+        <button class="menu-btn">☰</button>
     </div>
 
-    <!-- CATEGORY NAV -->
-    <nav class="category-nav">
-        <a href="{{ url_for('cars') }}">CARS</a>
-        <a href="{{ url_for('trucks') }}">TRUCKS</a>
-        <a href="{{ url_for('motobikes') }}">MOTOBIKE</a>
-        <a href="{{ url_for('plane') }}">PLANE</a>
-        <a href="{{ url_for('services') }}">SERVICES</a>
-    </nav>
 </header>
 
+<!-- ================= CATEGORY NAV ================= -->
+<nav class="category-nav">
+    <a href="{{ url_for('cars') }}" class="{% if active_page == 'cars'%}active{% endif %}">CARS</a>
+    <a href="{{ url_for('trucks') }}">TRUCKS</a>
+    <a href="{{ url_for('motobikes') }}">BIKES</a>
+    <a href="{{ url_for('plane') }}">AVIATION</a>
+    <a href="{{ url_for('services') }}">SERVICES</a>
+</nav>
+
+<!-- ================= MOBILE MENU ================= -->
+<div id="mobileMenu" class="mobile-menu">
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('services') }}">Services</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+</div>
 <!-- SINGLE POST -->
 <section class="post-container">
 
@@ -174,6 +184,25 @@
         <a href="{{ url_for('privacy') }}">Privacy Policy</a>
     </div>
 </footer>
+<script>
+/* ✅ FIXED HAMBURGER (WORKS DESKTOP + MOBILE) */
+const menuBtn = document.querySelector(".menu-btn");
+const menu = document.getElementById("mobileMenu");
+
+menuBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+});
+
+document.addEventListener("click", function(e){
+    if(!menu.contains(e.target) && !menuBtn.contains(e.target)){
+        menu.style.display = "none";
+    }
+});
+
+/* ================= CONFIG ================= */
+const LIMIT = 300;
+</script>
 
 </body>
 </html>
