@@ -76,7 +76,7 @@ def car():
     logged_in = session.get('logged_in', False)
     return render_template('car.html',logged_in=logged_in, active_page='car')
 
-@app.route('truck')
+@app.route('/truck')
 def truck():
     logged_in = session.get('logged_in', False)
     return render_template('truck.html',logged_in=logged_in, active_page='truck')
