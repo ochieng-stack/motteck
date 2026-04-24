@@ -18,7 +18,6 @@
                     <a href="{{ url_for('cars') }}" class="{% if active_page == 'cars'%} active{% endif %}">CARS</a>
                     <a href="{{ url_for('trucks') }}" class="{% if active_page == 'trucks'%} active{% endif %}">TRUCKS</a>
                     <a href="{{ url_for('motobikes') }}" class="{% if active_page == 'motobikes'%} active{% endif %}">MOTOBIKE</a>
-                    <a href="{{ url_for('trains') }}" class="{% if active_page == 'trains'%} active{% endif %}">TRAIN</a>
                     <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%} active{% endif %}">PLANE</a>
                     <a href="{{ url_for('services') }}" class="{% if active_page == 'services'%} active{% endif %}">SERVICES</a>
             </nav>
@@ -40,6 +39,26 @@
          <h2> plane </h2>
          <div id="carPost" class="post-container"></div>
     </section>
+    <footer class="footer">
+    <div class="footer-content">
+        <h2>INFO</h2>
+        <p>Follow us on all social media platforms</p>
+    </div>
+
+    <!-- SOCIAL ICONS -->
+    <ul class="list">
+        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+    </ul>
+
+    <!-- LEGAL LINKS -->
+    <div class="legal-links">
+        <a href="{{ url_for('terms') }}">Terms & Conditions</a>
+        <span>•</span>
+        <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+    </div>
+</footer>
     <script src="{{ url_for('static', filename='post-manager.js')}}"></script>
     <script>
         const category = 'plane';

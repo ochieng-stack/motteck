@@ -103,7 +103,6 @@
         <a href="{{ url_for('cars') }}">CARS</a>
         <a href="{{ url_for('trucks') }}">TRUCKS</a>
         <a href="{{ url_for('motobikes') }}">MOTOBIKE</a>
-        <a href="{{ url_for('trains') }}">TRAIN</a>
         <a href="{{ url_for('plane') }}">PLANE</a>
         <a href="{{ url_for('services') }}">SERVICES</a>
     </nav>
@@ -154,6 +153,26 @@
     </div>
 
 </section>
+<footer class="footer">
+    <div class="footer-content">
+        <h2>INFO</h2>
+        <p>Follow us on all social media platforms</p>
+    </div>
+
+    <!-- SOCIAL ICONS -->
+    <ul class="list">
+        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+    </ul>
+
+    <!-- LEGAL LINKS -->
+    <div class="legal-links">
+        <a href="{{ url_for('terms') }}">Terms & Conditions</a>
+        <span>•</span>
+        <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+    </div>
+</footer>
 
 </body>
 </html>
