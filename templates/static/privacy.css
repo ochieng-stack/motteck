@@ -1,0 +1,104 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f0f0f;
+    color: #eaeaea;
+}
+
+.page-header {
+    text-align: center;
+    padding: 30px;
+    background: #111;
+    border-bottom: 1px solid #222;
+}
+
+.content {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    line-height: 1.7;
+}
+
+h2 {
+    margin-top: 25px;
+    color: #ffffff;
+}
+
+a {
+    color: #4da3ff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+/* FOOTER */
+.footer {
+    background: #0f0f0f;
+    color: white;
+    text-align: center;
+    padding: 35px 15px;
+    border-top: 1px solid #222;
+}
+
+/* ICON CONTAINER */
+.list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 15px 0;
+    margin: 0;
+}
+
+/* ICON LINKS */
+.big {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+/* ICON STYLE */
+.big i {
+    font-size: 20px;
+    color: #ffffff;
+    transition: 0.3s ease;
+}
+
+/* HOVER EFFECT (IMPORTANT UPGRADE) */
+.big:hover {
+    background: blue;
+    transform: translateY(-5px);
+}
+
+.big:hover i {
+    color: white;
+}
+
+/* LEGAL LINKS */
+.legal-links {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.legal-links a {
+    color: #aaa;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: 0.3s;
+}
+
+.legal-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.legal-links span {
+    color: #444;
+}

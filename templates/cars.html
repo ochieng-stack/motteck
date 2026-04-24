@@ -19,7 +19,8 @@
     </h1>
 
     <div class="top-actions">
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <!-- ✅ removed onclick -->
+        <button class="menu-btn">☰</button>
     </div>
 
 </header>
@@ -63,20 +64,20 @@
     <div id="carPost" class="post-container"></div>
 
 </section>
+
+<!-- ================= FOOTER ================= -->
 <footer class="footer">
     <div class="footer-content">
         <h2>INFO</h2>
         <p>Follow us on all social media platforms</p>
     </div>
 
-    <!-- SOCIAL ICONS -->
     <ul class="list">
         <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
-        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a class="big" href="https://x.com/motteck254" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
         <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
     </ul>
 
-    <!-- LEGAL LINKS -->
     <div class="legal-links">
         <a href="{{ url_for('terms') }}">Terms & Conditions</a>
         <span>•</span>
@@ -94,10 +95,21 @@ const container = document.getElementById('carPost');
 const searchInput = document.getElementById('carSearch');
 
 let allPosts = [];
-function toggleMenu() {
-    const menu = document.getElementById("mobileMenu");
+
+/* ✅ FIXED HAMBURGER (WORKS DESKTOP + MOBILE) */
+const menuBtn = document.querySelector(".menu-btn");
+const menu = document.getElementById("mobileMenu");
+
+menuBtn.addEventListener("click", function(e){
+    e.stopPropagation();
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-}
+});
+
+document.addEventListener("click", function(e){
+    if(!menu.contains(e.target) && !menuBtn.contains(e.target)){
+        menu.style.display = "none";
+    }
+});
 
 /* ================= CONFIG ================= */
 const LIMIT = 300;
@@ -162,29 +174,25 @@ function renderPosts(posts){
             </div>
         `;
 
-        // prevent buttons triggering link
         card.querySelectorAll("button").forEach(btn => {
             btn.addEventListener("click", e => e.stopPropagation());
         });
 
-        // like
         card.querySelector(`#like-${post.id}`).onclick = () => likePost(post.id);
 
-        // delete
         const del = card.querySelector(".delete-btn");
         if(del){
             del.onclick = () => deletePost(post.id);
         }
 
-        // see more toggle
         const textDiv = card.querySelector(".post-text");
         const btn = card.querySelector(".see-more-btn");
 
         let expanded = false;
         const full = textDiv.innerHTML;
-        const short = textDiv.innerText.slice(0, 300) + "...";
+        const short = textDiv.innerText.slice(0, LIMIT) + "...";
 
-        if(textDiv.innerText.length > 300){
+        if(textDiv.innerText.length > LIMIT){
             textDiv.innerHTML = `<p>${short}</p>`;
 
             btn.onclick = () => {
@@ -207,7 +215,6 @@ function showPosts(){
     });
 }
 
-// SEARCH (THIS WAS MISSING BEFORE)
 searchInput.addEventListener("input", function(){
     const value = this.value.toLowerCase();
 
