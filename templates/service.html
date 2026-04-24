@@ -29,9 +29,9 @@
 <nav class="category-nav">
     <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
     <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
-    <a href="{{ url_for('motobikes') }}" class="{% if active_page == 'cars'%}active{% endif %}" >BIKE</a>
-    <a href="{{ url_for('plane') }}" class="{% if active_page == 'cars'%}active{% endif %}">AVIATION</a>
-    <a href="{{ url_for('services') }}" class="{% if active_page == 'cars'%}active{% endif %}">SERVICE</a>
+    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}" >BIKE</a>
+    <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
+    <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
 </nav>
 
 <!-- ================= MOBILE MENU ================= -->
@@ -47,7 +47,7 @@
 
     {% if logged_in %}
     <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data">
-        <input type="hidden" name="category" value="service>
+        <input type="hidden" name="category" value="service">
         <input type="text" name="title" placeholder="service Title" required>
         <input type="file" name="image" accept="image/*" required>
         <textarea name="description" placeholder="Write your post..." required></textarea>
@@ -79,7 +79,7 @@
     </ul>
 
     <div class="legal-links">
-        <a href="{{ url_for('terms') }}">Terms & Conditions</a>
+        <a href="{{ url_for('term') }}">Terms & Conditions</a>
         <span>•</span>
         <a href="{{ url_for('privacy') }}">Privacy Policy</a>
     </div>

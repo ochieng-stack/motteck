@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motteck - Cars</title>
+    <title>Motteck - Car</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='cars.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='car.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
@@ -27,17 +27,17 @@
 
 <!-- ================= CATEGORY NAV ================= -->
 <nav class="category-nav">
-    <a href="{{ url_for('cars') }}" class="{% if active_page == 'cars'%}active{% endif %}">CARS</a>
-    <a href="{{ url_for('trucks') }}">TRUCKS</a>
-    <a href="{{ url_for('motobikes') }}">BIKES</a>
-    <a href="{{ url_for('plane') }}">AVIATION</a>
-    <a href="{{ url_for('services') }}">SERVICES</a>
+    <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
+    <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
+    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}" >BIKES</a>
+    <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
+    <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
 </nav>
 
 <!-- ================= MOBILE MENU ================= -->
 <div id="mobileMenu" class="mobile-menu">
     <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('services') }}">Services</a>
+    <a href="{{ url_for('service') }}">Service</a>
     <a href="{{ url_for('about') }}">About</a>
     <a href="{{ url_for('contact') }}">Contact</a>
 </div>
@@ -79,7 +79,7 @@
     </ul>
 
     <div class="legal-links">
-        <a href="{{ url_for('terms') }}">Terms & Conditions</a>
+        <a href="{{ url_for('term') }}">Terms & Conditions</a>
         <span>•</span>
         <a href="{{ url_for('privacy') }}">Privacy Policy</a>
     </div>
