@@ -65,26 +65,26 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/services')
-def services():
+@app.route('/service')
+def service():
     logged_in = session.get('logged_in', False)
-    return render_template('services.html',logged_in=logged_in, active_page='services')
+    return render_template('service.html',logged_in=logged_in, active_page='service')
 
 
-@app.route('/cars')
-def cars():
+@app.route('/car')
+def car():
     logged_in = session.get('logged_in', False)
-    return render_template('cars.html',logged_in=logged_in, active_page='cars')
+    return render_template('car.html',logged_in=logged_in, active_page='car')
 
-@app.route('/trucks')
-def trucks():
+@app.route('truck')
+def truck():
     logged_in = session.get('logged_in', False)
-    return render_template('trucks.html',logged_in=logged_in, active_page='trucks')
+    return render_template('truck.html',logged_in=logged_in, active_page='truck')
 
-@app.route('/motobikes')
-def motobikes():
+@app.route('/motobike')
+def motobike():
     logged_in = session.get('logged_in', False)
-    return render_template('motobikes.html',logged_in=logged_in, active_page='motobikes')
+    return render_template('motobike.html',logged_in=logged_in, active_page='motobike')
 
 @app.route('/plane')
 def plane():
@@ -95,9 +95,9 @@ def plane():
 def privacy():
     return render_template('privacy.html')
 
-@app.route('/terms')
-def terms():
-    return render_template('terms.html')   
+@app.route('/term')
+def term():
+    return render_template('term.html')   
 
 
 # Admin login page
