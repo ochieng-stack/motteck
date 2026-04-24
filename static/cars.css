@@ -137,12 +137,13 @@ input, textarea, button {
    SEARCH BAR
    ===========*/
    .category-search{
-    padding-top:40px;
+    padding-top:80px;
     display: flex;
     justify-content: center;
     align-items: center;
    }
    .search-input {
+    padding-top:80px;
     width: 60%;
     max-width: 500px;
     padding: 12px 20px;
