@@ -348,6 +348,31 @@ input, textarea, button {
     .form{ 
         max-width: 95%; 
     } 
+    .mobile-menu{
+        position: fixed;
+        top: 60px;
+        right: 10px;
+        background: #1a1a1a;
+        border-radius: 10px;
+        padding: 15px;
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 2000;
+        min-width: 180px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    .mobile-menu a{
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 8px;
+        border-radius: 6px;
+        transition: 0.3s;
+    }
+    .mobile-menu a:hover{
+        background: #2196f3;
+    }
 } 
 @media screen and (max-width: 500px){ 
     .category-nav a{ 
