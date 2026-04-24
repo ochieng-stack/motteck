@@ -86,11 +86,6 @@ def motobikes():
     logged_in = session.get('logged_in', False)
     return render_template('motobikes.html',logged_in=logged_in, active_page='motobikes')
 
-@app.route('/trains')
-def trains():
-    logged_in = session.get('logged_in', False)
-    return render_template('trains.html',logged_in=logged_in, active_page='trains')
-
 @app.route('/plane')
 def plane():
     logged_in = session.get('logged_in', False)
@@ -102,11 +97,7 @@ def privacy():
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html')
-    
-@app.route('/listings')
-def listings():
-    return render_template('listings.html')   
+    return render_template('terms.html')   
 
 
 # Admin login page
