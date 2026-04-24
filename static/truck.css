@@ -44,23 +44,7 @@ body{
     gap: 12px;
 }
 
-/* LISTINGS BUTTON FIX */
-.listings-btn{
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #2196f3;
-    color: white;
-    padding: 7px 12px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
 
-.listings-btn:hover{
-    background: #1976d2;
-}
 
 /* HAMBURGER */
 .menu-btn{
