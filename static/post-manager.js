@@ -1,10 +1,11 @@
-
 // =========================
-// VIEW TRACKING
+// VIEW TRACKING (CLEAN + SAFE)
 // =========================
 const viewedPosts = new Set();
 
 async function viewPost(postId) {
+
+    // prevent duplicate frontend calls
     if (viewedPosts.has(postId)) return;
 
     try {
@@ -56,7 +57,7 @@ async function likePost(postId) {
 
 
 // =========================
-// TEXT FORMATTER (GLOBAL STANDARD)
+// TEXT FORMATTER
 // =========================
 function formatText(text) {
     if (!text) return "";
@@ -70,10 +71,10 @@ function formatText(text) {
 
 
 // =========================
-// SAFE TEXT TRUNCATION
+// SAFE TRUNCATION
 // =========================
 function getShortText(text, limit = 250) {
-    const clean = text.replace(/<[^>]*>/g, ""); // strip HTML
+    const clean = text.replace(/<[^>]*>/g, "");
     return clean.length > limit
         ? clean.slice(0, limit) + "..."
         : clean;
@@ -81,9 +82,10 @@ function getShortText(text, limit = 250) {
 
 
 // =========================
-// SEE MORE (UNIFIED)
+// SEE MORE (STABLE VERSION)
 // =========================
 function setupSeeMoreButtons() {
+
     document.querySelectorAll(".post-card").forEach(card => {
 
         const btn = card.querySelector(".see-more-btn");
@@ -91,24 +93,26 @@ function setupSeeMoreButtons() {
 
         if (!btn || !textEl) return;
 
-        const fullHTML = textEl.innerHTML;
-        const plainText = textEl.innerText;
+        const fullText = textEl.innerText;
 
-        if (plainText.length <= 250) {
+        if (fullText.length <= 250) {
             btn.style.display = "none";
             return;
         }
 
-        const short = getShortText(plainText, 250);
+        const shortText = getShortText(fullText, 250);
         let expanded = false;
 
-        textEl.innerHTML = `<p>${short}</p>`;
+        textEl.innerHTML = `<p>${shortText}</p>`;
 
         btn.addEventListener("click", (e) => {
             e.stopPropagation();
 
             expanded = !expanded;
-            textEl.innerHTML = expanded ? fullHTML : `<p>${short}</p>`;
+            textEl.innerHTML = expanded
+                ? `<p>${fullText}</p>`
+                : `<p>${shortText}</p>`;
+
             btn.textContent = expanded ? "See Less" : "See More";
         });
     });
@@ -116,33 +120,40 @@ function setupSeeMoreButtons() {
 
 
 // =========================
-// VIEW OBSERVER
+// VIEW OBSERVER (FIXED)
 // =========================
 function setupViewObserver() {
+
     const posts = document.querySelectorAll(".post-card");
 
     const observer = new IntersectionObserver((entries) => {
 
         entries.forEach(entry => {
+
             if (entry.isIntersecting) {
 
                 const postId = entry.target.id.replace("post-", "");
 
+                // prevent multiple triggers per session
+                if (viewedPosts.has(postId)) return;
+
                 setTimeout(() => {
                     viewPost(postId);
-                }, 2000);
+                }, 2500); // slightly safer delay
 
             }
         });
 
-    }, { threshold: 0.6 });
+    }, {
+        threshold: 0.7 // stricter = better quality views
+    });
 
     posts.forEach(post => observer.observe(post));
 }
 
 
 // =========================
-// INIT HELPERS
+// INIT
 // =========================
 function initPostFeatures() {
     setupSeeMoreButtons();
@@ -150,7 +161,7 @@ function initPostFeatures() {
 }
 
 
-// expose globally (important for other pages)
+// expose globally
 window.likePost = likePost;
 window.viewPost = viewPost;
 window.initPostFeatures = initPostFeatures;
