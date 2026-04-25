@@ -59,20 +59,69 @@ a:hover {
     text-decoration: underline;
 }
 
-/* LEGAL FOOTER (optional cross-links) */
-.legal-footer {
+/* FOOTER */
+.footer {
+    background: #0f0f0f;
+    color: white;
     text-align: center;
-    margin-top: 40px;
-    padding: 15px;
+    padding: 35px 15px;
     border-top: 1px solid #222;
+}
+
+/* ICONS */
+.list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 15px 0;
+    margin: 0;
+}
+
+.big {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.big i {
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.big:hover {
+    background: blue;
+    transform: translateY(-5px);
+}
+
+.big:hover i {
+    color: white;
+}
+
+/* LEGAL */
+.legal-links {
+    margin-top: 15px;
     font-size: 14px;
 }
 
-.legal-footer a {
-    margin: 0 10px;
+.legal-links a {
     color: #aaa;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: 0.3s;
 }
 
-.legal-footer a:hover {
+.legal-links a:hover {
     color: white;
+    text-decoration: underline;
+}
+
+.legal-links span {
+    color: #444;
 }
