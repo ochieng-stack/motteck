@@ -89,9 +89,6 @@ function toggleMenu() {
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
-/* ================= CONFIG ================= */
-const LIMIT = 300;
-
 /* ================= FORMAT TEXT ================= */
 function formatText(text) {
     if (!text) return "";
@@ -103,47 +100,17 @@ function formatText(text) {
         .join('');
 }
 
-/* ================= SEE MORE ================= */
-function setupSeeMoreButtons() {
-    document.querySelectorAll('.post-card').forEach(card => {
-
-        const btn = card.querySelector('.see-more-btn');
-        const textEl = card.querySelector('.post-text');
-
-        if (!btn || !textEl) return;
-
-        if (!textEl.dataset.fullText) {
-            textEl.dataset.fullText = textEl.innerText.trim();
-        }
-
-        const fullText = textEl.dataset.fullText;
-
-        if (fullText.length <= LIMIT) {
-            btn.style.display = "none";
-            return;
-        }
-
-        const shortText = fullText.slice(0, LIMIT) + "...";
-        let expanded = false;
-
-        textEl.innerText = shortText;
-
-        btn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            expanded = !expanded;
-            textEl.innerText = expanded ? fullText : shortText;
-            btn.textContent = expanded ? "See Less" : "See More";
-        });
-    });
-}
-
 /* ================= POST CARD ================= */
 function createPostCard(post) {
 
     let image = post.image || post.image_url || "/static/images/default.jpg";
     if (!image.startsWith("http")) image = "/static/" + image;
+
+    const preview = post.description
+        ? post.description.slice(0, 180)
+        : "";
+
+    const showDots = post.description && post.description.length > 180;
 
     return `
         <div class="post-card" id="post-${post.id}">
@@ -158,8 +125,14 @@ function createPostCard(post) {
                     <h3 class="post-title">${post.title}</h3>
                 </a>
 
+                <!-- TIME -->
+                <p class="post-time">
+                    ${post.time_ago || ""}
+                </p>
+
+                <!-- PREVIEW TEXT -->
                 <div class="post-text">
-                    ${formatText(post.description)}
+                    ${formatText(preview)} ${showDots ? "..." : ""}
                 </div>
 
                 <div class="post-actions">
@@ -172,7 +145,10 @@ function createPostCard(post) {
                         👁️ <span id="view-count-${post.id}">${post.views || 0}</span>
                     </span>
 
-                    <button class="see-more-btn">See More</button>
+                    <!-- SEE MORE (NOW LINKS, NOT EXPANDS) -->
+                    <a href="/post/${post.id}" class="see-more-btn">
+                        See More
+                    </a>
 
                 </div>
             </div>
@@ -183,8 +159,6 @@ function createPostCard(post) {
 /* ================= INIT FEATURES ================= */
 function initPostFeatures() {
 
-    setupSeeMoreButtons();
-
     document.querySelectorAll(".post-card").forEach(card => {
         const likeBtn = card.querySelector("button[id^='like-btn-']");
         if (!likeBtn) return;
@@ -192,9 +166,13 @@ function initPostFeatures() {
         const postId = likeBtn.id.replace("like-btn-", "");
         const key = `liked-${postId}`;
 
+        // restore liked state
         if (localStorage.getItem(key)) {
             likeBtn.style.backgroundColor = "#d6eefd";
         }
+
+        // attach click
+        likeBtn.addEventListener("click", () => likePost(postId));
     });
 }
 
@@ -218,18 +196,6 @@ function likePost(postId) {
         });
 }
 
-/* ================= VIEW ================= */
-function incrementView(postId) {
-    fetch(`/view/${postId}`, { method: "POST" })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                const el = document.getElementById(`view-count-${postId}`);
-                if (el) el.textContent = data.views;
-            }
-        });
-}
-
 /* ================= LOAD HOME ================= */
 async function loadHomePosts() {
 
@@ -244,16 +210,14 @@ async function loadHomePosts() {
         trending.innerHTML = "";
         recent.innerHTML = "";
 
-        const allPosts = [...data.trending, ...data.recent];
-
+        // TRENDING
         data.trending.forEach(post => {
             trending.innerHTML += createPostCard(post);
-            incrementView(post.id);
         });
 
+        // RECENT
         data.recent.forEach(post => {
             recent.innerHTML += createPostCard(post);
-            incrementView(post.id);
         });
 
         initPostFeatures();

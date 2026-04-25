@@ -5,33 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ post.title }} | Motteck</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='car.css', filename='motobike.css', filename='plane.css', filename='truck.css', filename='service.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='car.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='motobike.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='plane.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='truck.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='service.css') }}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
     <style>
-        /* FIX: prevent navbar overlap */
         .post-container {
             max-width: 900px;
             margin: 40px auto;
             padding: 20px;
-            padding-top: 120px; /* pushes content below fixed navbar */
+            padding-top: 120px;
         }
 
         .post-container h1 {
-            margin-bottom: 20px;
-            line-height: 1.3;
+            margin-bottom: 10px;
             font-size: 28px;
+            line-height: 1.3;
+        }
+
+        .post-meta {
+            color: gray;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
 
         .post-container img {
             width: 100%;
             border-radius: 10px;
             margin-bottom: 20px;
-        }
-
-        .post-meta {
-            color: gray;
-            margin-bottom: 10px;
         }
 
         .post-content {
@@ -74,7 +79,6 @@
             background: #bbb;
         }
 
-        /* MOBILE FIX */
         @media (max-width: 600px) {
             .post-container {
                 padding-top: 140px;
@@ -91,25 +95,22 @@
 
 <!-- ================= HEADER ================= -->
 <header class="header">
-
     <h1 class="title">
         <a href="{{ url_for('home') }}">MOTTECK</a>
     </h1>
 
     <div class="top-actions">
-        <!-- ✅ removed onclick -->
         <button class="menu-btn">☰</button>
     </div>
-
 </header>
 
 <!-- ================= CATEGORY NAV ================= -->
 <nav class="category-nav">
-    <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
-    <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
-    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}">BIKE</a>
-    <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
-    <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
+    <a href="{{ url_for('car') }}">CAR</a>
+    <a href="{{ url_for('truck') }}">TRUCK</a>
+    <a href="{{ url_for('motobike') }}">BIKE</a>
+    <a href="{{ url_for('plane') }}">AVIATION</a>
+    <a href="{{ url_for('service') }}">SERVICE</a>
 </nav>
 
 <!-- ================= MOBILE MENU ================= -->
@@ -119,30 +120,31 @@
     <a href="{{ url_for('about') }}">About</a>
     <a href="{{ url_for('contact') }}">Contact</a>
 </div>
-<!-- SINGLE POST -->
+
+<!-- ================= POST ================= -->
 <section class="post-container">
 
     <!-- TITLE -->
     <h1>{{ post.title }}</h1>
+
+    <!-- META -->
+    <p class="post-meta">
+        Category: {{ post.category.upper() }} • {{ post.time_ago }} • 👁️ {{ post.views }} views • ❤️ {{ post.likes }} likes
+    </p>
 
     <!-- IMAGE -->
     {% if post.image_url %}
     <img src="{{ post.image_url }}" alt="{{ post.title }}">
     {% endif %}
 
-    <!-- CATEGORY -->
-    <p class="post-meta">
-        Category: {{ post.category.upper() }}
-    </p>
-
     <!-- CONTENT -->
-     <div class="post-content">
+    <div class="post-content">
         {% for paragraph in post.description.split('\n') %}
-        {% if paragraph.strip() %}
-        <p>{{ paragraph }}</p>
-        {% endif %}
+            {% if paragraph.strip() %}
+                <p>{{ paragraph }}</p>
+            {% endif %}
         {% endfor %}
-     </div>
+    </div>
 
     <!-- ACTIONS -->
     <div class="actions">
@@ -152,7 +154,7 @@
         {% elif post.category == 'truck' %}
         <a href="/truck" class="btn">← Back to Truck</a>
         {% elif post.category == 'motobike' %}
-        <a href="/motobike" class="btn">← Back to Motobike</a>
+        <a href="/motobike" class="btn">← Back to Bike</a>
         {% elif post.category == 'plane' %}
         <a href="/plane" class="btn">← Back to Aviation</a>
         {% endif %}
@@ -162,28 +164,46 @@
     </div>
 
 </section>
+
+<!-- ================= FOOTER ================= -->
 <footer class="footer">
     <div class="footer-content">
         <h2>INFO</h2>
         <p>Follow us on all social media platforms</p>
     </div>
 
-    <!-- SOCIAL ICONS -->
     <ul class="list">
-        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
-        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
-        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+        <li><a class="big" href="https://www.instagram.com/mott_eck"><i class="fa-brands fa-instagram"></i></a></li>
+        <li><a class="big" href="https://x.com/motteck254"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365"><i class="fa-brands fa-facebook"></i></a></li>
     </ul>
 
-    <!-- LEGAL LINKS -->
     <div class="legal-links">
         <a href="{{ url_for('term') }}">Terms & Conditions</a>
         <span>•</span>
         <a href="{{ url_for('privacy') }}">Privacy Policy</a>
     </div>
 </footer>
+
+<!-- ================= VIEW TRACKING (REAL ENGAGEMENT) ================= -->
 <script>
-/* ✅ FIXED HAMBURGER (WORKS DESKTOP + MOBILE) */
+let startTime = Date.now();
+let counted = false;
+
+/* Only count view if user actually stays */
+setTimeout(() => {
+    counted = true;
+}, 10000); // 10 seconds minimum
+
+window.addEventListener("beforeunload", function () {
+    let timeSpent = Math.floor((Date.now() - startTime) / 1000);
+
+    if (counted && timeSpent > 10) {
+        navigator.sendBeacon("/view/{{ post.id }}");
+    }
+});
+
+/* MOBILE MENU */
 const menuBtn = document.querySelector(".menu-btn");
 const menu = document.getElementById("mobileMenu");
 
@@ -197,9 +217,6 @@ document.addEventListener("click", function(e){
         menu.style.display = "none";
     }
 });
-
-/* ================= CONFIG ================= */
-const LIMIT = 300;
 </script>
 
 </body>

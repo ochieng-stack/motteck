@@ -13,23 +13,20 @@
 
 <!-- ================= HEADER ================= -->
 <header class="header">
-
     <h1 class="title">
         <a href="{{ url_for('home') }}">MOTTECK</a>
     </h1>
 
     <div class="top-actions">
-        <!-- ✅ removed onclick -->
         <button class="menu-btn">☰</button>
     </div>
-
 </header>
 
 <!-- ================= CATEGORY NAV ================= -->
 <nav class="category-nav">
     <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
     <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
-    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}" >BIKES</a>
+    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}">BIKES</a>
     <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
     <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
 </nav>
@@ -42,25 +39,23 @@
     <a href="{{ url_for('contact') }}">Contact</a>
 </div>
 
-<!-- ================= MAIN CONTENT ================= -->
+<!-- ================= MAIN ================= -->
 <section class="main-section">
 
     {% if logged_in %}
-    <form id="postform" method="POST" action="/add_post" enctype="multipart/form-data">
+    <form method="POST" action="/add_post" enctype="multipart/form-data">
         <input type="hidden" name="category" value="car">
         <input type="text" name="title" placeholder="Car Title" required>
-        <input type="file" name="image" accept="image/*" required>
-        <textarea name="description" placeholder="Write your post..." required></textarea>
-        <button type="submit">Publish Post</button>
+        <input type="file" name="image" required>
+        <textarea name="description" placeholder="Write post..." required></textarea>
+        <button type="submit">Publish</button>
     </form>
     {% endif %}
 
-    <!-- SEARCH -->
     <div class="category-search">
-        <input class="search-input" type="text" id="carSearch" placeholder="Search cars...">
+        <input type="text" id="carSearch" placeholder="Search cars...">
     </div>
 
-    <!-- POSTS -->
     <div id="carPost" class="post-container"></div>
 
 </section>
@@ -73,9 +68,9 @@
     </div>
 
     <ul class="list">
-        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
-        <li><a class="big" href="https://x.com/motteck254" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
-        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+        <li><a href="https://www.instagram.com/mott_eck"><i class="fa-brands fa-instagram"></i></a></li>
+        <li><a href="https://x.com/motteck254"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=100064234773365"><i class="fa-brands fa-facebook"></i></a></li>
     </ul>
 
     <div class="legal-links">
@@ -85,163 +80,137 @@
     </div>
 </footer>
 
-<!-- ================= JS ================= -->
-
-<script src="{{ url_for('static', filename='post-manager.js')}}"></script>
-
+<!-- ================= SCRIPT ================= -->
 <script>
-const category = 'car';
-const container = document.getElementById('carPost');
-const searchInput = document.getElementById('carSearch');
+
+const category = "car";
+const container = document.getElementById("carPost");
+const searchInput = document.getElementById("carSearch");
 
 let allPosts = [];
 
-/* ✅ FIXED HAMBURGER (WORKS DESKTOP + MOBILE) */
 const menuBtn = document.querySelector(".menu-btn");
 const menu = document.getElementById("mobileMenu");
 
-menuBtn.addEventListener("click", function(e){
+/* MENU */
+menuBtn.addEventListener("click", e => {
     e.stopPropagation();
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 });
 
-document.addEventListener("click", function(e){
+document.addEventListener("click", e => {
     if(!menu.contains(e.target) && !menuBtn.contains(e.target)){
         menu.style.display = "none";
     }
 });
 
-/* ================= CONFIG ================= */
-const LIMIT = 300;
-
-function formatParagraphs(text){
+/* FORMAT TEXT */
+function formatText(text){
     return text
-        .split('\n')
-        .filter(line => line.trim() !== '')
-        .map(line => `<p>${line}</p>`)
-        .join('');
+        .split("\n")
+        .filter(l => l.trim() !== "")
+        .map(l => `<p>${l}</p>`)
+        .join("");
 }
 
-function getPostBycategory(category){
-    return fetch('/get_posts?t=' + new Date().getTime())
-    .then(res => res.json())
-    .then(posts => posts.filter(p => p.category === category))
-    .catch(() => []);
+/* GET POSTS */
+function getPosts(){
+    return fetch("/get_posts?t=" + Date.now())
+        .then(res => res.json())
+        .then(posts => posts.filter(p => p.category === category))
+        .catch(() => []);
 }
 
-function renderPosts(posts){
-    container.innerHTML = '';
+/* RENDER */
+function render(posts){
+    container.innerHTML = "";
 
-    if(!posts || posts.length === 0){
-        container.innerHTML = `<p>No posts found.</p>`;
+    if(!posts.length){
+        container.innerHTML = "<p>No posts found.</p>";
         return;
     }
 
     posts.forEach(post => {
 
-        const card = document.createElement('div');
-        card.classList.add('post-card');
+        const card = document.createElement("div");
+        card.className = "post-card";
 
-        const formattedText = formatParagraphs(post.description);
+        const text = formatText(post.description || "");
 
         card.innerHTML = `
-            <a href="/post/${post.id}" class="post-link">
+            <a href="/post/${post.id}">
                 <img src="${post.image_url}">
             </a>
 
             <div class="post-content">
 
-                <a href="/post/${post.id}" class="post-link">
-                    <h3 class="post-title">${post.title}</h3>
+                <a href="/post/${post.id}">
+                    <h3>${post.title}</h3>
                 </a>
 
-                <div class="post-text">${formattedText}</div>
+                <p class="meta">
+                    👁️ ${post.views || 0} • ❤️ ${post.likes || 0} • 🕒 ${post.time_ago || ""}
+                </p>
+
+                <div class="post-text">${text}</div>
 
                 <div class="post-actions">
 
-                    <button class="like-btn" id="like-${post.id}">
-                        Like (<span id="count-${post.id}">${post.likes || 0}</span>)
+                    <button id="like-${post.id}">
+                        Like (${post.likes || 0})
                     </button>
 
                     {% if logged_in %}
-                    <button class="delete-btn">Delete</button>
+                    <button onclick="deletePost(${post.id})">Delete</button>
                     {% endif %}
 
-                    <button class="see-more-btn">See more</button>
-
                 </div>
-
             </div>
         `;
 
-        card.querySelectorAll("button").forEach(btn => {
-            btn.addEventListener("click", e => e.stopPropagation());
-        });
-
-        card.querySelector(`#like-${post.id}`).onclick = () => likePost(post.id);
-
-        const del = card.querySelector(".delete-btn");
-        if(del){
-            del.onclick = () => deletePost(post.id);
-        }
-
-        const textDiv = card.querySelector(".post-text");
-        const btn = card.querySelector(".see-more-btn");
-
-        let expanded = false;
-        const full = textDiv.innerHTML;
-        const short = textDiv.innerText.slice(0, LIMIT) + "...";
-
-        if(textDiv.innerText.length > LIMIT){
-            textDiv.innerHTML = `<p>${short}</p>`;
-
-            btn.onclick = () => {
-                expanded = !expanded;
-                textDiv.innerHTML = expanded ? full : `<p>${short}</p>`;
-                btn.textContent = expanded ? "See less" : "See more";
-            };
-        } else {
-            btn.style.display = "none";
-        }
+        card.querySelector(`#like-${post.id}`).onclick = () => {
+            fetch(`/like/${post.id}`, {method:"POST"})
+            .then(r => r.json())
+            .then(d => {
+                card.querySelector(`#like-${post.id}`).innerText =
+                    `Like (${d.likes})`;
+            });
+        };
 
         container.appendChild(card);
     });
 }
 
-function showPosts(){
-    getPostBycategory(category).then(posts => {
-        allPosts = posts.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-        renderPosts(allPosts);
+/* INIT */
+function load(){
+    getPosts().then(data => {
+        allPosts = data;
+        render(allPosts);
     });
 }
 
-searchInput.addEventListener("input", function(){
-    const value = this.value.toLowerCase();
+/* SEARCH */
+searchInput.addEventListener("input", e => {
+    const v = e.target.value.toLowerCase();
 
-    const filtered = allPosts.filter(post =>
-        post.title.toLowerCase().includes(value) ||
-        post.description.toLowerCase().includes(value)
+    const filtered = allPosts.filter(p =>
+        p.title.toLowerCase().includes(v) ||
+        p.description.toLowerCase().includes(v)
     );
 
-    renderPosts(filtered);
+    render(filtered);
 });
 
-function likePost(id){
-    fetch(`/like/${id}`, {method:'POST'})
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById(`count-${id}`).textContent = data.likes;
-    });
-}
-
+/* DELETE */
 function deletePost(id){
     if(!confirm("Delete?")) return;
 
-    fetch(`/delete_post/${id}`, {method:'DELETE'})
-    .then(() => location.reload());
+    fetch(`/delete_post/${id}`, {method:"DELETE"})
+        .then(() => location.reload());
 }
 
-showPosts();
+load();
+
 </script>
 
 </body>
