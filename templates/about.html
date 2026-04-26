@@ -17,7 +17,7 @@
                 <ul class="unlist">
                     <li><a href="{{ url_for('home') }}" class="list"><i class="fa-regular fa-house"></i></a></li>
                     <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
-                    <li><a href="{{ url_for('services') }}" class="list">SERVICES</a></li>
+                    <li><a href="{{ url_for('service') }}" class="list">SERVICE</a></li>
                     <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>
                 </ul>
             </nav>
@@ -51,7 +51,7 @@
             </p>     
         </div>
     </section>
-    <footer class="footer">
+<footer class="footer">
     <div class="footer-content">
         <h2>INFO</h2>
         <p>Follow us on all social media platforms</p>
@@ -66,7 +66,7 @@
 
     <!-- LEGAL LINKS -->
     <div class="legal-links">
-        <a href="{{ url_for('terms') }}">Terms & Conditions</a>
+        <a href="{{ url_for('term') }}">Terms & Conditions</a>
         <span>•</span>
         <a href="{{ url_for('privacy') }}">Privacy Policy</a>
     </div>
