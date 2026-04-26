@@ -14,13 +14,14 @@
 <body>
 
 <!-- ================= HEADER ================= -->
-<header class="header">
+<header class="site-header">
 
-    <div class="logo">
-        <a href="{{ url_for('home') }}">MOTTECK</a>
+    <div class="nav-left">
+        <a href="{{ url_for('home') }}" class="logo"> MOTTECK</a>
     </div>
-
-    <div class="menu-btn" id="menuBtn">☰</div>
+    <div class="nav-right">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
 
 </header>
 
@@ -93,12 +94,10 @@
 <!-- ================= SCRIPTS ================= -->
 <script>
 /* ================= HAMBURGER MENU ================= */
-const menuBtn = document.getElementById("menuBtn");
-const menu = document.getElementById("mobileMenu");
-
-menuBtn.addEventListener("click", () => {
+function toggleMenu() {
+    const menu = document.getElementById("mobileMenu");
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-});
+}
 
 /* ================= CONTACT FORM ================= */
 document.querySelector('#contact-form').addEventListener('submit', async function(e) {

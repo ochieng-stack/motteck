@@ -3,26 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>motteck</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Contact MOTTECK</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
-   <header>
-        <div class="header">
-            <h1 class="title">
-                <a href="{{ url_for('home') }}" style="text-decoration: none; color: inherit ;"><i>MOTTECK</i></a>
-            </h1>  
-            <nav class="navbar">
-                <ul class="unlist">
-                    <li><a href="{{ url_for('home') }}" class="list"><i class="fa-regular fa-house"></i></a></li>
-                    <li><a href="{{ url_for('about') }}" class="list">ABOUT</a></li>
-                    <li><a href="{{ url_for('service') }}" class="list">SERVICE</a></li>
-                    <li><a href="{{ url_for('contact') }}" class="list">CONTACT</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+
+    <div class="logo">
+        <a href="{{ url_for('home') }}">MOTTECK</a>
+    </div>
+
+    <div class="menu-btn" id="menuBtn">☰</div>
+
+</header>
+
+<!-- ================= MOBILE MENU ================= -->
+<div id="mobileMenu" class="mobile-menu">
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('service') }}">Service</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+</div>
     <section>
         <div class="container">
             <h2 class="subtitle">ABOUT US</h2>
