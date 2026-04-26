@@ -1,3 +1,4 @@
+
 // =========================
 // VIEW TRACKING (CLEAN + SAFE)
 // =========================
@@ -5,8 +6,8 @@ const viewedPosts = new Set();
 
 async function viewPost(postId) {
 
-    // prevent duplicate frontend calls
-    if (viewedPosts.has(postId)) return;
+    postId = Number(postId);
+    if (!postId || viewedPosts.has(postId)) return;
 
     try {
         const res = await fetch(`/view/${postId}`, { method: "POST" });
@@ -29,6 +30,8 @@ async function viewPost(postId) {
 // LIKE SYSTEM
 // =========================
 async function likePost(postId) {
+
+    postId = Number(postId);
     const key = `liked-${postId}`;
 
     if (localStorage.getItem(key)) {
@@ -82,7 +85,7 @@ function getShortText(text, limit = 250) {
 
 
 // =========================
-// SEE MORE (STABLE VERSION)
+// SEE MORE (FIXED STABLE VERSION)
 // =========================
 function setupSeeMoreButtons() {
 
@@ -93,7 +96,7 @@ function setupSeeMoreButtons() {
 
         if (!btn || !textEl) return;
 
-        const fullText = textEl.innerText;
+        const fullText = textEl.textContent || textEl.innerText;
 
         if (fullText.length <= 250) {
             btn.style.display = "none";
@@ -106,9 +109,11 @@ function setupSeeMoreButtons() {
         textEl.innerHTML = `<p>${shortText}</p>`;
 
         btn.addEventListener("click", (e) => {
+            e.preventDefault();
             e.stopPropagation();
 
             expanded = !expanded;
+
             textEl.innerHTML = expanded
                 ? `<p>${fullText}</p>`
                 : `<p>${shortText}</p>`;
@@ -120,7 +125,7 @@ function setupSeeMoreButtons() {
 
 
 // =========================
-// VIEW OBSERVER (FIXED)
+// VIEW OBSERVER (IMPROVED)
 // =========================
 function setupViewObserver() {
 
@@ -130,22 +135,21 @@ function setupViewObserver() {
 
         entries.forEach(entry => {
 
-            if (entry.isIntersecting) {
+            if (!entry.isIntersecting) return;
 
-                const postId = entry.target.id.replace("post-", "");
+            const idRaw = entry.target.id?.replace("post-", "");
+            const postId = Number(idRaw);
 
-                // prevent multiple triggers per session
-                if (viewedPosts.has(postId)) return;
+            if (!postId || viewedPosts.has(postId)) return;
 
-                setTimeout(() => {
-                    viewPost(postId);
-                }, 2500); // slightly safer delay
+            setTimeout(() => {
+                viewPost(postId);
+            }, 2000);
 
-            }
         });
 
     }, {
-        threshold: 0.7 // stricter = better quality views
+        threshold: 0.75
     });
 
     posts.forEach(post => observer.observe(post));
