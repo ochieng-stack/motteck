@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motteck - bike</title>
+    <title>Motteck - Bike</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='motobike.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
@@ -24,11 +24,11 @@
 
 <!-- ================= CATEGORY NAV ================= -->
 <nav class="category-nav">
-    <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
-    <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
-    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}">BIKES</a>
-    <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
-    <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
+    <a href="{{ url_for('car') }}">CAR</a>
+    <a href="{{ url_for('truck') }}">TRUCK</a>
+    <a href="{{ url_for('motobike') }}" class="active">BIKES</a>
+    <a href="{{ url_for('plane') }}">AVIATION</a>
+    <a href="{{ url_for('service') }}">SERVICE</a>
 </nav>
 
 <!-- ================= MOBILE MENU ================= -->
@@ -44,19 +44,39 @@
 
     {% if logged_in %}
     <form method="POST" action="/add_post" enctype="multipart/form-data">
+
+        <!-- ⭐ FIXED CATEGORY -->
         <input type="hidden" name="category" value="motobike">
-        <input type="text" name="title" placeholder="motobike Title" required>
+
+        <input type="text" name="title" placeholder="Bike Title" required>
         <input type="file" name="image" required>
         <textarea name="description" placeholder="Write post..." required></textarea>
+
+        <!-- 🔥 NEW OPTIONS -->
+        <div class="post-options">
+
+            <label>
+                <input type="checkbox" name="is_sponsored">
+                Sponsored Post
+            </label>
+
+            <label>
+                <input type="checkbox" name="is_featured">
+                Featured Post (Premium)
+            </label>
+
+        </div>
+
         <button type="submit">Publish</button>
     </form>
     {% endif %}
 
+    <!-- ================= SEARCH ================= -->
     <div class="category-search">
-        <input type="text" id="motobikeSearch" placeholder="Search motobike...">
+        <input type="text" id="bikeSearch" placeholder="Search bikes only...">
     </div>
 
-    <div id="motobikePost" class="post-container"></div>
+    <div id="bikePost" class="post-container"></div>
 
 </section>
 
@@ -67,14 +87,12 @@
         <p>Follow us on all social media platforms</p>
     </div>
 
-    <!-- SOCIAL ICONS -->
     <ul class="list">
-        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
-        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
-        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+        <li><a class="big" href="https://www.instagram.com/mott_eck"><i class="fa-brands fa-instagram"></i></a></li>
+        <li><a class="big" href="https://x.com/motteck254"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365"><i class="fa-brands fa-facebook"></i></a></li>
     </ul>
 
-    <!-- LEGAL LINKS -->
     <div class="legal-links">
         <a href="{{ url_for('term') }}">Terms & Conditions</a>
         <span>•</span>
@@ -85,16 +103,16 @@
 <!-- ================= SCRIPT ================= -->
 <script>
 
-const category = "car";
-const container = document.getElementById("carPost");
-const searchInput = document.getElementById("carSearch");
+const category = "motobike";
+const container = document.getElementById("bikePost");
+const searchInput = document.getElementById("bikeSearch");
 
 let allPosts = [];
 
+/* MENU */
 const menuBtn = document.querySelector(".menu-btn");
 const menu = document.getElementById("mobileMenu");
 
-/* MENU */
 menuBtn.addEventListener("click", e => {
     e.stopPropagation();
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
@@ -115,11 +133,11 @@ function formatText(text){
         .join("");
 }
 
-/* GET POSTS */
+/* GET POSTS (MOTOBIKE ONLY) */
 function getPosts(){
     return fetch("/get_posts?t=" + Date.now())
         .then(res => res.json())
-        .then(posts => posts.filter(p => p.category === category))
+        .then(posts => posts.filter(p => p.category === "motobike"))
         .catch(() => []);
 }
 
@@ -128,7 +146,7 @@ function render(posts){
     container.innerHTML = "";
 
     if(!posts.length){
-        container.innerHTML = "<p>No posts found.</p>";
+        container.innerHTML = "<p>No bike posts found.</p>";
         return;
     }
 
@@ -139,7 +157,18 @@ function render(posts){
 
         const text = formatText(post.description || "");
 
+        /* ⭐ BADGES */
+        let badge = "";
+        if(post.is_featured){
+            badge += `<span class="badge featured">Featured</span>`;
+        }
+        if(post.is_sponsored){
+            badge += `<span class="badge sponsored">Sponsored</span>`;
+        }
+
         card.innerHTML = `
+            ${badge}
+
             <a href="/post/${post.id}">
                 <img src="${post.image_url}">
             </a>
@@ -183,7 +212,7 @@ function render(posts){
     });
 }
 
-/* INIT */
+/* LOAD */
 function load(){
     getPosts().then(data => {
         allPosts = data;
@@ -191,13 +220,14 @@ function load(){
     });
 }
 
-/* SEARCH */
+/* 🔥 CATEGORY SEARCH FIXED */
 searchInput.addEventListener("input", e => {
     const v = e.target.value.toLowerCase();
 
     const filtered = allPosts.filter(p =>
-        p.title.toLowerCase().includes(v) ||
-        p.description.toLowerCase().includes(v)
+        (p.title && p.title.toLowerCase().includes(v)) ||
+        (p.description && p.description.toLowerCase().includes(v)) ||
+        (p.tags && p.tags.toLowerCase().includes(v))
     );
 
     render(filtered);

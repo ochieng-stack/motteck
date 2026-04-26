@@ -19,7 +19,10 @@
     </div>
 
     <div class="nav-center">
-        <input type="text" id="searchInput" placeholder="Search car, truck, guides...">
+        <form action="{{ url_for('search') }}" method="GET" class="search-form">
+            <input type="text" name="q" id="searchInput" placeholder="Search cars, trucks, guides..." required>
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
     </div>
 
     <div class="nav-right">
@@ -46,6 +49,11 @@
         <li><a href="/motobike" class="linkup">BIKE</a></li>
         <li><a href="/plane" class="linkup">AVIATION</a></li>
     </ul>
+</section>
+<!-- =================  FEATURED ================ -->
+ <section class="pagethree">
+    <h2 class="brows"> Featured Posts</h2>
+    <div id="featured-posts" class="post-container"></div>
 </section>
 
 <!-- ================= TRENDING ================= -->
@@ -204,18 +212,25 @@ async function loadHomePosts() {
         const res = await fetch("/get_home_posts");
         const data = await res.json();
 
+        const featured = document.getElementById("featured-posts");
         const trending = document.getElementById("trending-posts");
         const recent = document.getElementById("recent-posts");
 
+        featured.innerHTML = "";
         trending.innerHTML = "";
         recent.innerHTML = "";
 
-        // TRENDING
+        // ⭐ FEATURED (MAX 4)
+        data.featured.forEach(post => {
+            featured.innerHTML += createPostCard(post);
+        });
+
+        // 🔥 TRENDING
         data.trending.forEach(post => {
             trending.innerHTML += createPostCard(post);
         });
 
-        // RECENT
+        // 🆕 RECENT
         data.recent.forEach(post => {
             recent.innerHTML += createPostCard(post);
         });
