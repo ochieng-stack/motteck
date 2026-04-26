@@ -37,7 +37,7 @@ body {
 
 .nav-left .logo {
     color: white;
-    font-size: 24px; /* 🔥 increased */
+    font-size: 36px; /* 🔥 increased */
     font-weight: bold;
     text-decoration: none;
 }
@@ -364,14 +364,14 @@ body {
     .unlisttwo {
         display: flex;
         justify-content: space-between;
-        gap: 6px;
+        gap: 2px;
         padding: 10px 5px;
         flex-wrap: nowrap;
     }
 
     .linkup {
-        font-size: 11px;       /* 🔥 key fix */
-        padding: 6px 8px;      /* 🔥 smaller buttons */
+        font-size: 14px;       /* 🔥 key fix */
+        padding: 8px 8px;      /* 🔥 smaller buttons */
         border-radius: 15px;
         white-space: nowrap;
         flex: 1;               /* 🔥 makes them fit evenly */

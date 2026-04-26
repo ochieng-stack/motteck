@@ -4,15 +4,79 @@
     box-sizing: border-box;
 }
 
+
 /* =========================
-   HEADER FIX (REMOVE HARSH BLOCK FEEL)
+   NAVBAR (DESKTOP STRONG)
 ========================= */
-.title{
-    background: transparent;
+
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(16, 17, 19);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 14px 30px; /* 🔥 bigger for desktop */
+    z-index: 1000;
+}
+
+/* LEFT */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-left .logo {
     color: white;
-    font-size: 20px;
-    letter-spacing: 2px;
-    padding: 10px 20px;
+    font-size: 36px; /* 🔥 increased */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* RIGHT */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-link {
+    color: beige;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 65px;
+    right: 10px;
+    background: #111;
+    width: 200px;
+    border-radius: 8px;
+    z-index: 2000;
+}
+
+.mobile-menu a {
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    border-bottom: 1px solid #222;
 }
 
 /* =========================

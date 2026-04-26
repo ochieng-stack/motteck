@@ -2,55 +2,81 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
 }
-.header{
+
+
+/* =========================
+   NAVBAR (DESKTOP STRONG)
+========================= */
+
+.site-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background: rgb(16, 17, 19);
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-
-}
-.title{
-    font-weight: 600px;
-    font-size: 60px ;
-    color: rgb(255, 255, 255);
+    padding: 14px 30px; /* 🔥 bigger for desktop */
+    z-index: 1000;
 }
 
-.navbar{
-    padding-top: 20px;
+/* LEFT */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.unlist li{
-    list-style: none;
-    display: inline-block;
-    margin: 0 20px;
+.nav-left .logo {
+    color: white;
+    font-size: 36px; /* 🔥 increased */
+    font-weight: bold;
+    text-decoration: none;
 }
 
-.list {
-    position: relative;
+/* RIGHT */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-link {
     color: beige;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    padding: 10px 18px;
-    
 }
 
-.list::after{
-    content: "";
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
     position: absolute;
-    left: 0; 
-    bottom:-8px;  
-    width: 0;
-    height: 3px;
-    background-color: aqua;
-    transition: 0.5s ease;
+    top: 65px;
+    right: 10px;
+    background: #111;
+    width: 200px;
+    border-radius: 8px;
+    z-index: 2000;
 }
 
-a:hover::after {
-    width: 100%;
+.mobile-menu a {
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    border-bottom: 1px solid #222;
 }
 
 .subtitle {
