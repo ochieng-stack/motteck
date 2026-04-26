@@ -23,8 +23,6 @@ app.secret_key = 'motteck_super_secret_key'
 
 load_dotenv()
 
-POSTS_FILE = os.path.join(os.path.dirname(__file__), 'posts.json')
-
 # ================= CLOUDINARY =================
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -61,7 +59,7 @@ def verify_recaptcha(token):
     return response.json().get("success", False)
 
 
-# ================= TIME AGO FUNCTION =================
+# ================= TIME AGO =================
 def time_ago(dt_str):
     try:
         dt = datetime.fromisoformat(dt_str.replace("Z", ""))
@@ -169,7 +167,7 @@ def logout():
     return redirect(url_for('home'))
 
 
-# ================= GET HOME POSTS =================
+# ================= HOME POSTS =================
 @app.route("/get_home_posts")
 def get_home_posts():
     try:
@@ -178,7 +176,24 @@ def get_home_posts():
         for post in all_posts:
             post["time_ago"] = time_ago(post.get("created_at", ""))
 
-        # ===== TRENDING SCORE =====
+        # ================= FEATURED =================
+        featured = sorted(
+            [p for p in all_posts if p.get("is_featured")],
+            key=lambda x: x.get("created_at", ""),
+            reverse=True
+        )[:4]
+
+        featured_ids = {p["id"] for p in featured}
+
+        # ================= SPONSORED =================
+        sponsored = [
+            p for p in all_posts
+            if p.get("is_sponsored")
+        ]
+
+        sponsored_ids = {p["id"] for p in sponsored}
+
+        # ================= TRENDING =================
         def trending_score(p):
             views = p.get("views", 0)
             likes = p.get("likes", 0)
@@ -188,14 +203,29 @@ def get_home_posts():
 
             return (views * 0.5) + (likes * 2)
 
-        trending = sorted(all_posts, key=trending_score, reverse=True)[:6]
+        trending = sorted(all_posts, key=trending_score, reverse=True)
+
+        trending = [
+            p for p in trending
+            if p["id"] not in featured_ids
+            and p["id"] not in sponsored_ids
+        ][:6]
 
         trending_ids = {p["id"] for p in trending}
 
-        recent = [p for p in all_posts if p["id"] not in trending_ids]
+        # ================= RECENT =================
+        recent = [
+            p for p in all_posts
+            if p["id"] not in featured_ids
+            and p["id"] not in trending_ids
+            and p["id"] not in sponsored_ids
+        ]
+
         recent.sort(key=lambda x: x.get("created_at", ""), reverse=True)
 
         return jsonify({
+            "featured": featured,
+            "sponsored": sponsored,
             "trending": trending,
             "recent": recent
         })
@@ -207,6 +237,7 @@ def get_home_posts():
 # ================= ADD POST =================
 @app.route('/add_post', methods=['POST'])
 def add_post():
+
     category = request.form.get('category')
     title = request.form.get('title')
     image_file = request.files.get('image')
@@ -225,7 +256,11 @@ def add_post():
         "description": description,
         "likes": 0,
         "views": 0,
-        "created_at": datetime.utcnow().isoformat()
+        "created_at": datetime.utcnow().isoformat(),
+
+        # ⭐ NEW SYSTEM FIELDS
+        "is_featured": True if request.form.get("is_featured") else False,
+        "is_sponsored": True if request.form.get("is_sponsored") else False
     }
 
     response = supabase.table("posts").insert(new_post).execute()
@@ -265,7 +300,7 @@ def like_post(post_id):
         return jsonify({"success": False, "error": str(e)})
 
 
-# ================= VIEW (SAFE) =================
+# ================= VIEW =================
 @app.route('/view/<int:post_id>', methods=['POST'])
 def view_post(post_id):
     try:
