@@ -14,13 +14,14 @@
 <body>
 
 <!-- ================= HEADER ================= -->
-<header class="header">
+<header class="site-header">
 
-    <div class="logo">
-        <a href="{{ url_for('home') }}">MOTTECK</a>
+    <div class="nav-left">
+        <a href="{{ url_for('home') }}" class="logo"> MOTTECK</a>
     </div>
-
-    <div class="menu-btn" id="menuBtn">☰</div>
+    <div class="nav-right">
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
 
 </header>
 
@@ -31,6 +32,7 @@
     <a href="{{ url_for('about') }}">About</a>
     <a href="{{ url_for('contact') }}">Contact</a>
 </div>
+
     <section>
         <div class="container">
             <h2 class="subtitle">ABOUT US</h2>
