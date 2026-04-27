@@ -167,6 +167,26 @@ def logout():
     return redirect(url_for('home'))
 
 
+# ================= GET POSTS (ALL CATEGORY PAGES) =================
+@app.route("/get_posts")
+def get_posts():
+    try:
+        posts = supabase.table("posts").select("*").execute().data or []
+
+        for post in posts:
+            post["time_ago"] = time_ago(post.get("created_at", ""))
+
+        posts.sort(
+            key=lambda x: x.get("created_at", ""),
+            reverse=True
+        )
+
+        return jsonify(posts)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 # ================= HOME POSTS =================
 @app.route("/get_home_posts")
 def get_home_posts():
@@ -176,7 +196,7 @@ def get_home_posts():
         for post in all_posts:
             post["time_ago"] = time_ago(post.get("created_at", ""))
 
-        # ================= FEATURED =================
+        # FEATURED
         featured = sorted(
             [p for p in all_posts if p.get("is_featured")],
             key=lambda x: x.get("created_at", ""),
@@ -185,7 +205,7 @@ def get_home_posts():
 
         featured_ids = {p["id"] for p in featured}
 
-        # ================= SPONSORED =================
+        # SPONSORED
         sponsored = [
             p for p in all_posts
             if p.get("is_sponsored")
@@ -193,7 +213,7 @@ def get_home_posts():
 
         sponsored_ids = {p["id"] for p in sponsored}
 
-        # ================= TRENDING =================
+        # TRENDING
         def trending_score(p):
             views = p.get("views", 0)
             likes = p.get("likes", 0)
@@ -213,7 +233,7 @@ def get_home_posts():
 
         trending_ids = {p["id"] for p in trending}
 
-        # ================= RECENT =================
+        # RECENT
         recent = [
             p for p in all_posts
             if p["id"] not in featured_ids
@@ -221,7 +241,10 @@ def get_home_posts():
             and p["id"] not in sponsored_ids
         ]
 
-        recent.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        recent.sort(
+            key=lambda x: x.get("created_at", ""),
+            reverse=True
+        )
 
         return jsonify({
             "featured": featured,
@@ -257,8 +280,6 @@ def add_post():
         "likes": 0,
         "views": 0,
         "created_at": datetime.utcnow().isoformat(),
-
-        # ⭐ NEW SYSTEM FIELDS
         "is_featured": True if request.form.get("is_featured") else False,
         "is_sponsored": True if request.form.get("is_sponsored") else False
     }
