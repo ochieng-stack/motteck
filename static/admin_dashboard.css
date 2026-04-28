@@ -119,3 +119,32 @@ th,td{
     color:orange;
     font-weight:bold;
 }
+#publishBtn{
+    padding:12px 20px;
+    border:none;
+    background:#111;
+    color:white;
+    cursor:pointer;
+    border-radius:6px;
+}
+
+#publishBtn:disabled{
+    opacity:0.8;
+    cursor:not-allowed;
+}
+
+.spinner{
+    display:inline-block;
+    width:14px;
+    height:14px;
+    border:2px solid white;
+    border-top:2px solid transparent;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    margin-right:8px;
+    vertical-align:middle;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
