@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard - Motteck</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='admin_dashboard.css') }}">
+
+<style>
+/* simple modal for edit */
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background:white;
+    width:400px;
+    margin:80px auto;
+    padding:20px;
+    border-radius:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <h2>Motteck Admin Dashboard</h2>
+    <a href="/logout" style="color:white;">Logout</a>
+</header>
+
+<div class="container">
+
+<!-- ================= ANALYTICS ================= -->
+<div class="form-box">
+    <h3>Analytics</h3>
+
+    <div id="analytics">
+        Loading analytics...
+    </div>
+</div>
+
+<!-- ================= POST FORM ================= -->
+<div class="form-box">
+
+    <h3>Create Post</h3>
+
+    <form id="postForm" enctype="multipart/form-data">
+
+        <input type="text" name="title" placeholder="Title" required>
+
+        <select name="category">
+            <option value="car">Car</option>
+            <option value="truck">Truck</option>
+            <option value="motobike">Bike</option>
+            <option value="plane">Aviation</option>
+            <option value="service">Service</option>
+        </select>
+
+        <input type="file" name="image" required>
+
+        <textarea name="description" placeholder="Description" required></textarea>
+
+        <label>
+            <input type="checkbox" name="is_featured">
+            Featured
+        </label>
+
+        <label>
+            <input type="checkbox" name="is_sponsored">
+            Sponsored
+        </label>
+
+        <button type="submit">Publish</button>
+
+    </form>
+
+</div>
+
+<!-- ================= POSTS LIST ================= -->
+<div class="posts-box">
+
+    <h3>All Posts</h3>
+
+    <div id="posts"></div>
+
+</div>
+
+</div>
+
+<!-- ================= EDIT MODAL ================= -->
+<div id="editModal" class="modal">
+
+    <div class="modal-content">
+
+        <h3>Edit Post</h3>
+
+        <form id="editForm" enctype="multipart/form-data">
+
+            <input type="hidden" name="post_id" id="edit_id">
+
+            <input type="text" name="title" id="edit_title">
+
+            <select name="category" id="edit_category">
+                <option value="car">Car</option>
+                <option value="truck">Truck</option>
+                <option value="motobike">Bike</option>
+                <option value="plane">Aviation</option>
+                <option value="service">Service</option>
+            </select>
+
+            <textarea name="description" id="edit_description"></textarea>
+
+            <input type="file" name="image">
+
+            <label>
+                <input type="checkbox" name="is_featured" id="edit_featured">
+                Featured
+            </label>
+
+            <label>
+                <input type="checkbox" name="is_sponsored" id="edit_sponsored">
+                Sponsored
+            </label>
+
+            <button type="submit">Save Changes</button>
+            <button type="button" onclick="closeModal()">Close</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+const postsContainer = document.getElementById("posts");
+const form = document.getElementById("postForm");
+const editForm = document.getElementById("editForm");
+const analyticsBox = document.getElementById("analytics");
+
+let allPosts = [];
+
+/* ================= LOAD POSTS ================= */
+function loadPosts(){
+
+    fetch("/get_posts")
+    .then(res => res.json())
+    .then(data => {
+        allPosts = data;
+        render(data);
+    });
+}
+
+/* ================= ANALYTICS ================= */
+function loadAnalytics(){
+
+    fetch("/analytics")
+    .then(res => res.json())
+    .then(data => {
+
+        analyticsBox.innerHTML = `
+            <p>📦 Total Posts: ${data.total_posts}</p>
+            <p>👁 Total Views: ${data.total_views}</p>
+            <p>❤️ Total Likes: ${data.total_likes}</p>
+        `;
+    });
+}
+
+/* ================= RENDER POSTS ================= */
+function render(posts){
+
+    postsContainer.innerHTML = "";
+
+    posts.forEach(post => {
+
+        let badges = "";
+
+        if(post.is_featured){
+            badges += `<span class="badge featured">Featured</span>`;
+        }
+
+        if(post.is_sponsored){
+            badges += `<span class="badge sponsored">Sponsored</span>`;
+        }
+
+        const div = document.createElement("div");
+        div.className = "post-card";
+
+        div.innerHTML = `
+            ${badges}
+            <div style="display:flex;gap:10px;align-items:center;">
+                <img src="${post.image_url}" width="80">
+                <div>
+                    <h4>${post.title}</h4>
+                    <small>${post.category}</small><br>
+                    👁 ${post.views || 0} ❤️ ${post.likes || 0}
+                </div>
+            </div>
+
+            <button onclick="openEdit(${post.id})">Edit</button>
+            <button onclick="deletePost(${post.id})">Delete</button>
+        `;
+
+        postsContainer.appendChild(div);
+    });
+}
+
+/* ================= DELETE ================= */
+function deletePost(id){
+
+    if(!confirm("Delete this post?")) return;
+
+    fetch(`/delete_post/${id}`, {
+        method:"DELETE"
+    }).then(() => loadPosts());
+}
+
+/* ================= OPEN EDIT ================= */
+function openEdit(id){
+
+    fetch(`/get_post/${id}`)
+    .then(res => res.json())
+    .then(post => {
+
+        document.getElementById("edit_id").value = post.id;
+        document.getElementById("edit_title").value = post.title;
+        document.getElementById("edit_category").value = post.category;
+        document.getElementById("edit_description").value = post.description;
+
+        document.getElementById("edit_featured").checked = post.is_featured;
+        document.getElementById("edit_sponsored").checked = post.is_sponsored;
+
+        document.getElementById("editModal").style.display = "block";
+    });
+}
+
+/* ================= CLOSE MODAL ================= */
+function closeModal(){
+    document.getElementById("editModal").style.display = "none";
+}
+
+/* ================= EDIT SUBMIT ================= */
+editForm.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("edit_id").value;
+    const formData = new FormData(editForm);
+
+    const res = await fetch(`/edit_post/${id}`, {
+        method:"POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        closeModal();
+        loadPosts();
+    }
+});
+
+/* ================= CREATE POST ================= */
+form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    const res = await fetch("/add_post", {
+        method:"POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        form.reset();
+        loadPosts();
+        loadAnalytics();
+    }
+});
+
+/* ================= INIT ================= */
+loadPosts();
+loadAnalytics();
+
+</script>
+
+</body>
+</html>

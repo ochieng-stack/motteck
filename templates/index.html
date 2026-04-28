@@ -120,8 +120,15 @@ function createPostCard(post) {
 
     const showDots = post.description && post.description.length > 180;
 
+    /* ⭐ Sponsored badge */
+    let badge = "";
+    if (post.is_sponsored) {
+        badge = `<span class="badge sponsored">Sponsored</span>`;
+    }
+
     return `
         <div class="post-card" id="post-${post.id}">
+            ${badge}
 
             <a href="/post/${post.id}">
                 <img src="${image}" class="post-image">
@@ -133,12 +140,10 @@ function createPostCard(post) {
                     <h3 class="post-title">${post.title}</h3>
                 </a>
 
-                <!-- TIME -->
                 <p class="post-time">
                     ${post.time_ago || ""}
                 </p>
 
-                <!-- PREVIEW TEXT -->
                 <div class="post-text">
                     ${formatText(preview)} ${showDots ? "..." : ""}
                 </div>
@@ -153,7 +158,6 @@ function createPostCard(post) {
                         👁️ <span id="view-count-${post.id}">${post.views || 0}</span>
                     </span>
 
-                    <!-- SEE MORE (NOW LINKS, NOT EXPANDS) -->
                     <a href="/post/${post.id}" class="see-more-btn">
                         See More
                     </a>
@@ -174,12 +178,10 @@ function initPostFeatures() {
         const postId = likeBtn.id.replace("like-btn-", "");
         const key = `liked-${postId}`;
 
-        // restore liked state
         if (localStorage.getItem(key)) {
             likeBtn.style.backgroundColor = "#d6eefd";
         }
 
-        // attach click
         likeBtn.addEventListener("click", () => likePost(postId));
     });
 }
@@ -204,6 +206,33 @@ function likePost(postId) {
         });
 }
 
+/* ================= SMART SPONSORED INSERTION ================= */
+function mergeSponsored(posts, sponsored) {
+
+    if (!sponsored || sponsored.length === 0) return posts;
+
+    let result = [];
+    let sIndex = 0;
+
+    posts.forEach((post, i) => {
+        result.push(post);
+
+        // insert sponsored every 3 posts
+        if ((i + 1) % 3 === 0 && sIndex < sponsored.length) {
+            result.push(sponsored[sIndex]);
+            sIndex++;
+        }
+    });
+
+    // leftover sponsored
+    while (sIndex < sponsored.length) {
+        result.push(sponsored[sIndex]);
+        sIndex++;
+    }
+
+    return result;
+}
+
 /* ================= LOAD HOME ================= */
 async function loadHomePosts() {
 
@@ -220,7 +249,7 @@ async function loadHomePosts() {
         trending.innerHTML = "";
         recent.innerHTML = "";
 
-        // ⭐ FEATURED (MAX 4)
+        // ⭐ FEATURED
         data.featured.forEach(post => {
             featured.innerHTML += createPostCard(post);
         });
@@ -230,8 +259,10 @@ async function loadHomePosts() {
             trending.innerHTML += createPostCard(post);
         });
 
-        // 🆕 RECENT
-        data.recent.forEach(post => {
+        // 🆕 RECENT + 💰 SPONSORED MIX
+        const mergedRecent = mergeSponsored(data.recent, data.sponsored);
+
+        mergedRecent.forEach(post => {
             recent.innerHTML += createPostCard(post);
         });
 

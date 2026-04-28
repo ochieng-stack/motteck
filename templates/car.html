@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motteck - Car</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motteck - Car</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='car.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='car.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<!-- HEADER -->
 <header class="header">
     <h1 class="title">
         <a href="{{ url_for('home') }}">MOTTECK</a>
@@ -22,7 +22,7 @@
     </div>
 </header>
 
-<!-- ================= CATEGORY NAV ================= -->
+<!-- CATEGORY NAV -->
 <nav class="category-nav">
     <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
     <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
@@ -31,7 +31,7 @@
     <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
 </nav>
 
-<!-- ================= MOBILE MENU ================= -->
+<!-- MOBILE MENU -->
 <div id="mobileMenu" class="mobile-menu">
     <a href="{{ url_for('home') }}">Home</a>
     <a href="{{ url_for('service') }}">Service</a>
@@ -39,47 +39,20 @@
     <a href="{{ url_for('contact') }}">Contact</a>
 </div>
 
-<!-- ================= MAIN ================= -->
+<!-- MAIN -->
 <section class="main-section">
 
-    {% if logged_in %}
-    <form method="POST" action="/add_post" enctype="multipart/form-data">
+<!-- SEARCH -->
+<div class="category-search">
+    <input type="text" id="carSearch" placeholder="Search cars only...">
+</div>
 
-        <input type="hidden" name="category" value="car">
-
-        <input type="text" name="title" placeholder="Car Title" required>
-        <input type="file" name="image" required>
-        <textarea name="description" placeholder="Write post..." required></textarea>
-
-        <!-- 🔥 NEW: MONETIZATION OPTIONS -->
-        <div class="post-options">
-
-            <label>
-                <input type="checkbox" name="is_sponsored">
-                Sponsored Post
-            </label>
-
-            <label>
-                <input type="checkbox" name="is_featured">
-                Featured Post (Premium)
-            </label>
-
-        </div>
-
-        <button type="submit">Publish</button>
-    </form>
-    {% endif %}
-
-    <!-- ================= CATEGORY SEARCH ================= -->
-    <div class="category-search">
-        <input type="text" id="carSearch" placeholder="Search cars only...">
-    </div>
-
-    <div id="carPost" class="post-container"></div>
+<!-- POSTS -->
+<div id="carPost" class="post-container"></div>
 
 </section>
 
-<!-- ================= FOOTER ================= -->
+<!-- FOOTER -->
 <footer class="footer">
     <div class="footer-content">
         <h2>INFO</h2>
@@ -99,7 +72,6 @@
     </div>
 </footer>
 
-<!-- ================= SCRIPT ================= -->
 <script>
 
 const category = "car";
@@ -127,21 +99,22 @@ document.addEventListener("click", e => {
 function formatText(text){
     return text
         .split("\n")
-        .filter(l => l.trim() !== "")
-        .map(l => `<p>${l}</p>`)
+        .filter(line => line.trim() !== "")
+        .map(line => `<p>${line}</p>`)
         .join("");
 }
 
-/* GET ONLY CAR POSTS */
+/* GET POSTS */
 function getPosts(){
     return fetch("/get_posts?t=" + Date.now())
         .then(res => res.json())
-        .then(posts => posts.filter(p => p.category === "car"))
+        .then(posts => posts.filter(p => p.category === category))
         .catch(() => []);
 }
 
-/* RENDER */
+/* RENDER POSTS */
 function render(posts){
+
     container.innerHTML = "";
 
     if(!posts.length){
@@ -151,18 +124,18 @@ function render(posts){
 
     posts.forEach(post => {
 
-        const card = document.createElement("div");
-        card.className = "post-card";
-
-        const text = formatText(post.description || "");
-
         let badge = "";
+
         if(post.is_featured){
             badge += `<span class="badge featured">Featured</span>`;
         }
+
         if(post.is_sponsored){
             badge += `<span class="badge sponsored">Sponsored</span>`;
         }
+
+        const card = document.createElement("div");
+        card.className = "post-card";
 
         card.innerHTML = `
             ${badge}
@@ -181,7 +154,9 @@ function render(posts){
                     👁️ ${post.views || 0} • ❤️ ${post.likes || 0} • 🕒 ${post.time_ago || ""}
                 </p>
 
-                <div class="post-text">${text}</div>
+                <div class="post-text">
+                    ${formatText(post.description || "")}
+                </div>
 
                 <div class="post-actions">
 
@@ -189,11 +164,8 @@ function render(posts){
                         Like (${post.likes || 0})
                     </button>
 
-                    {% if logged_in %}
-                    <button onclick="deletePost(${post.id})">Delete</button>
-                    {% endif %}
-
                 </div>
+
             </div>
         `;
 
@@ -202,7 +174,7 @@ function render(posts){
             .then(r => r.json())
             .then(d => {
                 card.querySelector(`#like-${post.id}`).innerText =
-                    `Like (${d.likes})`;
+                `Like (${d.likes})`;
             });
         };
 
@@ -210,7 +182,7 @@ function render(posts){
     });
 }
 
-/* LOAD */
+/* LOAD POSTS */
 function load(){
     getPosts().then(data => {
         allPosts = data;
@@ -218,26 +190,18 @@ function load(){
     });
 }
 
-/* 🔥 CATEGORY-ONLY SEARCH (FIXED) */
+/* SEARCH */
 searchInput.addEventListener("input", e => {
-    const v = e.target.value.toLowerCase();
 
-    const filtered = allPosts.filter(p =>
-        (p.title && p.title.toLowerCase().includes(v)) ||
-        (p.description && p.description.toLowerCase().includes(v)) ||
-        (p.tags && p.tags.toLowerCase().includes(v))
+    const value = e.target.value.toLowerCase();
+
+    const filtered = allPosts.filter(post =>
+        (post.title || "").toLowerCase().includes(value) ||
+        (post.description || "").toLowerCase().includes(value)
     );
 
     render(filtered);
 });
-
-/* DELETE */
-function deletePost(id){
-    if(!confirm("Delete?")) return;
-
-    fetch(`/delete_post/${id}`, {method:"DELETE"})
-        .then(() => location.reload());
-}
 
 load();
 
