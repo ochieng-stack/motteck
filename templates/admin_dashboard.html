@@ -66,7 +66,7 @@
             Sponsored
         </label>
 
-        <button type="submit">Publish</button>
+        <button type="submit" id="publishBtn">Publish</button>
 
     </form>
 
@@ -134,6 +134,7 @@ const form = document.getElementById("postForm");
 const editForm = document.getElementById("editForm");
 const analyticsBox = document.getElementById("analytics");
 const sponsorTable = document.getElementById("sponsorTable");
+const publishBtn = document.getElementById("publishBtn");
 
 let allPosts = [];
 
@@ -342,17 +343,42 @@ form.addEventListener("submit", async (e) => {
 
     const formData = new FormData(form);
 
-    const res = await fetch("/add_post", {
-        method:"POST",
-        body:formData
-    });
+    publishBtn.disabled = true;
+    publishBtn.innerHTML = `<span class="spinner"></span> Publishing...`;
 
-    const data = await res.json();
+    try{
 
-    if(data.success){
-        form.reset();
-        loadPosts();
-        loadAnalytics();
+        const res = await fetch("/add_post", {
+            method:"POST",
+            body:formData
+        });
+
+        const data = await res.json();
+
+        if(data.success){
+
+            publishBtn.innerHTML = "✅ Published";
+            publishBtn.style.background = "green";
+
+            form.reset();
+
+            loadPosts();
+            loadAnalytics();
+
+            setTimeout(() => {
+                publishBtn.innerHTML = "Publish";
+                publishBtn.disabled = false;
+                publishBtn.style.background = "";
+            }, 2000);
+
+        }else{
+            publishBtn.innerHTML = "❌ Failed";
+            publishBtn.disabled = false;
+        }
+
+    }catch(error){
+        publishBtn.innerHTML = "❌ Error";
+        publishBtn.disabled = false;
     }
 });
 
