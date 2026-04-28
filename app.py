@@ -91,33 +91,23 @@ def time_ago(dt_str):
 def sponsored_score(post):
     views = post.get("views", 0)
     likes = post.get("likes", 0)
+    return (views * 0.7) + (likes * 2) + random.uniform(1, 5)
 
-    score = (views * 0.7) + (likes * 2)
 
-    # rotation boost
-    score += random.uniform(1, 5)
-
-    return score
-# ========= adimn dashboard ===============
+# ================= ADMIN DASHBOARD =================
 @app.route("/admin-dashboard")
 def admin_dashboard():
-
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
-    return render_template(
-        "admin_dashboard.html",
-        logged_in=True
-    )
+    return render_template("admin_dashboard.html", logged_in=True)
+
 
 # ================= HOME =================
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template(
-        'index.html',
-        logged_in=session.get('logged_in', False)
-    )
+    return render_template('index.html', logged_in=session.get('logged_in', False))
 
 
 # ================= STATIC PAGES =================
@@ -125,559 +115,162 @@ def home():
 def about():
     return render_template('about.html')
 
-
 @app.route('/service')
 def service():
-    return render_template(
-        'service.html',
-        logged_in=session.get('logged_in', False)
-    )
-
+    return render_template('service.html', logged_in=session.get('logged_in', False))
 
 @app.route('/car')
 def car():
-    return render_template(
-        'car.html',
-        logged_in=session.get('logged_in', False)
-    )
-
+    return render_template('car.html', logged_in=session.get('logged_in', False))
 
 @app.route('/truck')
 def truck():
-    return render_template(
-        'truck.html',
-        logged_in=session.get('logged_in', False)
-    )
-
+    return render_template('truck.html', logged_in=session.get('logged_in', False))
 
 @app.route('/motobike')
 def motobike():
-    return render_template(
-        'motobike.html',
-        logged_in=session.get('logged_in', False)
-    )
-
+    return render_template('motobike.html', logged_in=session.get('logged_in', False))
 
 @app.route('/plane')
 def plane():
-    return render_template(
-        'plane.html',
-        logged_in=session.get('logged_in', False)
-    )
-
+    return render_template('plane.html', logged_in=session.get('logged_in', False))
 
 @app.route('/privacy')
 def privacy():
     return render_template('privacy.html')
-
 
 @app.route('/term')
 def term():
     return render_template('term.html')
 
 
-# ================= LOGIN =================
-@app.route('/login-goodwill254@', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")
-def login():
+# ================= ADD POST (FIXED) =================
+@app.route('/add_post', methods=['POST'])
+def add_post():
 
-    ip = get_remote_address()
+    if not session.get("logged_in"):
+        return jsonify({"success": False, "error": "unauthorized"}), 403
 
-    if ip in FAILED_ATTEMPTS:
-        if FAILED_ATTEMPTS[ip]["locked_until"] > time.time():
-            return render_template(
-                "admin.html",
-                error="Too many attempts. Try later."
-            )
+    try:
+        category = request.form.get("category", "")
+        title = request.form.get("title", "")
+        description = request.form.get("description", "")
+        image_file = request.files.get("image")
 
-    if request.method == "POST":
+        is_featured = request.form.get("is_featured") == "on"
+        is_sponsored = request.form.get("is_sponsored") == "on"
 
-        username = request.form["username"]
-        password = request.form["password"]
-        recaptcha_token = request.form.get("g-recaptcha-response")
+        image_url = None
 
-        if not verify_recaptcha(recaptcha_token):
-            return render_template(
-                "admin.html",
-                error="reCAPTCHA failed."
-            )
+        if image_file and image_file.filename:
+            upload_result = cloudinary.uploader.upload(image_file)
+            image_url = upload_result.get("secure_url")
 
-        if username == ADMIN_USER and bcrypt.checkpw(
-            password.encode(),
-            ADMIN_PASS_HASH
-        ):
-            session["logged_in"] = True
-            FAILED_ATTEMPTS.pop(ip, None)
-            return redirect(url_for("admin_dashboard"))
+        sponsored_until = None
+        if is_sponsored:
+            sponsored_until = (datetime.utcnow() + timedelta(days=30)).isoformat()
 
-        FAILED_ATTEMPTS.setdefault(
-            ip,
-            {"count": 0, "locked_until": 0}
-        )
+        new_post = {
+            "category": category,
+            "title": title,
+            "image_url": image_url,
+            "description": description,
+            "likes": 0,
+            "views": 0,
+            "created_at": datetime.utcnow().isoformat(),
+            "is_featured": is_featured,
+            "is_sponsored": is_sponsored,
+            "sponsored_until": sponsored_until,
+            "ad_clicks": 0,
+            "ad_views": 0,
+            "ad_earnings": 0
+        }
 
-        FAILED_ATTEMPTS[ip]["count"] += 1
+        response = supabase.table("posts").insert(new_post).execute()
 
-        if FAILED_ATTEMPTS[ip]["count"] >= 5:
-            FAILED_ATTEMPTS[ip]["locked_until"] = time.time() + LOCK_TIME
+        return jsonify({"success": bool(response.data)})
 
-        return render_template(
-            "admin.html",
-            error="Invalid login"
-        )
-
-    return render_template("admin.html")
-
-
-@app.route('/logout')
-def logout():
-    session.pop("logged_in", None)
-    return redirect(url_for("home"))
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 # ================= GET POSTS =================
 @app.route("/get_posts")
 def get_posts():
+    posts = supabase.table("posts").select("*").execute().data or []
 
-    try:
-        posts = supabase.table("posts").select("*").execute().data or []
+    for post in posts:
+        post["time_ago"] = time_ago(post.get("created_at", ""))
 
-        for post in posts:
-            post["time_ago"] = time_ago(post.get("created_at", ""))
+    posts.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+    return jsonify(posts)
 
-        posts.sort(
-            key=lambda x: x.get("created_at", ""),
-            reverse=True
-        )
 
-        return jsonify(posts)
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# ================= GET SINGLE POST (EDIT) =================
+# ================= GET SINGLE POST =================
 @app.route("/get_post/<int:post_id>")
 def get_post(post_id):
 
     if not session.get("logged_in"):
         return jsonify({"error": "unauthorized"}), 403
 
-    try:
-        post = supabase.table("posts") \
-            .select("*") \
-            .eq("id", post_id) \
-            .execute().data
+    post = supabase.table("posts").select("*").eq("id", post_id).execute().data
+    if not post:
+        return jsonify({"error": "not found"}), 404
 
-        if not post:
-            return jsonify({"error": "not found"}), 404
-
-        return jsonify(post[0])
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# ================= HOME POSTS =================
-@app.route("/get_home_posts")
-def get_home_posts():
-
-    try:
-        all_posts = supabase.table("posts").select("*").execute().data or []
-
-        for post in all_posts:
-            post["time_ago"] = time_ago(post.get("created_at", ""))
-
-        # ================= FEATURED =================
-        featured = sorted(
-            [p for p in all_posts if p.get("is_featured")],
-            key=lambda x: x.get("created_at", ""),
-            reverse=True
-        )[:4]
-
-        featured_ids = {p["id"] for p in featured}
-
-        # ================= SPONSORED =================
-        sponsored = [
-            p for p in all_posts
-            if p.get("is_sponsored")
-        ]
-
-        # remove expired ads if using sponsored_until
-        active_sponsored = []
-
-        for ad in sponsored:
-            expiry = ad.get("sponsored_until")
-
-            if not expiry:
-                active_sponsored.append(ad)
-                continue
-
-            try:
-                expiry_date = datetime.fromisoformat(
-                    expiry.replace("Z", "")
-                )
-
-                if expiry_date > datetime.utcnow():
-                    active_sponsored.append(ad)
-
-            except:
-                active_sponsored.append(ad)
-
-        sponsored = sorted(
-            active_sponsored,
-            key=sponsored_score,
-            reverse=True
-        )
-
-        sponsored_ids = {p["id"] for p in sponsored}
-
-        # ================= TRENDING =================
-        def trending_score(post):
-            views = post.get("views", 0)
-            likes = post.get("likes", 0)
-
-            if views < 50:
-                return 0
-
-            return (views * 0.5) + (likes * 2)
-
-        trending = sorted(
-            all_posts,
-            key=trending_score,
-            reverse=True
-        )
-
-        trending = [
-            p for p in trending
-            if p["id"] not in featured_ids
-            and p["id"] not in sponsored_ids
-        ][:6]
-
-        trending_ids = {p["id"] for p in trending}
-
-        # ================= RECENT =================
-        recent = [
-            p for p in all_posts
-            if p["id"] not in featured_ids
-            and p["id"] not in trending_ids
-            and p["id"] not in sponsored_ids
-        ]
-
-        recent.sort(
-            key=lambda x: x.get("created_at", ""),
-            reverse=True
-        )
-
-        # ================= SMART MIX =================
-        mixed_recent = []
-        sponsor_index = 0
-
-        for i, post in enumerate(recent):
-
-            mixed_recent.append(post)
-
-            # insert ad every 3 posts
-            if (i + 1) % 3 == 0:
-                if sponsor_index < len(sponsored):
-                    mixed_recent.append(
-                        sponsored[sponsor_index]
-                    )
-                    sponsor_index += 1
-
-        while sponsor_index < len(sponsored):
-            mixed_recent.append(sponsored[sponsor_index])
-            sponsor_index += 1
-
-        return jsonify({
-            "featured": featured,
-            "sponsored": sponsored,
-            "trending": trending,
-            "recent": mixed_recent
-        })
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    return jsonify(post[0])
 
 
-# ================= ADD POST =================
-@app.route('/add_post', methods=['POST'])
-def add_post():
-
-    category = request.form.get("category")
-    title = request.form.get("title")
-    image_file = request.files.get("image")
-    description = request.form.get("description")
-
-    image_url = None
-
-    if image_file and image_file.filename:
-        upload_result = cloudinary.uploader.upload(image_file)
-        image_url = upload_result.get("secure_url")
-
-    is_sponsored = True if request.form.get("is_sponsored") else False
-
-    sponsored_until = None
-
-    # default 30 days ad
-    if is_sponsored:
-        sponsored_until = (
-            datetime.utcnow() + timedelta(days=30)
-        ).isoformat()
-
-    new_post = {
-        "category": category,
-        "title": title,
-        "image_url": image_url,
-        "description": description,
-        "likes": 0,
-        "views": 0,
-        "created_at": datetime.utcnow().isoformat(),
-        "is_featured": True if request.form.get("is_featured") else False,
-        "is_sponsored": is_sponsored,
-        "sponsored_until": sponsored_until,
-        "ad_clicks": 0,
-        "ad_views": 0,
-        "ad_earnings": 0
-    }
-
-    response = supabase.table("posts").insert(new_post).execute()
-
-    return jsonify({
-        "success": bool(response.data)
-    })
-
-    
-# ================= ANALYTICS DASHBOARD DATA =================
+# ================= ANALYTICS =================
 @app.route("/analytics")
 def analytics():
 
     if not session.get("logged_in"):
         return jsonify({"error": "unauthorized"}), 403
 
-    try:
-        posts = supabase.table("posts").select("*").execute().data or []
+    posts = supabase.table("posts").select("*").execute().data or []
 
-        total_posts = len(posts)
-        total_views = sum(p.get("views", 0) for p in posts)
-        total_likes = sum(p.get("likes", 0) for p in posts)
+    return jsonify({
+        "total_posts": len(posts),
+        "total_views": sum(p.get("views", 0) for p in posts),
+        "total_likes": sum(p.get("likes", 0) for p in posts),
+        "top_posts": sorted(posts, key=lambda x: x.get("views", 0), reverse=True)[:5]
+    })
 
-        top_posts = sorted(
-            posts,
-            key=lambda x: (x.get("views", 0) + x.get("likes", 0)),
-            reverse=True
-        )[:5]
-
-        category_stats = {}
-
-        for p in posts:
-            cat = p.get("category", "unknown")
-            category_stats[cat] = category_stats.get(cat, 0) + 1
-
-        return jsonify({
-            "total_posts": total_posts,
-            "total_views": total_views,
-            "total_likes": total_likes,
-            "top_posts": top_posts,
-            "category_stats": category_stats
-        })
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 # ================= EDIT POST =================
 @app.route('/edit_post/<int:post_id>', methods=['POST'])
 def edit_post(post_id):
 
     if not session.get("logged_in"):
-        return jsonify({"success": False, "error": "unauthorized"}), 403
+        return jsonify({"success": False}), 403
 
-    try:
-        title = request.form.get("title")
-        description = request.form.get("description")
-        category = request.form.get("category")
+    update_data = {
+        "title": request.form.get("title"),
+        "description": request.form.get("description"),
+        "category": request.form.get("category"),
+        "is_featured": request.form.get("is_featured") == "on",
+        "is_sponsored": request.form.get("is_sponsored") == "on"
+    }
 
-        is_featured = True if request.form.get("is_featured") else False
-        is_sponsored = True if request.form.get("is_sponsored") else False
+    image_file = request.files.get("image")
+    if image_file and image_file.filename:
+        upload_result = cloudinary.uploader.upload(image_file)
+        update_data["image_url"] = upload_result.get("secure_url")
 
-        image_file = request.files.get("image")
+    supabase.table("posts").update(update_data).eq("id", post_id).execute()
 
-        update_data = {
-            "title": title,
-            "description": description,
-            "category": category,
-            "is_featured": is_featured,
-            "is_sponsored": is_sponsored
-        }
-
-        # optional image update
-        if image_file and image_file.filename:
-            upload_result = cloudinary.uploader.upload(image_file)
-            update_data["image_url"] = upload_result.get("secure_url")
-
-        supabase.table("posts") \
-            .update(update_data) \
-            .eq("id", post_id) \
-            .execute()
-
-        return jsonify({"success": True})
-
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)})
-
-# ================= SINGLE POST =================
-@app.route('/post/<int:post_id>')
-def single_post(post_id):
-
-    response = supabase.table("posts")\
-        .select("*")\
-        .eq("id", post_id)\
-        .execute()
-
-    if not response.data:
-        return "Post not found", 404
-
-    post = response.data[0]
-
-    return render_template(
-        "single_post.html",
-        post=post
-    )
+    return jsonify({"success": True})
 
 
-# ================= LIKE =================
-@app.route('/like/<int:post_id>', methods=['POST'])
-def like_post(post_id):
-
-    try:
-        response = supabase.table("posts")\
-            .select("likes")\
-            .eq("id", post_id)\
-            .execute()
-
-        if not response.data:
-            return jsonify({"success": False}), 404
-
-        current = response.data[0]["likes"] or 0
-
-        supabase.table("posts").update({
-            "likes": current + 1
-        }).eq("id", post_id).execute()
-
-        return jsonify({
-            "success": True,
-            "likes": current + 1
-        })
-
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        })
-
-
-# ================= VIEW =================
-@app.route('/view/<int:post_id>', methods=['POST'])
-def view_post(post_id):
-
-    try:
-        if "viewed_posts" not in session:
-            session["viewed_posts"] = []
-
-        response = supabase.table("posts")\
-            .select("views,is_sponsored,ad_views")\
-            .eq("id", post_id)\
-            .execute()
-
-        if not response.data:
-            return jsonify({"success": False}), 404
-
-        row = response.data[0]
-
-        current_views = row["views"] or 0
-        ad_views = row.get("ad_views", 0) or 0
-
-        if post_id not in session["viewed_posts"]:
-
-            update_data = {
-                "views": current_views + 1
-            }
-
-            if row.get("is_sponsored"):
-                update_data["ad_views"] = ad_views + 1
-
-            supabase.table("posts")\
-                .update(update_data)\
-                .eq("id", post_id)\
-                .execute()
-
-            session["viewed_posts"].append(post_id)
-            current_views += 1
-
-        return jsonify({
-            "success": True,
-            "views": current_views
-        })
-
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        })
-
-
-# ================= DELETE POST =================
+# ================= DELETE =================
 @app.route('/delete_post/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
 
     if not session.get("logged_in"):
         return jsonify({"success": False}), 403
 
-    try:
-        supabase.table("posts")\
-            .delete()\
-            .eq("id", post_id)\
-            .execute()
-
-        return jsonify({"success": True})
-
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        })
-
-
-# ================= CONTACT =================
-@app.route('/contact', methods=['GET', 'POST'])
-def contact():
-
-    if request.method == "POST":
-
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
-        email = request.form.get("email")
-        message = request.form.get("text")
-
-        msg = EmailMessage()
-        msg["Subject"] = f"Motteck Contact {firstname} {lastname}"
-        msg["From"] = GMAIL_USER
-        msg["To"] = GMAIL_USER
-
-        msg.set_content(
-            f"{firstname} {lastname}\n"
-            f"{email}\n\n"
-            f"{message}"
-        )
-
-        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-            smtp.starttls()
-            smtp.login(
-                GMAIL_USER,
-                GMAIL_APP_PASSWORD
-            )
-            smtp.send_message(msg)
-
-        return jsonify({"status": "success"})
-
-    return render_template("contact.html")
+    supabase.table("posts").delete().eq("id", post_id).execute()
+    return jsonify({"success": True})
 
 
 # ================= RUN =================
