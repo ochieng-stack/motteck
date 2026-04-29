@@ -249,20 +249,18 @@ async function loadHomePosts() {
         trending.innerHTML = "";
         recent.innerHTML = "";
 
-        // ⭐ FEATURED
+        // FEATURED
         data.featured.forEach(post => {
             featured.innerHTML += createPostCard(post);
         });
 
-        // 🔥 TRENDING
+        // TRENDING (max 5 from backend)
         data.trending.forEach(post => {
             trending.innerHTML += createPostCard(post);
         });
 
-        // 🆕 RECENT + 💰 SPONSORED MIX
-        const mergedRecent = mergeSponsored(data.recent, data.sponsored);
-
-        mergedRecent.forEach(post => {
+        // RECENT already includes sponsored inserted by backend
+        data.recent.forEach(post => {
             recent.innerHTML += createPostCard(post);
         });
 
@@ -272,7 +270,6 @@ async function loadHomePosts() {
         console.error("Home load error:", err);
     }
 }
-
 /* ================= START ================= */
 document.addEventListener("DOMContentLoaded", loadHomePosts);
 
