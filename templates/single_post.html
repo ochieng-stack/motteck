@@ -140,12 +140,24 @@
     <!-- CONTENT -->
     <div class="post-content">
         {% for paragraph in post.description.split('\n') %}
-            {% if paragraph.strip() %}
-                <p>{{ paragraph }}</p>
-            {% endif %}
-        {% endfor %}
-    </div>
+            {% set line = paragraph.strip() %}
 
+        {% if line %}
+        
+        {% if line.endswith('.jpg') or line.endswith('.jpeg') or line.endswith('.png') or line.endswith('.gif') or line.endswith('.webp') %}
+
+            <img src="{{ line }}" alt="Post image">
+
+        {% else %}
+
+            <p>{{ line }}</p>
+
+        {% endif %}
+
+        {% endif %}
+    {% endfor %}
+
+    </div>
     <!-- ACTIONS -->
     <div class="actions">
 

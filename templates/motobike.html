@@ -98,10 +98,35 @@ document.addEventListener("click", e => {
 
 /* FORMAT TEXT */
 function formatText(text){
+
+    if(!text) return "";
+
+    const imagePattern = /(https?:\/\/\S+\.(jpg|jpeg|png|gif|webp))/i;
+
     return text
         .split("\n")
         .filter(line => line.trim() !== "")
-        .map(line => `<p>${line}</p>`)
+        .map(line => {
+
+            const cleanLine = line.trim();
+
+            // If line is image link only
+            if(imagePattern.test(cleanLine)){
+                return `
+                    <img 
+                        src="${cleanLine}" 
+                        style="
+                            width:100%;
+                            max-height:320px;
+                            object-fit:cover;
+                            border-radius:10px;
+                            margin:12px 0;
+                        ">
+                `;
+            }
+
+            return `<p>${cleanLine}</p>`;
+        })
         .join("");
 }
 

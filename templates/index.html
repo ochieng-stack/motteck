@@ -101,10 +101,32 @@ function toggleMenu() {
 function formatText(text) {
     if (!text) return "";
 
+    const imagePattern = /(https?:\/\/\S+\.(jpg|jpeg|png|gif|webp))/i;
+
     return text
         .split('\n')
         .filter(line => line.trim() !== '')
-        .map(line => `<p>${line.trim()}</p>`)
+        .map(line => {
+            const cleanLine = line.trim();
+
+            // If line is image URL only
+            if (imagePattern.test(cleanLine)) {
+                return `
+                    <img 
+                        src="${cleanLine}" 
+                        style="
+                            width:100%;
+                            max-height:260px;
+                            object-fit:cover;
+                            border-radius:10px;
+                            margin:10px 0;
+                        ">
+                `;
+            }
+
+            // normal paragraph
+            return `<p>${cleanLine}</p>`;
+        })
         .join('');
 }
 
@@ -114,9 +136,7 @@ function createPostCard(post) {
     let image = post.image || post.image_url || "/static/images/default.jpg";
     if (!image.startsWith("http")) image = "/static/" + image;
 
-    const preview = post.description
-        ? post.description.slice(0, 180)
-        : "";
+    const preview = post.description || "";
 
     const showDots = post.description && post.description.length > 180;
 

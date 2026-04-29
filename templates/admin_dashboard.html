@@ -149,6 +149,23 @@ function loadPosts(){
         loadSponsors(data);
     });
 }
+function renderDescription(text){
+
+    if(!text) return "";
+
+    // convert image URLs into <img> tags
+    const imagePattern = /(https?:\/\/\S+\.(jpg|jpeg|png|gif|webp))/g;
+
+    let formatted = text.replace(
+        imagePattern,
+        '<img src="$1" style="max-width:100%; height:auto; margin:10px 0; border-radius:8px;">'
+    );
+
+    // preserve line breaks
+    formatted = formatted.replace(/\n/g, "<br>");
+
+    return formatted;
+}
 
 /* ================= ANALYTICS ================= */
 function loadAnalytics(){
@@ -266,6 +283,11 @@ function render(posts){
                 <div>
                     <h4>${post.title}</h4>
                     <small>${post.category}</small><br>
+
+                    <div class="post-description">
+                        ${renderDescription(post.description)}
+                    </div>
+                    
                     👁 ${post.views || 0} ❤️ ${post.likes || 0}
                 </div>
             </div>
