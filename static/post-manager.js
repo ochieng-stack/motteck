@@ -76,13 +76,34 @@ async function likePost(postId) {
 function formatText(text) {
     if (!text) return "";
 
+    const imagePattern = /(https?:\/\/\S+\.(jpg|jpeg|png|gif|webp))/i;
+
     return text
         .split("\n")
         .filter(line => line.trim() !== "")
-        .map(line => `<p>${line.trim()}</p>`)
+        .map(line => {
+
+            const cleanLine = line.trim();
+
+            // image url on its own line
+            if (imagePattern.test(cleanLine)) {
+                return `
+                    <img 
+                        src="${cleanLine}" 
+                        style="
+                            width:100%;
+                            max-height:320px;
+                            object-fit:cover;
+                            border-radius:10px;
+                            margin:12px 0;
+                        ">
+                `;
+            }
+
+            return `<p>${cleanLine}</p>`;
+        })
         .join("");
 }
-
 
 // =========================
 // SAFE TRUNCATION
@@ -106,8 +127,9 @@ function setupSeeMoreButtons() {
         const textEl = card.querySelector(".post-text");
 
         if (!btn || !textEl) return;
-
-        const fullText = textEl.textContent || textEl.innerText;
+        
+        textEl.dataset.fulltext = textEl.innerHTML;
+        const fullText = textEl.dataset.fulltext || textEl.innerHTML;
 
         if (fullText.length <= 250) {
             btn.style.display = "none";
