@@ -79,10 +79,10 @@ body {
 .mobile-menu {
     display: none;
     flex-direction: column;
-    position: absolute;
+    position: fixed;
     top: 65px;
     right: 10px;
-    background: #111;
+    background: #377cfc;
     width: 200px;
     border-radius: 8px;
     z-index: 2000;

@@ -62,7 +62,7 @@
 .mobile-menu {
     display: none;
     flex-direction: column;
-    position: absolute;
+    position: fixed;
     top: 65px;
     right: 10px;
     background: #111;

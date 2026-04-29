@@ -100,6 +100,25 @@ body{
 .category-nav a.active {
     background-color: #2196f3;
 }
+/* MOBILE MENU */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 65px;
+    right: 10px;
+    background: #111111;
+    width: 200px;
+    border-radius: 8px;
+    z-index: 2000;
+}
+
+.mobile-menu a {
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    border-bottom: 1px solid #222;
+}
 
 /* =========================
    FORM
