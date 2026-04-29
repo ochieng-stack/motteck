@@ -285,7 +285,9 @@ def get_home_posts():
         for post in all_posts:
             post["time_ago"] = time_ago(post.get("created_at", ""))
 
-        # ================= FEATURED =================
+        # ==========================================
+        # FEATURED (manual picks only, max 4)
+        # ==========================================
         featured = sorted(
             [p for p in all_posts if p.get("is_featured")],
             key=lambda x: x.get("created_at", ""),
@@ -294,20 +296,20 @@ def get_home_posts():
 
         featured_ids = {p["id"] for p in featured}
 
-        # ================= SPONSORED =================
-        sponsored = [
-            p for p in all_posts
-            if p.get("is_sponsored")
-        ]
+        # ==========================================
+        # ACTIVE SPONSORED POSTS ONLY
+        # ==========================================
+        sponsored = []
 
-        # remove expired ads if using sponsored_until
-        active_sponsored = []
+        for post in all_posts:
 
-        for ad in sponsored:
-            expiry = ad.get("sponsored_until")
+            if not post.get("is_sponsored"):
+                continue
+
+            expiry = post.get("sponsored_until")
 
             if not expiry:
-                active_sponsored.append(ad)
+                sponsored.append(post)
                 continue
 
             try:
@@ -316,49 +318,80 @@ def get_home_posts():
                 )
 
                 if expiry_date > datetime.utcnow():
-                    active_sponsored.append(ad)
+                    sponsored.append(post)
 
             except:
-                active_sponsored.append(ad)
+                sponsored.append(post)
 
         sponsored = sorted(
-            active_sponsored,
+            sponsored,
             key=sponsored_score,
             reverse=True
         )
 
         sponsored_ids = {p["id"] for p in sponsored}
 
-        # ================= TRENDING =================
-        def trending_score(post):
-            views = post.get("views", 0)
-            likes = post.get("likes", 0)
-
-            if views < 50:
-                return 0
-
-            return (views * 0.5) + (likes * 2)
-
-        trending = sorted(
-            all_posts,
-            key=trending_score,
-            reverse=True
-        )
-
-        trending = [
-            p for p in trending
+        # ==========================================
+        # ORGANIC POSTS ONLY
+        # (not featured, not sponsored)
+        # ==========================================
+        organic_posts = [
+            p for p in all_posts
             if p["id"] not in featured_ids
             and p["id"] not in sponsored_ids
-        ][:6]
+        ]
+
+        # ==========================================
+        # STRICT TRENDING SCORE
+        # only real engagement wins
+        # ==========================================
+        def trending_score(post):
+
+            views = post.get("views", 0) or 0
+            likes = post.get("likes", 0) or 0
+            clicks = post.get("clicks", 0) or 0
+
+            score = (
+                (views * 0.20) +
+                (likes * 5) +
+                (clicks * 3)
+            )
+
+            return score
+
+        # only posts with enough activity can trend
+        trending_candidates = []
+
+        for post in organic_posts:
+
+            views = post.get("views", 0) or 0
+            likes = post.get("likes", 0) or 0
+            clicks = post.get("clicks", 0) or 0
+
+            score = trending_score(post)
+
+            if (
+                views >= 30 and
+                (likes >= 2 or clicks >= 3) and
+                score >= 25
+            ):
+                trending_candidates.append(post)
+
+        trending = sorted(
+            trending_candidates,
+            key=trending_score,
+            reverse=True
+        )[:5]
 
         trending_ids = {p["id"] for p in trending}
 
-        # ================= RECENT =================
+        # ==========================================
+        # RECENT POSTS
+        # remaining organic posts only
+        # ==========================================
         recent = [
-            p for p in all_posts
-            if p["id"] not in featured_ids
-            and p["id"] not in trending_ids
-            and p["id"] not in sponsored_ids
+            p for p in organic_posts
+            if p["id"] not in trending_ids
         ]
 
         recent.sort(
@@ -366,7 +399,10 @@ def get_home_posts():
             reverse=True
         )
 
-        # ================= SMART MIX =================
+        # ==========================================
+        # INSERT SPONSORED INTO RECENT FEED
+        # after every 3 posts
+        # ==========================================
         mixed_recent = []
         sponsor_index = 0
 
@@ -374,7 +410,6 @@ def get_home_posts():
 
             mixed_recent.append(post)
 
-            # insert ad every 3 posts
             if (i + 1) % 3 == 0:
                 if sponsor_index < len(sponsored):
                     mixed_recent.append(
@@ -383,18 +418,22 @@ def get_home_posts():
                     sponsor_index += 1
 
         while sponsor_index < len(sponsored):
-            mixed_recent.append(sponsored[sponsor_index])
+            mixed_recent.append(
+                sponsored[sponsor_index]
+            )
             sponsor_index += 1
 
         return jsonify({
             "featured": featured,
-            "sponsored": sponsored,
             "trending": trending,
-            "recent": mixed_recent
+            "recent": mixed_recent,
+            "sponsored": sponsored
         })
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 
 # ================= ADD POST =================
