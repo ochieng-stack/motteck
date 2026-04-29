@@ -1,16 +1,23 @@
-
 // =========================
-// VIEW TRACKING (CLEAN + SAFE)
+// STATE TRACKING (CLEAN)
 // =========================
 const viewedPosts = new Set();
+const likedPosts = new Set();
 
+
+// =========================
+// VIEW TRACKING (SAFE + SIMPLE)
+// =========================
 async function viewPost(postId) {
 
     postId = Number(postId);
     if (!postId || viewedPosts.has(postId)) return;
 
     try {
-        const res = await fetch(`/view/${postId}`, { method: "POST" });
+        const res = await fetch(`/view/${postId}`, {
+            method: "POST"
+        });
+
         const data = await res.json();
 
         if (data.success) {
@@ -27,7 +34,7 @@ async function viewPost(postId) {
 
 
 // =========================
-// LIKE SYSTEM
+// LIKE SYSTEM (SYNCED ONLY)
 // =========================
 async function likePost(postId) {
 
@@ -40,7 +47,10 @@ async function likePost(postId) {
     }
 
     try {
-        const res = await fetch(`/like/${postId}`, { method: "POST" });
+        const res = await fetch(`/like/${postId}`, {
+            method: "POST"
+        });
+
         const data = await res.json();
 
         if (data.success) {
@@ -51,6 +61,7 @@ async function likePost(postId) {
             if (btn) btn.style.backgroundColor = "#d6eefd";
 
             localStorage.setItem(key, "true");
+            likedPosts.add(postId);
         }
 
     } catch (err) {
@@ -85,7 +96,7 @@ function getShortText(text, limit = 250) {
 
 
 // =========================
-// SEE MORE (FIXED STABLE VERSION)
+// SEE MORE SYSTEM (UI ONLY)
 // =========================
 function setupSeeMoreButtons() {
 
@@ -125,7 +136,7 @@ function setupSeeMoreButtons() {
 
 
 // =========================
-// VIEW OBSERVER (IMPROVED)
+// VIEW OBSERVER (ENGAGEMENT ONLY)
 // =========================
 function setupViewObserver() {
 
@@ -142,6 +153,7 @@ function setupViewObserver() {
 
             if (!postId || viewedPosts.has(postId)) return;
 
+            // only count view after real attention
             setTimeout(() => {
                 viewPost(postId);
             }, 2000);
@@ -165,7 +177,7 @@ function initPostFeatures() {
 }
 
 
-// expose globally
+// expose globally (used by HTML)
 window.likePost = likePost;
 window.viewPost = viewPost;
 window.initPostFeatures = initPostFeatures;
