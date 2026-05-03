@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motteck - service</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>service - Bike</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='service.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='service.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<!-- HEADER -->
 <header class="header">
     <h1 class="title">
         <a href="{{ url_for('home') }}">MOTTECK</a>
@@ -22,16 +22,16 @@
     </div>
 </header>
 
-<!-- ================= CATEGORY NAV ================= -->
+<!-- CATEGORY NAV -->
 <nav class="category-nav">
-    <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
-    <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
-    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}">BIKES</a>
-    <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
-    <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
+    <a href="{{ url_for('car') }}">CAR</a>
+    <a href="{{ url_for('truck') }}">TRUCK</a>
+    <a href="{{ url_for('motobike') }}" class="active">BIKES</a>
+    <a href="{{ url_for('plane') }}">AVIATION</a>
+    <a href="{{ url_for('service') }}">SERVICE</a>
 </nav>
 
-<!-- ================= MOBILE MENU ================= -->
+<!-- MOBILE MENU -->
 <div id="mobileMenu" class="mobile-menu">
     <a href="{{ url_for('home') }}">Home</a>
     <a href="{{ url_for('service') }}">Service</a>
@@ -39,47 +39,20 @@
     <a href="{{ url_for('contact') }}">Contact</a>
 </div>
 
-<!-- ================= MAIN ================= -->
+<!-- MAIN -->
 <section class="main-section">
 
-    {% if logged_in %}
-    <form method="POST" action="/add_post" enctype="multipart/form-data">
+<!-- SEARCH -->
+<div class="category-search">
+    <input type="text" id="serviceSearch" placeholder="Search bikes only...">
+</div>
 
-        <input type="hidden" name="category" value="service">
-
-        <input type="text" name="title" placeholder="service Title" required>
-        <input type="file" name="image" required>
-        <textarea name="description" placeholder="Write post..." required></textarea>
-
-        <!-- 🔥 NEW: MONETIZATION OPTIONS -->
-        <div class="post-options">
-
-            <label>
-                <input type="checkbox" name="is_sponsored">
-                Sponsored Post
-            </label>
-
-            <label>
-                <input type="checkbox" name="is_featured">
-                Featured Post (Premium)
-            </label>
-
-        </div>
-
-        <button type="submit">Publish</button>
-    </form>
-    {% endif %}
-
-    <!-- ================= CATEGORY SEARCH ================= -->
-    <div class="category-search">
-        <input type="text" id="serviceSearch" placeholder="Search service guide & Insurance guide..">
-    </div>
-
-    <div id="servicePost" class="post-container"></div>
+<!-- POSTS -->
+<div id="servicePost" class="post-container"></div>
 
 </section>
 
-<!-- ================= FOOTER ================= -->
+<!-- FOOTER -->
 <footer class="footer">
     <div class="footer-content">
         <h2>INFO</h2>
@@ -87,9 +60,9 @@
     </div>
 
     <ul class="list">
-        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
-        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
-        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+        <li><a class="big" href="https://www.instagram.com/mott_eck"><i class="fa-brands fa-instagram"></i></a></li>
+        <li><a class="big" href="https://x.com/motteck254"><i class="fa-brands fa-square-x-twitter"></i></a></li>
+        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365"><i class="fa-brands fa-facebook"></i></a></li>
     </ul>
 
     <div class="legal-links">
@@ -99,7 +72,6 @@
     </div>
 </footer>
 
-<!-- ================= SCRIPT ================= -->
 <script>
 
 const category = "service";
@@ -114,11 +86,12 @@ const menu = document.getElementById("mobileMenu");
 
 menuBtn.addEventListener("click", e => {
     e.stopPropagation();
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    menu.style.display =
+        menu.style.display === "flex" ? "none" : "flex";
 });
 
 document.addEventListener("click", e => {
-    if(!menu.contains(e.target) && !menuBtn.contains(e.target)){
+    if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
         menu.style.display = "none";
     }
 });
@@ -157,81 +130,98 @@ function formatText(text){
         .join("");
 }
 
-/* GET ONLY CAR POSTS */
+/* GET POSTS */
 function getPosts(){
     return fetch("/get_posts?t=" + Date.now())
         .then(res => res.json())
-        .then(posts => posts.filter(p => p.category === "car"))
+        .then(posts =>
+            posts.filter(p => p.category === category)
+        )
         .catch(() => []);
+}
+
+/* CREATE CARD */
+function createPostCard(post){
+
+    let badge = "";
+
+    if(post.is_featured){
+        badge += `<span class="badge featured">Featured</span>`;
+    }
+
+    if(post.is_sponsored){
+        badge += `<span class="badge sponsored">Sponsored</span>`;
+    }
+
+    const card = document.createElement("div");
+    card.className = "post-card";
+
+    card.innerHTML = `
+        ${badge}
+
+        <a href="/post/${post.id}">
+            <img src="${post.image_url}">
+        </a>
+
+        <div class="post-content">
+
+            <a href="/post/${post.id}">
+                <h3>${post.title}</h3>
+            </a>
+
+            <p class="meta">
+                👁️ ${post.views || 0}
+                • ❤️ ${post.likes || 0}
+                • 🕒 ${post.time_ago || ""}
+            </p>
+
+            <div class="post-text">
+                ${formatText(post.description || "")}
+            </div>
+
+            <div class="post-actions">
+
+                <button id="like-${post.id}">
+                    Like (${post.likes || 0})
+                </button>
+
+                {% if logged_in %}
+                <button onclick="deletePost(${post.id})">
+                    Delete
+                </button>
+                {% endif %}
+
+            </div>
+
+        </div>
+    `;
+
+    card.querySelector(`#like-${post.id}`).onclick = () => {
+        fetch(`/like/${post.id}`, {
+            method:"POST"
+        })
+        .then(r => r.json())
+        .then(d => {
+            card.querySelector(`#like-${post.id}`).innerText =
+                `Like (${d.likes})`;
+        });
+    };
+
+    return card;
 }
 
 /* RENDER */
 function render(posts){
+
     container.innerHTML = "";
 
     if(!posts.length){
-        container.innerHTML = "<p>No car posts found.</p>";
+        container.innerHTML = "<p>No bike posts found.</p>";
         return;
     }
 
     posts.forEach(post => {
-
-        const card = document.createElement("div");
-        card.className = "post-card";
-
-        const text = formatText(post.description || "");
-
-        let badge = "";
-        if(post.is_featured){
-            badge += `<span class="badge featured">Featured</span>`;
-        }
-        if(post.is_sponsored){
-            badge += `<span class="badge sponsored">Sponsored</span>`;
-        }
-
-        card.innerHTML = `
-            ${badge}
-
-            <a href="/post/${post.id}">
-                <img src="${post.image_url}">
-            </a>
-
-            <div class="post-content">
-
-                <a href="/post/${post.id}">
-                    <h3>${post.title}</h3>
-                </a>
-
-                <p class="meta">
-                    👁️ ${post.views || 0} • ❤️ ${post.likes || 0} • 🕒 ${post.time_ago || ""}
-                </p>
-
-                <div class="post-text">${text}</div>
-
-                <div class="post-actions">
-
-                    <button id="like-${post.id}">
-                        Like (${post.likes || 0})
-                    </button>
-
-                    {% if logged_in %}
-                    <button onclick="deletePost(${post.id})">Delete</button>
-                    {% endif %}
-
-                </div>
-            </div>
-        `;
-
-        card.querySelector(`#like-${post.id}`).onclick = () => {
-            fetch(`/like/${post.id}`, {method:"POST"})
-            .then(r => r.json())
-            .then(d => {
-                card.querySelector(`#like-${post.id}`).innerText =
-                    `Like (${d.likes})`;
-            });
-        };
-
-        container.appendChild(card);
+        container.appendChild(createPostCard(post));
     });
 }
 
@@ -243,14 +233,14 @@ function load(){
     });
 }
 
-/* 🔥 CATEGORY-ONLY SEARCH (FIXED) */
+/* SEARCH */
 searchInput.addEventListener("input", e => {
-    const v = e.target.value.toLowerCase();
 
-    const filtered = allPosts.filter(p =>
-        (p.title && p.title.toLowerCase().includes(v)) ||
-        (p.description && p.description.toLowerCase().includes(v)) ||
-        (p.tags && p.tags.toLowerCase().includes(v))
+    const value = e.target.value.toLowerCase();
+
+    const filtered = allPosts.filter(post =>
+        (post.title || "").toLowerCase().includes(value) ||
+        (post.description || "").toLowerCase().includes(value)
     );
 
     render(filtered);
@@ -258,12 +248,16 @@ searchInput.addEventListener("input", e => {
 
 /* DELETE */
 function deletePost(id){
-    if(!confirm("Delete?")) return;
 
-    fetch(`/delete_post/${id}`, {method:"DELETE"})
-        .then(() => location.reload());
+    if(!confirm("Delete this post?")) return;
+
+    fetch(`/delete_post/${id}`, {
+        method:"DELETE"
+    })
+    .then(() => load());
 }
 
+/* START */
 load();
 
 </script>
