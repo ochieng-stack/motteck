@@ -255,7 +255,23 @@ function loadSponsors(posts){
     sponsorTable.innerHTML = html;
 }
 
+/* ============ getpreview post ===============*/
+function getPreview(text){
+
+    if(!text) return "";
+
+    // remove image URLs first
+    let clean = text.replace(/(https?:\/\/\S+\.(jpg|jpeg|png|gif|webp))/g, "");
+
+    // remove HTML if any exists
+    clean = clean.replace(/<[^>]*>/g, "");
+
+    // keep ONLY first line or first 120 chars
+    return clean.split("\n")[0].substring(0, 120) + "...";
+}
+
 /* ================= RENDER POSTS ================= */
+
 function render(posts){
 
     postsContainer.innerHTML = "";
@@ -293,10 +309,8 @@ function render(posts){
 
                     <small>${post.category}</small>
 
-                    <div style="margin-top:6px;font-size:14px;color:#444;">
-
-                        ${renderDescription(post.description)}
-
+                    <div class="post-preview" style="margin-top:6px;font-size:14px;color:#444;">
+                        ${getPreview(post.description)}
                     </div>
 
                     <div style="margin-top:8px;font-size:13px;">
