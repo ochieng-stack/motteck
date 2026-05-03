@@ -89,10 +89,9 @@ button {
     margin-top: 6px;
     line-height: 1.5;
 
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* INLINE IMAGES INSIDE DESCRIPTION */
