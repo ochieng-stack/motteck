@@ -149,57 +149,61 @@ th,td{
     to{transform:rotate(360deg);}
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px){
 
-    .container {
-        grid-template-columns: 1fr;
+    /* make dashboard stack vertically */
+    .container{
+        display: flex;
+        flex-direction: column;
         padding: 10px;
         gap: 15px;
     }
 
+    /* make boxes full width */
     .form-box,
-    .posts-box {
-        padding: 15px;
-        border-radius: 8px;
+    .posts-box{
+        width: 100%;
     }
 
-    header {
-        padding: 12px;
+    /* header easier on phone */
+    header{
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    header h2{
         font-size: 18px;
     }
 
+    /* inputs easier to tap */
     input,
     textarea,
     select,
-    button {
+    button{
         font-size: 16px;
-        padding: 12px;
     }
 
-    .post-card img {
-        width: 100%;
-        height: auto;
-        margin-top: 10px;
-    }
-
-    table {
+    /* table fix */
+    table{
         display: block;
         overflow-x: auto;
         white-space: nowrap;
     }
 
-    th, td {
-        font-size: 13px;
-        padding: 8px;
+    /* post layout */
+    .post-card{
+        flex-direction: column;
     }
 
-    .modal-content {
+    .post-card img{
+        width: 100%;
+        height: auto;
+    }
+
+    /* modal fix */
+    .modal-content{
         width: 95%;
-        margin: 30px auto;
-        padding: 15px;
-    }
-
-    body {
-        overflow-x: hidden;
+        margin: 40px auto;
     }
 }
