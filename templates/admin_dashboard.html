@@ -278,23 +278,39 @@ function render(posts){
         div.innerHTML = `
             ${badges}
 
-            <div style="display:flex;gap:10px;align-items:center;">
-                <img src="${post.image_url}" width="80">
+            <!-- MAIN ROW -->
+            <div style="display:flex;gap:12px;align-items:flex-start;">
 
-                <div>
-                    <h4>${post.title}</h4>
-                    <small>${post.category}</small><br>
-
-                    <div class="post-description">
-                        ${renderDescription(post.description)}
-                    </div>
-                    
-                    👁 ${post.views || 0} ❤️ ${post.likes || 0}
+                <!-- IMAGE LEFT -->
+                <div style="flex-shrink:0;">
+                    <img src="${post.image_url}" style="width:130px;height:90px;object-fit:cover;border-radius:8px;">
                 </div>
-            </div>
 
-            <button onclick="openEdit(${post.id})">Edit</button>
-            <button onclick="deletePost(${post.id})">Delete</button>
+                <!-- CONTENT RIGHT -->
+                <div style="flex:1;">
+
+                    <h4 style="margin:0;">${post.title}</h4>
+
+                    <small>${post.category}</small>
+
+                    <div style="margin-top:6px;font-size:14px;color:#444;">
+
+                        ${renderDescription(post.description)}
+
+                    </div>
+
+                    <div style="margin-top:8px;font-size:13px;">
+                        👁 ${post.views || 0} &nbsp; ❤️ ${post.likes || 0}
+                    </div>
+
+                    <div style="margin-top:8px;">
+                        <button onclick="openEdit(${post.id})">Edit</button>
+                        <button onclick="deletePost(${post.id})">Delete</button>
+                    </div>
+
+                </div>
+
+            </div>
         `;
 
         postsContainer.appendChild(div);
