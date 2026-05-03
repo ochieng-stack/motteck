@@ -148,3 +148,58 @@ th,td{
 @keyframes spin{
     to{transform:rotate(360deg);}
 }
+
+@media (max-width: 768px) {
+
+    .container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .form-box,
+    .posts-box {
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    header {
+        padding: 12px;
+        font-size: 18px;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .post-card img {
+        width: 100%;
+        height: auto;
+        margin-top: 10px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 30px auto;
+        padding: 15px;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+}
