@@ -708,26 +708,35 @@ def contact():
         email = request.form.get("email")
         message = request.form.get("text")
 
-        msg = EmailMessage()
-        msg["Subject"] = f"Motteck Contact {firstname} {lastname}"
-        msg["From"] = GMAIL_USER
-        msg["To"] = GMAIL_USER
+        try:
+            msg = EmailMessage()
+            msg["Subject"] = f"Motteck Contact {firstname} {lastname}"
+            msg["From"] = GMAIL_USER
+            msg["To"] = GMAIL_USER
 
-        msg.set_content(
-            f"{firstname} {lastname}\n"
-            f"{email}\n\n"
-            f"{message}"
-        )
-
-        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-            smtp.starttls()
-            smtp.login(
-                GMAIL_USER,
-                GMAIL_APP_PASSWORD
+            msg.set_content(
+                f"{firstname} {lastname}\n"
+                f"{email}\n\n"
+                f"{message}"
             )
-            smtp.send_message(msg)
 
-        return jsonify({"status": "success"})
+            with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+                smtp.send_message(msg)
+
+            return jsonify({
+                "status": "success",
+                "message": "Message sent successfully"
+            })
+
+        except Exception as e:
+            print(e)
+            return jsonify({
+                "status": "error",
+                "message": "Failed to send message"
+            })
 
     return render_template("contact.html")
 
