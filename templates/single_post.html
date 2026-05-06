@@ -11,84 +11,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='truck.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='service.css') }}">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='single_post.css') }}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
-    <style>
-        .post-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            padding-top: 120px;
-        }
-
-        .post-container h1 {
-            margin-bottom: 10px;
-            font-size: 28px;
-            line-height: 1.3;
-        }
-
-        .post-meta {
-            color: gray;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .post-container img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .post-content {
-            font-size: 17px;
-            line-height: 1.8;
-            color: #222;
-        }
-
-        .post-content p {
-            margin-bottom: 18px;
-            text-align: justify;
-        }
-
-        .actions {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 10px 15px;
-            background: black;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
-        .btn.secondary {
-            background: #ddd;
-            color: black;
-        }
-
-        .btn:hover {
-            background: #333;
-        }
-
-        .btn.secondary:hover {
-            background: #bbb;
-        }
-
-        @media (max-width: 600px) {
-            .post-container {
-                padding-top: 140px;
-            }
-
-            .post-container h1 {
-                font-size: 22px;
-            }
-        }
-    </style>
 </head>
 
 <body>
