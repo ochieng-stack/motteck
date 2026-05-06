@@ -175,6 +175,19 @@ def privacy():
 def term():
     return render_template('term.html')
 
+@app.route('/partner_with_us')
+def term():
+    return render_template('partner_with_us.html')
+
+
+@app.route('/advertise')
+def term():
+    return render_template('advertise.html')
+
+
+@app.route('/cookies')
+def term():
+    return render_template('cookies.html')
 
 # ================= LOGIN =================
 @app.route('/login-goodwill254@', methods=['GET', 'POST'])
