@@ -176,17 +176,17 @@ def term():
     return render_template('term.html')
 
 @app.route('/partner_with_us')
-def term():
+def partner_with_us():
     return render_template('partner_with_us.html')
 
 
 @app.route('/advertise')
-def term():
+def advertise():
     return render_template('advertise.html')
 
 
 @app.route('/cookies')
-def term():
+def cookies():
     return render_template('cookies.html')
 
 # ================= LOGIN =================
