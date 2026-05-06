@@ -49,8 +49,8 @@
 </div>
 
 <!-- ================= BROWSING ================= -->
-<section class="pagetwo">
-    <h2 class="brows">BROWSING TYPE</h2>
+<section class="pagetwo" id="categories">
+    <h2 class="brows">Explore</h2>
 
     <ul class="unlisttwo">
         <li><a href="/car" class="linkup">CAR</a></li>
@@ -133,9 +133,11 @@
                 <a href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v" target="_blank">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
-
+                
                 <a href="https://www.tiktok.com/@motteckauto" target="_blank">
                     <i class="fa-brands fa-tiktok"></i>
+                </a>
+
             </div>
         </div>
 
@@ -156,18 +158,26 @@ function toggleMenu() {
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
 
-const stickyBar = document.getElementById("stickyCategories");
-const categoriesSection = document.getElementById("categories");
+window.addEventListener("DOMContentLoaded", () => {
 
-window.addEventListener("scroll", () => {
+    const stickyBar = document.getElementById("stickyCategories");
+    const categoriesSection = document.getElementById("categories");
 
-    const trigger = categoriesSection.offsetTop + categoriesSection.offsetHeight;
+    if (!stickyBar || !categoriesSection) return;
 
-    if (window.scrollY > trigger) {
-        stickyBar.classList.add("show");
-    } else {
-        stickyBar.classList.remove("show");
-    }
+    window.addEventListener("scroll", () => {
+
+        const trigger =
+            categoriesSection.offsetTop +
+            categoriesSection.offsetHeight;
+
+        if (window.scrollY > trigger) {
+            stickyBar.classList.add("show");
+        } else {
+            stickyBar.classList.remove("show");
+        }
+
+    });
 
 });
 
