@@ -38,6 +38,15 @@
     <a href="{{ url_for('about') }}">About</a>
     <a href="{{ url_for('contact') }}">Contact</a>
 </div>
+<!-- ================= STICKY CATEGORIES ================= -->
+<div class="sticky-categories" id="stickyCategories">
+
+    <a href="/car">Cars</a>
+    <a href="/truck">Trucks</a>
+    <a href="/motobike">Bike</a>
+    <a href="/plane">Aviation</a>
+
+</div>
 
 <!-- ================= BROWSING ================= -->
 <section class="pagetwo">
@@ -70,22 +79,72 @@
 </section>
 
 <footer class="footer">
-    <div class="footer-content">
-        <h2>INFO</h2>
-        <p>Follow us on all social media platforms</p>
+
+    <div class="footer-top">
+        <h2 class="footer-logo">Motteck</h2>
+        <p class="footer-text">
+            Motteck is your trusted source for cars, trucks, bikes, motoring news, reviews, and automotive insights.
+        </p>
     </div>
 
-    <ul class="list">
-        <li><a class="big" href="https://www.instagram.com/mott_eck" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
-        <li><a class="big" href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a></li>
-        <li><a class="big" href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
-    </ul>
+    <div class="footer-links">
 
-    <div class="legal-links">
-        <a href="{{ url_for('term') }}">Terms & Conditions</a>
-        <span>•</span>
-        <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+        <div class="footer-column">
+            <h3>Company</h3>
+            <a href="{{ url_for('contact') }}">Contact Us</a>
+            <a href="{{ url_for('partner_with_us') }}">Partner With Us</a>
+            <a href="{{ url_for('advertise') }}">Advertise With Us</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Legal</h3>
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+            <a href="{{ url_for('term') }}">Terms & Conditions</a>
+            <a href="{{ url_for('cookies') }}">Cookie Policy</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Disclaimer</h3>
+            <p class="small-text">
+                Information published on Motteck is for general informational purposes only. Please verify details independently before making decisions.
+            </p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Contact</h3>
+            <p>Email: motteckcompany@gmail.com</p>
+            <p>call: +254742022263</p>
+
+            <div class="social-box">
+                <p>Follow Us</p>
+
+                <a href="https://www.instagram.com/mott_eck" target="_blank">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank">
+                    <i class="fa-brands fa-square-x-twitter"></i>
+                </a>
+
+                <a href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v" target="_blank">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+
+                <a href="https://www.tiktok.com/@motteckauto" target="_blank">
+                    <i class="fa-brands fa-tiktok"></i>
+            </div>
+        </div>
+
     </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 Motteck. All Rights Reserved.</p>
+    </div>
+
 </footer>
 
 <!-- ================= SCRIPTS ================= -->
@@ -96,6 +155,21 @@ function toggleMenu() {
     const menu = document.getElementById("mobileMenu");
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }
+
+const stickyBar = document.getElementById("stickyCategories");
+const categoriesSection = document.getElementById("categories");
+
+window.addEventListener("scroll", () => {
+
+    const trigger = categoriesSection.offsetTop + categoriesSection.offsetHeight;
+
+    if (window.scrollY > trigger) {
+        stickyBar.classList.add("show");
+    } else {
+        stickyBar.classList.remove("show");
+    }
+
+});
 
 /* HOMEPAGE PREVIEW ONLY */
 function formatText(text) {
