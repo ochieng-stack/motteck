@@ -124,23 +124,6 @@ body{
     border-bottom: 1px solid #222;
 }
 
-/* =========================
-   FORM
-========================= */
-form {
-    display: flex;
-    flex-direction: column;
-    padding-top: 150px;
-    max-width: 450px;
-    margin: 0 auto 20px;
-    gap: 10px;
-}
-
-input, textarea, button {
-    padding: 10px;
-    font-size: 1em;
-}
-
 /* =====================
    SEARCH BAR
 ===================== */
@@ -167,54 +150,57 @@ input, textarea, button {
 }
 
 /* =========================
-   POSTS
+   POSTS DESKTOP ONLY
 ========================= */
-.post-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-    flex: 1;
+
+.post-container{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:22px;
+    padding:20px;
 }
 
-.post-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    padding: 20px;
+/* CARD */
+.post-card{
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.08);
+    overflow:hidden;
+    padding:0;
 }
 
-.post-card img {
-    width: 320px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
+/* IMAGE TOP */
+.post-card img{
+    width:100%;
+    height:210px;
+    object-fit:cover;
+    border-radius:0;
 }
 
+/* CONTENT */
 .post-content{
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    gap: 8px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
 }
 
+/* TITLE */
 .post-title{
-    font-size: 20px;
-    font-weight: bold;
-    color: black;
+    font-size:19px;
+    font-weight:bold;
+    color:black;
+    line-height:1.4;
 }
 
+/* TEXT */
 .post-text{
-    line-height: 1.6;
-    color: #444;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
+    font-size:15px;
+    color:#444;
+    line-height:1.6;
 }
 
 /* BUTTONS */
@@ -253,73 +239,196 @@ input, textarea, button {
     background: #2196f3;
     color: white;
 }
+/* =========================
+   FOOTER
+========================= */
 
-/* FOOTER */
-.footer {
-    background: #0f0f0f;
-    color: white;
-    text-align: center;
-    padding: 35px 15px;
-    border-top: 1px solid #222;
-    margin-top: auto;
+.footer{
+    background:#0f0f0f;
+    color:#ffffff;
+    padding:55px 20px 20px;
+    margin-top:auto;
+    border-top:1px solid #222;
 }
 
-/* ICONS */
-.list {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    padding: 15px 0;
-    margin: 0;
+/* TOP BRAND AREA */
+.footer-top{
+    max-width:1200px;
+    margin:0 auto 35px;
+    text-align:center;
 }
 
-.big {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    transition: all 0.3s ease;
-    text-decoration: none;
+.footer-logo{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:10px;
+    letter-spacing:1px;
 }
 
-.big i {
-    font-size: 20px;
-    color: #ffffff;
+.footer-text{
+    max-width:700px;
+    margin:0 auto;
+    color:#bdbdbd;
+    font-size:15px;
+    line-height:1.7;
 }
 
-.big:hover {
-    background: blue;
-    transform: translateY(-5px);
+/* GRID LINKS */
+.footer-links{
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:35px;
+    padding:20px 0 30px;
 }
 
-.big:hover i {
-    color: white;
+/* EACH COLUMN */
+.footer-column h3{
+    font-size:16px;
+    margin-bottom:14px;
+    color:#ffffff;
 }
 
-/* LEGAL */
-.legal-links {
-    margin-top: 15px;
-    font-size: 14px;
+.footer-column a{
+    display:block;
+    color:#bdbdbd;
+    text-decoration:none;
+    margin-bottom:10px;
+    font-size:14px;
+    transition:0.25s ease;
 }
 
-.legal-links a {
-    color: #aaa;
-    text-decoration: none;
-    margin: 0 8px;
-    transition: 0.3s;
+.footer-column a:hover{
+    color:#ffffff;
+    transform:translateX(4px);
 }
 
-.legal-links a:hover {
-    color: white;
-    text-decoration: underline;
+.footer-column p{
+    color:#bdbdbd;
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:8px;
 }
 
-.legal-links span {
-    color: #444;
+.small-text{
+    font-size:13px;
+    line-height:1.8;
+}
+
+/* SOCIAL AREA */
+.social-box{
+    margin-top:12px;
+}
+
+.social-box p{
+    margin-bottom:10px;
+    color:#ffffff;
+    font-weight:600;
+}
+
+/* ICON ROW */
+.social-box{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px;
+}
+
+.social-box p{
+    width:100%;
+}
+
+/* ICON LINKS */
+.social-box a{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#1a1a1a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#ffffff;
+    text-decoration:none;
+    transition:0.25s ease;
+    margin-bottom:0;
+}
+
+.social-box a i{
+    font-size:18px;
+}
+
+.social-box a:hover{
+    background:#2b2b2b;
+    transform:translateY(-4px);
+}
+
+/* BOTTOM */
+.footer-bottom{
+    border-top:1px solid #222;
+    padding-top:18px;
+    text-align:center;
+}
+
+.footer-bottom p{
+    font-size:13px;
+    color:#9c9c9c;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 992px){
+
+    .footer-links{
+        grid-template-columns:repeat(2,1fr);
+        gap:28px;
+    }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px){
+
+    .footer{
+        padding:45px 16px 18px;
+    }
+
+    .footer-top{
+        margin-bottom:25px;
+    }
+
+    .footer-logo{
+        font-size:24px;
+    }
+
+    .footer-text{
+        font-size:14px;
+    }
+
+    .footer-links{
+        grid-template-columns:1fr;
+        gap:24px;
+        text-align:left;
+    }
+
+    .footer-column h3{
+        margin-bottom:10px;
+    }
+
+    .social-box a{
+        width:40px;
+        height:40px;
+    }
+
+    .footer-bottom{
+        margin-top:10px;
+    }
+
 }
 
 /* =========================
