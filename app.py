@@ -713,6 +713,7 @@ def contact():
             msg["Subject"] = f"Motteck Contact {firstname} {lastname}"
             msg["From"] = GMAIL_USER
             msg["To"] = GMAIL_USER
+            msg["Reply-To"] = email
 
             msg.set_content(
                 f"{firstname} {lastname}\n"
