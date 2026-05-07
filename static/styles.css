@@ -534,14 +534,13 @@ body {
     }
 
     .nav-center input{
-        width:70%;              
+        width:80%;              
         max-width:260px;        
         padding:8px 12px;
         font-size:14px;
         border-radius:20px;
     }
     .nav-center button{
-        background:none;
         border:none;
         font-size:18px;
         cursor:pointer;
@@ -604,7 +603,7 @@ body {
     /* STICKY FIX */
     .sticky-categories{
         position:fixed;
-        top:72px;
+        top:60px;
         left:0;
         width:100%;
         z-index:999;
