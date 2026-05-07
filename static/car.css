@@ -30,6 +30,7 @@ body{
     width: 100%;
     top: 0;
     left: 0;
+    margin: 0;
     padding: 10px 20px;
     z-index: 1000;
 }
@@ -72,7 +73,7 @@ body{
     background-color: rgb(16, 17, 19);
     padding: 12px 10px;
     position: fixed;
-    top: 70px;
+    top: 58px;
     left: 0;
     width: 100%;
     z-index: 999;
@@ -199,6 +200,10 @@ body{
 
 /* TEXT */
 .post-text{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     font-size:15px;
     color:#444;
     line-height:1.6;
@@ -321,10 +326,14 @@ body{
 /* SOCIAL AREA */
 .social-box{
     margin-top:12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
 }
 
 .social-box p{
-    margin-bottom:10px;
+    margin-bottom:8px;
     color:#ffffff;
     font-weight:600;
 }
