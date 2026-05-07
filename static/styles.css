@@ -256,7 +256,7 @@ body {
 }
 .sticky-categories{
     position: fixed;
-    top: 65px;
+    top: 72px;
     left: 0;
     width: 100%;
     background: rgba(0,0,0,0.92);
@@ -603,7 +603,7 @@ body {
     /* STICKY FIX */
     .sticky-categories{
         position:fixed;
-        top:65px;
+        top:72px;
         left:0;
         width:100%;
         z-index:999;
