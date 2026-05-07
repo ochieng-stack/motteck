@@ -479,105 +479,125 @@ body {
 /* =========================
    🔥 MOBILE FINAL (CLEAN + STABLE)
 ========================= */
-
 @media screen and (max-width: 900px){
 
-    .site-header {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        padding: 10px 12px;
+    /* HEADER */
+    .site-header{
+        display:flex;
+        flex-wrap:wrap;
+        align-items:center;
+        padding:10px 12px;
     }
 
-    .nav-left {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        order: 1;
+    .nav-left{
+        gap:6px;
     }
 
-    .nav-left .logo {
-        font-size: 18px;
+    .nav-left .logo{
+        font-size:20px;
     }
 
-    .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-left: auto;
-        order: 2;
+    .nav-right{
+        margin-left:auto;
+        gap:6px;
     }
 
-    .highlight {
-        padding: 5px 8px;
-        font-size: 13px;
+    .menu-btn{
+        font-size:20px;
     }
 
-    .menu-btn {
-        font-size: 20px;
+    .nav-center{
+        width:100%;
+        display:flex;
+        justify-content:center;
+        margin-top:8px;
     }
 
-    .nav-center {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 6px;
-        order: 3;
+    .nav-center input{
+        width:95%;
+        max-width:320px;
+        padding:8px 12px;
+        font-size:14px;
     }
 
-    .nav-center input {
-        width: 70%;
-        max-width: 240px;
-        font-size: 13px;
-        padding: 6px 10px;
+    /* CATEGORY TOP */
+    .unlisttwo{
+        overflow-x:auto;
+        flex-wrap:nowrap;
+        gap:8px;
+        padding:10px;
+        justify-content:flex-start;
     }
 
-    .unlisttwo {
-        display: flex;
-        justify-content: space-between;
-        gap: 2px;
-        padding: 10px 5px;
-        flex-wrap: nowrap;
+    .unlisttwo::-webkit-scrollbar{
+        display:none;
     }
 
-    .linkup {
-        font-size: 14px;
-        padding: 8px 8px;
-        border-radius: 15px;
-        white-space: nowrap;
-        flex: 1;
-        text-align: center;
+    .linkup{
+        white-space:nowrap;
+        flex-shrink:0;
+        font-size:13px;
+        padding:7px 12px;
     }
 
-    .post-card {
-        flex-direction: column;
+    /* POSTS FIX */
+    .post-container{
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+        padding:12px;
     }
 
-    .post-card img {
-        width: 100%;
-        height: auto;
+    .post-card{
+        display:flex;
+        flex-direction:column;
+        border-radius:10px;
+        overflow:hidden;
     }
 
-    .post-text {
-        font-size: 14px;
+    .post-card img{
+        width:100%;
+        height:220px;
+        object-fit:cover;
     }
 
+    .post-content{
+        padding:12px;
+    }
+
+    .post-title{
+        font-size:18px;
+        line-height:1.4;
+        margin-bottom:6px;
+    }
+
+    .post-text{
+        font-size:14px;
+        color:#555;
+
+        display:-webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+    }
+
+    /* STICKY CENTER FIX */
     .sticky-categories{
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding: 10px 12px;
-        gap: 8px;
+        justify-content:center;
+        overflow-x:auto;
+        gap:8px;
+        padding:10px;
     }
 
     .sticky-categories a{
-        font-size: 12px;
-        padding: 6px 12px;
-        white-space: nowrap;
-        flex-shrink: 0;
+        white-space:nowrap;
+        flex-shrink:0;
+        font-size:12px;
+        padding:7px 12px;
     }
 
-    /* optional: hide scrollbar for cleaner look */
     .sticky-categories::-webkit-scrollbar{
-        display: none;
+        display:none;
     }
+
 }
