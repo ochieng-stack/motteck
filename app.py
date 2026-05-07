@@ -703,26 +703,39 @@ def contact():
 
     if request.method == "POST":
 
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
-        email = request.form.get("email")
-        message = request.form.get("text")
+        firstname = request.form.get("firstname", "").strip()
+        lastname = request.form.get("lastname", "").strip()
+        email = request.form.get("email", "").strip()
+        message = request.form.get("text", "").strip()
+
+        if not firstname or not email or not message:
+            return jsonify({
+                "status": "error",
+                "message": "Please fill all required fields"
+            })
+
+        if not GMAIL_USER or not GMAIL_APP_PASSWORD:
+            return jsonify({
+                "status": "error",
+                "message": "Email server not configured"
+            })
 
         try:
             msg = EmailMessage()
-            msg["Subject"] = f"Motteck Contact {firstname} {lastname}"
+            msg["Subject"] = f"Motteck Contact - {firstname} {lastname}"
             msg["From"] = GMAIL_USER
             msg["To"] = GMAIL_USER
             msg["Reply-To"] = email
 
-            msg.set_content(
-                f"{firstname} {lastname}\n"
-                f"{email}\n\n"
-                f"{message}"
-            )
+            msg.set_content(f"""
+Name: {firstname} {lastname}
+Email: {email}
 
-            with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-                smtp.ehlo()
+Message:
+{message}
+""")
+
+            with smtplib.SMTP("smtp.gmail.com", 587, timeout=20) as smtp:
                 smtp.starttls()
                 smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
                 smtp.send_message(msg)
@@ -733,7 +746,8 @@ def contact():
             })
 
         except Exception as e:
-            print(e)
+            print("CONTACT ERROR:", str(e))
+
             return jsonify({
                 "status": "error",
                 "message": "Failed to send message"
