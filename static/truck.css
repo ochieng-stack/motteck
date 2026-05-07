@@ -104,6 +104,10 @@ body{
 .category-nav a.active {
     background-color: #2196f3;
 }
+.category-nav a.active{
+    background:#2196f3;
+    color:white;
+}
 
 /* MOBILE MENU */
 .mobile-menu {
@@ -493,7 +497,7 @@ body{
 
     /* CATEGORY NAV */
     .category-nav{
-        top:58px;
+        top:52px;
         padding:10px 8px;
         gap:8px;
         justify-content:flex-start;
@@ -513,7 +517,7 @@ body{
 
     /* REMOVE BIG GAP */
     .category-search{
-        margin-top:110px;
+        margin-top:calc(60px + 50px);
         padding:10px;
     }
 

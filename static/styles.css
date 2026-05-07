@@ -481,15 +481,18 @@ body {
 ========================= */
 @media screen and (max-width: 900px){
 
-    /* HEADER */
+    /* HEADER FIX */
     .site-header{
         display:flex;
-        flex-wrap:wrap;
+        flex-wrap:nowrap;
+        justify-content:space-between;
         align-items:center;
         padding:10px 12px;
     }
 
     .nav-left{
+        display:flex;
+        align-items:center;
         gap:6px;
     }
 
@@ -498,14 +501,18 @@ body {
     }
 
     .nav-right{
-        margin-left:auto;
+        display:flex;
+        align-items:center;
         gap:6px;
+        margin-left:auto;
     }
 
     .menu-btn{
-        font-size:20px;
+        font-size:21px;
+        line-height:1;
     }
 
+    /* SEARCH */
     .nav-center{
         width:100%;
         display:flex;
@@ -520,13 +527,14 @@ body {
         font-size:14px;
     }
 
-    /* CATEGORY TOP */
+    /* TOP CATEGORIES */
     .unlisttwo{
-        overflow-x:auto;
+        display:flex;
+        justify-content:center;
         flex-wrap:nowrap;
+        overflow-x:auto;
         gap:8px;
         padding:10px;
-        justify-content:flex-start;
     }
 
     .unlisttwo::-webkit-scrollbar{
@@ -540,19 +548,12 @@ body {
         padding:7px 12px;
     }
 
-    /* POSTS FIX */
+    /* POSTS */
     .post-container{
         display:flex;
         flex-direction:column;
         gap:16px;
         padding:12px;
-    }
-
-    .post-card{
-        display:flex;
-        flex-direction:column;
-        border-radius:10px;
-        overflow:hidden;
     }
 
     .post-card img{
@@ -567,26 +568,42 @@ body {
 
     .post-title{
         font-size:18px;
-        line-height:1.4;
-        margin-bottom:6px;
     }
 
     .post-text{
         font-size:14px;
-        color:#555;
-
         display:-webkit-box;
         -webkit-line-clamp:2;
         -webkit-box-orient:vertical;
         overflow:hidden;
     }
 
-    /* STICKY CENTER FIX */
+    /* STICKY FIX */
     .sticky-categories{
+        position:fixed;
+        top:65px;
+        left:0;
+        width:100%;
+        z-index:999;
+
+        display:flex;
         justify-content:center;
-        overflow-x:auto;
+        align-items:center;
         gap:8px;
         padding:10px;
+
+        overflow-x:auto;
+
+        transform:translateY(-120%);
+        transition:0.3s ease;
+    }
+
+    .sticky-categories.show{
+        transform:translateY(0);
+    }
+
+    .sticky-categories::-webkit-scrollbar{
+        display:none;
     }
 
     .sticky-categories a{
@@ -594,10 +611,6 @@ body {
         flex-shrink:0;
         font-size:12px;
         padding:7px 12px;
-    }
-
-    .sticky-categories::-webkit-scrollbar{
-        display:none;
     }
 
 }
