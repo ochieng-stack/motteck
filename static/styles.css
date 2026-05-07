@@ -288,7 +288,7 @@ body {
 }
 
 .sticky-categories a:hover{
-    background: #f59e0b;
+    background: #205afa;
     color: #000;
 }
 
@@ -603,7 +603,7 @@ body {
     /* STICKY FIX */
     .sticky-categories{
         position:fixed;
-        top:90px;
+        top:95px;
         left:0;
         width:100%;
         z-index:999;
