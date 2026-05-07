@@ -90,9 +90,9 @@ body{
     padding: 8px 14px;
     background-color: #444;
     color: white;
-    border-radius: 6px;
+    border-radius: 20px;
     font-weight: bold;
-    transition: 0.3s;
+    transition: 0.3s ease;
     font-size: 14px;
     white-space: nowrap;
 }
@@ -101,9 +101,6 @@ body{
     background-color:#2196f3;
 }
 
-.category-nav a.active {
-    background-color: #2196f3;
-}
 .category-nav a.active{
     background:#2196f3;
     color:white;
@@ -484,7 +481,9 @@ body{
 
     /* HEADER */
     .header{
+        height:56px;
         padding:10px 14px;
+        box-sizing:border-box;
     }
 
     .title{
@@ -497,7 +496,7 @@ body{
 
     /* CATEGORY NAV */
     .category-nav{
-        top:52px;
+        top:56px;
         padding:10px 8px;
         gap:8px;
         justify-content:flex-start;
@@ -517,7 +516,7 @@ body{
 
     /* REMOVE BIG GAP */
     .category-search{
-        margin-top:calc(60px + 50px);
+        margin-top:110px;
         padding:10px;
     }
 
