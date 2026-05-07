@@ -603,7 +603,7 @@ body {
     /* STICKY FIX */
     .sticky-categories{
         position:fixed;
-        top:72px;
+        top:90px;
         left:0;
         width:100%;
         z-index:999;
