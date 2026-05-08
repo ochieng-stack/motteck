@@ -725,18 +725,15 @@ def contact():
             msg["Subject"] = f"Motteck Contact - {firstname} {lastname}"
             msg["From"] = GMAIL_USER
             msg["To"] = GMAIL_USER
-            msg["Reply-To"] = email
+            msg["Reply-To"] = email if email else GMAIL_USER
 
             msg.set_content(f"""
-Name: {firstname} {lastname}
-Email: {email}
+            Name: {firstname} {lastname}
+            Email: {email}
+            Message:{message}
+            """)
 
-Message:
-{message}
-""")
-
-            with smtplib.SMTP("smtp.gmail.com", 587, timeout=20) as smtp:
-                smtp.starttls()
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as smtp:
                 smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
                 smtp.send_message(msg)
 
