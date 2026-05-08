@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='single_post.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
+    {% if post.image_url %}
+    <link rel="preload" as="image" href="{{ post.image_url }}">
+    {% endif %}
 
 </head>
 
