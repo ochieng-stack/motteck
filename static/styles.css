@@ -112,6 +112,15 @@ body {
     border-bottom: 1px solid #222;
 }
 
+.mobile-menu a:hover {
+    background-color:#2196f3;
+}
+
+.mobile-menu a.active{
+    background:#2196f3;
+    color:white;
+}
+
 /* =========================
    BROWSING
 ========================= */
