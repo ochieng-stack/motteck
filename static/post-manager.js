@@ -129,7 +129,7 @@ function setupSeeMoreButtons() {
         if (!btn || !textEl) return;
         
         textEl.dataset.fulltext = textEl.innerHTML;
-        const fullText = textEl.dataset.fulltext || textEl.innerHTML;
+        const fullText = textEl.dataset.fulltext || textEl.textContent;
 
         if (fullText.length <= 250) {
             btn.style.display = "none";
@@ -160,11 +160,19 @@ function setupSeeMoreButtons() {
 // =========================
 // VIEW OBSERVER (ENGAGEMENT ONLY)
 // =========================
+
+function observeAllPosts() {
+    const posts = document.querySelectorAll(".post-card");
+    posts.forEach(post => observer.observe(post));
+}
+
+let observer;
+
 function setupViewObserver() {
 
-    const posts = document.querySelectorAll(".post-card");
+    if (observer) observer.disconnect();
 
-    const observer = new IntersectionObserver((entries) => {
+    observer = new IntersectionObserver((entries) => {
 
         entries.forEach(entry => {
 
@@ -175,7 +183,6 @@ function setupViewObserver() {
 
             if (!postId || viewedPosts.has(postId)) return;
 
-            // only count view after real attention
             setTimeout(() => {
                 viewPost(postId);
             }, 2000);
@@ -186,7 +193,7 @@ function setupViewObserver() {
         threshold: 0.75
     });
 
-    posts.forEach(post => observer.observe(post));
+    observeAllPosts();
 }
 
 
@@ -196,6 +203,7 @@ function setupViewObserver() {
 function initPostFeatures() {
     setupSeeMoreButtons();
     setupViewObserver();
+    observeAllPosts();
 }
 
 
