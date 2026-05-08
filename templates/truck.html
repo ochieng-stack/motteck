@@ -24,11 +24,11 @@
 
 <!-- CATEGORY NAV -->
 <nav class="category-nav">
-    <a href="{{ url_for('car') }}" class="{% if active_page == 'car'%}active{% endif %}">CAR</a>
-    <a href="{{ url_for('truck') }}" class="{% if active_page == 'truck'%}active{% endif %}">TRUCK</a>
-    <a href="{{ url_for('motobike') }}" class="{% if active_page == 'motobike'%}active{% endif %}">BIKES</a>
-    <a href="{{ url_for('plane') }}" class="{% if active_page == 'plane'%}active{% endif %}">AVIATION</a>
-    <a href="{{ url_for('service') }}" class="{% if active_page == 'service'%}active{% endif %}">SERVICE</a>
+    <a href="{{ url_for('car') }}">CAR</a>
+    <a href="{{ url_for('truck') }}" class="active">TRUCK</a>
+    <a href="{{ url_for('motobike') }}">BIKES</a>
+    <a href="{{ url_for('plane') }}" >AVIATION</a>
+    <a href="{{ url_for('service') }}" >SERVICE</a>
 </nav>
 
 <!-- MOBILE MENU -->
@@ -111,6 +111,7 @@
 
                 <a href="https://www.tiktok.com/@motteckauto" target="_blank">
                     <i class="fa-brands fa-tiktok"></i>
+                </a>
             </div>
         </div>
 
@@ -179,6 +180,25 @@ function formatText(text){
         .join("");
 }
 
+/* createSkeleton*/
+function createSkeletonCard(){
+    return `
+        <div class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+        </div>
+    `;
+}
+
+function showSkeletons(){
+    container.innerHTML =
+        createSkeletonCard() +
+        createSkeletonCard() +
+        createSkeletonCard();
+}
+
 /* GET POSTS */
 function getPosts(){
     return fetch("/get_posts?t=" + Date.now())
@@ -207,7 +227,14 @@ function createPostCard(post){
         ${badge}
 
         <a href="/post/${post.id}">
-            <img src="${post.image_url}">
+            <img 
+            src="${post.image_url}"
+            loading="lazy"
+            decoding="async"
+            alt="${post.title}"
+            width="400"
+            height="250"
+            >
         </a>
 
         <div class="post-content">
@@ -268,9 +295,34 @@ function render(posts){
 
 /* LOAD */
 function load(){
+
+    const CACHE_KEY = "truck_cache";
+    const CACHE_TIME = "truck_cache_time";
+    const CACHE_MINUTES = 15;
+
+    // SHOW CACHE FIRST
+    const saved = localStorage.getItem(CACHE_KEY);
+    const savedTime = localStorage.getItem(CACHE_TIME);
+
+    if(saved && savedTime){
+
+        const age = Date.now() - parseInt(savedTime);
+
+        if(age < CACHE_MINUTES * 60 * 1000){
+            allPosts = JSON.parse(saved);
+            render(allPosts);
+        }
+    }
+
+    // FETCH FRESH
     getPosts().then(data => {
+
         allPosts = data;
         render(allPosts);
+
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_TIME, Date.now());
+
     });
 }
 
@@ -299,6 +351,7 @@ function deletePost(id){
 }
 
 /* START */
+showSkeletons();
 load();
 
 </script>

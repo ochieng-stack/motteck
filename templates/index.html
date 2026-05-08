@@ -180,7 +180,32 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+function createSkeletonCard() {
+    return `
+        <div class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+        </div>
+    `;
+}
 
+function showSkeletons() {
+    const sections = [
+        "featured-posts",
+        "trending-posts",
+        "recent-posts"
+    ];
+
+    sections.forEach(id => {
+        const box = document.getElementById(id);
+        box.innerHTML =
+            createSkeletonCard() +
+            createSkeletonCard() +
+            createSkeletonCard();
+    });
+}
 /* HOMEPAGE PREVIEW ONLY */
 function formatText(text) {
     if (!text) return "";
@@ -222,7 +247,15 @@ function createPostCard(post) {
             ${badge}
 
             <a href="/post/${post.id}">
-                <img src="${image}" class="post-image">
+                <img 
+                    src="${image}"
+                    class="post-image"
+                    alt="${post.title}"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="250"
+                >
             </a>
 
             <div class="post-content">
@@ -299,16 +332,54 @@ function likePost(postId) {
 }
 
 /* LOAD HOME POSTS */
+/* LOAD HOME POSTS WITH CACHE */
 async function loadHomePosts() {
 
+    const CACHE_KEY = "motteck_home_cache";
+    const CACHE_TIME_KEY = "motteck_home_cache_time";
+    const CACHE_MINUTES = 15;
+
+    const featured = document.getElementById("featured-posts");
+    const trending = document.getElementById("trending-posts");
+    const recent = document.getElementById("recent-posts");
+
+    // SHOW SAVED CACHE FIRST
+    const saved = localStorage.getItem(CACHE_KEY);
+    const savedTime = localStorage.getItem(CACHE_TIME_KEY);
+
+    if (saved && savedTime) {
+
+        const age = Date.now() - parseInt(savedTime);
+
+        if (age < CACHE_MINUTES * 60 * 1000) {
+
+            const data = JSON.parse(saved);
+
+            featured.innerHTML = "";
+            trending.innerHTML = "";
+            recent.innerHTML = "";
+
+            data.featured.forEach(post => {
+                featured.innerHTML += createPostCard(post);
+            });
+
+            data.trending.forEach(post => {
+                trending.innerHTML += createPostCard(post);
+            });
+
+            data.recent.forEach(post => {
+                recent.innerHTML += createPostCard(post);
+            });
+
+            initPostFeatures();
+        }
+    }
+
+    // FETCH NEW DATA IN BACKGROUND
     try {
 
         const res = await fetch("/get_home_posts");
         const data = await res.json();
-
-        const featured = document.getElementById("featured-posts");
-        const trending = document.getElementById("trending-posts");
-        const recent = document.getElementById("recent-posts");
 
         featured.innerHTML = "";
         trending.innerHTML = "";
@@ -328,12 +399,19 @@ async function loadHomePosts() {
 
         initPostFeatures();
 
+        // SAVE CACHE
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_TIME_KEY, Date.now());
+
     } catch (err) {
         console.error("Home load error:", err);
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadHomePosts);
+document.addEventListener("DOMContentLoaded", () => {
+    showSkeletons();
+    loadHomePosts();
+});
 
 </script>
 

@@ -60,7 +60,15 @@
 
     <!-- IMAGE -->
     {% if post.image_url %}
-    <img src="{{ post.image_url }}" alt="{{ post.title }}">
+    <img 
+    src="{{ post.image_url }}"
+    alt="{{ post.title }}"
+    loading="eager"
+    fetchpriority="high"
+    decoding="async"
+    width="900"
+    height="520"
+    >
     {% endif %}
 
     <!-- CONTENT -->
@@ -72,7 +80,14 @@
         
         {% if line.endswith('.jpg') or line.endswith('.jpeg') or line.endswith('.png') or line.endswith('.gif') or line.endswith('.webp') %}
 
-            <img src="{{ line }}" alt="Post image">
+            <img 
+            src="{{ line }}"
+            alt="Post image"
+            loading="lazy"
+            decoding="async"
+            width="900"
+            height="520"
+            >
 
         {% else %}
 
@@ -162,6 +177,7 @@
 
                 <a href="https://www.tiktok.com/@motteckauto" target="_blank">
                     <i class="fa-brands fa-tiktok"></i>
+                </a>
             </div>
         </div>
 
