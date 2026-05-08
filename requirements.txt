@@ -5,4 +5,5 @@ requests
 flask-limiter
 python-dotenv
 supabase
-cloudinary
+cloudinary 
+resend
