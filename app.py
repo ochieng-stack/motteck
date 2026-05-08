@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import os
 import time
-import smtplib
+import resend
 import random
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -43,6 +43,8 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 GMAIL_USER = os.environ.get("GMAIL_USER")
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD")
 
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+resend.api_key = RESEND_API_KEY
 
 # ================= LOGIN SECURITY =================
 limiter = Limiter(get_remote_address, app=app)
@@ -714,28 +716,19 @@ def contact():
                 "message": "Please fill all required fields"
             })
 
-        if not GMAIL_USER or not GMAIL_APP_PASSWORD:
-            return jsonify({
-                "status": "error",
-                "message": "Email server not configured"
-            })
-
         try:
-            msg = EmailMessage()
-            msg["Subject"] = f"Motteck Contact - {firstname} {lastname}"
-            msg["From"] = GMAIL_USER
-            msg["To"] = GMAIL_USER
-            msg["Reply-To"] = email if email else GMAIL_USER
-
-            msg.set_content(f"""
-            Name: {firstname} {lastname}
-            Email: {email}
-            Message:{message}
-            """)
-
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as smtp:
-                smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-                smtp.send_message(msg)
+            resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": "motteckcompany@gmail.com",
+                "subject": f"Motteck Contact - {firstname} {lastname}",
+                "reply_to": email,
+                "html": f"""
+                    <h2>New Contact Message</h2>
+                    <p><strong>Name:</strong> {firstname} {lastname}</p>
+                    <p><strong>Email:</strong> {email}</p>
+                    <p><strong>Message:</strong><br>{message}</p>
+                """
+            })
 
             return jsonify({
                 "status": "success",
