@@ -718,7 +718,7 @@ def contact():
 
         try:
             resend.Emails.send({
-                "from": "onboarding@resend.dev",
+                "from": "contact@motteck.onrender.com",
                 "to": "motteckcompany@gmail.com",
                 "subject": f"Motteck Contact - {firstname} {lastname}",
                 "reply_to": email,
