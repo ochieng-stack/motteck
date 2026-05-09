@@ -146,7 +146,7 @@ body{
     background:#0f0f0f;
     color:#ffffff;
     padding:55px 20px 20px;
-    margin-top:auto;
+    margin-top:50px;
     border-top:1px solid #222;
 }
 
@@ -218,16 +218,6 @@ body{
 /* SOCIAL AREA */
 .social-box{
     margin-top:12px;
-}
-
-.social-box p{
-    margin-bottom:10px;
-    color:#ffffff;
-    font-weight:600;
-}
-
-/* ICON ROW */
-.social-box{
     display:flex;
     flex-wrap:wrap;
     align-items:center;
@@ -236,6 +226,9 @@ body{
 
 .social-box p{
     width:100%;
+    margin-bottom:10px;
+    color:#ffffff;
+    font-weight:600;
 }
 
 /* ICON LINKS */
@@ -250,7 +243,6 @@ body{
     color:#ffffff;
     text-decoration:none;
     transition:0.25s ease;
-    margin-bottom:0;
 }
 
 .social-box a i{
@@ -278,7 +270,16 @@ body{
    TABLET
 ========================= */
 
-@media (max-width: 992px){
+@media(max-width:992px){
+
+    .content{
+        margin:30px 20px;
+        padding:40px 30px;
+    }
+
+    .page-header h1{
+        font-size:36px;
+    }
 
     .footer-links{
         grid-template-columns:repeat(2,1fr);
@@ -291,7 +292,35 @@ body{
    MOBILE
 ========================= */
 
-@media (max-width: 768px){
+@media(max-width:768px){
+
+    .page-header{
+        padding:55px 18px;
+    }
+
+    .page-header h1{
+        font-size:30px;
+        line-height:1.3;
+    }
+
+    .page-header p{
+        font-size:16px;
+    }
+
+    .content{
+        margin:20px 15px;
+        padding:28px 22px;
+        border-radius:12px;
+    }
+
+    .content h2{
+        font-size:22px;
+        margin-top:28px;
+    }
+
+    .content p{
+        font-size:16px;
+    }
 
     .footer{
         padding:45px 16px 18px;
@@ -324,8 +353,22 @@ body{
         height:40px;
     }
 
-    .footer-bottom{
-        margin-top:10px;
+}
+
+/* SMALL PHONES */
+
+@media(max-width:480px){
+
+    .page-header h1{
+        font-size:26px;
+    }
+
+    .content{
+        padding:22px 18px;
+    }
+
+    .content h2{
+        font-size:20px;
     }
 
 }
