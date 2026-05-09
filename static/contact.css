@@ -215,6 +215,8 @@ h2, p {
     padding:55px 20px 20px;
     margin-top:auto;
     border-top:1px solid #222;
+    width:100%;
+    clear:both;
 }
 
 /* TOP BRAND AREA */
