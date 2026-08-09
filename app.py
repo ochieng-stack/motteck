@@ -6,6 +6,8 @@ import random
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from email.message import EmailMessage
+from flask import flash
+from supabase import AuthApiError
 
 import cloudinary
 import cloudinary.uploader
@@ -87,6 +89,92 @@ def time_ago(dt_str):
 
     except:
         return ""
+    
+ #================= register =================
+    
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        full_name = request.form.get("full_name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        account_type = request.form.get("account_type")
+
+        try:
+            # Create user in Supabase Auth
+            auth_response = supabase.auth.sign_up({
+                "email": email,
+                "password": password
+            })
+
+            user = auth_response.user
+
+            if user:
+
+                # Create profile
+                supabase.table("profiles").insert({
+                    "id": user.id,
+                    "full_name": full_name,
+                    "account_type": account_type
+                }).execute()
+
+                flash(
+                    "Registration successful! Please check your email to verify your account.",
+                    "success"
+                )
+
+                return redirect(url_for("login_user"))
+
+        except Exception as e:
+            flash(str(e), "error")
+
+    return render_template("register.html")
+
+# ================= USER LOGIN =================
+@app.route("/login", methods=["GET", "POST"])
+def login_user():
+
+    if request.method == "POST":
+
+        login = request.form.get("login").strip()
+        password = request.form.get("password")
+
+        try:
+
+            # Login with email
+            response = supabase.auth.sign_in_with_password({
+                "email": login,
+                "password": password
+            })
+
+            user = response.user
+
+            if user:
+
+                # Get user profile
+                profile = supabase.table("profiles") \
+                    .select("*") \
+                    .eq("id", user.id) \
+                    .single() \
+                    .execute()
+
+                session["user_logged_in"] = True
+                session["user_id"] = user.id
+                session["email"] = user.email
+                session["full_name"] = profile.data.get("full_name")
+                session["account_type"] = profile.data.get("account_type")
+
+                flash("Welcome back!", "success")
+
+                return redirect(url_for("home"))
+
+        except Exception:
+
+            flash("Invalid email or password.", "error")
+
+    return render_template("login.html")
 
 
 # ================= SPONSORED SCORE =================
@@ -118,9 +206,59 @@ def admin_dashboard():
 def home():
     return render_template(
         'index.html',
-        logged_in=session.get('logged_in', False)
+        logged_in=session.get('user_logged_in', False),
+        full_name=session.get("full_name")
     )
 
+    
+# ================= USER LOGOUT =================
+@app.route("/user/logout")
+def user_logout():
+
+    supabase.auth.sign_out()
+
+    session.pop("user_logged_in", None)
+    session.pop("user_id", None)
+    session.pop("email", None)
+    session.pop("full_name", None)
+    session.pop("account_type", None)
+
+    flash("You have been logged out.", "success")
+
+    return redirect(url_for("home"))
+
+
+# ================= USER PROFILE =================
+@app.route("/profile")
+def profile():
+
+    if not session.get("user_logged_in"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    user_id = session.get("user_id")
+
+    # Count posts
+    posts = supabase.table("posts") \
+        .select("id") \
+        .eq("user_id", user_id) \
+        .execute()
+
+    posts_count = len(posts.data) if posts.data else 0
+
+    # Temporary values
+    followers_count = 0
+    following_count = 0
+
+    return render_template(
+        "profile.html",
+        full_name=session.get("full_name"),
+        email=session.get("email"),
+        account_type=session.get("account_type"),
+        posts_count=posts_count,
+        followers_count=followers_count,
+        following_count=following_count
+    )
 
 # ================= STATIC PAGES =================
 @app.route('/about')
@@ -477,6 +615,7 @@ def add_post():
         ).isoformat()
 
     new_post = {
+        "user_id": session.get("user_id"),
         "category": category,
         "title": title,
         "image_url": image_url,
