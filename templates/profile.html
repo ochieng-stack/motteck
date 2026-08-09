@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='profile.css') }}">
+
+</head>
+
+<body>
+
+    <div class="profile-container">
+
+        <div class="profile-header">
+
+            <img src="{{ profile_picture or url_for('static', filename='images/default-avatar.png') }}"
+                 alt="Profile Picture"
+                 class="profile-image">
+
+            <h1>{{ full_name }}</h1>
+            <div class="profile-stats">
+                
+                <div class="stat-box">
+                    <h3>{{ posts_count or 0 }}</h3>
+                    <p>Posts</p>
+                </div>
+                <div class="stat-box">
+                    <h3>{{ followers_count or 0 }}</h3>
+                    <p>Followers</p>
+                </div>
+                <div class="stat-box">
+                    <h3>{{ following_count or 0 }}</h3>
+                    <p>Following</p>
+                </div>
+            </div>
+            
+            <p>{{ email }}</p>
+
+            <p class="account-type">
+                {{ account_type|capitalize }} Account
+            </p>
+
+        </div>
+
+        {% if account_type == "individual" %}
+
+        <div class="profile-menu">
+
+            <a href="#">Submit Post</a>
+
+            <a href="#">My Submissions</a>
+
+            <a href="#">Saved Posts</a>
+
+            <a href="#">Questions</a>
+
+            <a href="#">Settings</a>
+
+        </div>
+
+        {% elif account_type == "business" %}
+
+        <div class="profile-menu">
+
+            <a href="#">Submit Post</a>
+
+            <a href="#">My Submissions</a>
+
+            <a href="#">Sponsored Posts</a>
+
+            <a href="#">Featured Posts</a>
+
+            <a href="#">Analytics</a>
+
+            <a href="#">Business Settings</a>
+
+        </div>
+
+        {% endif %}
+
+        <div class="logout-btn">
+
+            <a href="{{ url_for('user_logout') }}">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | MOTTECK</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<header class="site-header">
+
+    <div class="nav-left">
+        <a href="{{ url_for('home') }}" class="logo">MOTTECK</a>
+    </div>
+
+    <div class="nav-center">
+        <form class="search-form">
+            <input type="text" placeholder="Search cars, trucks, guides..." disabled>
+            <button type="button">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="nav-right">
+        <button class="menu-btn">☰</button>
+    </div>
+
+</header>
+
+<!-- ================= REGISTER ================= -->
+
+<div class="register-container">
+
+    <div class="register-card">
+
+        <h2>Create Your MOTTECK Account</h2>
+
+        <p>
+            Join the MOTTECK community to comment, like posts,
+            submit articles and connect with businesses.
+        </p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('register') }}">
+
+            <label>Full Name</label>
+            <input
+                type="text"
+                name="full_name"
+                required
+            >
+
+            <label>Email Address</label>
+            <input
+                type="email"
+                name="email"
+                required
+            >
+
+            <label>Password</label>
+            <input
+                type="password"
+                name="password"
+                required
+            >
+
+            <label>Confirm Password</label>
+            <input
+                type="password"
+                name="confirm_password"
+                required
+            >
+
+            <label>Account Type</label>
+
+            <select
+                name="account_type"
+                required
+            >
+                <option value="">Choose Account Type</option>
+                <option value="individual">Individual</option>
+                <option value="business">Business</option>
+            </select>
+
+            <button
+                type="submit"
+                class="register-btn"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <button
+            type="button"
+            class="google-btn"
+        >
+            <i class="fab fa-google"></i>
+            Continue with Google
+        </button>
+
+        <p class="login-link">
+            Already have an account?
+
+            <a href="{{ url_for('login_user') }}">
+                Login
+            </a>
+        </p>
+
+    </div>
+
+</div>
+<script>
+const form = document.querySelector("form");
+
+form.addEventListener("submit", function(e){
+
+    const password =
+        document.querySelector('input[name="password"]').value;
+
+    const confirm =
+        document.querySelector('input[name="confirm_password"]').value;
+
+    if(password !== confirm){
+
+        e.preventDefault();
+
+        alert("Passwords do not match.");
+
+    }
+
+});
+</script>
+
+</body>
+</html>

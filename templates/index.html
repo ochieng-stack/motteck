@@ -24,11 +24,28 @@
             <button type="submit"><i class="fa fa-search"></i></button>
         </form>
     </div>
-
     <div class="nav-right">
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-    </div>
 
+        {% if session.get("user_id") %}
+
+        <a href="{{ url_for('profile') }}" class="profile-btn">
+            <i class="fa-solid fa-user"></i>
+            profile
+        </a>
+        
+        {% else %}
+        
+        <div class="auth-buttons">
+            <a href="{{ url_for('login_user') }}" class="login-btn">Login</a>
+            <a href="{{ url_for('register') }}" class="signup-btn">Sign Up</a>
+        </div>
+        
+        {% endif %}
+
+        <button class="menu-btn" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
 </header>
 
 <!-- MOBILE MENU -->
