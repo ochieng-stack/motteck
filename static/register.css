@@ -1,0 +1,52 @@
+.register-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+}
+
+.register-card{
+    width:100%;
+    max-width:500px;
+    background:#fff;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,.1);
+}
+
+.register-card input,
+.register-card select{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+.register-btn,
+.google-btn{
+    width:100%;
+    padding:12px;
+    cursor:pointer;
+}
+
+.flash-message{
+    padding:12px;
+    margin-bottom:15px;
+    border-radius:5px;
+}
+
+.flash-message.success{
+    background:#d4edda;
+    color:#155724;
+}
+
+.flash-message.error{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+.divider{
+    text-align:center;
+    margin:20px 0;
+}

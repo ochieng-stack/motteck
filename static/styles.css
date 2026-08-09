@@ -120,6 +120,73 @@ body {
     background:#2196f3;
     color:white;
 }
+/* ==========================
+   AUTH BUTTONS
+========================== */
+
+.auth-buttons{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.login-btn,
+.signup-btn{
+    text-decoration:none;
+    padding:9px 18px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s ease;
+}
+
+/* Login */
+
+.login-btn{
+    color:white;
+    border:2px solid white;
+    background:transparent;
+}
+
+.login-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(255,255,255,.18);
+}
+
+/* Signup */
+
+.signup-btn{
+    background:#2196f3;
+    color:white;
+}
+
+.signup-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(33,150,243,.35);
+}
+
+/* Profile */
+
+.profile-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:white;
+    text-decoration:none;
+    padding:9px 18px;
+    border-radius:30px;
+    border:2px solid white;
+    transition:.3s;
+}
+
+.profile-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(255,255,255,.2);
+}
+
+.profile-btn i{
+    font-size:15px;
+}
 
 /* =========================
    BROWSING
@@ -534,7 +601,40 @@ body {
         margin-top:10px;
     }
 
+    .nav-center{
+        display:none;
+    }
+
+    .site-header{
+        padding:12px 15px;
+    }
+
+    .nav-left .logo{
+        font-size:28px;
+    }
+
+    .nav-right{
+        gap:8px;
+    }
+
+    .auth-buttons{
+        gap:6px;
+    }
+
+    .login-btn,
+    .signup-btn,
+    .profile-btn{
+
+        padding:7px 12px;
+        font-size:12px;
+    }
+
+    .menu-btn{
+        font-size:24px;
+    }
+
 }
+
 
 /* =========================
    🔥 MOBILE FINAL (CLEAN + STABLE)

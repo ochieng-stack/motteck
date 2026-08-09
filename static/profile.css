@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f5f7;
+    color: #333;
+    padding: 20px;
+}
+
+.profile-container {
+    max-width: 900px;
+    margin: 30px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Header */
+
+.profile-header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1f2937, #374151);
+    color: white;
+}
+
+.profile-image {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    margin-bottom: 15px;
+}
+
+.profile-header h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.profile-header p {
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.account-type {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Menu */
+
+.profile-menu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 25px;
+}
+
+.profile-menu a {
+    text-decoration: none;
+    background: #f8f9fa;
+    color: #333;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    transition: 0.3s ease;
+    border: 1px solid #ddd;
+}
+
+.profile-menu a:hover {
+    background: #1f2937;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Logout */
+
+.logout-btn {
+    padding: 25px;
+    text-align: center;
+}
+
+.logout-btn a {
+    display: inline-block;
+    padding: 14px 30px;
+    background: #dc2626;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.logout-btn a:hover {
+    background: #b91c1c;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .profile-menu {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-header h1 {
+        font-size: 22px;
+    }
+}
