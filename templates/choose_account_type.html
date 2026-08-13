@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Choose Account Type | MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='choose_account_type.css') }}">
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <a href="{{ url_for('home') }}" class="logo">
+        MOTTECK
+    </a>
+
+</header>
+
+
+<main class="account-container">
+
+    <div class="account-card">
+
+        <h1>Choose Your Account Type</h1>
+
+        <p class="subtitle">
+            How would you like to use MOTTECK?
+        </p>
+
+
+        <form method="POST"
+              action="{{ url_for('choose_account_type') }}">
+
+            <div class="account-options">
+
+                <!-- INDIVIDUAL -->
+
+                <label class="account-option">
+
+                    <input
+                        type="radio"
+                        name="account_type"
+                        value="individual"
+                        required
+                    >
+
+                    <div class="option-content">
+
+                        <div class="option-icon">
+                            👤
+                        </div>
+
+                        <div>
+                            <h2>Individual</h2>
+
+                            <p>
+                                Join the MOTTECK community, share posts,
+                                ask questions and interact with other users.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </label>
+
+
+                <!-- BUSINESS -->
+
+                <label class="account-option">
+
+                    <input
+                        type="radio"
+                        name="account_type"
+                        value="business"
+                        required
+                    >
+
+                    <div class="option-content">
+
+                        <div class="option-icon">
+                            🏢
+                        </div>
+
+                        <div>
+                            <h2>Business</h2>
+
+                            <p>
+                                Promote your automotive business,
+                                advertise products and reach MOTTECK users.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </label>
+
+            </div>
+
+
+            <button type="submit" class="continue-btn">
+                Continue
+            </button>
+
+        </form>
+
+    </div>
+
+</main>
+
+</body>
+</html>
