@@ -260,6 +260,7 @@ def profile():
         following_count=following_count
     )
 
+
 # ================= STATIC PAGES =================
 @app.route('/about')
 def about():
@@ -386,7 +387,215 @@ def logout():
     session.pop("logged_in", None)
     return redirect(url_for("home"))
 
+# ================= FORGOT PASSWORD =================
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
 
+    if request.method == "POST":
+
+        email = request.form.get("email", "").strip()
+
+        if not email:
+            flash("Please enter your email address.", "error")
+            return redirect(url_for("forgot_password"))
+
+        try:
+            supabase.auth.reset_password_for_email(
+                email,
+                options={
+                    "redirect_to": url_for(
+                        "reset_password",
+                        _external=True
+                    )
+                }
+            )
+
+            flash(
+                "If an account exists with that email, a password reset link has been sent.",
+                "success"
+            )
+
+            return redirect(url_for("login_user"))
+
+        except Exception as e:
+            print("PASSWORD RESET ERROR:", str(e))
+
+            flash(
+                "Unable to send the password reset email. Please try again.",
+                "error"
+            )
+
+    return render_template("forgot_password.html")
+
+# ================= RESET PASSWORD =================
+@app.route("/reset-password", methods=["GET", "POST"])
+def reset_password():
+
+    if request.method == "POST":
+
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+
+        if not password or not confirm_password:
+            flash("Please fill in both password fields.", "error")
+            return redirect(url_for("reset_password"))
+
+        if password != confirm_password:
+            flash("Passwords do not match.", "error")
+            return redirect(url_for("reset_password"))
+
+        try:
+            supabase.auth.update_user({
+                "password": password
+            })
+
+            flash(
+                "Your password has been changed successfully.",
+                "success"
+            )
+
+            return redirect(url_for("login_user"))
+
+        except Exception as e:
+            print("PASSWORD UPDATE ERROR:", str(e))
+
+            flash(
+                "Unable to update your password.",
+                "error"
+            )
+
+    return render_template("reset_password.html")
+
+# ================= GOOGLE LOGIN =================
+@app.route("/auth/google")
+def google_login():
+
+    try:
+        response = supabase.auth.sign_in_with_oauth({
+            "provider": "google",
+            "options": {
+                "redirect_to": url_for(
+                    "google_callback",
+                    _external=True
+                )
+            }
+        })
+
+        return redirect(response.url)
+
+    except Exception as e:
+        print("GOOGLE LOGIN ERROR:", str(e))
+
+        flash(
+            "Unable to start Google login.",
+            "error"
+        )
+
+        return redirect(url_for("login_user"))
+# ================= CHOOSE GOOGLE ACCOUNT TYPE =================
+@app.route("/choose-account-type", methods=["GET", "POST"])
+def choose_account_type():
+
+    # Make sure this came from Google login
+    if not session.get("google_user_id"):
+        return redirect(url_for("login_user"))
+
+    if request.method == "POST":
+
+        account_type = request.form.get("account_type")
+
+        if account_type not in ["individual", "business"]:
+            flash("Please choose an account type.", "error")
+            return redirect(url_for("choose_account_type"))
+
+        user_id = session.get("google_user_id")
+        email = session.get("google_email")
+        full_name = session.get("google_full_name")
+
+        try:
+            # Create MOTTECK profile
+            supabase.table("profiles").insert({
+                "id": user_id,
+                "full_name": full_name,
+                "account_type": account_type
+            }).execute()
+
+            # Create normal MOTTECK login session
+            session["user_logged_in"] = True
+            session["user_id"] = user_id
+            session["email"] = email
+            session["full_name"] = full_name
+            session["account_type"] = account_type
+
+            # Remove temporary Google information
+            session.pop("google_user_id", None)
+            session.pop("google_email", None)
+            session.pop("google_full_name", None)
+
+            flash("Welcome to MOTTECK!", "success")
+
+            return redirect(url_for("home"))
+
+        except Exception as e:
+            print("PROFILE CREATION ERROR:", str(e))
+
+            flash("Unable to create your MOTTECK account.", "error")
+            return redirect(url_for("choose_account_type"))
+
+    return render_template("choose_account_type.html")
+
+# ================= GOOGLE CALLBACK =================
+@app.route("/auth/callback")
+def google_callback():
+
+    try:
+        code = request.args.get("code")
+
+        if not code:
+            flash("Google login was not completed.", "error")
+            return redirect(url_for("login_user"))
+
+        response = supabase.auth.exchange_code_for_session(code)
+
+        user = response.user
+
+        if not user:
+            flash("Unable to complete Google login.", "error")
+            return redirect(url_for("login_user"))
+
+        profile_response = supabase.table("profiles") \
+            .select("*") \
+            .eq("id", user.id) \
+            .execute()
+
+        profile = profile_response.data[0] if profile_response.data else None
+
+        # Google users may not have a profile yet
+        if not profile:
+
+            full_name = (
+                user.user_metadata.get("full_name")
+                or user.user_metadata.get("name")
+                or user.email.split("@")[0]
+            )
+        # Store google user temporarily    
+        session["google_user_id"] = user.id
+        session["google_email"] = user.email
+        session["google_full_name"] = full_name
+
+        return redirect(url_for("choose_account_type"))
+
+    except Exception as e:
+
+        print("GOOGLE CALLBACK ERROR:", str(e))
+
+        flash(
+            "Google login could not be completed.",
+            "error"
+        )
+
+        return redirect(url_for("login_user"))  
+     
 # ================= GET POSTS =================
 @app.route("/get_posts")
 def get_posts():
