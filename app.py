@@ -168,7 +168,7 @@ def login_user():
 
                 flash("Welcome back!", "success")
 
-                return redirect(url_for("home"))
+                return redirect(url_for("profile"))
 
         except Exception:
 
