@@ -623,33 +623,66 @@ def google_callback():
         code = request.args.get("code")
 
         if not code:
-            flash("Google login was not completed.", "error")
+            flash(
+                "Google login could not be completed. Please try again.",
+                "error"
+            )
             return redirect(url_for("login_user"))
 
+        # Exchange Google's authorization code for a Supabase session
         response = supabase.auth.exchange_code_for_session(code)
 
         user = response.user
 
         if not user:
-            flash("Unable to complete Google login.", "error")
+            flash(
+                "We couldn't complete your Google login. Please try again.",
+                "error"
+            )
             return redirect(url_for("login_user"))
+
+        # ================= FIND PROFILE =================
 
         profile_response = supabase.table("profiles") \
             .select("*") \
             .eq("id", user.id) \
             .execute()
 
-        profile = profile_response.data[0] if profile_response.data else None
+        profile = (
+            profile_response.data[0]
+            if profile_response.data
+            else None
+        )
 
-        # Google users may not have a profile yet
-        if not profile:
+        # ================= EXISTING USER =================
 
-            full_name = (
-                user.user_metadata.get("full_name")
-                or user.user_metadata.get("name")
-                or user.email.split("@")[0]
-            )
-        # Store google user temporarily    
+        if profile:
+
+            session["user_logged_in"] = True
+            session["user_id"] = user.id
+            session["email"] = user.email
+            session["full_name"] = profile.get("full_name")
+            session["account_type"] = profile.get("account_type")
+
+            # Make sure temporary Google information is removed
+            session.pop("google_user_id", None)
+            session.pop("google_email", None)
+            session.pop("google_full_name", None)
+
+            flash("Welcome back!", "success")
+
+            return redirect(url_for("home"))
+
+        # ================= NEW GOOGLE USER =================
+
+        full_name = (
+            user.user_metadata.get("full_name")
+            or user.user_metadata.get("name")
+            or user.email.split("@")[0]
+        )
+
+        # Store Google information temporarily
+        # until the user chooses Individual or Business.
         session["google_user_id"] = user.id
         session["google_email"] = user.email
         session["google_full_name"] = full_name
@@ -661,11 +694,11 @@ def google_callback():
         print("GOOGLE CALLBACK ERROR:", str(e))
 
         flash(
-            "Google login could not be completed.",
+            "Google login could not be completed. Please try again.",
             "error"
         )
 
-        return redirect(url_for("login_user"))  
+        return redirect(url_for("login_user")) 
      
 # ================= GET POSTS =================
 @app.route("/get_posts")
