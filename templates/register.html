@@ -108,14 +108,15 @@
         <div class="divider">
             <span>OR</span>
         </div>
-
-        <button
-            type="button"
-            class="google-btn"
+        <a
+        href="{{ url_for('google_login') }}"
+        class="google-btn"
         >
-            <i class="fab fa-google"></i>
-            Continue with Google
-        </button>
+        <i class="fab fa-google">
+            
+        </i>
+        Continue with Google
+    </a>
 
         <p class="login-link">
             Already have an account?
