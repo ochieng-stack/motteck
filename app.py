@@ -90,20 +90,52 @@ def time_ago(dt_str):
     except:
         return ""
     
- #================= register =================
-    
+# ================= USER REGISTRATION =================
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == "POST":
 
-        full_name = request.form.get("full_name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        account_type = request.form.get("account_type")
+        full_name = request.form.get("full_name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+        account_type = request.form.get("account_type", "").strip().lower()
+
+        # ================= VALIDATION =================
+
+        if not full_name or not email or not password or not confirm_password:
+            flash(
+                "Please fill in all required fields.",
+                "error"
+            )
+            return redirect(url_for("register"))
+
+        if password != confirm_password:
+            flash(
+                "Passwords do not match.",
+                "error"
+            )
+            return redirect(url_for("register"))
+
+        if len(password) < 6:
+            flash(
+                "Your password must be at least 6 characters long.",
+                "error"
+            )
+            return redirect(url_for("register"))
+
+        if account_type not in ["individual", "business"]:
+            flash(
+                "Please choose an account type.",
+                "error"
+            )
+            return redirect(url_for("register"))
 
         try:
-            # Create user in Supabase Auth
+
+            # ================= CREATE AUTH USER =================
+
             auth_response = supabase.auth.sign_up({
                 "email": email,
                 "password": password
@@ -111,24 +143,63 @@ def register():
 
             user = auth_response.user
 
-            if user:
-
-                # Create profile
-                supabase.table("profiles").insert({
-                    "id": user.id,
-                    "full_name": full_name,
-                    "account_type": account_type
-                }).execute()
-
+            if not user:
                 flash(
-                    "Registration successful! Please check your email to verify your account.",
-                    "success"
+                    "We couldn't create your account. Please try again.",
+                    "error"
                 )
+                return redirect(url_for("register"))
 
-                return redirect(url_for("login_user"))
+            # ================= CREATE PROFILE =================
+
+            profile_response = supabase.table("profiles").insert({
+                "id": user.id,
+                "full_name": full_name,
+                "account_type": account_type
+            }).execute()
+
+            if not profile_response.data:
+                flash(
+                    "Your account could not be completed. Please try again.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+            # ================= SUCCESS =================
+
+            flash(
+                "Account created successfully! Please check your email to verify your account.",
+                "success"
+            )
+
+            return redirect(url_for("login_user"))
 
         except Exception as e:
-            flash(str(e), "error")
+
+            # Technical error goes to Render logs,
+            # NOT to the user.
+            print("REGISTRATION ERROR:", str(e))
+
+            error_message = str(e).lower()
+
+            # Friendly duplicate email message
+            if (
+                "already registered" in error_message
+                or "already exists" in error_message
+                or "user_already_exists" in error_message
+            ):
+                flash(
+                    "An account with this email already exists. Please log in instead.",
+                    "error"
+                )
+
+            else:
+                flash(
+                    "We couldn't create your account right now. Please try again.",
+                    "error"
+                )
+
+            return redirect(url_for("register"))
 
     return render_template("register.html")
 
