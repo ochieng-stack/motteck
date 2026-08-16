@@ -387,6 +387,8 @@ body {
 
     cursor: pointer;
 
+    text-decoration: none;
+
     transition: 0.2s ease;
 }
 
@@ -394,6 +396,12 @@ body {
     background: #f5f5f5;
 
     border-color: #bbb;
+
+    text-decoration: none;
+}
+
+.google-btn:visited {
+    color: #333;
 }
 
 .google-btn i {
