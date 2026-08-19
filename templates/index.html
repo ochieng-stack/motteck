@@ -25,13 +25,82 @@
         </form>
     </div>
     <div class="nav-right">
-
-        {% if session.get("user_id") %}
-
-        <a href="{{ url_for('profile') }}" class="profile-btn">
-            <i class="fa-solid fa-user"></i>
-            profile
-        </a>
+        
+        {% if session.get("user_logged_in") %}
+        
+        <div class="profile-dropdown">
+            <button type="button" class="profile-btn" id="profileDropdownBtn">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+                <i class="fa-solid fa-chevron-down profile-arrow"></i>
+            </button>
+            
+            <div class="profile-menu" id="profileMenu">
+                {% if session.get("account_type") == "business" %}
+                
+                <div class="profile-menu-header">
+                    <i class="fa-solid fa-building"></i>
+                    <div>
+                        <strong>{{ session.get("full_name") }}</strong>
+                        <small>Business Account</small>
+                    </div>
+                </div>
+                
+                {% else %}
+                
+                <div class="profile-menu-header">
+                    <i class="fa-solid fa-user"></i>
+                    <div>
+                        <strong>{{ session.get("full_name") }}</strong>
+                        <small>Individual Account</small>
+                    </div>
+                </div>
+                
+                {% endif %}
+                
+                <div class="profile-menu-divider"></div>
+                
+                <!-- View Profile -->
+                 <a href="{{ url_for('profile') }}" class="profile-menu-item">
+                    <i class="fa-solid fa-user"></i>
+                    <span>View Profile</span>
+                </a>
+                <!-- Settings -->
+                 <a href="#" class="profile-menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </a>
+                
+                <!-- Submit Post -->
+                 <a href="#" class="profile-menu-item">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Submit Post</span>
+                </a>
+                
+                <!-- Business Dashboard -->
+                 
+                {% if session.get("account_type") == "business" %}
+                <a href="#" class="profile-menu-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Business Dashboard</span>
+                </a>
+                
+                {% endif %}
+                
+                <!-- My Submissions -->
+                 <a href="#" class="profile-menu-item">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>My Submissions</span>
+                </a>
+                
+                <div class="profile-menu-divider"></div>
+                <!-- Logout -->
+                 <a href="{{ url_for('user_logout') }}" class="profile-menu-item logout-item">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
         
         {% else %}
         
@@ -242,6 +311,40 @@ function formatText(text) {
 
     return `<p>${text}</p>`;
 }
+/* =========================
+   PROFILE DROPDOWN
+========================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const profileBtn = document.getElementById("profileDropdownBtn");
+    const profileDropdown = document.querySelector(".profile-dropdown");
+
+    if (!profileBtn || !profileDropdown) {
+        return;
+    }
+
+    profileBtn.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        profileDropdown.classList.toggle("active");
+
+    });
+
+    /* Close when clicking outside */
+
+    document.addEventListener("click", function (event) {
+
+        if (!profileDropdown.contains(event.target)) {
+
+            profileDropdown.classList.remove("active");
+
+        }
+
+    });
+
+});
 
 /* POST CARD */
 function createPostCard(post) {
