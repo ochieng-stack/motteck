@@ -89,12 +89,14 @@ def time_ago(dt_str):
 
     except:
         return ""
-    
+
 # ================= USER REGISTRATION =================
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
     if request.method == "POST":
+
+        # ================= BASIC ACCOUNT INFORMATION =================
 
         full_name = request.form.get("full_name", "").strip()
         email = request.form.get("email", "").strip().lower()
@@ -102,35 +104,139 @@ def register():
         confirm_password = request.form.get("confirm_password", "")
         account_type = request.form.get("account_type", "").strip().lower()
 
-        # ================= VALIDATION =================
+
+        # ================= BUSINESS INFORMATION =================
+        # These fields will only be used when account_type == "business"
+
+        business_name = request.form.get("business_name", "").strip()
+        business_category = request.form.get("business_category", "").strip()
+        business_representative = request.form.get(
+            "business_representative", ""
+        ).strip()
+        business_phone = request.form.get("business_phone", "").strip()
+        business_location = request.form.get("business_location", "").strip()
+        business_town = request.form.get("business_town", "").strip()
+        business_description = request.form.get(
+            "business_description", ""
+        ).strip()
+        business_years = request.form.get("business_years", "").strip()
+        business_website = request.form.get(
+            "business_website", ""
+        ).strip()
+        business_social_media = request.form.get(
+            "business_social_media", ""
+        ).strip()
+
+
+        # ================= BASIC VALIDATION =================
 
         if not full_name or not email or not password or not confirm_password:
+
             flash(
                 "Please fill in all required fields.",
                 "error"
             )
+
             return redirect(url_for("register"))
 
+
         if password != confirm_password:
+
             flash(
                 "Passwords do not match.",
                 "error"
             )
+
             return redirect(url_for("register"))
 
+
         if len(password) < 6:
+
             flash(
                 "Your password must be at least 6 characters long.",
                 "error"
             )
+
             return redirect(url_for("register"))
 
+
         if account_type not in ["individual", "business"]:
+
             flash(
                 "Please choose an account type.",
                 "error"
             )
+
             return redirect(url_for("register"))
+
+
+        # ================= BUSINESS VALIDATION =================
+
+        if account_type == "business":
+
+            if not business_name:
+                flash(
+                    "Please enter your business name.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+
+            if not business_category:
+                flash(
+                    "Please choose your business category.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+
+            if not business_representative:
+                flash(
+                    "Please enter the business owner or representative.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+
+            if not business_phone:
+                flash(
+                    "Please enter your business phone number.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+
+            if not business_location:
+                flash(
+                    "Please enter your physical business location.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+
+            if not business_town:
+                flash(
+                    "Please enter your town or city.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+
+            if not business_description:
+                flash(
+                    "Please describe your business.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
+
+            if not business_years:
+                flash(
+                    "Please tell us how long the business has operated.",
+                    "error"
+                )
+                return redirect(url_for("register"))
+
 
         try:
 
@@ -143,63 +249,127 @@ def register():
 
             user = auth_response.user
 
+
             if not user:
+
                 flash(
                     "We couldn't create your account. Please try again.",
                     "error"
                 )
+
                 return redirect(url_for("register"))
+
 
             # ================= CREATE PROFILE =================
 
-            profile_response = supabase.table("profiles").insert({
+            profile_data = {
                 "id": user.id,
                 "full_name": full_name,
-                "account_type": account_type
-            }).execute()
+                "account_type": account_type,
+
+                # Every new account starts unverified.
+                # Individual accounts do not require verification,
+                # while business accounts can be manually verified later.
+                "is_verified": False
+            }
+
+
+            # ================= ADD BUSINESS DATA =================
+
+            if account_type == "business":
+
+                profile_data.update({
+
+                    "business_name": business_name,
+                    "business_category": business_category,
+                    "business_representative": business_representative,
+                    "business_phone": business_phone,
+                    "business_location": business_location,
+                    "business_town": business_town,
+                    "business_description": business_description,
+                    "business_years": business_years,
+                    "business_website": business_website or None,
+                    "business_social_media": business_social_media or None
+
+                })
+
+
+            # ================= SAVE PROFILE =================
+
+            profile_response = supabase.table(
+                "profiles"
+            ).insert(profile_data).execute()
+
 
             if not profile_response.data:
+
                 flash(
                     "Your account could not be completed. Please try again.",
                     "error"
                 )
+
                 return redirect(url_for("register"))
+
 
             # ================= SUCCESS =================
 
-            flash(
-                "Account created successfully! Please check your email to verify your account.",
-                "success"
-            )
+            if account_type == "business":
+
+                flash(
+                    "Business account created successfully! "
+                    "Your account is pending verification. "
+                    "Please check your email to verify your account.",
+                    "success"
+                )
+
+            else:
+
+                flash(
+                    "Account created successfully! "
+                    "Please check your email to verify your account.",
+                    "success"
+                )
+
 
             return redirect(url_for("login_user"))
+
 
         except Exception as e:
 
             # Technical error goes to Render logs,
-            # NOT to the user.
+            # NOT directly to the user.
+
             print("REGISTRATION ERROR:", str(e))
 
             error_message = str(e).lower()
 
-            # Friendly duplicate email message
+
+            # ================= DUPLICATE EMAIL =================
+
             if (
                 "already registered" in error_message
                 or "already exists" in error_message
                 or "user_already_exists" in error_message
             ):
+
                 flash(
-                    "An account with this email already exists. Please log in instead.",
+                    "An account with this email already exists. "
+                    "Please log in instead.",
                     "error"
                 )
+
 
             else:
+
                 flash(
-                    "We couldn't create your account right now. Please try again.",
+                    "We couldn't create your account right now. "
+                    "Please try again.",
                     "error"
                 )
 
+
             return redirect(url_for("register"))
+
 
     return render_template("register.html")
 
