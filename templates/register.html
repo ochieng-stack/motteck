@@ -33,6 +33,7 @@
 
 </header>
 
+
 <!-- ================= REGISTER ================= -->
 
 <div class="register-container">
@@ -45,49 +46,83 @@
             Join the MOTTECK community to comment, like posts,
             submit articles and connect with businesses.
         </p>
+
+
+        <!-- ================= FLASH MESSAGES ================= -->
+
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        {% for category, message in messages %}
-        <div class="flash-message {{ category }}">
-            {{ message }}
-        </div>
-        {% endfor %}
+
+            {% for category, message in messages %}
+
+            <div class="flash-message {{ category }}">
+                {{ message }}
+            </div>
+
+            {% endfor %}
+
         {% endif %}
         {% endwith %}
 
+
+        <!-- ================= REGISTRATION FORM ================= -->
+
         <form method="POST" action="{{ url_for('register') }}">
 
-            <label>Full Name</label>
+            <!-- FULL NAME -->
+
+            <label for="full_name">Full Name</label>
+
             <input
                 type="text"
+                id="full_name"
                 name="full_name"
                 required
             >
 
-            <label>Email Address</label>
+
+            <!-- EMAIL -->
+
+            <label for="email">Email Address</label>
+
             <input
                 type="email"
+                id="email"
                 name="email"
                 required
             >
 
-            <label>Password</label>
+
+            <!-- PASSWORD -->
+
+            <label for="password">Password</label>
+
             <input
                 type="password"
+                id="password"
                 name="password"
                 required
             >
 
-            <label>Confirm Password</label>
+
+            <!-- CONFIRM PASSWORD -->
+
+            <label for="confirm_password">Confirm Password</label>
+
             <input
                 type="password"
+                id="confirm_password"
                 name="confirm_password"
                 required
             >
 
-            <label>Account Type</label>
+
+            <!-- ACCOUNT TYPE -->
+
+            <label for="account_type">Account Type</label>
 
             <select
+                id="account_type"
                 name="account_type"
                 required
             >
@@ -95,6 +130,261 @@
                 <option value="individual">Individual</option>
                 <option value="business">Business</option>
             </select>
+
+
+            <!-- ================================================= -->
+            <!-- BUSINESS INFORMATION -->
+            <!-- ================================================= -->
+
+            <div
+                id="business-section"
+                class="business-section"
+                style="display: none;"
+            >
+
+                <div class="business-heading">
+
+                    <h3>Business Information</h3>
+
+                    <p>
+                        Tell us about your business so MOTTECK can
+                        help keep the marketplace safe and trustworthy.
+                    </p>
+
+                </div>
+
+
+                <!-- BUSINESS NAME -->
+
+                <label for="business_name">
+                    Business Name
+                </label>
+
+                <input
+                    type="text"
+                    id="business_name"
+                    name="business_name"
+                >
+
+
+                <!-- BUSINESS CATEGORY -->
+
+                <label for="business_category">
+                    Business Category
+                </label>
+
+                <select
+                    id="business_category"
+                    name="business_category"
+                >
+
+                    <option value="">
+                        Choose Business Category
+                    </option>
+
+                    <option value="automotive_garage">
+                        Automotive Garage
+                    </option>
+
+                    <option value="car_dealer">
+                        Car Dealer
+                    </option>
+
+                    <option value="motorcycle_dealer">
+                        Motorcycle Dealer
+                    </option>
+
+                    <option value="spare_parts">
+                        Spare Parts
+                    </option>
+
+                    <option value="car_rental">
+                        Car Rental
+                    </option>
+
+                    <option value="transport">
+                        Transport Services
+                    </option>
+
+                    <option value="car_wash">
+                        Car Wash / Detailing
+                    </option>
+
+                    <option value="mechanic">
+                        Mechanic
+                    </option>
+
+                    <option value="body_shop">
+                        Body Shop / Auto Repair
+                    </option>
+
+                    <option value="towing">
+                        Towing / Recovery
+                    </option>
+
+                    <option value="insurance">
+                        Insurance
+                    </option>
+
+                    <option value="driving_school">
+                        Driving School
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+
+                <!-- REPRESENTATIVE -->
+
+                <label for="business_representative">
+                    Owner / Business Representative
+                </label>
+
+                <input
+                    type="text"
+                    id="business_representative"
+                    name="business_representative"
+                >
+
+
+                <!-- BUSINESS PHONE -->
+
+                <label for="business_phone">
+                    Business Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="business_phone"
+                    name="business_phone"
+                    placeholder="e.g. 0712 345 678"
+                >
+
+
+                <!-- BUSINESS LOCATION -->
+
+                <label for="business_location">
+                    Physical Business Location
+                </label>
+
+                <input
+                    type="text"
+                    id="business_location"
+                    name="business_location"
+                    placeholder="e.g. Shop 12, Industrial Area"
+                >
+
+
+                <!-- TOWN / CITY -->
+
+                <label for="business_town">
+                    Town / City
+                </label>
+
+                <input
+                    type="text"
+                    id="business_town"
+                    name="business_town"
+                    placeholder="e.g. Nairobi"
+                >
+
+
+                <!-- BUSINESS DESCRIPTION -->
+
+                <label for="business_description">
+                    Business Description
+                </label>
+
+                <textarea
+                    id="business_description"
+                    name="business_description"
+                    rows="4"
+                    placeholder="Briefly describe what your business does..."
+                ></textarea>
+
+
+                <!-- YEARS OPERATING -->
+
+                <label for="business_years">
+                    How Long Has the Business Operated?
+                </label>
+
+                <input
+                    type="text"
+                    id="business_years"
+                    name="business_years"
+                    placeholder="e.g. 3 years"
+                >
+
+
+                <!-- WEBSITE -->
+
+                <label for="business_website">
+                    Business Website
+                    <span>(Optional)</span>
+                </label>
+
+                <input
+                    type="url"
+                    id="business_website"
+                    name="business_website"
+                    placeholder="https://example.com"
+                >
+
+
+                <!-- SOCIAL MEDIA -->
+
+                <label for="business_social_media">
+                    Business Social Media
+                    <span>(Optional)</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="business_social_media"
+                    name="business_social_media"
+                    placeholder="Facebook, Instagram, TikTok, etc."
+                >
+
+
+                <!-- ================= VERIFICATION NOTICE ================= -->
+
+                <div class="verification-notice">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <div>
+
+                        <strong>Business Verification</strong>
+
+                        <p>
+                            Your business account will initially be
+                            marked as pending verification.
+                        </p>
+
+                        <p>
+                            MOTTECK may contact you or visit your
+                            business premises to confirm that the
+                            business is genuine.
+                        </p>
+
+                        <p>
+                            Providing false or misleading information
+                            may result in your account being restricted
+                            or removed.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= CREATE ACCOUNT ================= -->
 
             <button
                 type="submit"
@@ -105,50 +395,231 @@
 
         </form>
 
+
+        <!-- ================= GOOGLE ================= -->
+
         <div class="divider">
             <span>OR</span>
         </div>
+
         <a
-        href="{{ url_for('google_login') }}"
-        class="google-btn"
+            href="{{ url_for('google_login') }}"
+            class="google-btn"
         >
-        <i class="fab fa-google">
-            
-        </i>
-        Continue with Google
-    </a>
+
+            <i class="fab fa-google"></i>
+
+            Continue with Google
+
+        </a>
+
+
+        <!-- ================= LOGIN ================= -->
 
         <p class="login-link">
+
             Already have an account?
 
             <a href="{{ url_for('login_user') }}">
                 Login
             </a>
+
         </p>
 
     </div>
 
 </div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
 <script>
+
 const form = document.querySelector("form");
 
-form.addEventListener("submit", function(e){
+const accountType =
+    document.getElementById("account_type");
+
+const businessSection =
+    document.getElementById("business-section");
+
+
+/* ================= BUSINESS FIELD ELEMENTS ================= */
+
+const businessName =
+    document.getElementById("business_name");
+
+const businessCategory =
+    document.getElementById("business_category");
+
+const businessRepresentative =
+    document.getElementById("business_representative");
+
+const businessPhone =
+    document.getElementById("business_phone");
+
+const businessLocation =
+    document.getElementById("business_location");
+
+const businessTown =
+    document.getElementById("business_town");
+
+const businessDescription =
+    document.getElementById("business_description");
+
+const businessYears =
+    document.getElementById("business_years");
+
+
+/* ================= SHOW / HIDE BUSINESS SECTION ================= */
+
+function toggleBusinessFields() {
+
+    const isBusiness =
+        accountType.value === "business";
+
+
+    if (isBusiness) {
+
+        businessSection.style.display = "block";
+
+
+        /* Required business fields */
+
+        businessName.required = true;
+
+        businessCategory.required = true;
+
+        businessRepresentative.required = true;
+
+        businessPhone.required = true;
+
+        businessLocation.required = true;
+
+        businessTown.required = true;
+
+        businessDescription.required = true;
+
+        businessYears.required = true;
+
+    } else {
+
+        businessSection.style.display = "none";
+
+
+        /* Remove required status */
+
+        businessName.required = false;
+
+        businessCategory.required = false;
+
+        businessRepresentative.required = false;
+
+        businessPhone.required = false;
+
+        businessLocation.required = false;
+
+        businessTown.required = false;
+
+        businessDescription.required = false;
+
+        businessYears.required = false;
+
+
+        /* Clear business values */
+
+        businessName.value = "";
+
+        businessCategory.value = "";
+
+        businessRepresentative.value = "";
+
+        businessPhone.value = "";
+
+        businessLocation.value = "";
+
+        businessTown.value = "";
+
+        businessDescription.value = "";
+
+        businessYears.value = "";
+
+        document.getElementById(
+            "business_website"
+        ).value = "";
+
+        document.getElementById(
+            "business_social_media"
+        ).value = "";
+
+    }
+
+}
+
+
+/* Run whenever account type changes */
+
+accountType.addEventListener(
+    "change",
+    toggleBusinessFields
+);
+
+
+/* ================= PASSWORD VALIDATION ================= */
+
+form.addEventListener("submit", function(e) {
 
     const password =
-        document.querySelector('input[name="password"]').value;
+        document.querySelector(
+            'input[name="password"]'
+        ).value;
 
     const confirm =
-        document.querySelector('input[name="confirm_password"]').value;
+        document.querySelector(
+            'input[name="confirm_password"]'
+        ).value;
 
-    if(password !== confirm){
+
+    if (password !== confirm) {
 
         e.preventDefault();
 
         alert("Passwords do not match.");
 
+        return;
+
+    }
+
+
+    /* Extra protection */
+
+    if (accountType.value === "business") {
+
+        if (
+            !businessName.value.trim() ||
+            !businessCategory.value ||
+            !businessRepresentative.value.trim() ||
+            !businessPhone.value.trim() ||
+            !businessLocation.value.trim() ||
+            !businessTown.value.trim() ||
+            !businessDescription.value.trim() ||
+            !businessYears.value.trim()
+        ) {
+
+            e.preventDefault();
+
+            alert(
+                "Please complete all required business information."
+            );
+
+            return;
+
+        }
+
     }
 
 });
+
 </script>
 
 </body>
