@@ -187,6 +187,203 @@ body {
 .profile-btn i{
     font-size:15px;
 }
+/* =========================
+   PROFILE DROPDOWN
+========================= */
+
+.profile-dropdown {
+    position: relative;
+}
+
+/* Profile button */
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    background: transparent;
+    text-decoration: none;
+    padding: 9px 14px;
+    border-radius: 30px;
+    border: 2px solid white;
+    transition: .3s;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,255,255,.2);
+}
+
+.profile-btn i {
+    font-size: 15px;
+}
+
+.profile-arrow {
+    font-size: 11px !important;
+    transition: transform .25s ease;
+}
+
+/* Rotate arrow when menu opens */
+
+.profile-dropdown.active .profile-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown */
+
+.profile-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 245px;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.20);
+
+    overflow: hidden;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-8px);
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease,
+        visibility .2s ease;
+
+    z-index: 3000;
+}
+
+/* Open dropdown */
+
+.profile-dropdown.active .profile-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Account information */
+
+.profile-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 15px;
+
+    background: #f7f7f7;
+}
+
+.profile-menu-header > i {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #2196f3;
+    color: white;
+
+    border-radius: 50%;
+
+    font-size: 16px;
+}
+
+.profile-menu-header div {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.profile-menu-header strong {
+    color: #222;
+
+    font-size: 14px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-menu-header small {
+    color: #777;
+
+    font-size: 12px;
+
+    margin-top: 3px;
+}
+
+/* Divider */
+
+.profile-menu-divider {
+    height: 1px;
+    background: #eeeeee;
+}
+
+/* Menu items */
+
+.profile-menu-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    width: 100%;
+
+    padding: 12px 15px;
+
+    color: #222;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition: background .2s ease;
+}
+
+.profile-menu-item i {
+    width: 20px;
+
+    text-align: center;
+
+    color: #555;
+
+    font-size: 15px;
+}
+
+.profile-menu-item:hover {
+    background: #f1f7ff;
+}
+
+.profile-menu-item:hover i {
+    color: #2196f3;
+}
+
+/* Logout */
+
+.profile-menu-item.logout-item {
+    color: #d32f2f;
+}
+
+.profile-menu-item.logout-item i {
+    color: #d32f2f;
+}
+
+.profile-menu-item.logout-item:hover {
+    background: #fff1f1;
+}
 
 /* =========================
    BROWSING
