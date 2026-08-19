@@ -409,7 +409,7 @@ def login_user():
 
                 flash("Welcome back!", "success")
 
-                return redirect(url_for("profile"))
+                return redirect(url_for("home"))
 
         except Exception:
 
