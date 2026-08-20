@@ -379,41 +379,104 @@ def login_user():
 
     if request.method == "POST":
 
-        login = request.form.get("login").strip()
-        password = request.form.get("password")
+        login = request.form.get("login", "").strip().lower()
+        password = request.form.get("password", "")
+
+        if not login or not password:
+            flash("Please enter your email and password.", "error")
+            return render_template("login.html")
+
+        # ================= AUTHENTICATION =================
 
         try:
 
-            # Login with email
             response = supabase.auth.sign_in_with_password({
                 "email": login,
                 "password": password
             })
 
-            user = response.user
+        except Exception as e:
 
-            if user:
+            print("LOGIN AUTH ERROR:", repr(e))
 
-                # Get user profile
-                profile = supabase.table("profiles") \
-                    .select("*") \
-                    .eq("id", user.id) \
-                    .single() \
-                    .execute()
+            flash(
+                "Invalid email or password.",
+                "error"
+            )
 
-                session["user_logged_in"] = True
-                session["user_id"] = user.id
-                session["email"] = user.email
-                session["full_name"] = profile.data.get("full_name")
-                session["account_type"] = profile.data.get("account_type")
+            return render_template("login.html")
 
-                flash("Welcome back!", "success")
 
-                return redirect(url_for("home"))
+        user = response.user
 
-        except Exception:
+        if not user:
 
-            flash("Invalid email or password.", "error")
+            flash(
+                "Unable to sign you in. Please try again.",
+                "error"
+            )
+
+            return render_template("login.html")
+
+
+        # ================= GET PROFILE =================
+
+        try:
+
+            profile_response = supabase.table("profiles") \
+                .select("*") \
+                .eq("id", user.id) \
+                .execute()
+
+            profile_data = profile_response.data
+
+            if not profile_data:
+
+                print(
+                    "LOGIN PROFILE ERROR: "
+                    f"No profile found for user {user.id}"
+                )
+
+                # The authentication succeeded, but the MOTTECK
+                # profile does not exist.
+
+                flash(
+                    "Your account was authenticated, but your MOTTECK "
+                    "profile could not be found. Please contact support.",
+                    "error"
+                )
+
+                return render_template("login.html")
+
+
+            profile = profile_data[0]
+
+
+        except Exception as e:
+
+            print("LOGIN PROFILE ERROR:", repr(e))
+
+            flash(
+                "We couldn't load your MOTTECK profile. "
+                "Please try again.",
+                "error"
+            )
+
+            return render_template("login.html")
+
+
+        # ================= CREATE LOGIN SESSION =================
+
+        session["user_logged_in"] = True
+        session["user_id"] = user.id
+        session["email"] = user.email
+        session["full_name"] = profile.get("full_name")
+        session["account_type"] = profile.get("account_type")
+
+        flash("Welcome back!", "success")
+
+        return redirect(url_for("home"))
+
 
     return render_template("login.html")
 
@@ -790,6 +853,7 @@ def choose_account_type():
 def google_callback():
 
     try:
+
         code = request.args.get("code")
 
         if not code:
@@ -799,19 +863,23 @@ def google_callback():
             )
             return redirect(url_for("login_user"))
 
-        # Exchange Google's authorization code for a Supabase session
+        # ================= EXCHANGE GOOGLE CODE =================
+
         response = supabase.auth.exchange_code_for_session(code)
 
         user = response.user
 
         if not user:
+
             flash(
                 "We couldn't complete your Google login. Please try again.",
                 "error"
             )
+
             return redirect(url_for("login_user"))
 
-        # ================= FIND PROFILE =================
+
+        # ================= FIND EXISTING PROFILE =================
 
         profile_response = supabase.table("profiles") \
             .select("*") \
@@ -824,7 +892,8 @@ def google_callback():
             else None
         )
 
-        # ================= EXISTING USER =================
+
+        # ================= EXISTING MOTTECK USER =================
 
         if profile:
 
@@ -834,7 +903,7 @@ def google_callback():
             session["full_name"] = profile.get("full_name")
             session["account_type"] = profile.get("account_type")
 
-            # Make sure temporary Google information is removed
+            # Remove temporary Google information
             session.pop("google_user_id", None)
             session.pop("google_email", None)
             session.pop("google_full_name", None)
@@ -843,32 +912,52 @@ def google_callback():
 
             return redirect(url_for("home"))
 
+
         # ================= NEW GOOGLE USER =================
 
+        # Safely read Google metadata
+        metadata = user.user_metadata
+
+        if not isinstance(metadata, dict):
+            metadata = {}
+
+
         full_name = (
-            user.user_metadata.get("full_name")
-            or user.user_metadata.get("name")
-            or user.email.split("@")[0]
+            metadata.get("full_name")
+            or metadata.get("name")
+            or metadata.get("display_name")
+            or (
+                user.email.split("@")[0]
+                if user.email
+                else "MOTTECK User"
+            )
         )
 
-        # Store Google information temporarily
-        # until the user chooses Individual or Business.
+
+        # ================= STORE TEMPORARY GOOGLE DATA =================
+
         session["google_user_id"] = user.id
         session["google_email"] = user.email
         session["google_full_name"] = full_name
 
-        return redirect(url_for("choose_account_type"))
+
+        # Send new Google user to account type selection
+
+        return redirect(
+            url_for("choose_account_type")
+        )
+
 
     except Exception as e:
 
-        print("GOOGLE CALLBACK ERROR:", str(e))
+        print("GOOGLE CALLBACK ERROR:", repr(e))
 
         flash(
             "Google login could not be completed. Please try again.",
             "error"
         )
 
-        return redirect(url_for("login_user")) 
+        return redirect(url_for("login_user"))
      
 # ================= GET POSTS =================
 @app.route("/get_posts")
