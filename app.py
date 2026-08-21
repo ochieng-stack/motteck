@@ -244,7 +244,10 @@ def register():
 
             auth_response = supabase.auth.sign_up({
                 "email": email,
-                "password": password
+                "password": password,
+                "options": {
+                    "email_redirect_to": url_for("login_user", _external=True)
+                }
             })
 
             user = auth_response.user
