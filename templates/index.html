@@ -66,13 +66,13 @@
                     <span>View Profile</span>
                 </a>
                 <!-- Settings -->
-                 <a href="#" class="profile-menu-item">
+                 <a href="{{ url_for('settings') }}" class="profile-menu-item">
                     <i class="fa-solid fa-gear"></i>
                     <span>Settings</span>
                 </a>
                 
                 <!-- Submit Post -->
-                 <a href="#" class="profile-menu-item">
+                 <a href="{{ url_for('submit_post') }}" class="profile-menu-item">
                     <i class="fa-solid fa-pen-to-square"></i>
                     <span>Submit Post</span>
                 </a>
@@ -88,7 +88,7 @@
                 {% endif %}
                 
                 <!-- My Submissions -->
-                 <a href="#" class="profile-menu-item">
+                 <a href="{{ url_for('my_submissions') }}" class="profile-menu-item">
                     <i class="fa-solid fa-file-lines"></i>
                     <span>My Submissions</span>
                 </a>

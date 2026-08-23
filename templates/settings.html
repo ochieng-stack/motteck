@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Settings - MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='settings.css') }}">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="settings-header">
+
+        <div class="header-left">
+
+            <a href="{{ url_for('home') }}"
+               class="back-button">
+                ←
+            </a>
+
+            <div>
+                <h1>Settings</h1>
+                <p>Manage your MOTTECK account</p>
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('profile') }}"
+           class="profile-link">
+            Profile
+        </a>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="settings-container">
+
+        <!-- ACCOUNT INFORMATION -->
+
+        <section class="settings-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    👤
+                </div>
+
+                <div>
+                    <h2>Account</h2>
+                    <p>Your account information</p>
+                </div>
+
+            </div>
+
+
+            <div class="settings-row">
+
+                <div class="setting-info">
+                    <span class="setting-label">
+                        Name
+                    </span>
+
+                    <span class="setting-value">
+                        {{ full_name or "Not provided" }}
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="settings-row">
+
+                <div class="setting-info">
+                    <span class="setting-label">
+                        Email
+                    </span>
+
+                    <span class="setting-value">
+                        {{ email or "Not provided" }}
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="settings-row">
+
+                <div class="setting-info">
+                    <span class="setting-label">
+                        Account Type
+                    </span>
+
+                    <span class="account-badge
+                        {% if account_type == 'business' %}
+                            business
+                        {% else %}
+                            individual
+                        {% endif %}">
+
+                        {% if account_type == "business" %}
+                            Business
+                        {% else %}
+                            Individual
+                        {% endif %}
+
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PROFILE SETTINGS ================= -->
+
+        <section class="settings-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    ⚙️
+                </div>
+
+                <div>
+                    <h2>Profile</h2>
+                    <p>Manage your public profile</p>
+                </div>
+
+            </div>
+
+
+            <a href="{{ url_for('profile') }}"
+               class="settings-action">
+
+                <div class="action-left">
+
+                    <div class="action-icon">
+                        👤
+                    </div>
+
+                    <div>
+                        <strong>View Profile</strong>
+
+                        <span>
+                            View your public MOTTECK profile
+                        </span>
+                    </div>
+
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+        </section>
+
+
+        <!-- ================= SECURITY ================= -->
+
+        <section class="settings-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    🔐
+                </div>
+
+                <div>
+                    <h2>Security</h2>
+                    <p>Keep your account secure</p>
+                </div>
+
+            </div>
+
+
+            <a href="{{ url_for('forgot_password') }}"
+               class="settings-action">
+
+                <div class="action-left">
+
+                    <div class="action-icon">
+                        🔑
+                    </div>
+
+                    <div>
+                        <strong>Change Password</strong>
+
+                        <span>
+                            Reset or change your account password
+                        </span>
+                    </div>
+
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+        </section>
+
+
+        <!-- ================= ACCOUNT ACTIONS ================= -->
+
+        <section class="settings-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    📋
+                </div>
+
+                <div>
+                    <h2>Account Actions</h2>
+                    <p>Manage your MOTTECK session</p>
+                </div>
+
+            </div>
+
+
+            <a href="{{ url_for('user_logout') }}"
+               class="settings-action logout-action">
+
+                <div class="action-left">
+
+                    <div class="action-icon">
+                        🚪
+                    </div>
+
+                    <div>
+                        <strong>Log Out</strong>
+
+                        <span>
+                            Sign out of your MOTTECK account
+                        </span>
+                    </div>
+
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="settings-footer">
+
+        <p>
+            © 2026 MOTTECK. All rights reserved.
+        </p>
+
+    </footer>
+
+
+</body>
+</html>

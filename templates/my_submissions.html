@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Submissions | MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='my_submissions.css') }}">
+
+</head>
+
+<body>
+
+    <div class="submissions-container">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>My Submissions</h1>
+
+                <p>
+                    Track the status of posts you have submitted to MOTTECK.
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('submit_post') }}"
+               class="new-post-btn">
+
+                + Submit Post
+
+            </a>
+
+        </div>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- SUBMISSIONS -->
+
+        {% if submissions %}
+
+            <div class="submissions-list">
+
+                {% for submission in submissions %}
+
+                    <div class="submission-card">
+
+                        <!-- IMAGE -->
+
+                        <div class="submission-image">
+
+                            {% if submission.image_urls
+                                  and submission.image_urls|length > 0 %}
+
+                                <img
+                                    src="{{ submission.image_urls[0] }}"
+                                    alt="{{ submission.title }}"
+                                >
+
+                            {% else %}
+
+                                <div class="no-image">
+                                    No Image
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- CONTENT -->
+
+                        <div class="submission-content">
+
+                            <div class="submission-top">
+
+                                <span class="category">
+                                    {{ submission.category }}
+                                </span>
+
+                                <span class="status {{ submission.status }}">
+                                    {{ submission.status|capitalize }}
+                                </span>
+
+                            </div>
+
+
+                            <h2>
+                                {{ submission.title }}
+                            </h2>
+
+
+                            <p class="description">
+
+                                {{ submission.description }}
+
+                            </p>
+
+
+                            <div class="submission-details">
+
+                                <span>
+                                    <strong>Type:</strong>
+                                    {{ submission.post_type|capitalize }}
+                                </span>
+
+                                <span>
+                                    <strong>Submitted:</strong>
+                                    {{ submission.created_at[:10] }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- ADMIN NOTES -->
+
+                            {% if submission.admin_notes %}
+
+                                <div class="admin-notes">
+
+                                    <strong>
+                                        MOTTECK Review:
+                                    </strong>
+
+                                    <p>
+                                        {{ submission.admin_notes }}
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <h2>
+                    No submissions yet
+                </h2>
+
+                <p>
+                    You haven't submitted any posts yet.
+                    Start sharing with the MOTTECK community.
+                </p>
+
+                <a href="{{ url_for('submit_post') }}"
+                   class="new-post-btn">
+
+                    Submit Your First Post
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- BACK -->
+
+        <div class="back-section">
+
+            <a href="{{ url_for('profile') }}">
+
+                ← Back to Profile
+
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

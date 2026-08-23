@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Submit Post | MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='submit_post.css') }}">
+
+</head>
+
+<body>
+
+    <div class="submit-container">
+
+        <div class="submit-header">
+
+            <h1>Submit a Post</h1>
+
+            <p>
+                Share your content with the MOTTECK community.
+            </p>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="messages">
+
+                    {% for category, message in messages %}
+
+                        <div class="message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <form
+            action="{{ url_for('submit_post') }}"
+            method="POST"
+            enctype="multipart/form-data"
+            class="submit-form"
+        >
+
+            <!-- TITLE -->
+
+            <div class="form-group">
+
+                <label for="title">
+                    Post Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="Enter your post title"
+                    maxlength="150"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category"
+                    required
+                >
+
+                    <option value="">
+                        Select a category
+                    </option>
+
+                    <option value="Cars">
+                        Cars
+                    </option>
+
+                    <option value="Motorbikes">
+                        Motorbikes
+                    </option>
+
+                    <option value="Trucks">
+                        Trucks
+                    </option>
+
+                    <option value="Aviation">
+                        Aviation
+                    </option>
+
+                    <option value="Train">
+                        Train
+                    </option>
+
+                    <option value="Automotive News">
+                        Automotive News
+                    </option>
+
+                    <option value="Reviews">
+                        Reviews
+                    </option>
+
+                    <option value="Guides">
+                        Guides
+                    </option>
+
+                    <option value="Questions">
+                        Questions
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="8"
+                    placeholder="Tell us about your post..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- IMAGES -->
+
+            <div class="form-group">
+
+                <label for="images">
+                    Photos
+                </label>
+
+                {% if account_type == "individual" %}
+
+                    <p class="upload-info">
+                        You can upload up to 5 photos.
+                    </p>
+
+                    <input
+                        type="file"
+                        id="images"
+                        name="images"
+                        accept="image/*"
+                        multiple
+                    >
+
+                {% else %}
+
+                    <p class="upload-info">
+                        You can upload up to 10 photos.
+                    </p>
+
+                    <input
+                        type="file"
+                        id="images"
+                        name="images"
+                        accept="image/*"
+                        multiple
+                    >
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- BUSINESS POST TYPE -->
+
+            {% if account_type == "business" %}
+
+            <div class="form-group">
+
+                <label>
+                    Post Type
+                </label>
+
+                <div class="post-type-options">
+
+                    <label class="post-type-card">
+
+                        <input
+                            type="radio"
+                            name="post_type"
+                            value="normal"
+                            checked
+                        >
+
+                        <span>
+
+                            <strong>Normal</strong>
+
+                            <small>
+                                Regular business post
+                            </small>
+
+                        </span>
+
+                    </label>
+
+
+                    <label class="post-type-card">
+
+                        <input
+                            type="radio"
+                            name="post_type"
+                            value="sponsored"
+                        >
+
+                        <span>
+
+                            <strong>Sponsored</strong>
+
+                            <small>
+                                Promote your business through a sponsored post
+                            </small>
+
+                        </span>
+
+                    </label>
+
+
+                    <label class="post-type-card">
+
+                        <input
+                            type="radio"
+                            name="post_type"
+                            value="featured"
+                        >
+
+                        <span>
+
+                            <strong>Featured</strong>
+
+                            <small>
+                                Request placement as a featured post
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- NOTICE -->
+
+            <div class="approval-notice">
+
+                <strong>Before you submit</strong>
+
+                <p>
+                    All posts are reviewed by MOTTECK before they are
+                    published. Please make sure your information is
+                    accurate and appropriate.
+                </p>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Submit Post
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
