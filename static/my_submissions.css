@@ -1,0 +1,342 @@
+/* ================= RESET ================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ================= BODY ================= */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+    min-height: 100vh;
+    padding: 35px 20px;
+}
+
+
+/* ================= CONTAINER ================= */
+
+.submissions-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+
+/* ================= HEADER ================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 30px;
+    margin-bottom: 7px;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 15px;
+}
+
+
+/* ================= BUTTON ================= */
+
+.new-post-btn {
+    background: #111;
+    color: #fff;
+
+    padding: 12px 18px;
+    border-radius: 7px;
+
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.new-post-btn:hover {
+    background: #333;
+}
+
+
+/* ================= SUBMISSIONS ================= */
+
+.submissions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+/* ================= CARD ================= */
+
+.submission-card {
+    display: flex;
+    gap: 20px;
+
+    background: #fff;
+    padding: 18px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ================= IMAGE ================= */
+
+.submission-image {
+    width: 180px;
+    min-width: 180px;
+    height: 130px;
+
+    border-radius: 8px;
+    overflow: hidden;
+
+    background: #eee;
+}
+
+.submission-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.no-image {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* ================= CONTENT ================= */
+
+.submission-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.submission-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 10px;
+}
+
+.category {
+    font-size: 13px;
+    color: #666;
+}
+
+
+/* ================= STATUS ================= */
+
+.status {
+    font-size: 12px;
+    font-weight: bold;
+
+    padding: 6px 10px;
+    border-radius: 20px;
+}
+
+.status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status.rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+
+/* ================= TITLE ================= */
+
+.submission-content h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+
+/* ================= DESCRIPTION ================= */
+
+.description {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+
+    margin-bottom: 14px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+
+/* ================= DETAILS ================= */
+
+.submission-details {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 18px;
+
+    font-size: 13px;
+    color: #666;
+}
+
+
+/* ================= ADMIN NOTES ================= */
+
+.admin-notes {
+    margin-top: 15px;
+
+    padding: 12px;
+
+    background: #f7f7f7;
+
+    border-left: 4px solid #333;
+
+    border-radius: 5px;
+}
+
+.admin-notes strong {
+    font-size: 13px;
+}
+
+.admin-notes p {
+    margin-top: 6px;
+
+    color: #555;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* ================= EMPTY ================= */
+
+.empty-state {
+    text-align: center;
+
+    background: #fff;
+
+    padding: 60px 25px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.empty-state h2 {
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #666;
+
+    margin-bottom: 25px;
+
+    line-height: 1.6;
+}
+
+
+/* ================= BACK ================= */
+
+.back-section {
+    margin-top: 30px;
+}
+
+.back-section a {
+    color: #333;
+
+    text-decoration: none;
+
+    font-size: 14px;
+}
+
+.back-section a:hover {
+    text-decoration: underline;
+}
+
+
+/* ================= FLASH ================= */
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 13px 15px;
+    border-radius: 7px;
+}
+
+.message.success {
+    background: #e8f7ed;
+    color: #21733b;
+}
+
+.message.error {
+    background: #fdeaea;
+    color: #a12626;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 650px) {
+
+    body {
+        padding: 20px 12px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .new-post-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .submission-card {
+        flex-direction: column;
+    }
+
+    .submission-image {
+        width: 100%;
+        height: 200px;
+    }
+
+    .submission-top {
+        align-items: flex-start;
+    }
+
+}
