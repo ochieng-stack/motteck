@@ -567,6 +567,20 @@ def profile():
         following_count=following_count
     )
 
+# ================= USER SETTINGS =================
+@app.route("/settings")
+def settings():
+
+    if not session.get("user_logged_in"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    return render_template(
+        "settings.html",
+        full_name=session.get("full_name"),
+        email=session.get("email"),
+        account_type=session.get("account_type")
+    )
 
 # ================= STATIC PAGES =================
 @app.route('/about')
@@ -850,7 +864,249 @@ def choose_account_type():
             return redirect(url_for("choose_account_type"))
 
     return render_template("choose_account_type.html")
+# ================= SUBMIT POST =================
+@app.route("/submit-post", methods=["GET", "POST"])
+def submit_post():
 
+    # User must be logged in
+    if not session.get("user_logged_in"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    user_id = session.get("user_id")
+    account_type = session.get("account_type")
+
+    # Make sure account type is valid
+    if account_type not in ["individual", "business"]:
+        flash("Unable to determine your account type.", "error")
+        return redirect(url_for("profile"))
+
+    # ================= GET =================
+    if request.method == "GET":
+
+        return render_template(
+            "submit_post.html",
+            account_type=account_type
+        )
+
+    # ================= POST =================
+
+    title = request.form.get("title", "").strip()
+    category = request.form.get("category", "").strip()
+    description = request.form.get("description", "").strip()
+
+    # Only businesses can choose sponsored/featured
+    post_type = request.form.get("post_type", "normal").strip().lower()
+
+    # ================= VALIDATION =================
+
+    if not title:
+        flash("Please enter a post title.", "error")
+        return redirect(url_for("submit_post"))
+
+    if not category:
+        flash("Please choose a category.", "error")
+        return redirect(url_for("submit_post"))
+
+    if not description:
+        flash("Please enter a description.", "error")
+        return redirect(url_for("submit_post"))
+
+    # ================= POST TYPE SECURITY =================
+
+    if account_type == "individual":
+
+        # Individuals can only submit normal posts
+        post_type = "normal"
+
+    elif account_type == "business":
+
+        if post_type not in [
+            "normal",
+            "sponsored",
+            "featured"
+        ]:
+            post_type = "normal"
+
+    # ================= IMAGES =================
+
+    image_files = request.files.getlist("images")
+
+    # Remove empty file selections
+    image_files = [
+        image for image in image_files
+        if image and image.filename
+    ]
+
+    # Individual = maximum 5
+    # Business = maximum 10
+    max_images = 5 if account_type == "individual" else 10
+
+    if len(image_files) > max_images:
+
+        flash(
+            f"You can upload a maximum of {max_images} photos.",
+            "error"
+        )
+
+        return redirect(url_for("submit_post"))
+
+    image_urls = []
+
+    # ================= CLOUDINARY UPLOAD =================
+
+    try:
+
+        for image_file in image_files:
+
+            upload_result = cloudinary.uploader.upload(
+                image_file,
+                folder="motteck/submissions"
+            )
+
+            image_url = upload_result.get("secure_url")
+
+            if image_url:
+                image_urls.append(image_url)
+
+    except Exception as e:
+
+        print("SUBMISSION IMAGE UPLOAD ERROR:", repr(e))
+
+        flash(
+            "We couldn't upload your images. Please try again.",
+            "error"
+        )
+
+        return redirect(url_for("submit_post"))
+
+    # ================= SAVE SUBMISSION =================
+
+    submission_data = {
+
+        "user_id": user_id,
+
+        "account_type": account_type,
+
+        "title": title,
+
+        "category": category,
+
+        "description": description,
+
+        "image_urls": image_urls,
+
+        "post_type": post_type,
+
+        "status": "pending"
+
+    }
+
+    try:
+
+        response = supabase.table(
+            "post_submissions"
+        ).insert(
+            submission_data
+        ).execute()
+
+        if not response.data:
+
+            flash(
+                "Your post could not be submitted. Please try again.",
+                "error"
+            )
+
+            return redirect(url_for("submit_post"))
+
+        # ================= SUCCESS =================
+
+        if account_type == "business":
+
+            if post_type == "sponsored":
+
+                flash(
+                    "Your sponsored post has been submitted and is "
+                    "pending review and payment.",
+                    "success"
+                )
+
+            elif post_type == "featured":
+
+                flash(
+                    "Your featured post has been submitted and is "
+                    "pending review and payment.",
+                    "success"
+                )
+
+            else:
+
+                flash(
+                    "Your post has been submitted successfully and "
+                    "is waiting for approval.",
+                    "success"
+                )
+
+        else:
+
+            flash(
+                "Your post has been submitted successfully and "
+                "is waiting for approval.",
+                "success"
+            )
+
+        return redirect(url_for("profile"))
+
+    except Exception as e:
+
+        print("POST SUBMISSION ERROR:", repr(e))
+
+        flash(
+            "We couldn't submit your post right now. Please try again.",
+            "error"
+        )
+
+        return redirect(url_for("submit_post"))
+    
+# ================= MY SUBMISSIONS =================
+@app.route("/my-submissions")
+def my_submissions():
+
+    # User must be logged in
+    if not session.get("user_logged_in"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    user_id = session.get("user_id")
+
+    try:
+
+        # Get only submissions belonging to this user
+        response = supabase.table("post_submissions") \
+            .select("*") \
+            .eq("user_id", user_id) \
+            .order("created_at", desc=True) \
+            .execute()
+
+        submissions = response.data or []
+
+        return render_template(
+            "my_submissions.html",
+            submissions=submissions,
+            account_type=session.get("account_type")
+        )
+
+    except Exception as e:
+
+        print("MY SUBMISSIONS ERROR:", repr(e))
+
+        flash(
+            "We couldn't load your submissions. Please try again.",
+            "error"
+        )
+
+        return redirect(url_for("profile"))
+    
 # ================= GOOGLE CALLBACK =================
 @app.route("/auth/callback")
 def google_callback():
