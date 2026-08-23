@@ -52,15 +52,15 @@
 
         <div class="profile-menu">
 
-            <a href="#">Submit Post</a>
+            <a href="{{ url_for('submit_post') }}">Submit Post</a>
 
-            <a href="#">My Submissions</a>
+            <a href="{{ url_for('my_submissions') }}">My Submissions</a>
 
             <a href="#">Saved Posts</a>
 
             <a href="#">Questions</a>
 
-            <a href="#">Settings</a>
+            <a href="{{ url_for('settings') }}">Settings</a>
 
         </div>
 
@@ -68,9 +68,9 @@
 
         <div class="profile-menu">
 
-            <a href="#">Submit Post</a>
+            <a href="{{ url_for('submit_post') }}">Submit Post</a>
 
-            <a href="#">My Submissions</a>
+            <a href="{{ url_for('my_submissions') }}">My Submissions</a>
 
             <a href="#">Sponsored Posts</a>
 
@@ -78,7 +78,7 @@
 
             <a href="#">Analytics</a>
 
-            <a href="#">Business Settings</a>
+            <a href="{{ url_for('settings') }}">Business Settings</a>
 
         </div>
 
