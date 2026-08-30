@@ -1736,9 +1736,9 @@ def view_post(post_id):
         })
 
 
-# ================= DELETE POST =================
+# =================ADMIN DELETE POST =================
 @app.route('/delete_post/<int:post_id>', methods=['DELETE'])
-def delete_post(post_id):
+def admin_delete_post(post_id):
 
     if not session.get("logged_in"):
         return jsonify({"success": False}), 403
