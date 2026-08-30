@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Motteck</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body>
+
+<header class="dashboard-header">
+
+    <div class="header-left">
+        <a href="{{ url_for('home') }}" class="logo">MOTTECK</a>
+    </div>
+
+    <div class="header-right">
+        <a href="{{ url_for('profile') }}" class="profile-link">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+    </div>
+
+</header>
+
+
+<main class="dashboard-container">
+
+    <div class="dashboard-title">
+        <div>
+            <h1>Dashboard</h1>
+            <p>Manage your posts and see how they are performing.</p>
+        </div>
+
+        <a href="{{ url_for('submit_post') }}" class="submit-btn">
+            + Submit Post
+        </a>
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">📝</div>
+
+            <div>
+                <span>Total Posts</span>
+                <strong>{{ posts|length }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon">👁</div>
+
+            <div>
+                <span>Total Views</span>
+                <strong>{{ total_views }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon">❤️</div>
+
+            <div>
+                <span>Total Likes</span>
+                <strong>{{ total_likes }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon">💬</div>
+
+            <div>
+                <span>Total Comments</span>
+                <strong>{{ total_comments }}</strong>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- POSTS -->
+
+    <section class="posts-section">
+
+        <div class="section-header">
+            <div>
+                <h2>Your Posts</h2>
+                <p>Track the performance of everything you've submitted.</p>
+            </div>
+        </div>
+
+
+        {% if posts %}
+
+        <div class="posts-list">
+
+            {% for post in posts %}
+
+            <div class="post-row">
+
+                <!-- IMAGE -->
+
+                <div class="post-image">
+
+                    {% if post.image_url %}
+
+                    <img src="{{ post.image_url }}"
+                         alt="{{ post.title }}">
+
+                    {% else %}
+
+                    <div class="no-image">
+                        No Image
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- POST INFORMATION -->
+
+                <div class="post-info">
+
+                    <h3>{{ post.title }}</h3>
+
+                    <p class="post-date">
+                        Posted:
+                        {% if post.created_at %}
+                            {{ post.created_at[:16].replace('T', ' ') }}
+                        {% else %}
+                            Date unavailable
+                        {% endif %}
+                    </p>
+
+
+                    <div class="post-status">
+
+                        {% if post.status == "approved" %}
+
+                            <span class="status approved">
+                                Approved
+                            </span>
+
+                        {% elif post.status == "rejected" %}
+
+                            <span class="status rejected">
+                                Rejected
+                            </span>
+
+                        {% else %}
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PERFORMANCE -->
+
+                <div class="post-stat">
+
+                    <span class="stat-number">
+                        {{ post.views or 0 }}
+                    </span>
+
+                    <span class="stat-label">
+                        Views
+                    </span>
+
+                </div>
+
+
+                <div class="post-stat">
+
+                    <span class="stat-number">
+                        {{ post.likes or 0 }}
+                    </span>
+
+                    <span class="stat-label">
+                        Likes
+                    </span>
+
+                </div>
+
+
+                <div class="post-stat">
+
+                    <span class="stat-number">
+                        {{ post.comments_count or 0 }}
+                    </span>
+
+                    <span class="stat-label">
+                        Comments
+                    </span>
+
+                </div>
+
+
+                <!-- DELETE -->
+
+                <div class="post-actions">
+
+                    <form method="POST"
+                          action="{{ url_for('delete_post', post_id=post.id) }}"
+                          onsubmit="return confirm('Are you sure you want to delete this post?');">
+
+                        <button type="submit" class="delete-btn">
+                            Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-dashboard">
+
+            <div class="empty-icon">📝</div>
+
+            <h3>You haven't submitted any posts yet</h3>
+
+            <p>
+                Share your first post with the Motteck community.
+            </p>
+
+            <a href="{{ url_for('submit_post') }}" class="submit-btn">
+                Submit Your First Post
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>
