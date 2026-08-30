@@ -813,6 +813,7 @@ def google_login():
         )
 
         return redirect(url_for("login_user"))
+    
 # ================= CHOOSE GOOGLE ACCOUNT TYPE =================
 @app.route("/choose-account-type", methods=["GET", "POST"])
 def choose_account_type():
@@ -864,6 +865,7 @@ def choose_account_type():
             return redirect(url_for("choose_account_type"))
 
     return render_template("choose_account_type.html")
+
 # ================= SUBMIT POST =================
 @app.route("/submit-post", methods=["GET", "POST"])
 def submit_post():
@@ -1106,7 +1108,94 @@ def my_submissions():
         )
 
         return redirect(url_for("profile"))
-    
+
+ #================ Dashboard =================
+
+@app.route("/dashboard")
+def dashboard():
+
+    # Make sure user is logged in
+    if "user_id" not in session:
+        return redirect(url_for("login_user"))
+
+    user_id = session["user_id"]
+
+    try:
+
+        # Get the user's posts
+        response = (
+            supabase
+            .table("posts")
+            .select("*")
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        posts = response.data or []
+
+        # Calculate totals
+        total_views = sum(
+            int(post.get("views") or 0)
+            for post in posts
+        )
+
+        total_likes = sum(
+            int(post.get("likes") or 0)
+            for post in posts
+        )
+
+        total_comments = sum(
+            int(post.get("comments_count") or 0)
+            for post in posts
+        )
+
+        return render_template(
+            "dashboard.html",
+            posts=posts,
+            total_views=total_views,
+            total_likes=total_likes,
+            total_comments=total_comments
+        )
+
+    except Exception as e:
+
+        print("Dashboard error:", e)
+
+        return render_template(
+            "dashboard.html",
+            posts=[],
+            total_views=0,
+            total_likes=0,
+            total_comments=0
+        )
+   # ============= delete btn dashboard ============
+   
+@app.route("/delete-post/<post_id>", methods=["POST"])
+def delete_post(post_id):
+
+    if "user_id" not in session:
+        return redirect(url_for("login_user"))
+
+    user_id = session["user_id"]
+
+    try:
+
+        # Delete ONLY if the post belongs to the logged-in user
+        supabase.table("posts") \
+            .delete() \
+            .eq("id", post_id) \
+            .eq("user_id", user_id) \
+            .execute()
+
+        return redirect(url_for("dashboard"))
+
+    except Exception as e:
+
+        print("Delete post error:", e)
+
+        return redirect(url_for("dashboard"))
+           
 # ================= GOOGLE CALLBACK =================
 @app.route("/auth/callback")
 def google_callback():
