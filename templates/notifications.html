@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | Motteck</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='notifications.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header class="notifications-header">
+
+    <a href="{{ url_for('home') }}"
+       class="logo">
+
+        MOTTECK
+
+    </a>
+
+
+    <div class="header-links">
+
+        <a href="{{ url_for('profile') }}">
+            Profile
+        </a>
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- MAIN -->
+
+<main class="notifications-container">
+
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>Notifications</h1>
+
+            <p>
+                Stay updated with replies, Motteck posts,
+                and people you follow.
+            </p>
+
+        </div>
+
+
+        {% if unread_count > 0 %}
+
+        <span class="unread-badge">
+            {{ unread_count }} new
+        </span>
+
+        {% endif %}
+
+    </div>
+
+
+
+    {% if notifications %}
+
+    <div class="notifications-list">
+
+
+        {% for notification in notifications %}
+
+        <div class="notification-card
+                    {% if not notification.is_read %}
+                    unread
+                    {% endif %}"
+             data-id="{{ notification.id }}">
+
+
+            <!-- ICON -->
+
+            <div class="notification-icon">
+
+                {% if notification.type == "reply" %}
+
+                    💬
+
+                {% elif notification.type == "motteck" %}
+
+                    📢
+
+                {% elif notification.type == "following" %}
+
+                    👤
+
+                {% else %}
+
+                    🔔
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- CONTENT -->
+
+            <div class="notification-content">
+
+                <div class="notification-top">
+
+                    <h3>
+                        {{ notification.title }}
+                    </h3>
+
+                    {% if not notification.is_read %}
+
+                    <span class="new-dot"></span>
+
+                    {% endif %}
+
+                </div>
+
+
+                {% if notification.message %}
+
+                <p>
+                    {{ notification.message }}
+                </p>
+
+                {% endif %}
+
+
+                <span class="notification-date">
+
+                    {{ notification.created_at[:16]
+                       .replace("T", " ") }}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- ACTION -->
+
+            {% if not notification.is_read %}
+
+            <button
+                class="read-btn"
+                onclick="markAsRead({{ notification.id }}, this)">
+
+                Mark read
+
+            </button>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- EMPTY -->
+
+    <div class="empty-notifications">
+
+        <div class="empty-icon">
+            🔔
+        </div>
+
+        <h2>No notifications yet</h2>
+
+        <p>
+            When someone replies to your post,
+            Motteck publishes something new,
+            or someone you follow posts,
+            you'll see it here.
+        </p>
+
+        <a href="{{ url_for('home') }}"
+           class="home-btn">
+
+            Explore Motteck
+
+        </a>
+
+    </div>
+
+
+    {% endif %}
+
+
+</main>
+
+
+
+<script>
+
+async function markAsRead(notificationId, button) {
+
+    try {
+
+        const response = await fetch(
+            `/notifications/read/${notificationId}`,
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            const card = button.closest(
+                ".notification-card"
+            );
+
+            card.classList.remove("unread");
+
+            button.remove();
+
+            const dot = card.querySelector(
+                ".new-dot"
+            );
+
+            if (dot) {
+                dot.remove();
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Notification error:",
+            error
+        );
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>
