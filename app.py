@@ -1757,7 +1757,86 @@ def admin_delete_post(post_id):
             "error": str(e)
         })
 
+# ================= NOTIFICATIONS =================
+@app.route("/notifications")
+def notifications():
 
+    if not session.get("user_logged_in"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    user_id = session.get("user_id")
+
+    try:
+
+        response = (
+            supabase
+            .table("notifications")
+            .select("*")
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        notification_list = response.data or []
+
+        unread_count = sum(
+            1
+            for notification in notification_list
+            if not notification.get("is_read")
+        )
+
+        return render_template(
+            "notifications.html",
+            notifications=notification_list,
+            unread_count=unread_count
+        )
+
+    except Exception as e:
+
+        print("NOTIFICATIONS ERROR:", repr(e))
+
+        return render_template(
+            "notifications.html",
+            notifications=[],
+            unread_count=0
+        )
+# ================= MARK NOTIFICATIONS AS READ =================
+@app.route("/notifications/read/<int:notification_id>", methods=["POST"])
+def mark_notification_read(notification_id):
+
+    if not session.get("user_logged_in"):
+        return jsonify({
+            "success": False,
+            "error": "Unauthorized"
+        }), 403
+
+    user_id = session.get("user_id")
+
+    try:
+
+        supabase.table("notifications") \
+            .update({
+                "is_read": True
+            }) \
+            .eq("id", notification_id) \
+            .eq("user_id", user_id) \
+            .execute()
+
+        return jsonify({
+            "success": True
+        })
+
+    except Exception as e:
+
+        print("MARK NOTIFICATION READ ERROR:", repr(e))
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+        
 # ================= CONTACT =================
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
