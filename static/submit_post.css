@@ -208,6 +208,151 @@ body {
 }
 
 
+/* ================= PROMOTION DURATION ================= */
+
+.promotion-duration {
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background: #fafafa;
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 10px;
+}
+
+.duration-heading {
+    margin-bottom: 16px;
+}
+
+.duration-heading h3 {
+    font-size: 17px;
+
+    margin-bottom: 5px;
+}
+
+.duration-heading p {
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* ================= DURATION OPTIONS ================= */
+
+.duration-options {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.duration-card {
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    background: #fff;
+
+    border: 1px solid #dddddd;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.duration-card:hover {
+    border-color: #999;
+
+    background: #fdfdfd;
+}
+
+.duration-card input {
+    width: 18px;
+
+    height: 18px;
+
+    flex-shrink: 0;
+}
+
+.duration-content {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.duration-content strong {
+    font-size: 15px;
+}
+
+.duration-content small {
+    color: #555;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+/* ================= PRICE DISPLAY ================= */
+
+.sponsored-price,
+.featured-price {
+    display: none;
+}
+
+.sponsored-price {
+    font-weight: 600;
+}
+
+.featured-price {
+    font-weight: 600;
+}
+
+
+/* ================= PAYMENT NOTE ================= */
+
+.promotion-note {
+    margin-top: 18px;
+
+    padding: 14px;
+
+    background: #f3f3f3;
+
+    border-radius: 7px;
+
+    border-left: 4px solid #222;
+}
+
+.promotion-note strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 14px;
+}
+
+.promotion-note p {
+    color: #666;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
 /* ================= APPROVAL NOTICE ================= */
 
 .approval-notice {
@@ -341,6 +486,10 @@ body {
         width: 100%;
 
         text-align: center;
+    }
+
+    .promotion-duration {
+        padding: 16px;
     }
 
 }

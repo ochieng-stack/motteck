@@ -1,0 +1,973 @@
+```css
+/* =========================================================
+   MOTTECK FEATURED POSTS
+   ========================================================= */
+
+
+/* ================= RESET ================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ================= BODY ================= */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f5f6f8;
+
+    color: #222;
+
+    min-height: 100vh;
+}
+
+
+/* ================= HEADER ================= */
+
+.page-header {
+    width: 100%;
+
+    height: 70px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e8e8e8;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 45px;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+}
+
+
+/* ================= LOGO ================= */
+
+.logo {
+    text-decoration: none;
+
+    color: #111;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+
+/* ================= HEADER RIGHT ================= */
+
+.header-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+
+/* ================= HEADER LINKS ================= */
+
+.back-link,
+.profile-link {
+    text-decoration: none;
+
+    color: #444;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: color 0.2s ease;
+}
+
+.back-link:hover,
+.profile-link:hover {
+    color: #000;
+}
+
+
+/* ================= LOGOUT ================= */
+
+.logout-btn {
+    text-decoration: none;
+
+    background: #111;
+
+    color: #fff;
+
+    padding: 9px 16px;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: background 0.2s ease;
+}
+
+.logout-btn:hover {
+    background: #333;
+}
+
+
+/* ================= MAIN CONTAINER ================= */
+
+.container {
+    width: 100%;
+
+    max-width: 1150px;
+
+    margin: 0 auto;
+
+    padding: 45px 25px 60px;
+}
+
+
+/* ================= PAGE TITLE ================= */
+
+.page-title {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 30px;
+}
+
+.page-title h1 {
+    font-size: 30px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+
+    color: #111;
+}
+
+.page-title p {
+    color: #707070;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+/* ================= STATS GRID ================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 45px;
+}
+
+
+/* ================= STAT CARD ================= */
+
+.stat-card {
+    background: #fff;
+
+    border: 1px solid #e7e7e7;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-height: 95px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ================= STAT ICON ================= */
+
+.stat-icon {
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 9px;
+
+    background: #f1f1f1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 21px;
+
+    flex-shrink: 0;
+}
+
+
+/* ================= STAT TEXT ================= */
+
+.stat-card span {
+    display: block;
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+}
+
+.stat-card strong {
+    display: block;
+
+    color: #111;
+
+    font-size: 23px;
+
+    font-weight: 700;
+}
+
+
+/* ================= POSTS SECTION ================= */
+
+.posts-section {
+    width: 100%;
+}
+
+
+/* ================= SECTION HEADER ================= */
+
+.section-header {
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 21px;
+
+    color: #111;
+
+    margin-bottom: 6px;
+}
+
+.section-header p {
+    color: #777;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* ================= POSTS LIST ================= */
+
+.posts-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+/* ================= FEATURED CARD ================= */
+
+.featured-card {
+    background: #ffffff;
+
+    border: 1px solid #e3e3e3;
+
+    border-radius: 12px;
+
+    padding: 24px;
+
+    overflow: hidden;
+
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.featured-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
+
+
+/* ================= POST TOP ================= */
+
+.post-top {
+    display: flex;
+
+    gap: 22px;
+
+    padding-bottom: 22px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+/* ================= POST IMAGE ================= */
+
+.post-image {
+    width: 230px;
+
+    height: 155px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+
+    background: #eeeeee;
+}
+
+.post-image img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform 0.3s ease;
+}
+
+.featured-card:hover .post-image img {
+    transform: scale(1.03);
+}
+
+
+/* ================= NO IMAGE ================= */
+
+.no-image {
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+/* ================= POST DETAILS ================= */
+
+.post-details {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+/* ================= TITLE ROW ================= */
+
+.title-row {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 9px;
+}
+
+.title-row h3 {
+    font-size: 20px;
+
+    line-height: 1.35;
+
+    color: #111;
+
+    font-weight: 700;
+
+    word-break: break-word;
+}
+
+
+/* ================= FEATURED BADGE ================= */
+
+.featured-badge {
+    flex-shrink: 0;
+
+    background: #111;
+
+    color: #fff;
+
+    padding: 6px 10px;
+
+    border-radius: 5px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ================= POST DATE ================= */
+
+.posted-date {
+    color: #888;
+
+    font-size: 13px;
+
+    margin-bottom: 15px;
+}
+
+
+/* ================= FEATURED INFO ================= */
+
+.featured-info {
+    color: #666;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* ================= PERFORMANCE GRID ================= */
+
+.performance-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 12px;
+
+    padding: 22px 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+/* ================= PERFORMANCE ITEM ================= */
+
+.performance-item {
+    text-align: center;
+
+    padding: 12px;
+
+    background: #fafafa;
+
+    border-radius: 8px;
+}
+
+.performance-number {
+    display: block;
+
+    color: #111;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    margin-bottom: 5px;
+}
+
+.performance-label {
+    display: block;
+
+    color: #777;
+
+    font-size: 12px;
+}
+
+
+/* ================= PERFORMANCE SECTION ================= */
+
+.performance-section {
+    padding: 22px 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+/* ================= PERFORMANCE HEADING ================= */
+
+.performance-heading {
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #222;
+
+    margin-bottom: 17px;
+}
+
+
+/* ================= BAR ROW ================= */
+
+.bar-row {
+    display: grid;
+
+    grid-template-columns: 80px 1fr;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 13px;
+}
+
+.bar-row:last-child {
+    margin-bottom: 0;
+}
+
+.bar-row > span {
+    color: #666;
+
+    font-size: 13px;
+}
+
+
+/* ================= BAR ================= */
+
+.bar {
+    width: 100%;
+
+    height: 8px;
+
+    background: #ededed;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+/* ================= BAR FILL ================= */
+
+.bar-fill {
+    height: 100%;
+
+    background: #111;
+
+    border-radius: 20px;
+
+    transition: width 0.4s ease;
+}
+
+
+/* ================= ACTIONS ================= */
+
+.post-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding-top: 20px;
+}
+
+
+/* ================= VIEW BUTTON ================= */
+
+.view-btn {
+    display: inline-block;
+
+    text-decoration: none;
+
+    background: #111;
+
+    color: #fff;
+
+    padding: 11px 20px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.view-btn:hover {
+    background: #333;
+
+    transform: translateY(-1px);
+}
+
+
+/* ================= EMPTY STATE ================= */
+
+.empty-state {
+    background: #fff;
+
+    border: 1px solid #e4e4e4;
+
+    border-radius: 12px;
+
+    padding: 65px 30px;
+
+    text-align: center;
+
+    margin-top: 10px;
+}
+
+
+/* ================= EMPTY ICON ================= */
+
+.empty-icon {
+    width: 65px;
+
+    height: 65px;
+
+    margin: 0 auto 18px;
+
+    background: #f1f1f1;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+
+/* ================= EMPTY TITLE ================= */
+
+.empty-state h3 {
+    font-size: 20px;
+
+    color: #222;
+
+    margin-bottom: 8px;
+}
+
+
+/* ================= EMPTY TEXT ================= */
+
+.empty-state p {
+    max-width: 450px;
+
+    margin: 0 auto 22px;
+
+    color: #777;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* ================= EMPTY BUTTON ================= */
+
+.submit-btn {
+    display: inline-block;
+
+    text-decoration: none;
+
+    background: #111;
+
+    color: #fff;
+
+    padding: 11px 20px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #333;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .page-header {
+        padding: 0 25px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .post-image {
+        width: 200px;
+
+        height: 140px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .page-header {
+        height: auto;
+
+        min-height: 65px;
+
+        padding: 14px 16px;
+
+        gap: 12px;
+    }
+
+
+    .logo {
+        font-size: 20px;
+    }
+
+
+    .header-right {
+        gap: 10px;
+    }
+
+
+    .back-link,
+    .profile-link {
+        font-size: 12px;
+    }
+
+
+    .logout-btn {
+        padding: 8px 11px;
+
+        font-size: 12px;
+    }
+
+
+    .container {
+        padding: 30px 14px 45px;
+    }
+
+
+    .page-title {
+        margin-bottom: 25px;
+    }
+
+
+    .page-title h1 {
+        font-size: 25px;
+    }
+
+
+    .page-title p {
+        font-size: 14px;
+    }
+
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 10px;
+
+        margin-bottom: 35px;
+    }
+
+
+    .stat-card {
+        padding: 14px;
+
+        min-height: 85px;
+
+        gap: 10px;
+    }
+
+
+    .stat-icon {
+        width: 38px;
+
+        height: 38px;
+
+        font-size: 17px;
+    }
+
+
+    .stat-card span {
+        font-size: 11px;
+    }
+
+
+    .stat-card strong {
+        font-size: 20px;
+    }
+
+
+    .section-header h2 {
+        font-size: 19px;
+    }
+
+
+    .section-header p {
+        font-size: 13px;
+    }
+
+
+    .featured-card {
+        padding: 17px;
+    }
+
+
+    .post-top {
+        flex-direction: column;
+
+        gap: 16px;
+    }
+
+
+    .post-image {
+        width: 100%;
+
+        height: 200px;
+    }
+
+
+    .title-row {
+        flex-direction: column;
+
+        gap: 9px;
+    }
+
+
+    .title-row h3 {
+        font-size: 18px;
+    }
+
+
+    .featured-badge {
+        align-self: flex-start;
+    }
+
+
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 9px;
+
+        padding: 18px 0;
+    }
+
+
+    .performance-item {
+        padding: 11px 8px;
+    }
+
+
+    .performance-number {
+        font-size: 18px;
+    }
+
+
+    .performance-label {
+        font-size: 11px;
+    }
+
+
+    .bar-row {
+        grid-template-columns: 65px 1fr;
+
+        gap: 10px;
+    }
+
+
+    .post-actions {
+        justify-content: stretch;
+    }
+
+
+    .view-btn {
+        width: 100%;
+
+        text-align: center;
+    }
+
+
+    .empty-state {
+        padding: 50px 20px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .header-right {
+        gap: 7px;
+    }
+
+
+    .back-link,
+    .profile-link {
+        display: none;
+    }
+
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .post-image {
+        height: 180px;
+    }
+
+}
+```

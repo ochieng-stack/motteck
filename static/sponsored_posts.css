@@ -1,0 +1,494 @@
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+    height: 70px;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 45px;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    text-decoration: none;
+    color: #111;
+
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.back-link,
+.profile-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.logout-btn {
+    text-decoration: none;
+    background: #111;
+    color: #fff;
+
+    padding: 10px 17px;
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+    width: 94%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.page-title {
+    margin-bottom: 30px;
+}
+
+.page-title h1 {
+    font-size: 32px;
+    margin-bottom: 7px;
+}
+
+.page-title p {
+    color: #777;
+    font-size: 15px;
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
+
+    padding: 22px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+
+    background: #f1f1f1;
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.stat-card span {
+    display: block;
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.stat-card strong {
+    font-size: 24px;
+}
+
+
+/* =========================
+   POSTS SECTION
+========================= */
+
+.posts-section {
+    background: #fff;
+
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 25px;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.section-header h2 {
+    font-size: 21px;
+    margin-bottom: 5px;
+}
+
+.section-header p {
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* =========================
+   SPONSORED CARD
+========================= */
+
+.sponsored-card {
+    padding: 25px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.sponsored-card:last-child {
+    border-bottom: none;
+}
+
+
+/* =========================
+   POST TOP
+========================= */
+
+.post-top {
+    display: flex;
+    gap: 20px;
+}
+
+.post-image {
+    width: 150px;
+    height: 100px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+    border-radius: 8px;
+
+    background: #eee;
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #888;
+    font-size: 12px;
+}
+
+.post-details {
+    flex: 1;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 8px;
+}
+
+.title-row h3 {
+    font-size: 18px;
+}
+
+.posted-date,
+.expiry {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.expiry strong {
+    color: #555;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status.active {
+    background: #e7f7ed;
+    color: #16803c;
+}
+
+.status.expired {
+    background: #fde8e8;
+    color: #c53030;
+}
+
+
+/* =========================
+   PERFORMANCE
+========================= */
+
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 12px;
+
+    margin-top: 22px;
+}
+
+.performance-item {
+    background: #f7f7f7;
+
+    border-radius: 8px;
+
+    padding: 14px;
+
+    text-align: center;
+}
+
+.performance-number {
+    display: block;
+
+    font-size: 19px;
+    font-weight: 700;
+
+    margin-bottom: 5px;
+}
+
+.performance-label {
+    display: block;
+
+    color: #888;
+    font-size: 11px;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.post-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 18px;
+}
+
+.view-btn {
+    display: inline-block;
+
+    text-decoration: none;
+
+    background: #111;
+    color: #fff;
+
+    padding: 9px 17px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.view-btn:hover {
+    background: #333;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty-state {
+    text-align: center;
+    padding: 70px 20px;
+}
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.submit-btn {
+    display: inline-block;
+
+    text-decoration: none;
+
+    background: #111;
+    color: #fff;
+
+    padding: 11px 18px;
+
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 900px) {
+
+    .page-header {
+        padding: 0 20px;
+    }
+
+    .container {
+        margin: 25px auto;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .performance-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .page-header {
+        height: 60px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .header-right {
+        gap: 8px;
+    }
+
+    .back-link,
+    .profile-link {
+        display: none;
+    }
+
+    .logout-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .container {
+        width: 94%;
+        margin: 25px auto;
+    }
+
+    .page-title h1 {
+        font-size: 27px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sponsored-card {
+        padding: 18px;
+    }
+
+    .post-top {
+        gap: 12px;
+    }
+
+    .post-image {
+        width: 90px;
+        height: 70px;
+    }
+
+    .title-row {
+        display: block;
+    }
+
+    .title-row h3 {
+        font-size: 15px;
+        margin-bottom: 7px;
+    }
+
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .post-actions {
+        justify-content: stretch;
+    }
+
+    .view-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+```

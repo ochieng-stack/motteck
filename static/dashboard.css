@@ -8,9 +8,12 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: Arial, Helvetica, sans-serif;
+
     background: #f5f6f8;
+
     color: #222;
 }
 
@@ -20,48 +23,71 @@ body {
 ========================= */
 
 .dashboard-header {
+
     height: 70px;
+
     background: #ffffff;
+
     border-bottom: 1px solid #e5e5e5;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
     padding: 0 45px;
 
     position: sticky;
+
     top: 0;
+
     z-index: 100;
 }
 
 
 .logo {
+
     text-decoration: none;
+
     font-size: 25px;
+
     font-weight: 800;
+
     letter-spacing: 1px;
+
     color: #111;
 }
 
 
 .header-right {
+
     display: flex;
+
     align-items: center;
+
     gap: 20px;
 }
 
 
 .profile-link {
+
     text-decoration: none;
+
     color: #333;
+
     font-weight: 600;
+
+    font-size: 14px;
 }
 
 
 .logout-btn {
+
     text-decoration: none;
+
     background: #111;
+
     color: white;
 
     padding: 10px 18px;
@@ -69,6 +95,7 @@ body {
     border-radius: 7px;
 
     font-size: 14px;
+
     font-weight: 600;
 }
 
@@ -78,7 +105,9 @@ body {
 ========================= */
 
 .dashboard-container {
+
     width: 94%;
+
     max-width: 1250px;
 
     margin: 40px auto;
@@ -90,8 +119,11 @@ body {
 ========================= */
 
 .dashboard-title {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
     margin-bottom: 30px;
@@ -99,23 +131,63 @@ body {
 
 
 .dashboard-title h1 {
+
     font-size: 32px;
+
     margin-bottom: 7px;
 }
 
 
 .dashboard-title p {
+
     color: #777;
+
     font-size: 15px;
 }
 
 
+.account-label {
+
+    display: inline-block;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    margin-bottom: 8px;
+}
+
+
+.individual-label {
+
+    background: #eeeeee;
+
+    color: #555;
+}
+
+
+.business-label {
+
+    background: #111;
+
+    color: #fff;
+}
+
+
 .submit-btn {
+
     display: inline-block;
 
     text-decoration: none;
 
     background: #111;
+
     color: white;
 
     padding: 12px 20px;
@@ -123,6 +195,7 @@ body {
     border-radius: 7px;
 
     font-size: 14px;
+
     font-weight: 600;
 
     transition: 0.2s;
@@ -130,6 +203,7 @@ body {
 
 
 .submit-btn:hover {
+
     background: #333;
 }
 
@@ -139,6 +213,7 @@ body {
 ========================= */
 
 .stats-grid {
+
     display: grid;
 
     grid-template-columns:
@@ -146,11 +221,12 @@ body {
 
     gap: 18px;
 
-    margin-bottom: 35px;
+    margin-bottom: 18px;
 }
 
 
 .stat-card {
+
     background: white;
 
     border: 1px solid #e7e7e7;
@@ -160,6 +236,7 @@ body {
     padding: 22px;
 
     display: flex;
+
     align-items: center;
 
     gap: 15px;
@@ -167,7 +244,9 @@ body {
 
 
 .stat-icon {
+
     width: 45px;
+
     height: 45px;
 
     background: #f1f1f1;
@@ -175,7 +254,9 @@ body {
     border-radius: 9px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     font-size: 20px;
@@ -183,6 +264,7 @@ body {
 
 
 .stat-card span {
+
     display: block;
 
     color: #777;
@@ -194,7 +276,67 @@ body {
 
 
 .stat-card strong {
+
     font-size: 24px;
+}
+
+
+/* =========================
+   BUSINESS EXTRA STATS
+========================= */
+
+.business-extra-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 35px;
+}
+
+
+.business-stat {
+
+    background: #111;
+
+    color: white;
+
+    border-radius: 10px;
+
+    padding: 22px;
+}
+
+
+.business-stat span {
+
+    display: block;
+
+    font-size: 13px;
+
+    opacity: .7;
+
+    margin-bottom: 7px;
+}
+
+
+.business-stat strong {
+
+    display: block;
+
+    font-size: 28px;
+
+    margin-bottom: 5px;
+}
+
+
+.business-stat small {
+
+    color: #aaa;
+
+    font-size: 11px;
 }
 
 
@@ -203,6 +345,7 @@ body {
 ========================= */
 
 .posts-section {
+
     background: white;
 
     border: 1px solid #e7e7e7;
@@ -214,6 +357,7 @@ body {
 
 
 .section-header {
+
     padding: 25px;
 
     border-bottom: 1px solid #e7e7e7;
@@ -221,6 +365,7 @@ body {
 
 
 .section-header h2 {
+
     font-size: 21px;
 
     margin-bottom: 5px;
@@ -228,9 +373,26 @@ body {
 
 
 .section-header p {
+
     color: #777;
 
     font-size: 14px;
+}
+
+
+/* =========================
+   POST WRAPPER
+========================= */
+
+.post-wrapper {
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+.post-wrapper:last-child {
+
+    border-bottom: none;
 }
 
 
@@ -239,6 +401,7 @@ body {
 ========================= */
 
 .post-row {
+
     min-height: 120px;
 
     display: grid;
@@ -256,13 +419,20 @@ body {
     gap: 20px;
 
     padding: 18px 25px;
-
-    border-bottom: 1px solid #eeeeee;
 }
 
 
-.post-row:last-child {
-    border-bottom: none;
+.business-post {
+
+    cursor: pointer;
+
+    transition: background .2s;
+}
+
+
+.business-post:hover {
+
+    background: #fafafa;
 }
 
 
@@ -271,7 +441,9 @@ body {
 ========================= */
 
 .post-image {
+
     width: 90px;
+
     height: 70px;
 
     overflow: hidden;
@@ -283,7 +455,9 @@ body {
 
 
 .post-image img {
+
     width: 100%;
+
     height: 100%;
 
     object-fit: cover;
@@ -291,11 +465,15 @@ body {
 
 
 .no-image {
+
     width: 100%;
+
     height: 100%;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     color: #888;
@@ -309,6 +487,7 @@ body {
 ========================= */
 
 .post-info h3 {
+
     font-size: 16px;
 
     margin-bottom: 7px;
@@ -318,6 +497,7 @@ body {
 
 
 .post-date {
+
     color: #888;
 
     font-size: 12px;
@@ -331,6 +511,7 @@ body {
 ========================= */
 
 .status {
+
     display: inline-block;
 
     padding: 5px 9px;
@@ -344,33 +525,41 @@ body {
 
 
 .status.approved {
+
     background: #e7f7ed;
+
     color: #16803c;
 }
 
 
 .status.pending {
+
     background: #fff4d8;
+
     color: #9a6b00;
 }
 
 
 .status.rejected {
+
     background: #fde8e8;
+
     color: #c53030;
 }
 
 
 /* =========================
-   POST STATISTICS
+   POST STATS
 ========================= */
 
 .post-stat {
+
     text-align: center;
 }
 
 
 .stat-number {
+
     display: block;
 
     font-size: 18px;
@@ -382,6 +571,7 @@ body {
 
 
 .stat-label {
+
     display: block;
 
     color: #888;
@@ -395,6 +585,7 @@ body {
 ========================= */
 
 .delete-btn {
+
     border: none;
 
     background: #fff0f0;
@@ -411,21 +602,280 @@ body {
 
     cursor: pointer;
 
-    transition: 0.2s;
+    transition: .2s;
 }
 
 
 .delete-btn:hover {
+
     background: #d62828;
+
     color: white;
 }
 
 
 /* =========================
-   EMPTY DASHBOARD
+   BUSINESS ANALYTICS
+========================= */
+
+.analytics-panel {
+
+    display: none;
+
+    background: #fafafa;
+
+    border-top: 1px solid #e5e5e5;
+
+    padding: 25px;
+}
+
+
+.analytics-panel.open {
+
+    display: block;
+}
+
+
+.analytics-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 25px;
+}
+
+
+.analytics-label {
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    color: #888;
+
+    display: block;
+
+    margin-bottom: 6px;
+}
+
+
+.analytics-header h3 {
+
+    font-size: 19px;
+}
+
+
+.close-analytics {
+
+    border: none;
+
+    background: #eeeeee;
+
+    width: 30px;
+
+    height: 30px;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 20px;
+
+    line-height: 20px;
+}
+
+
+/* =========================
+   ANALYTICS STATS
+========================= */
+
+.analytics-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+
+.analytics-stats > div {
+
+    background: white;
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 8px;
+
+    padding: 15px;
+}
+
+
+.analytics-stats span {
+
+    display: block;
+
+    color: #888;
+
+    font-size: 11px;
+
+    margin-bottom: 5px;
+}
+
+
+.analytics-stats strong {
+
+    font-size: 21px;
+
+    display: block;
+}
+
+
+.analytics-stats small {
+
+    display: block;
+
+    color: #aaa;
+
+    font-size: 10px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================
+   GRAPH
+========================= */
+
+.graph-container {
+
+    background: white;
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 9px;
+
+    padding: 20px;
+}
+
+
+.graph-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+
+.graph-title h4 {
+
+    font-size: 15px;
+}
+
+
+.graph-title span {
+
+    color: #999;
+
+    font-size: 11px;
+}
+
+
+.simple-graph {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+.graph-bar {
+
+    display: grid;
+
+    grid-template-columns:
+        80px
+        1fr
+        60px;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.graph-bar > span {
+
+    font-size: 12px;
+
+    color: #666;
+}
+
+
+.graph-bar strong {
+
+    font-size: 12px;
+
+    text-align: right;
+}
+
+
+.bar {
+
+    height: 10px;
+
+    background: #eeeeee;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+.bar-fill {
+
+    height: 100%;
+
+    background: #111;
+
+    border-radius: 20px;
+
+    min-width: 3px;
+}
+
+
+.analytics-note {
+
+    color: #999;
+
+    font-size: 11px;
+
+    margin-top: 20px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================
+   EMPTY
 ========================= */
 
 .empty-dashboard {
+
     padding: 70px 20px;
 
     text-align: center;
@@ -433,6 +883,7 @@ body {
 
 
 .empty-icon {
+
     font-size: 45px;
 
     margin-bottom: 15px;
@@ -440,6 +891,7 @@ body {
 
 
 .empty-dashboard h3 {
+
     font-size: 20px;
 
     margin-bottom: 8px;
@@ -447,6 +899,7 @@ body {
 
 
 .empty-dashboard p {
+
     color: #777;
 
     font-size: 14px;
@@ -456,29 +909,34 @@ body {
 
 
 /* =========================
-   MOBILE
+   TABLET
 ========================= */
 
 @media (max-width: 900px) {
 
     .dashboard-header {
+
         padding: 0 20px;
     }
 
 
     .dashboard-container {
+
         width: 94%;
+
         margin: 25px auto;
     }
 
 
     .stats-grid {
+
         grid-template-columns:
             repeat(2, 1fr);
     }
 
 
     .post-row {
+
         grid-template-columns:
             75px
             1fr
@@ -490,77 +948,110 @@ body {
 
 
     .post-stat:nth-of-type(3) {
+
         display: none;
     }
 
 
     .post-actions {
+
         grid-column: 2 / -1;
+    }
+
+
+    .analytics-stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
 }
 
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 600px) {
 
     .dashboard-header {
+
         height: 60px;
     }
 
 
     .logo {
+
         font-size: 20px;
     }
 
 
     .header-right {
+
         gap: 8px;
     }
 
 
     .profile-link {
+
         font-size: 13px;
     }
 
 
     .logout-btn {
+
         padding: 8px 12px;
+
         font-size: 12px;
     }
 
 
     .dashboard-title {
+
         display: block;
     }
 
 
     .dashboard-title h1 {
+
         font-size: 27px;
     }
 
 
     .dashboard-title p {
+
         margin-bottom: 18px;
     }
 
 
     .submit-btn {
+
         width: 100%;
+
         text-align: center;
     }
 
 
     .stats-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .business-extra-stats {
+
         grid-template-columns: 1fr;
     }
 
 
     .posts-section {
+
         border-radius: 8px;
     }
 
 
     .post-row {
+
         display: grid;
 
         grid-template-columns:
@@ -574,17 +1065,21 @@ body {
 
 
     .post-image {
+
         width: 70px;
+
         height: 60px;
     }
 
 
     .post-info h3 {
+
         font-size: 14px;
     }
 
 
     .post-stat {
+
         background: #f7f7f7;
 
         padding: 10px;
@@ -594,12 +1089,39 @@ body {
 
 
     .post-actions {
+
         grid-column: 1 / -1;
     }
 
 
     .delete-btn {
+
         width: 100%;
+    }
+
+
+    .analytics-panel {
+
+        padding: 18px;
+    }
+
+
+    .analytics-stats {
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 8px;
+    }
+
+
+    .graph-bar {
+
+        grid-template-columns:
+            60px
+            1fr
+            45px;
+
+        gap: 7px;
     }
 
 }
