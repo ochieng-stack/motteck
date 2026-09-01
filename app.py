@@ -1227,6 +1227,135 @@ def my_submissions():
 
         return redirect(url_for("profile"))
 
+
+# ================= SPONSORED POSTS PAGE =================
+
+@app.route("/sponsored-posts")
+def sponsored_posts():
+
+    if not session.get("user_logged_in"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    user_id = session.get("user_id")
+
+    try:
+
+        response = (
+            supabase
+            .table("posts")
+            .select("*")
+            .eq("user_id", user_id)
+            .eq("is_sponsored", True)
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        posts = response.data or []
+
+        # ================= TOTALS =================
+
+        total_ad_views = sum(
+            int(post.get("ad_views") or 0)
+            for post in posts
+        )
+
+        total_ad_clicks = sum(
+            int(post.get("ad_clicks") or 0)
+            for post in posts
+        )
+
+        total_likes = sum(
+            int(post.get("likes") or 0)
+            for post in posts
+        )
+
+        # Current time for Active / Expired status
+        now = datetime.utcnow().isoformat()
+
+        return render_template(
+            "sponsored_posts.html",
+            posts=posts,
+            total_ad_views=total_ad_views,
+            total_ad_clicks=total_ad_clicks,
+            total_likes=total_likes,
+            now=now
+        )
+
+    except Exception as e:
+
+        print("SPONSORED POSTS PAGE ERROR:", repr(e))
+
+        flash(
+            "We couldn't load your sponsored posts right now.",
+            "error"
+        )
+
+        return redirect(url_for("profile"))
+
+
+# ================= FEATURED POSTS PAGE =================
+
+@app.route("/featured-posts")
+def featured_posts():
+
+    if not session.get("user_logged_in"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    user_id = session.get("user_id")
+
+    try:
+
+        response = (
+            supabase
+            .table("posts")
+            .select("*")
+            .eq("user_id", user_id)
+            .eq("is_featured", True)
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        posts = response.data or []
+
+        # ================= TOTALS =================
+
+        total_views = sum(
+            int(post.get("views") or 0)
+            for post in posts
+        )
+
+        total_likes = sum(
+            int(post.get("likes") or 0)
+            for post in posts
+        )
+
+        total_comments = sum(
+            int(post.get("comments_count") or 0)
+            for post in posts
+        )
+
+        return render_template(
+            "featured_posts.html",
+            posts=posts,
+            total_views=total_views,
+            total_likes=total_likes,
+            total_comments=total_comments
+        )
+
+    except Exception as e:
+
+        print("FEATURED POSTS PAGE ERROR:", repr(e))
+
+        flash(
+            "We couldn't load your featured posts right now.",
+            "error"
+        )
+
+        return redirect(url_for("profile"))
+
+
 # ================= DASHBOARD =================
 
 @app.route("/dashboard")
