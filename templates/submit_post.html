@@ -165,29 +165,21 @@
                         You can upload up to 5 photos.
                     </p>
 
-                    <input
-                        type="file"
-                        id="images"
-                        name="images"
-                        accept="image/*"
-                        multiple
-                    >
-
                 {% else %}
 
                     <p class="upload-info">
                         You can upload up to 10 photos.
                     </p>
 
-                    <input
-                        type="file"
-                        id="images"
-                        name="images"
-                        accept="image/*"
-                        multiple
-                    >
-
                 {% endif %}
+
+                <input
+                    type="file"
+                    id="images"
+                    name="images"
+                    accept="image/*"
+                    multiple
+                >
 
             </div>
 
@@ -204,6 +196,9 @@
 
                 <div class="post-type-options">
 
+
+                    <!-- NORMAL -->
+
                     <label class="post-type-card">
 
                         <input
@@ -215,7 +210,9 @@
 
                         <span>
 
-                            <strong>Normal</strong>
+                            <strong>
+                                Normal
+                            </strong>
 
                             <small>
                                 Regular business post
@@ -225,6 +222,8 @@
 
                     </label>
 
+
+                    <!-- SPONSORED -->
 
                     <label class="post-type-card">
 
@@ -236,7 +235,9 @@
 
                         <span>
 
-                            <strong>Sponsored</strong>
+                            <strong>
+                                Sponsored
+                            </strong>
 
                             <small>
                                 Promote your business through a sponsored post
@@ -246,6 +247,8 @@
 
                     </label>
 
+
+                    <!-- FEATURED -->
 
                     <label class="post-type-card">
 
@@ -257,15 +260,192 @@
 
                         <span>
 
-                            <strong>Featured</strong>
+                            <strong>
+                                Featured
+                            </strong>
 
                             <small>
-                                Request placement as a featured post
+                                Get premium placement at the top of MOTTECK
                             </small>
 
                         </span>
 
                     </label>
+
+                </div>
+
+
+                <!-- =========================
+                     PROMOTION DURATION
+                ========================== -->
+
+                <div
+                    id="promotion-duration"
+                    class="promotion-duration"
+                    style="display: none;"
+                >
+
+                    <div class="duration-heading">
+
+                        <h3>
+                            Choose Promotion Duration
+                        </h3>
+
+                        <p id="duration-description">
+                            Select how long you want your promotion to run.
+                        </p>
+
+                    </div>
+
+
+                    <div class="duration-options">
+
+
+                        <!-- 24 HOURS -->
+
+                        <label class="duration-card">
+
+                            <input
+                                type="radio"
+                                name="promotion_duration"
+                                value="24_hours"
+                            >
+
+                            <span class="duration-content">
+
+                                <strong>
+                                    24 Hours
+                                </strong>
+
+                                <small>
+                                    <span class="sponsored-price">
+                                        Sponsored: KSh 200
+                                    </span>
+
+                                    <span class="featured-price">
+                                        Featured: KSh 400
+                                    </span>
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- 3 DAYS -->
+
+                        <label class="duration-card">
+
+                            <input
+                                type="radio"
+                                name="promotion_duration"
+                                value="3_days"
+                            >
+
+                            <span class="duration-content">
+
+                                <strong>
+                                    3 Days
+                                </strong>
+
+                                <small>
+
+                                    <span class="sponsored-price">
+                                        Sponsored: KSh 500
+                                    </span>
+
+                                    <span class="featured-price">
+                                        Featured: KSh 700
+                                    </span>
+
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- 7 DAYS -->
+
+                        <label class="duration-card">
+
+                            <input
+                                type="radio"
+                                name="promotion_duration"
+                                value="7_days"
+                            >
+
+                            <span class="duration-content">
+
+                                <strong>
+                                    7 Days
+                                </strong>
+
+                                <small>
+
+                                    <span class="sponsored-price">
+                                        Sponsored: KSh 1,000
+                                    </span>
+
+                                    <span class="featured-price">
+                                        Featured: KSh 1,200
+                                    </span>
+
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- 1 MONTH -->
+
+                        <label class="duration-card">
+
+                            <input
+                                type="radio"
+                                name="promotion_duration"
+                                value="1_month"
+                            >
+
+                            <span class="duration-content">
+
+                                <strong>
+                                    1 Month
+                                </strong>
+
+                                <small>
+
+                                    <span class="sponsored-price">
+                                        Sponsored: KSh 3,000
+                                    </span>
+
+                                    <span class="featured-price">
+                                        Featured: KSh 3,200
+                                    </span>
+
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="promotion-note">
+
+                        <strong>
+                            Payment
+                        </strong>
+
+                        <p>
+                            Payment will be requested after submission.
+                            Your promotion will only become active after
+                            payment and MOTTECK approval.
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -278,7 +458,9 @@
 
             <div class="approval-notice">
 
-                <strong>Before you submit</strong>
+                <strong>
+                    Before you submit
+                </strong>
 
                 <p>
                     All posts are reviewed by MOTTECK before they are
@@ -313,6 +495,139 @@
 
     </div>
 
+
+    <!-- =========================
+         POST TYPE JAVASCRIPT
+    ========================== -->
+
+    {% if account_type == "business" %}
+
+    <script>
+
+        const postTypeInputs =
+            document.querySelectorAll(
+                'input[name="post_type"]'
+            );
+
+        const promotionDuration =
+            document.getElementById(
+                "promotion-duration"
+            );
+
+        const durationInputs =
+            document.querySelectorAll(
+                'input[name="promotion_duration"]'
+            );
+
+        const sponsoredPrices =
+            document.querySelectorAll(
+                ".sponsored-price"
+            );
+
+        const featuredPrices =
+            document.querySelectorAll(
+                ".featured-price"
+            );
+
+
+        function updatePromotionDuration() {
+
+            const selectedPostType =
+                document.querySelector(
+                    'input[name="post_type"]:checked'
+                );
+
+
+            if (
+                selectedPostType &&
+                (
+                    selectedPostType.value === "sponsored" ||
+                    selectedPostType.value === "featured"
+                )
+            ) {
+
+                promotionDuration.style.display = "block";
+
+
+                durationInputs.forEach(function(input) {
+
+                    input.required = true;
+
+                });
+
+
+                /*
+                 * Show the correct prices
+                 * depending on the selected post type.
+                 */
+
+                if (selectedPostType.value === "sponsored") {
+
+                    sponsoredPrices.forEach(function(price) {
+                        price.style.display = "block";
+                    });
+
+                    featuredPrices.forEach(function(price) {
+                        price.style.display = "none";
+                    });
+
+                }
+
+
+                if (selectedPostType.value === "featured") {
+
+                    sponsoredPrices.forEach(function(price) {
+                        price.style.display = "none";
+                    });
+
+                    featuredPrices.forEach(function(price) {
+                        price.style.display = "block";
+                    });
+
+                }
+
+            } else {
+
+                promotionDuration.style.display = "none";
+
+
+                durationInputs.forEach(function(input) {
+
+                    input.required = false;
+                    input.checked = false;
+
+                });
+
+                sponsoredPrices.forEach(function(price) {
+                    price.style.display = "none";
+                });
+
+                featuredPrices.forEach(function(price) {
+                    price.style.display = "none";
+                });
+
+            }
+
+        }
+
+
+        postTypeInputs.forEach(function(input) {
+
+            input.addEventListener(
+                "change",
+                updatePromotionDuration
+            );
+
+        });
+
+
+        updatePromotionDuration();
+
+    </script>
+
+    {% endif %}
+
 </body>
 
 </html>
+

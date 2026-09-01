@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sponsored Posts | Motteck</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='sponsored_posts.css') }}">
+</head>
+
+<body>
+
+<header class="page-header">
+
+    <a href="{{ url_for('home') }}" class="logo">
+        MOTTECK
+    </a>
+
+    <div class="header-right">
+        <a href="{{ url_for('dashboard') }}" class="back-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('profile') }}" class="profile-link">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="page-title">
+
+        <div>
+            <h1>Sponsored Posts</h1>
+
+            <p>
+                Track how your sponsored posts are performing.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">📢</div>
+
+            <div>
+                <span>Sponsored Posts</span>
+                <strong>{{ posts|length }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon">👁</div>
+
+            <div>
+                <span>Total Ad Views</span>
+                <strong>{{ total_ad_views }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon">🖱</div>
+
+            <div>
+                <span>Total Ad Clicks</span>
+                <strong>{{ total_ad_clicks }}</strong>
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-icon">❤️</div>
+
+            <div>
+                <span>Total Likes</span>
+                <strong>{{ total_likes }}</strong>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- POSTS -->
+
+    <section class="posts-section">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Your Sponsored Posts</h2>
+
+                <p>
+                    See the reach and performance of your advertising campaigns.
+                </p>
+            </div>
+
+        </div>
+
+
+        {% if posts %}
+
+        <div class="posts-list">
+
+            {% for post in posts %}
+
+            <article class="sponsored-card">
+
+                <!-- TOP -->
+
+                <div class="post-top">
+
+                    <div class="post-image">
+
+                        {% if post.image_url %}
+
+                        <img src="{{ post.image_url }}"
+                             alt="{{ post.title }}">
+
+                        {% else %}
+
+                        <div class="no-image">
+                            No Image
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="post-details">
+
+                        <div class="title-row">
+
+                            <h3>{{ post.title }}</h3>
+
+                            {% if post.sponsored_until %}
+
+                                {% if post.sponsored_until > now %}
+
+                                <span class="status active">
+                                    Active
+                                </span>
+
+                                {% else %}
+
+                                <span class="status expired">
+                                    Expired
+                                </span>
+
+                                {% endif %}
+
+                            {% else %}
+
+                            <span class="status active">
+                                Sponsored
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <p class="posted-date">
+
+                            Posted:
+
+                            {% if post.created_at %}
+                                {{ post.created_at[:16].replace('T', ' ') }}
+                            {% else %}
+                                Date unavailable
+                            {% endif %}
+
+                        </p>
+
+
+                        {% if post.sponsored_until %}
+
+                        <p class="expiry">
+
+                            <strong>Sponsored until:</strong>
+
+                            {{ post.sponsored_until[:16].replace('T', ' ') }}
+
+                        </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PERFORMANCE -->
+
+                <div class="performance-grid">
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.views or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Post Views
+                        </span>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.ad_views or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Ad Views
+                        </span>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.ad_clicks or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Ad Clicks
+                        </span>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.likes or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Likes
+                        </span>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.comments_count or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Comments
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTION -->
+
+                <div class="post-actions">
+
+                    <a href="{{ url_for('view_post', post_id=post.id) }}"
+                       class="view-btn">
+                        View Post
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                📢
+            </div>
+
+            <h3>No sponsored posts yet</h3>
+
+            <p>
+                Your sponsored posts will appear here once you have one.
+            </p>
+
+            <a href="{{ url_for('submit_post') }}"
+               class="submit-btn">
+                Submit a Post
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>
+

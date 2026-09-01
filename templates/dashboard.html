@@ -1,265 +1,732 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Dashboard | Motteck</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='dashboard.css') }}">
+
 </head>
 
+
 <body>
+
+
+<!-- ================= HEADER ================= -->
 
 <header class="dashboard-header">
 
     <div class="header-left">
-        <a href="{{ url_for('home') }}" class="logo">MOTTECK</a>
+
+        <a href="{{ url_for('home') }}"
+           class="logo">
+
+            MOTTECK
+
+        </a>
+
     </div>
 
+
     <div class="header-right">
-        <a href="{{ url_for('profile') }}" class="profile-link">
+
+        <a href="{{ url_for('profile') }}"
+           class="profile-link">
+
             Profile
+
         </a>
 
-        <a href="{{ url_for('logout') }}" class="logout-btn">
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-btn">
+
             Logout
+
         </a>
+
     </div>
 
 </header>
 
 
+
+<!-- ================= MAIN ================= -->
+
 <main class="dashboard-container">
 
+
+    <!-- ================= TITLE ================= -->
+
     <div class="dashboard-title">
+
         <div>
-            <h1>Dashboard</h1>
-            <p>Manage your posts and see how they are performing.</p>
+
+            {% if account_type == "business" %}
+
+                <div class="account-label business-label">
+                    BUSINESS ACCOUNT
+                </div>
+
+                <h1>Business Dashboard</h1>
+
+                <p>
+                    Track how your posts are performing.
+                </p>
+
+            {% else %}
+
+                <div class="account-label individual-label">
+                    INDIVIDUAL ACCOUNT
+                </div>
+
+                <h1>Dashboard</h1>
+
+                <p>
+                    Manage your posts and see how they are performing.
+                </p>
+
+            {% endif %}
+
         </div>
 
-        <a href="{{ url_for('submit_post') }}" class="submit-btn">
+
+        <a href="{{ url_for('submit_post') }}"
+           class="submit-btn">
+
             + Submit Post
+
         </a>
+
     </div>
 
 
-    <!-- SUMMARY -->
+
+    <!-- ================= STATS ================= -->
 
     <section class="stats-grid">
 
+
+        <!-- TOTAL POSTS -->
+
         <div class="stat-card">
-            <div class="stat-icon">📝</div>
+
+            <div class="stat-icon">
+                📝
+            </div>
 
             <div>
+
                 <span>Total Posts</span>
-                <strong>{{ posts|length }}</strong>
+
+                <strong>
+                    {{ posts|length }}
+                </strong>
+
             </div>
+
         </div>
 
 
+
+        <!-- VIEWS -->
+
         <div class="stat-card">
-            <div class="stat-icon">👁</div>
+
+            <div class="stat-icon">
+                👁
+            </div>
 
             <div>
+
                 <span>Total Views</span>
-                <strong>{{ total_views }}</strong>
+
+                <strong>
+                    {{ total_views }}
+                </strong>
+
             </div>
+
         </div>
 
 
+
+        <!-- LIKES -->
+
         <div class="stat-card">
-            <div class="stat-icon">❤️</div>
+
+            <div class="stat-icon">
+                ❤️
+            </div>
 
             <div>
+
                 <span>Total Likes</span>
-                <strong>{{ total_likes }}</strong>
+
+                <strong>
+                    {{ total_likes }}
+                </strong>
+
             </div>
+
         </div>
 
+
+
+        <!-- COMMENTS -->
 
         <div class="stat-card">
-            <div class="stat-icon">💬</div>
+
+            <div class="stat-icon">
+                💬
+            </div>
 
             <div>
+
                 <span>Total Comments</span>
-                <strong>{{ total_comments }}</strong>
+
+                <strong>
+                    {{ total_comments }}
+                </strong>
+
             </div>
+
         </div>
+
 
     </section>
 
 
-    <!-- POSTS -->
+
+    <!-- ================= BUSINESS EXTRA STATS ================= -->
+
+    {% if account_type == "business" %}
+
+    <section class="business-extra-stats">
+
+
+        <div class="business-stat">
+
+            <span>Followers Gained</span>
+
+            <strong>
+                {{ total_followers_gained }}
+            </strong>
+
+            <small>
+                Available after follow system
+            </small>
+
+        </div>
+
+
+        <div class="business-stat">
+
+            <span>Total Interactions</span>
+
+            <strong>
+                {{ total_interactions }}
+            </strong>
+
+            <small>
+                Likes + comments
+            </small>
+
+        </div>
+
+
+    </section>
+
+    {% endif %}
+
+
+
+    <!-- ================= POSTS ================= -->
 
     <section class="posts-section">
 
+
         <div class="section-header">
+
             <div>
-                <h2>Your Posts</h2>
-                <p>Track the performance of everything you've submitted.</p>
+
+                {% if account_type == "business" %}
+
+                    <h2>Your Business Posts</h2>
+
+                    <p>
+                        Click a post to view its performance.
+                    </p>
+
+                {% else %}
+
+                    <h2>Your Posts</h2>
+
+                    <p>
+                        Track the performance of everything you've submitted.
+                    </p>
+
+                {% endif %}
+
             </div>
+
         </div>
+
 
 
         {% if posts %}
 
+
         <div class="posts-list">
+
 
             {% for post in posts %}
 
-            <div class="post-row">
 
-                <!-- IMAGE -->
+            <!-- ================= POST ================= -->
 
-                <div class="post-image">
-
-                    {% if post.image_url %}
-
-                    <img src="{{ post.image_url }}"
-                         alt="{{ post.title }}">
-
-                    {% else %}
-
-                    <div class="no-image">
-                        No Image
-                    </div>
-
-                    {% endif %}
-
-                </div>
+            <div class="post-wrapper">
 
 
-                <!-- POST INFORMATION -->
-
-                <div class="post-info">
-
-                    <h3>{{ post.title }}</h3>
-
-                    <p class="post-date">
-                        Posted:
-                        {% if post.created_at %}
-                            {{ post.created_at[:16].replace('T', ' ') }}
-                        {% else %}
-                            Date unavailable
-                        {% endif %}
-                    </p>
+                <div class="post-row
+                    {% if account_type == 'business' %}
+                        business-post
+                    {% endif %}"
+                    
+                    {% if account_type == "business" %}
+                    
+                    onclick="toggleAnalytics('{{ post.id }}')"
+                    
+                    {% endif %}>
 
 
-                    <div class="post-status">
+                    <!-- IMAGE -->
 
-                        {% if post.status == "approved" %}
+                    <div class="post-image">
 
-                            <span class="status approved">
-                                Approved
-                            </span>
+                        {% if post.image_url %}
 
-                        {% elif post.status == "rejected" %}
-
-                            <span class="status rejected">
-                                Rejected
-                            </span>
+                            <img src="{{ post.image_url }}"
+                                 alt="{{ post.title }}">
 
                         {% else %}
 
-                            <span class="status pending">
-                                Pending
-                            </span>
+                            <div class="no-image">
+                                No Image
+                            </div>
 
                         {% endif %}
 
                     </div>
 
+
+
+                    <!-- INFORMATION -->
+
+                    <div class="post-info">
+
+                        <h3>
+                            {{ post.title }}
+                        </h3>
+
+
+                        <p class="post-date">
+
+                            Posted:
+
+                            {% if post.created_at %}
+
+                                {{ post.created_at[:16].replace('T', ' ') }}
+
+                            {% else %}
+
+                                Date unavailable
+
+                            {% endif %}
+
+                        </p>
+
+
+
+                        <div class="post-status">
+
+                            {% if post.status == "approved" %}
+
+                                <span class="status approved">
+                                    Approved
+                                </span>
+
+                            {% elif post.status == "rejected" %}
+
+                                <span class="status rejected">
+                                    Rejected
+                                </span>
+
+                            {% else %}
+
+                                <span class="status pending">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- VIEWS -->
+
+                    <div class="post-stat">
+
+                        <span class="stat-number">
+                            {{ post.views or 0 }}
+                        </span>
+
+                        <span class="stat-label">
+                            Views
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- LIKES -->
+
+                    <div class="post-stat">
+
+                        <span class="stat-number">
+                            {{ post.likes or 0 }}
+                        </span>
+
+                        <span class="stat-label">
+                            Likes
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- COMMENTS -->
+
+                    <div class="post-stat">
+
+                        <span class="stat-number">
+                            {{ post.comments_count or 0 }}
+                        </span>
+
+                        <span class="stat-label">
+                            Comments
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- DELETE -->
+
+                    <div class="post-actions"
+                         onclick="event.stopPropagation()">
+
+                        <form method="POST"
+                              action="{{ url_for('delete_post', post_id=post.id) }}"
+                              onsubmit="return confirm('Are you sure you want to delete this post?');">
+
+                            <button type="submit"
+                                    class="delete-btn">
+
+                                Delete
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+
                 </div>
 
 
-                <!-- PERFORMANCE -->
 
-                <div class="post-stat">
+                <!-- ================= BUSINESS ANALYTICS ================= -->
 
-                    <span class="stat-number">
-                        {{ post.views or 0 }}
-                    </span>
+                {% if account_type == "business" %}
 
-                    <span class="stat-label">
-                        Views
-                    </span>
-
-                </div>
+                <div id="analytics-{{ post.id }}"
+                     class="analytics-panel">
 
 
-                <div class="post-stat">
+                    <div class="analytics-header">
 
-                    <span class="stat-number">
-                        {{ post.likes or 0 }}
-                    </span>
+                        <div>
 
-                    <span class="stat-label">
-                        Likes
-                    </span>
+                            <span class="analytics-label">
+                                POST ANALYTICS
+                            </span>
 
-                </div>
+                            <h3>
+                                {{ post.title }}
+                            </h3>
 
+                        </div>
 
-                <div class="post-stat">
+                        <button type="button"
+                                class="close-analytics"
+                                onclick="toggleAnalytics('{{ post.id }}')">
 
-                    <span class="stat-number">
-                        {{ post.comments_count or 0 }}
-                    </span>
+                            ×
 
-                    <span class="stat-label">
-                        Comments
-                    </span>
-
-                </div>
-
-
-                <!-- DELETE -->
-
-                <div class="post-actions">
-
-                    <form method="POST"
-                          action="{{ url_for('delete_post', post_id=post.id) }}"
-                          onsubmit="return confirm('Are you sure you want to delete this post?');">
-
-                        <button type="submit" class="delete-btn">
-                            Delete
                         </button>
 
-                    </form>
+                    </div>
+
+
+
+                    <!-- ANALYTICS NUMBERS -->
+
+                    <div class="analytics-stats">
+
+
+                        <div>
+
+                            <span>
+                                Views
+                            </span>
+
+                            <strong>
+                                {{ post.views or 0 }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Likes
+                            </span>
+
+                            <strong>
+                                {{ post.likes or 0 }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Comments
+                            </span>
+
+                            <strong>
+                                {{ post.comments_count or 0 }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Followers
+                            </span>
+
+                            <strong>
+                                0
+                            </strong>
+
+                            <small>
+                                Coming soon
+                            </small>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- GRAPH -->
+
+                    <div class="graph-container">
+
+                        <div class="graph-title">
+
+                            <h4>
+                                Post Performance
+                            </h4>
+
+                            <span>
+                                Current data
+                            </span>
+
+                        </div>
+
+
+                        <div class="simple-graph">
+
+                            <div class="graph-bar">
+
+                                <span>
+                                    Views
+                                </span>
+
+                                <div class="bar">
+
+                                    <div class="bar-fill"
+                                         style="width: {{ [post.views or 0, 100] | min }}%;">
+                                    </div>
+
+                                </div>
+
+                                <strong>
+                                    {{ post.views or 0 }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="graph-bar">
+
+                                <span>
+                                    Likes
+                                </span>
+
+                                <div class="bar">
+
+                                    <div class="bar-fill"
+                                         style="width: {{ [post.likes or 0, 100] | min }}%;">
+                                    </div>
+
+                                </div>
+
+                                <strong>
+                                    {{ post.likes or 0 }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="graph-bar">
+
+                                <span>
+                                    Comments
+                                </span>
+
+                                <div class="bar">
+
+                                    <div class="bar-fill"
+                                         style="width: {{ [post.comments_count or 0, 100] | min }}%;">
+                                    </div>
+
+                                </div>
+
+                                <strong>
+                                    {{ post.comments_count or 0 }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <p class="analytics-note">
+
+                            Detailed daily analytics will be available
+                            once Motteck begins recording post activity.
+
+                        </p>
+
+                    </div>
+
 
                 </div>
+
+                {% endif %}
+
 
             </div>
 
+
             {% endfor %}
+
 
         </div>
 
+
         {% else %}
+
+
+        <!-- ================= EMPTY ================= -->
 
         <div class="empty-dashboard">
 
-            <div class="empty-icon">📝</div>
+            <div class="empty-icon">
+                📝
+            </div>
 
-            <h3>You haven't submitted any posts yet</h3>
+            <h3>
+                You haven't submitted any posts yet
+            </h3>
 
             <p>
                 Share your first post with the Motteck community.
             </p>
 
-            <a href="{{ url_for('submit_post') }}" class="submit-btn">
+            <a href="{{ url_for('submit_post') }}"
+               class="submit-btn">
+
                 Submit Your First Post
+
             </a>
 
         </div>
 
+
         {% endif %}
+
 
     </section>
 
+
 </main>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+{% if account_type == "business" %}
+
+<script>
+
+function toggleAnalytics(postId) {
+
+    const panel =
+        document.getElementById(
+            "analytics-" + postId
+        );
+
+    if (!panel) {
+        return;
+    }
+
+    panel.classList.toggle("open");
+
+}
+
+</script>
+
+{% endif %}
+
 
 </body>
 </html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Featured Posts | Motteck</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='featured_posts.css') }}">
+</head>
+
+<body>
+
+<header class="page-header">
+
+    <a href="{{ url_for('home') }}" class="logo">
+        MOTTECK
+    </a>
+
+    <div class="header-right">
+
+        <a href="{{ url_for('dashboard') }}" class="back-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('profile') }}" class="profile-link">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <!-- TITLE -->
+
+    <div class="page-title">
+
+        <div>
+            <h1>Featured Posts</h1>
+
+            <p>
+                See how your featured content is performing on Motteck.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <div>
+                <span>Featured Posts</span>
+                <strong>{{ posts|length }}</strong>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👁
+            </div>
+
+            <div>
+                <span>Total Views</span>
+                <strong>{{ total_views }}</strong>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ❤️
+            </div>
+
+            <div>
+                <span>Total Likes</span>
+                <strong>{{ total_likes }}</strong>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💬
+            </div>
+
+            <div>
+                <span>Total Comments</span>
+                <strong>{{ total_comments }}</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- POSTS -->
+
+    <section class="posts-section">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Your Featured Posts</h2>
+
+                <p>
+                    Monitor the performance of posts promoted as featured content.
+                </p>
+            </div>
+
+        </div>
+
+
+        {% if posts %}
+
+        <div class="posts-list">
+
+            {% for post in posts %}
+
+            <article class="featured-card">
+
+
+                <!-- POST HEADER -->
+
+                <div class="post-top">
+
+                    <div class="post-image">
+
+                        {% if post.image_url %}
+
+                        <img src="{{ post.image_url }}"
+                             alt="{{ post.title }}">
+
+                        {% else %}
+
+                        <div class="no-image">
+                            No Image
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="post-details">
+
+                        <div class="title-row">
+
+                            <h3>
+                                {{ post.title }}
+                            </h3>
+
+                            <span class="featured-badge">
+                                ⭐ Featured
+                            </span>
+
+                        </div>
+
+
+                        <p class="posted-date">
+
+                            Posted:
+
+                            {% if post.created_at %}
+                                {{ post.created_at[:16].replace('T', ' ') }}
+                            {% else %}
+                                Date unavailable
+                            {% endif %}
+
+                        </p>
+
+
+                        <p class="featured-info">
+                            This post is currently featured on Motteck.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PERFORMANCE -->
+
+                <div class="performance-grid">
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.views or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Views
+                        </span>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.likes or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Likes
+                        </span>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.comments_count or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Comments
+                        </span>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <span class="performance-number">
+                            {{ post.views or 0 }}
+                        </span>
+
+                        <span class="performance-label">
+                            Reach
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PERFORMANCE BAR -->
+
+                <div class="performance-section">
+
+                    <div class="performance-heading">
+                        <span>Post Performance</span>
+                    </div>
+
+                    <div class="bar-row">
+
+                        <span>Views</span>
+
+                        <div class="bar">
+                            <div class="bar-fill"
+                                 style="width: 85%;"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-row">
+
+                        <span>Likes</span>
+
+                        <div class="bar">
+                            <div class="bar-fill"
+                                 style="width: 55%;"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="bar-row">
+
+                        <span>Comments</span>
+
+                        <div class="bar">
+                            <div class="bar-fill"
+                                 style="width: 30%;"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTION -->
+
+                <div class="post-actions">
+
+                    <a href="{{ url_for('view_post', post_id=post.id) }}"
+                       class="view-btn">
+                        View Post
+                    </a>
+
+                </div>
+
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ⭐
+            </div>
+
+            <h3>No featured posts yet</h3>
+
+            <p>
+                Your featured posts will appear here once Motteck features them.
+            </p>
+
+            <a href="{{ url_for('dashboard') }}"
+               class="submit-btn">
+                Back to Dashboard
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

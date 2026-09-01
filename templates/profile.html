@@ -72,11 +72,13 @@
 
             <a href="{{ url_for('my_submissions') }}">My Submissions</a>
 
-            <a href="#">Sponsored Posts</a>
+            <a href="{{ url_for('notifications') }}">Notification</a>
 
-            <a href="#">Featured Posts</a>
+            <a href="{{ url_for('sponsored_posts') }}">Sponsored Posts</a>
 
-            <a href="#">Analytics</a>
+            <a href="{{ url_for('featured_posts') }}">Featured Posts</a>
+
+            <a href="{{ url_for('dashboard') }}">Business Dashboard</a>
 
             <a href="{{ url_for('settings') }}">Business Settings</a>
 
