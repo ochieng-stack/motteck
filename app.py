@@ -883,6 +883,26 @@ def submit_post():
         flash("Unable to determine your account type.", "error")
         return redirect(url_for("profile"))
 
+    # ================= PROMOTION PRICES =================
+    # These are controlled by the backend.
+    # Do NOT trust prices sent by the browser.
+
+    PROMOTION_PRICES = {
+        "sponsored": {
+            "24_hours": 200,
+            "3_days": 500,
+            "7_days": 1000,
+            "1_month": 3000
+        },
+
+        "featured": {
+            "24_hours": 400,
+            "3_days": 700,
+            "7_days": 1200,
+            "1_month": 3200
+        }
+    }
+
     # ================= GET =================
     if request.method == "GET":
 
@@ -898,7 +918,15 @@ def submit_post():
     description = request.form.get("description", "").strip()
 
     # Only businesses can choose sponsored/featured
-    post_type = request.form.get("post_type", "normal").strip().lower()
+    post_type = request.form.get(
+        "post_type",
+        "normal"
+    ).strip().lower()
+
+    promotion_duration = request.form.get(
+        "promotion_duration",
+        ""
+    ).strip().lower()
 
     # ================= VALIDATION =================
 
@@ -921,8 +949,13 @@ def submit_post():
         # Individuals can only submit normal posts
         post_type = "normal"
 
+        # No promotion for individuals
+        promotion_duration = ""
+        promotion_price = None
+
     elif account_type == "business":
 
+        # Only these three types are allowed
         if post_type not in [
             "normal",
             "sponsored",
@@ -930,28 +963,75 @@ def submit_post():
         ]:
             post_type = "normal"
 
+        # ================= PROMOTION VALIDATION =================
+
+        if post_type == "normal":
+
+            # Normal posts do not require promotion
+            promotion_duration = ""
+            promotion_price = None
+
+        else:
+
+            # Sponsored and Featured MUST have a duration
+            if not promotion_duration:
+
+                flash(
+                    "Please choose a promotion duration.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("submit_post")
+                )
+
+            # Make sure duration is valid for the selected post type
+            if promotion_duration not in PROMOTION_PRICES[post_type]:
+
+                flash(
+                    "Invalid promotion duration selected.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("submit_post")
+                )
+
+            # Get the REAL price from the backend
+            promotion_price = PROMOTION_PRICES[
+                post_type
+            ][promotion_duration]
+
     # ================= IMAGES =================
 
     image_files = request.files.getlist("images")
 
     # Remove empty file selections
     image_files = [
-        image for image in image_files
+        image
+        for image in image_files
         if image and image.filename
     ]
 
     # Individual = maximum 5
     # Business = maximum 10
-    max_images = 5 if account_type == "individual" else 10
+    max_images = (
+        5
+        if account_type == "individual"
+        else 10
+    )
 
     if len(image_files) > max_images:
 
         flash(
-            f"You can upload a maximum of {max_images} photos.",
+            f"You can upload a maximum of "
+            f"{max_images} photos.",
             "error"
         )
 
-        return redirect(url_for("submit_post"))
+        return redirect(
+            url_for("submit_post")
+        )
 
     image_urls = []
 
@@ -966,21 +1046,29 @@ def submit_post():
                 folder="motteck/submissions"
             )
 
-            image_url = upload_result.get("secure_url")
+            image_url = upload_result.get(
+                "secure_url"
+            )
 
             if image_url:
                 image_urls.append(image_url)
 
     except Exception as e:
 
-        print("SUBMISSION IMAGE UPLOAD ERROR:", repr(e))
+        print(
+            "SUBMISSION IMAGE UPLOAD ERROR:",
+            repr(e)
+        )
 
         flash(
-            "We couldn't upload your images. Please try again.",
+            "We couldn't upload your images. "
+            "Please try again.",
             "error"
         )
 
-        return redirect(url_for("submit_post"))
+        return redirect(
+            url_for("submit_post")
+        )
 
     # ================= SAVE SUBMISSION =================
 
@@ -1000,26 +1088,40 @@ def submit_post():
 
         "post_type": post_type,
 
-        "status": "pending"
+        "promotion_duration": (
+            promotion_duration
+            if post_type in [
+                "sponsored",
+                "featured"
+            ]
+            else None
+        ),
 
+        "promotion_price": promotion_price,
+
+        "status": "pending"
     }
 
     try:
 
-        response = supabase.table(
-            "post_submissions"
-        ).insert(
-            submission_data
-        ).execute()
+        response = (
+            supabase
+            .table("post_submissions")
+            .insert(submission_data)
+            .execute()
+        )
 
         if not response.data:
 
             flash(
-                "Your post could not be submitted. Please try again.",
+                "Your post could not be submitted. "
+                "Please try again.",
                 "error"
             )
 
-            return redirect(url_for("submit_post"))
+            return redirect(
+                url_for("submit_post")
+            )
 
         # ================= SUCCESS =================
 
@@ -1028,47 +1130,63 @@ def submit_post():
             if post_type == "sponsored":
 
                 flash(
-                    "Your sponsored post has been submitted and is "
-                    "pending review and payment.",
+                    f"Your sponsored post has been "
+                    f"submitted and is pending review "
+                    f"and payment. "
+                    f"Selected price: KSh "
+                    f"{promotion_price:,}.",
                     "success"
                 )
 
             elif post_type == "featured":
 
                 flash(
-                    "Your featured post has been submitted and is "
-                    "pending review and payment.",
+                    f"Your featured post has been "
+                    f"submitted and is pending review "
+                    f"and payment. "
+                    f"Selected price: KSh "
+                    f"{promotion_price:,}.",
                     "success"
                 )
 
             else:
 
                 flash(
-                    "Your post has been submitted successfully and "
-                    "is waiting for approval.",
+                    "Your post has been submitted "
+                    "successfully and is waiting "
+                    "for approval.",
                     "success"
                 )
 
         else:
 
             flash(
-                "Your post has been submitted successfully and "
-                "is waiting for approval.",
+                "Your post has been submitted "
+                "successfully and is waiting "
+                "for approval.",
                 "success"
             )
 
-        return redirect(url_for("profile"))
+        return redirect(
+            url_for("profile")
+        )
 
     except Exception as e:
 
-        print("POST SUBMISSION ERROR:", repr(e))
+        print(
+            "POST SUBMISSION ERROR:",
+            repr(e)
+        )
 
         flash(
-            "We couldn't submit your post right now. Please try again.",
+            "We couldn't submit your post right now. "
+            "Please try again.",
             "error"
         )
 
-        return redirect(url_for("submit_post"))
+        return redirect(
+            url_for("submit_post")
+        )
     
 # ================= MY SUBMISSIONS =================
 @app.route("/my-submissions")
@@ -1109,7 +1227,7 @@ def my_submissions():
 
         return redirect(url_for("profile"))
 
- #================ Dashboard =================
+# ================= DASHBOARD =================
 
 @app.route("/dashboard")
 def dashboard():
@@ -1119,6 +1237,9 @@ def dashboard():
         return redirect(url_for("login_user"))
 
     user_id = session["user_id"]
+
+    # Get account type
+    account_type = session.get("account_type", "individual")
 
     try:
 
@@ -1150,27 +1271,45 @@ def dashboard():
             for post in posts
         )
 
+        # Business-only values
+        # Followers will be connected later
+        total_followers_gained = 0
+
+        # Total interactions currently available
+        total_interactions = (
+            total_likes +
+            total_comments
+        )
+
         return render_template(
             "dashboard.html",
             posts=posts,
             total_views=total_views,
             total_likes=total_likes,
-            total_comments=total_comments
+            total_comments=total_comments,
+            total_followers_gained=total_followers_gained,
+            total_interactions=total_interactions,
+            account_type=account_type
         )
 
     except Exception as e:
 
-        print("Dashboard error:", e)
+        print("Dashboard error:", repr(e))
 
         return render_template(
             "dashboard.html",
             posts=[],
             total_views=0,
             total_likes=0,
-            total_comments=0
+            total_comments=0,
+            total_followers_gained=0,
+            total_interactions=0,
+            account_type=account_type
         )
-   # ============= delete btn dashboard ============
-   
+
+
+# ============= DELETE POST FROM DASHBOARD ============
+
 @app.route("/delete-post/<post_id>", methods=["POST"])
 def delete_post(post_id):
 
@@ -1181,7 +1320,7 @@ def delete_post(post_id):
 
     try:
 
-        # Delete ONLY if the post belongs to the logged-in user
+        # Delete ONLY the user's own post
         supabase.table("posts") \
             .delete() \
             .eq("id", post_id) \
@@ -1192,7 +1331,7 @@ def delete_post(post_id):
 
     except Exception as e:
 
-        print("Delete post error:", e)
+        print("Delete post error:", repr(e))
 
         return redirect(url_for("dashboard"))
            
@@ -1836,7 +1975,7 @@ def mark_notification_read(notification_id):
             "error": str(e)
         }), 500
 
-        
+
 # ================= CONTACT =================
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
