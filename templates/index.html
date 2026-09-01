@@ -80,7 +80,7 @@
                 <!-- Business Dashboard -->
                  
                 {% if session.get("account_type") == "business" %}
-                <a href="#" class="profile-menu-item">
+                <a href="{{ url_for('dashboard') }}" class="profile-menu-item">
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Business Dashboard</span>
                 </a>
