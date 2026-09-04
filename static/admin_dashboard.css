@@ -248,3 +248,281 @@ th,td{
         height:200px;
     }
 }
+        .submissions-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .submission-header h3 {
+            margin: 0;
+        }
+
+        .refresh-btn {
+            width: auto;
+            padding: 8px 14px;
+            background: #111;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .pending-count {
+            display: inline-block;
+            background: #ff9800;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 20px;
+            margin-left: 6px;
+        }
+
+        .submission-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .submission-main {
+            display: flex;
+            gap: 15px;
+        }
+
+        .submission-image {
+            width: 150px;
+            height: 105px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+            background: #eee;
+        }
+
+        .submission-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .submission-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+        }
+
+        .submission-meta {
+            color: #666;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+
+        .submission-description {
+            color: #333;
+            font-size: 14px;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .submission-badges {
+            margin-top: 8px;
+        }
+
+        .submission-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 7px;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+
+        .individual-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .business-badge {
+            background: #ede7f6;
+            color: #6a1b9a;
+        }
+
+        .normal-badge {
+            background: #eeeeee;
+            color: #333;
+        }
+
+        .sponsored-badge {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        .featured-badge {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .pending-badge {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .submission-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .submission-actions button {
+            width: auto;
+            padding: 8px 13px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .view-submission-btn {
+            background: #555;
+        }
+
+        .approve-btn {
+            background: #198754;
+        }
+
+        .reject-btn {
+            background: #dc3545;
+        }
+
+        .submission-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .submission-details.active {
+            display: block;
+        }
+
+        .submission-detail-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .submission-detail-images img {
+            width: 120px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .empty-submissions {
+            text-align: center;
+            padding: 30px 10px;
+            color: #777;
+        }
+
+        .loading-submissions {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        .submission-error {
+            padding: 15px;
+            background: #f8d7da;
+            color: #842029;
+            border-radius: 6px;
+        }
+
+        /* =========================================================
+           CONFIRM MODAL
+        ========================================================= */
+
+        .action-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+        }
+
+        .action-modal-content {
+            background: white;
+            width: 420px;
+            max-width: 90%;
+            margin: 100px auto;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .action-modal-content h3 {
+            margin-top: 0;
+        }
+
+        .action-modal-content p {
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            width: 50%;
+        }
+
+        .cancel-action {
+            background: #777;
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media screen and (max-width: 768px) {
+
+            .submission-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            .submission-main {
+                flex-direction: column;
+            }
+
+            .submission-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .submission-actions {
+                flex-direction: column;
+            }
+
+            .submission-actions button {
+                width: 100%;
+            }
+
+            .action-modal-content {
+                margin: 60px auto;
+            }
+        }
