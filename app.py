@@ -651,7 +651,7 @@ def advertise():
 def cookies():
     return render_template('cookies.html')
 
-# ================= LOGIN =================
+# ================= ADMIN LOGIN =================
 @app.route('/login-goodwill254@', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
 def login():
@@ -702,6 +702,34 @@ def login():
 
     return render_template("admin.html")
 
+def verify_recaptcha(token):
+    try:
+        if not token:
+            print("RECAPTCHA ERROR: No token received from browser.")
+            return False
+
+        if not RECAPTCHA_SECRET:
+            print("RECAPTCHA ERROR: RECAPTCHA_SECRET is missing.")
+            return False
+
+        response = requests.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data={
+                "secret": RECAPTCHA_SECRET,
+                "response": token
+            },
+            timeout=10
+        )
+
+        result = response.json()
+
+        print("RECAPTCHA RESPONSE:", result)
+
+        return result.get("success", False)
+
+    except Exception as e:
+        print("RECAPTCHA VERIFICATION ERROR:", repr(e))
+        return False
 
 @app.route('/logout')
 def logout():
