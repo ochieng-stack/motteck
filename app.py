@@ -674,8 +674,8 @@ def login():
         if not verify_recaptcha(recaptcha_token):
             return render_template(
                 "admin.html",
-                error="reCAPTCHA failed."
-            )
+                error="reCAPTCHA expired or was already used. Please complete the reCAPTCHA again."
+                )
 
         if username == ADMIN_USER and bcrypt.checkpw(
             password.encode(),
@@ -702,34 +702,6 @@ def login():
 
     return render_template("admin.html")
 
-def verify_recaptcha(token):
-    try:
-        if not token:
-            print("RECAPTCHA ERROR: No token received from browser.")
-            return False
-
-        if not RECAPTCHA_SECRET:
-            print("RECAPTCHA ERROR: RECAPTCHA_SECRET is missing.")
-            return False
-
-        response = requests.post(
-            "https://www.google.com/recaptcha/api/siteverify",
-            data={
-                "secret": RECAPTCHA_SECRET,
-                "response": token
-            },
-            timeout=10
-        )
-
-        result = response.json()
-
-        print("RECAPTCHA RESPONSE:", result)
-
-        return result.get("success", False)
-
-    except Exception as e:
-        print("RECAPTCHA VERIFICATION ERROR:", repr(e))
-        return False
 
 @app.route('/logout')
 def logout():
