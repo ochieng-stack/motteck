@@ -4,25 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - MOTTECK</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
-    <!-- Google reCAPTCHA script -->
+
+    <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
+
 <body>
+
     <h2>Admin Login</h2>
 
     {% if error %}
     <p class="error">{{ error }}</p>
     {% endif %}
 
-    <form method="POST">
-        <input type="text" name="username" placeholder="Enter Username" required>
-        <input type="password" name="password" placeholder="Enter Password" required>
+    <form method="POST" id="adminLoginForm">
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+            required
+            autocomplete="username"
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+            autocomplete="current-password"
+        >
 
         <!-- Google reCAPTCHA -->
-        <div class="g-recaptcha" data-sitekey="6LfvtagsAAAAAKT_wTXbB9GQvhESM6JQZ8UHhhmC"></div>
+        <div
+            class="g-recaptcha"
+            data-sitekey="6LfvtagsAAAAAKT_wTXbB9GQvhESM6JQZ8UHhhmC"
+        ></div>
 
-        <button type="submit">Login</button>
+        <button type="submit" id="loginButton">
+            Login
+        </button>
+
     </form>
+
+    <script>
+        const loginForm = document.getElementById("adminLoginForm");
+        const loginButton = document.getElementById("loginButton");
+
+        loginForm.addEventListener("submit", function(event) {
+
+            // Get the current reCAPTCHA token
+            const token = grecaptcha.getResponse();
+
+            // Do not submit without a valid token
+            if (!token) {
+                event.preventDefault();
+
+                alert("Please complete the reCAPTCHA.");
+
+                return;
+            }
+
+            // Prevent accidental double-click / double-submit
+            loginButton.disabled = true;
+            loginButton.textContent = "Logging in...";
+        });
+    </script>
+
 </body>
 </html>
