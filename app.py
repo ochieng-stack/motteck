@@ -506,7 +506,300 @@ def admin_dashboard():
         "admin_dashboard.html",
         logged_in=True
     )
+# =========================================================
+# ADMIN - LOAD PENDING SUBMISSIONS
+# =========================================================
 
+@app.route("/admin/submissions")
+def admin_submissions():
+    if not session.get("logged_in"):
+        return jsonify({
+            "error": "Unauthorized"
+        }), 403
+
+    try:
+        response = (
+            supabase
+            .table("post_submissions")
+            .select("*")
+            .eq("status", "pending")
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        submissions = response.data or []
+
+        # Get submitter information
+        for submission in submissions:
+
+            user_id = submission.get("user_id")
+
+            if user_id:
+                try:
+                    profile_response = (
+                        supabase
+                        .table("profiles")
+                        .select("full_name,email")
+                        .eq("id", user_id)
+                        .single()
+                        .execute()
+                    )
+
+                    profile = profile_response.data or {}
+
+                    submission["submitter_name"] = (
+                        profile.get("full_name")
+                        or "Unknown user"
+                    )
+
+                    submission["submitter_email"] = (
+                        profile.get("email")
+                        or "Not available"
+                    )
+
+                except Exception:
+                    submission["submitter_name"] = "Unknown user"
+                    submission["submitter_email"] = "Not available"
+
+            else:
+                submission["submitter_name"] = "Unknown user"
+                submission["submitter_email"] = "Not available"
+
+        return jsonify({
+            "success": True,
+            "submissions": submissions
+        })
+
+    except Exception as e:
+        print("ADMIN SUBMISSIONS ERROR:", e)
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+# =========================================================
+# ADMIN - APPROVE & PUBLISH SUBMISSION
+# =========================================================
+
+@app.route(
+    "/admin/submissions/<int:submission_id>/approve",
+    methods=["POST"]
+)
+def approve_submission(submission_id):
+
+    if not session.get("logged_in"):
+        return jsonify({
+            "error": "Unauthorized"
+        }), 403
+
+    try:
+
+        # Get the submission
+        response = (
+            supabase
+            .table("post_submissions")
+            .select("*")
+            .eq("id", submission_id)
+            .single()
+            .execute()
+        )
+
+        submission = response.data
+
+        if not submission:
+            return jsonify({
+                "error": "Submission not found."
+            }), 404
+
+        # Only pending submissions can be approved
+        if submission.get("status") != "pending":
+            return jsonify({
+                "error": "This submission has already been processed."
+            }), 400
+
+        post_type = submission.get("post_type", "normal")
+
+        # Determine sponsored / featured status
+        is_sponsored = post_type == "sponsored"
+        is_featured = post_type == "featured"
+
+        # Get submitted images
+        images = submission.get("image_urls") or []
+
+        if not isinstance(images, list):
+            images = []
+
+        # posts table currently uses image_url
+        image_url = images[0] if images else None
+
+        # -------------------------------------------------
+        # Calculate sponsored expiry
+        # -------------------------------------------------
+
+        sponsored_until = None
+
+        if is_sponsored:
+
+            promotion_duration = submission.get(
+                "promotion_duration"
+            )
+
+            if promotion_duration:
+
+                from datetime import datetime, timedelta
+
+                duration_text = str(
+                    promotion_duration
+                ).lower()
+
+                if "7" in duration_text:
+                    sponsored_until = (
+                        datetime.utcnow()
+                        + timedelta(days=7)
+                    ).isoformat()
+
+                elif "14" in duration_text:
+                    sponsored_until = (
+                        datetime.utcnow()
+                        + timedelta(days=14)
+                    ).isoformat()
+
+                elif "30" in duration_text:
+                    sponsored_until = (
+                        datetime.utcnow()
+                        + timedelta(days=30)
+                    ).isoformat()
+
+        # -------------------------------------------------
+        # Insert into published posts
+        # -------------------------------------------------
+
+        post_data = {
+            "user_id": submission.get("user_id"),
+            "title": submission.get("title"),
+            "category": submission.get("category"),
+            "image_url": image_url,
+            "description": submission.get("description"),
+            "likes": 0,
+            "views": 0,
+            "is_featured": is_featured,
+            "is_sponsored": is_sponsored,
+            "sponsored_until": sponsored_until,
+            "ad_clicks": 0,
+            "ad_views": 0,
+            "ad_earnings": 0
+        }
+
+        post_response = (
+            supabase
+            .table("posts")
+            .insert(post_data)
+            .execute()
+        )
+
+        if not post_response.data:
+            return jsonify({
+                "error": "Unable to publish post."
+            }), 500
+
+        # -------------------------------------------------
+        # Mark submission as approved
+        # -------------------------------------------------
+
+        (
+            supabase
+            .table("post_submissions")
+            .update({
+                "status": "approved"
+            })
+            .eq("id", submission_id)
+            .execute()
+        )
+
+        return jsonify({
+            "success": True,
+            "message": "Post approved and published."
+        })
+
+    except Exception as e:
+
+        print(
+            "APPROVE SUBMISSION ERROR:",
+            e
+        )
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+# =========================================================
+# ADMIN - REJECT SUBMISSION
+# =========================================================
+
+@app.route(
+    "/admin/submissions/<int:submission_id>/reject",
+    methods=["POST"]
+)
+def reject_submission(submission_id):
+
+    if not session.get("logged_in"):
+        return jsonify({
+            "error": "Unauthorized"
+        }), 403
+
+    try:
+
+        # Make sure submission exists
+        response = (
+            supabase
+            .table("post_submissions")
+            .select("id,status")
+            .eq("id", submission_id)
+            .single()
+            .execute()
+        )
+
+        submission = response.data
+
+        if not submission:
+            return jsonify({
+                "error": "Submission not found."
+            }), 404
+
+        if submission.get("status") != "pending":
+            return jsonify({
+                "error": "This submission has already been processed."
+            }), 400
+
+        # Mark as rejected
+        (
+            supabase
+            .table("post_submissions")
+            .update({
+                "status": "rejected"
+            })
+            .eq("id", submission_id)
+            .execute()
+        )
+
+        return jsonify({
+            "success": True,
+            "message": "Submission rejected."
+        })
+
+    except Exception as e:
+
+        print(
+            "REJECT SUBMISSION ERROR:",
+            e
+        )
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+        
 # ================= HOME =================
 @app.route('/')
 @app.route('/home')
