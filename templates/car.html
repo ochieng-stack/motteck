@@ -5,22 +5,16 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Cars | MOTTECK</title>
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='car.css') }}"
-    >
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='car.css') }}">
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-    >
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
 </head>
 
@@ -29,51 +23,26 @@
 
 
 <!-- =========================================================
-     NAVBAR
+     HEADER
 ========================================================= -->
 
-<header class="site-header">
+<header class="header">
 
-    <div class="nav-left">
+    <h1 class="title">
 
-        <a
-            href="{{ url_for('home') }}"
-            class="logo"
-        >
+        <a href="{{ url_for('home') }}">
             MOTTECK
         </a>
 
-    </div>
+    </h1>
 
 
-    <div class="nav-center">
+    <div class="top-actions">
 
-        <form
-            action="#"
-            method="GET"
-            class="search-form"
-        >
-
-            <input
-                type="text"
-                id="carSearch"
-                placeholder="Search cars..."
-            >
-
-            <button type="submit">
-
-                <i class="fa fa-search"></i>
-
-            </button>
-
-        </form>
-
-    </div>
-
-
-    <div class="nav-right">
 
         {% if session.get("user_logged_in") %}
+
+        <!-- PROFILE -->
 
         <div class="profile-dropdown">
 
@@ -98,6 +67,7 @@
                 class="profile-menu"
                 id="profileMenu"
             >
+
 
                 <div class="profile-menu-header">
 
@@ -231,11 +201,16 @@
 
                 </a>
 
+
             </div>
 
         </div>
 
+
         {% else %}
+
+
+        <!-- LOGIN / SIGN UP -->
 
         <div class="auth-buttons">
 
@@ -246,6 +221,7 @@
                 Login
             </a>
 
+
             <a
                 href="{{ url_for('register') }}"
                 class="signup-btn"
@@ -255,21 +231,27 @@
 
         </div>
 
+
         {% endif %}
 
+
+        <!-- HAMBURGER -->
 
         <button
             class="menu-btn"
             onclick="toggleMenu()"
+            type="button"
         >
 
             <i class="fa-solid fa-bars"></i>
 
         </button>
 
+
     </div>
 
 </header>
+
 
 
 <!-- =========================================================
@@ -281,91 +263,108 @@
     class="mobile-menu"
 >
 
+
     <a href="{{ url_for('home') }}">
         Home
     </a>
 
-    <a href="/car">
+
+    <a href="{{ url_for('car') }}">
         Cars
     </a>
 
-    <a href="/truck">
+
+    <a href="{{ url_for('truck') }}">
         Trucks
     </a>
 
-    <a href="/motobike">
+
+    <a href="{{ url_for('motobike') }}">
         Bikes
     </a>
 
-    <a href="/plane">
+
+    <a href="{{ url_for('plane') }}">
         Aviation
     </a>
 
-    <a href="/service">
+
+    <a href="{{ url_for('service') }}">
         Service
     </a>
 
+
 </div>
+
 
 
 <!-- =========================================================
      CATEGORY NAVIGATION
 ========================================================= -->
 
-<div class="sticky-categories">
+<nav class="category-nav">
 
-    <a href="/car">
-        Cars
+    <a
+        href="{{ url_for('car') }}"
+        class="active"
+    >
+        CAR
     </a>
 
-    <a href="/truck">
-        Trucks
+
+    <a href="{{ url_for('truck') }}">
+        TRUCK
     </a>
 
-    <a href="/motobike">
-        Bike
+
+    <a href="{{ url_for('motobike') }}">
+        BIKES
     </a>
 
-    <a href="/plane">
-        Aviation
+
+    <a href="{{ url_for('plane') }}">
+        AVIATION
     </a>
 
-    <a href="/service">
-        Service
+
+    <a href="{{ url_for('service') }}">
+        SERVICE
     </a>
 
-</div>
+</nav>
+
 
 
 <!-- =========================================================
-     CATEGORY TITLE
+     MAIN
 ========================================================= -->
 
-<section class="category-header">
-
-    <h1>
-        Cars
-    </h1>
-
-    <p>
-        Latest car news, reviews, discussions and automotive content.
-    </p>
-
-</section>
+<section class="main-section">
 
 
-<!-- =========================================================
-     POSTS
-========================================================= -->
+    <!-- SEARCH -->
 
-<section class="category-post-section">
+    <div class="category-search">
+
+        <input
+            type="text"
+            id="carSearch"
+            placeholder="Search cars only..."
+        >
+
+    </div>
+
+
+    <!-- POSTS -->
 
     <div
         id="carPost"
         class="post-container"
     ></div>
 
+
 </section>
+
 
 
 <!-- =========================================================
@@ -374,11 +373,13 @@
 
 <footer class="footer">
 
+
     <div class="footer-top">
 
         <h2 class="footer-logo">
             Motteck
         </h2>
+
 
         <p class="footer-text">
 
@@ -391,6 +392,175 @@
     </div>
 
 
+
+    <div class="footer-links">
+
+
+        <!-- COMPANY -->
+
+        <div class="footer-column">
+
+            <h3>
+                Company
+            </h3>
+
+
+            <a href="{{ url_for('contact') }}">
+                Contact Us
+            </a>
+
+
+            <a href="{{ url_for('partner_with_us') }}">
+                Partner With Us
+            </a>
+
+
+            <a href="{{ url_for('advertise') }}">
+                Advertise With Us
+            </a>
+
+        </div>
+
+
+
+        <!-- LEGAL -->
+
+        <div class="footer-column">
+
+            <h3>
+                Legal
+            </h3>
+
+
+            <a href="{{ url_for('privacy') }}">
+                Privacy Policy
+            </a>
+
+
+            <a href="{{ url_for('term') }}">
+                Terms & Conditions
+            </a>
+
+
+            <a href="{{ url_for('cookies') }}">
+                Cookie Policy
+            </a>
+
+        </div>
+
+
+
+        <!-- DISCLAIMER -->
+
+        <div class="footer-column">
+
+            <h3>
+                Disclaimer
+            </h3>
+
+
+            <p class="small-text">
+
+                Information published on Motteck is for
+                general informational purposes only.
+                Please verify details independently
+                before making decisions.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- CONTACT -->
+
+        <div class="footer-column">
+
+            <h3>
+                Contact
+            </h3>
+
+
+            <p>
+                Email: motteckcompany@gmail.com
+            </p>
+
+
+            <p>
+                Call: +254742022263
+            </p>
+
+
+            <div class="social-box">
+
+                <p>
+                    Follow Us
+                </p>
+
+
+                <a
+                    href="https://www.instagram.com/mott_eck"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+
+                    <i class="fa-brands fa-instagram"></i>
+
+                </a>
+
+
+                <a
+                    href="https://x.com/motteck254"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+
+                    <i class="fa-brands fa-square-x-twitter"></i>
+
+                </a>
+
+
+                <a
+                    href="https://www.facebook.com/profile.php?id=100064234773365"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+
+                    <i class="fa-brands fa-facebook"></i>
+
+                </a>
+
+
+                <a
+                    href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+
+                    <i class="fa-brands fa-whatsapp"></i>
+
+                </a>
+
+
+                <a
+                    href="https://www.tiktok.com/@motteckauto"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+
+                    <i class="fa-brands fa-tiktok"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
     <div class="footer-bottom">
 
         <p>
@@ -399,10 +569,13 @@
 
     </div>
 
+
 </footer>
 
 
+
 <script>
+
 
 /* =========================================================
    CATEGORY
@@ -410,22 +583,21 @@
 
 const category = "car";
 
+
 const postContainer =
-    document.getElementById(
-        "carPost"
-    );
+    document.getElementById("carPost");
+
 
 
 /* =========================================================
-   MENU
+   MOBILE MENU
 ========================================================= */
 
 function toggleMenu() {
 
     const menu =
-        document.getElementById(
-            "mobileMenu"
-        );
+        document.getElementById("mobileMenu");
+
 
     menu.style.display =
         menu.style.display === "flex"
@@ -435,33 +607,70 @@ function toggleMenu() {
 }
 
 
+
+/* =========================================================
+   CLOSE MOBILE MENU WHEN CLICKING OUTSIDE
+========================================================= */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const menu =
+            document.getElementById("mobileMenu");
+
+        const button =
+            document.querySelector(".menu-btn");
+
+
+        if (
+            menu &&
+            button &&
+            !menu.contains(event.target) &&
+            !button.contains(event.target)
+        ) {
+
+            menu.style.display = "none";
+
+        }
+
+    }
+);
+
+
+
 /* =========================================================
    PROFILE DROPDOWN
 ========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function() {
+
 
         const button =
             document.getElementById(
                 "profileDropdownBtn"
             );
 
+
         const dropdown =
             document.querySelector(
                 ".profile-dropdown"
             );
 
+
         if (!button || !dropdown) {
             return;
         }
 
+
         button.addEventListener(
             "click",
-            function (event) {
+            function(event) {
 
                 event.stopPropagation();
+
 
                 dropdown.classList.toggle(
                     "active"
@@ -473,7 +682,7 @@ document.addEventListener(
 
         document.addEventListener(
             "click",
-            function (event) {
+            function(event) {
 
                 if (
                     !dropdown.contains(
@@ -494,6 +703,7 @@ document.addEventListener(
 );
 
 
+
 /* =========================================================
    CATEGORY LABEL
 ========================================================= */
@@ -502,7 +712,7 @@ function getCategoryLabel(category) {
 
     const value =
         String(category || "")
-        .toLowerCase();
+            .toLowerCase();
 
 
     if (
@@ -561,6 +771,7 @@ function getCategoryLabel(category) {
 }
 
 
+
 /* =========================================================
    ESCAPE HTML
 ========================================================= */
@@ -577,6 +788,7 @@ function escapeHTML(value) {
 }
 
 
+
 /* =========================================================
    FORMAT TEXT
 ========================================================= */
@@ -584,6 +796,7 @@ function escapeHTML(value) {
 function formatText(text) {
 
     if (!text) return "";
+
 
     text =
         text.replace(
@@ -594,9 +807,9 @@ function formatText(text) {
 
     text =
         text
-        .replace(/\n+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
+            .replace(/\n+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
 
 
     return `<p>${escapeHTML(text)}</p>`;
@@ -604,11 +817,13 @@ function formatText(text) {
 }
 
 
+
 /* =========================================================
    AUTHOR HEADER
 ========================================================= */
 
 function createAuthorHeader(post) {
+
 
     const name =
         post.author_name ||
@@ -669,10 +884,7 @@ function createAuthorHeader(post) {
 
             <button
                 class="follow-btn ${following ? "following" : ""}"
-                onclick="toggleFollow(
-                    '${post.user_id}',
-                    this
-                )"
+                onclick="toggleFollow('${post.user_id}', this)"
             >
 
                 ${
@@ -692,17 +904,21 @@ function createAuthorHeader(post) {
 
         <div class="post-author-header">
 
+
             <div class="post-author-left">
 
                 ${avatar}
 
+
                 <div class="post-author-info">
+
 
                     <div class="post-author-name">
 
                         ${escapeHTML(name)}
 
                     </div>
+
 
                     <div class="post-author-category">
 
@@ -714,6 +930,7 @@ function createAuthorHeader(post) {
 
                     </div>
 
+
                     <div class="post-author-time">
 
                         ${escapeHTML(
@@ -722,9 +939,11 @@ function createAuthorHeader(post) {
 
                     </div>
 
+
                 </div>
 
             </div>
+
 
 
             <div class="post-author-right">
@@ -733,6 +952,7 @@ function createAuthorHeader(post) {
 
             </div>
 
+
         </div>
 
     `;
@@ -740,11 +960,13 @@ function createAuthorHeader(post) {
 }
 
 
+
 /* =========================================================
    POST CARD
 ========================================================= */
 
 function createPostCard(post) {
+
 
     let image =
         post.image ||
@@ -785,6 +1007,7 @@ function createPostCard(post) {
             class="post-card"
             id="post-${post.id}"
         >
+
 
             ${badge}
 
@@ -870,15 +1093,19 @@ function createPostCard(post) {
                         Read More
                     </a>
 
+
                 </div>
 
+
             </div>
+
 
         </div>
 
     `;
 
 }
+
 
 
 /* =========================================================
@@ -890,7 +1117,9 @@ async function toggleFollow(
     button
 ) {
 
+
     try {
+
 
         const response =
             await fetch(
@@ -930,6 +1159,7 @@ async function toggleFollow(
 
         }
 
+
     } catch (error) {
 
         console.error(
@@ -942,17 +1172,20 @@ async function toggleFollow(
 }
 
 
+
 /* =========================================================
    LIKE
 ========================================================= */
 
 function initLikes() {
 
+
     document
         .querySelectorAll(
             ".post-card button[id^='like-btn-']"
         )
         .forEach(button => {
+
 
             const postId =
                 button.id.replace(
@@ -979,6 +1212,7 @@ function initLikes() {
                 "click",
                 () => {
 
+
                     if (
                         localStorage.getItem(key)
                     ) {
@@ -999,33 +1233,47 @@ function initLikes() {
                         }
                     )
 
-                    .then(res => res.json())
 
-                    .then(data => {
+                    .then(
+                        res => res.json()
+                    )
 
-                        if (data.success) {
 
-                            const count =
-                                document.getElementById(
-                                    `like-count-${postId}`
+                    .then(
+                        data => {
+
+
+                            if (data.success) {
+
+
+                                const count =
+                                    document.getElementById(
+                                        `like-count-${postId}`
+                                    );
+
+
+                                if (count) {
+
+                                    count.textContent =
+                                        data.likes;
+
+                                }
+
+
+                                localStorage.setItem(
+                                    key,
+                                    "true"
                                 );
 
-                            if (count) {
 
-                                count.textContent =
-                                    data.likes;
+                                button.style.backgroundColor =
+                                    "#d6eefd";
 
                             }
 
-
-                            localStorage.setItem(
-                                key,
-                                "true"
-                            );
-
                         }
+                    );
 
-                    });
 
                 }
             );
@@ -1035,20 +1283,25 @@ function initLikes() {
 }
 
 
+
 /* =========================================================
    LOAD CATEGORY POSTS
 ========================================================= */
 
 async function loadCategoryPosts() {
 
+
     const CACHE_KEY =
         "motteck_car_cache";
+
 
     const CACHE_TIME_KEY =
         "motteck_car_cache_time";
 
+
     const CACHE_MINUTES =
         15;
+
 
 
     /* CACHE */
@@ -1058,13 +1311,18 @@ async function loadCategoryPosts() {
             CACHE_KEY
         );
 
+
     const savedTime =
         localStorage.getItem(
             CACHE_TIME_KEY
         );
 
 
-    if (saved && savedTime) {
+    if (
+        saved &&
+        savedTime
+    ) {
+
 
         const age =
             Date.now() -
@@ -1077,6 +1335,7 @@ async function loadCategoryPosts() {
             60 *
             1000
         ) {
+
 
             try {
 
@@ -1098,9 +1357,11 @@ async function loadCategoryPosts() {
     }
 
 
+
     /* DATABASE */
 
     try {
+
 
         const response =
             await fetch(
@@ -1112,7 +1373,9 @@ async function loadCategoryPosts() {
             await response.json();
 
 
-        if (!Array.isArray(posts)) {
+        if (
+            !Array.isArray(posts)
+        ) {
 
             console.error(posts);
 
@@ -1139,7 +1402,9 @@ async function loadCategoryPosts() {
 
         localStorage.setItem(
             CACHE_KEY,
-            JSON.stringify(categoryPosts)
+            JSON.stringify(
+                categoryPosts
+            )
         );
 
 
@@ -1161,16 +1426,19 @@ async function loadCategoryPosts() {
 }
 
 
+
 /* =========================================================
    RENDER
 ========================================================= */
 
 function renderPosts(posts) {
 
+
     postContainer.innerHTML = "";
 
 
     if (!posts.length) {
+
 
         postContainer.innerHTML = `
 
@@ -1180,6 +1448,7 @@ function renderPosts(posts) {
                     No posts yet
                 </h3>
 
+
                 <p>
                     There are no published
                     posts in this category yet.
@@ -1188,6 +1457,7 @@ function renderPosts(posts) {
             </div>
 
         `;
+
 
         return;
 
@@ -1207,6 +1477,7 @@ function renderPosts(posts) {
 }
 
 
+
 /* =========================================================
    SEARCH
 ========================================================= */
@@ -1215,12 +1486,13 @@ document
     .getElementById("carSearch")
     .addEventListener(
         "input",
-        function () {
+        function() {
+
 
             const query =
                 this.value
-                .toLowerCase()
-                .trim();
+                    .toLowerCase()
+                    .trim();
 
 
             document
@@ -1229,9 +1501,10 @@ document
                 )
                 .forEach(card => {
 
+
                     const text =
                         card.textContent
-                        .toLowerCase();
+                            .toLowerCase();
 
 
                     card.style.display =
@@ -1243,6 +1516,7 @@ document
 
         }
     );
+
 
 
 /* =========================================================
@@ -1258,9 +1532,11 @@ document.addEventListener(
     }
 );
 
+
 </script>
 
 
 </body>
 
 </html>
+
