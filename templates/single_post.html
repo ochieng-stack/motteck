@@ -1,231 +1,1225 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>{{ post.title }} | Motteck</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='car.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='motobike.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='plane.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='truck.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='service.css') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='single_post.css') }}">
+    <!-- CATEGORY CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='car.css') }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='motobike.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plane.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='truck.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='service.css') }}">
+
+
+    <!-- SINGLE POST CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='single_post.css') }}">
+
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+
     {% if post.image_url %}
-    <link rel="preload" as="image" href="{{ post.image_url }}">
+    <link rel="preload"
+          as="image"
+          href="{{ post.image_url }}">
     {% endif %}
 
 </head>
 
+
 <body>
 
-<!-- ================= HEADER ================= -->
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header class="header">
+
     <h1 class="title">
-        <a href="{{ url_for('home') }}">MOTTECK</a>
+        <a href="{{ url_for('home') }}">
+            MOTTECK
+        </a>
     </h1>
 
+
     <div class="top-actions">
-        <button class="menu-btn">☰</button>
+
+        <!-- PROFILE BUTTON -->
+        <a href="{{ url_for('profile') }}"
+           class="profile-btn"
+           title="Profile">
+
+            <i class="fa-solid fa-user"></i>
+
+        </a>
+
+
+        <!-- HAMBURGER -->
+        <button class="menu-btn"
+                type="button"
+                aria-label="Open menu">
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
     </div>
+
 </header>
 
-<!-- ================= CATEGORY NAV ================= -->
+
+
+<!-- =====================================================
+     CATEGORY NAVIGATION
+===================================================== -->
+
 <nav class="category-nav">
-    <a href="{{ url_for('car') }}">CAR</a>
-    <a href="{{ url_for('truck') }}">TRUCK</a>
-    <a href="{{ url_for('motobike') }}">BIKE</a>
-    <a href="{{ url_for('plane') }}">AVIATION</a>
-    <a href="{{ url_for('service') }}">SERVICE</a>
+
+    <a href="{{ url_for('car') }}">
+        CAR
+    </a>
+
+    <a href="{{ url_for('truck') }}">
+        TRUCK
+    </a>
+
+    <a href="{{ url_for('motobike') }}">
+        BIKE
+    </a>
+
+    <a href="{{ url_for('plane') }}">
+        AVIATION
+    </a>
+
+    <a href="{{ url_for('service') }}">
+        SERVICE
+    </a>
+
 </nav>
 
-<!-- ================= MOBILE MENU ================= -->
-<div id="mobileMenu" class="mobile-menu">
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('service') }}">Service</a>
-    <a href="{{ url_for('about') }}">About</a>
-    <a href="{{ url_for('contact') }}">Contact</a>
+
+
+<!-- =====================================================
+     MOBILE MENU
+===================================================== -->
+
+<div id="mobileMenu"
+     class="mobile-menu">
+
+
+    <a href="{{ url_for('home') }}">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+    </a>
+
+
+    <a href="{{ url_for('car') }}">
+        <i class="fa-solid fa-car"></i>
+        <span>Cars</span>
+    </a>
+
+
+    <a href="{{ url_for('truck') }}">
+        <i class="fa-solid fa-truck"></i>
+        <span>Trucks</span>
+    </a>
+
+
+    <a href="{{ url_for('motobike') }}">
+        <i class="fa-solid fa-motorcycle"></i>
+        <span>Bikes</span>
+    </a>
+
+
+    <a href="{{ url_for('plane') }}">
+        <i class="fa-solid fa-plane"></i>
+        <span>Aviation</span>
+    </a>
+
+
+    <a href="{{ url_for('service') }}">
+        <i class="fa-solid fa-wrench"></i>
+        <span>Service</span>
+    </a>
+
+
+    <a href="{{ url_for('about') }}">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>About</span>
+    </a>
+
+
+    <a href="{{ url_for('contact') }}">
+        <i class="fa-solid fa-envelope"></i>
+        <span>Contact</span>
+    </a>
+
 </div>
 
-<!-- ================= POST ================= -->
-<section class="post-container">
 
-    <!-- TITLE -->
-    <h1>{{ post.title }}</h1>
 
-    <!-- META -->
-    <p class="post-meta">
-        Category: {{ post.category.upper() }} • {{ post.time_ago }} • 👁️ {{ post.views }} views • ❤️ {{ post.likes }} likes
-    </p>
+<!-- =====================================================
+     SINGLE POST
+===================================================== -->
 
-    <!-- IMAGE -->
-    {% if post.image_url %}
-    <img 
-    src="{{ post.image_url }}"
-    alt="{{ post.title }}"
-    loading="eager"
-    fetchpriority="high"
-    decoding="async"
-    width="900"
-    height="520"
-    >
-    {% endif %}
+<main class="single-post-page">
 
-    <!-- CONTENT -->
-    <div class="post-content">
-        {% for paragraph in post.description.split('\n') %}
-            {% set line = paragraph.strip() %}
 
-        {% if line %}
-        
-        {% if line.endswith('.jpg') or line.endswith('.jpeg') or line.endswith('.png') or line.endswith('.gif') or line.endswith('.webp') %}
+    <article class="single-post">
 
-            <img 
-            src="{{ line }}"
-            alt="Post image"
-            loading="lazy"
-            decoding="async"
-            width="900"
-            height="520"
-            >
 
-        {% else %}
+        <!-- =================================================
+             PROFILE / POST HEADER
+        ================================================== -->
 
-            <p>{{ line }}</p>
+        <div class="post-user-header">
+
+
+            <div class="post-user-left">
+
+
+                <!-- PROFILE IMAGE -->
+
+                {% if post.profile_image %}
+
+                <img
+                    src="{{ post.profile_image }}"
+                    alt="Profile"
+                    class="post-profile-image"
+                    loading="eager"
+                    decoding="async">
+
+                {% else %}
+
+                <img
+                    src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                    alt="Profile"
+                    class="post-profile-image"
+                    loading="eager"
+                    decoding="async">
+
+                {% endif %}
+
+
+                <!-- USER INFORMATION -->
+
+                <div class="post-user-info">
+
+                    <div class="post-user-name">
+
+                        {{ post.full_name
+                           or post.user_name
+                           or post.business_name
+                           or 'MOTTECK User' }}
+
+                    </div>
+
+
+                    <div class="post-user-meta">
+
+                        <span>
+                            {{ post.category.upper() }}
+                        </span>
+
+                        <span class="dot">
+                            •
+                        </span>
+
+                        <span>
+                            {{ post.time_ago }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PROFILE BUTTON -->
+
+            <a href="{{ url_for('profile') }}"
+               class="post-profile-button">
+
+                <i class="fa-solid fa-user"></i>
+
+                Profile
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =================================================
+             POST TITLE
+        ================================================== -->
+
+        {% if post.title %}
+
+        <h1 class="single-post-title">
+            {{ post.title }}
+        </h1>
 
         {% endif %}
 
+
+
+        <!-- =================================================
+             POST DESCRIPTION
+        ================================================== -->
+
+        {% if post.description %}
+
+        <div class="single-post-description">
+
+            {% for paragraph in post.description.split('\n') %}
+
+                {% set line = paragraph.strip() %}
+
+                {% if line %}
+
+                    {% if not (
+                        line.endswith('.jpg')
+                        or line.endswith('.jpeg')
+                        or line.endswith('.png')
+                        or line.endswith('.gif')
+                        or line.endswith('.webp')
+                    ) %}
+
+                        <p>
+                            {{ line }}
+                        </p>
+
+                    {% endif %}
+
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+
         {% endif %}
-    {% endfor %}
 
-    </div>
-    <!-- ACTIONS -->
-    <div class="actions">
 
-        {% if post.category == 'car' %}
-        <a href="/car" class="btn">← Back to Car</a>
-        {% elif post.category == 'truck' %}
-        <a href="/truck" class="btn">← Back to Truck</a>
-        {% elif post.category == 'motobike' %}
-        <a href="/motobike" class="btn">← Back to Bike</a>
-        {% elif post.category == 'plane' %}
-        <a href="/plane" class="btn">← Back to Aviation</a>
-        {% endif %}
 
-        <a href="{{ url_for('home') }}" class="btn secondary">Home</a>
+        <!-- =================================================
+             PHOTO GALLERY
+        ================================================== -->
 
-    </div>
+        <div class="post-photo-gallery">
 
-</section>
 
-<!-- ================= FOOTER ================= -->
+            <!-- MAIN POST IMAGE -->
+
+            {% if post.image_url %}
+
+            <div class="post-photo">
+
+                <img
+                    src="{{ post.image_url }}"
+                    alt="{{ post.title }}"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async">
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- ADDITIONAL IMAGES STORED IN DESCRIPTION -->
+
+            {% if post.description %}
+
+                {% for paragraph in post.description.split('\n') %}
+
+                    {% set line = paragraph.strip() %}
+
+                    {% if line %}
+
+                        {% if (
+                            line.endswith('.jpg')
+                            or line.endswith('.jpeg')
+                            or line.endswith('.png')
+                            or line.endswith('.gif')
+                            or line.endswith('.webp')
+                        ) %}
+
+                        <div class="post-photo">
+
+                            <img
+                                src="{{ line }}"
+                                alt="{{ post.title }}"
+                                loading="lazy"
+                                decoding="async">
+
+                        </div>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             ENGAGEMENT
+        ================================================== -->
+
+        <div class="post-engagement">
+
+
+            <div class="engagement-counts">
+
+                <span>
+                    <i class="fa-solid fa-eye"></i>
+
+                    <span id="viewCount">
+                        {{ post.views or 0 }}
+                    </span>
+
+                    views
+                </span>
+
+
+                <span>
+
+                    <i class="fa-solid fa-heart"></i>
+
+                    <span id="likeCount">
+                        {{ post.likes or 0 }}
+                    </span>
+
+                    likes
+
+                </span>
+
+            </div>
+
+
+
+            <div class="engagement-buttons">
+
+
+                <!-- LIKE -->
+
+                <button
+                    type="button"
+                    class="engagement-btn like-btn"
+                    id="likeButton">
+
+                    <i class="fa-regular fa-heart"></i>
+
+                    <span>Like</span>
+
+                </button>
+
+
+
+                <!-- COMMENT -->
+
+                <button
+                    type="button"
+                    class="engagement-btn"
+                    id="commentButton">
+
+                    <i class="fa-regular fa-comment"></i>
+
+                    <span>Comment</span>
+
+                </button>
+
+
+
+                <!-- SHARE -->
+
+                <button
+                    type="button"
+                    class="engagement-btn"
+                    id="shareButton">
+
+                    <i class="fa-solid fa-share"></i>
+
+                    <span>Share</span>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             COMMENTS
+        ================================================== -->
+
+        <section class="comments-section"
+                 id="commentsSection">
+
+
+            <h2>
+                Comments
+            </h2>
+
+
+            <!-- COMMENT FORM -->
+
+            <div class="comment-form">
+
+                <div class="comment-avatar">
+
+                    <img
+                        src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                        alt="Profile">
+
+                </div>
+
+
+                <div class="comment-input-area">
+
+                    <textarea
+                        id="commentInput"
+                        placeholder="Write a comment..."
+                        rows="3"></textarea>
+
+
+                    <button
+                        type="button"
+                        id="postCommentButton">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        Post Comment
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EXISTING COMMENTS -->
+
+            <div id="commentsList"
+                 class="comments-list">
+
+                {% if post.comments %}
+
+                    {% for comment in post.comments %}
+
+                    <div class="comment">
+
+                        <img
+                            src="{{ comment.profile_image or url_for('static', filename='images/default-avatar.png') }}"
+                            alt="Profile"
+                            class="comment-profile-image">
+
+
+                        <div class="comment-body">
+
+                            <strong>
+                                {{ comment.full_name
+                                   or comment.user_name
+                                   or 'User' }}
+                            </strong>
+
+
+                            <p>
+                                {{ comment.comment }}
+                            </p>
+
+
+                            <small>
+                                {{ comment.time_ago }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p class="no-comments">
+                        No comments yet. Be the first to comment.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             BACK BUTTONS
+        ================================================== -->
+
+        <div class="actions">
+
+
+            {% if post.category == 'car' %}
+
+            <a href="{{ url_for('car') }}"
+               class="btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Car
+
+            </a>
+
+
+            {% elif post.category == 'truck' %}
+
+            <a href="{{ url_for('truck') }}"
+               class="btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Truck
+
+            </a>
+
+
+            {% elif post.category == 'motobike' %}
+
+            <a href="{{ url_for('motobike') }}"
+               class="btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Bike
+
+            </a>
+
+
+            {% elif post.category == 'plane' %}
+
+            <a href="{{ url_for('plane') }}"
+               class="btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Aviation
+
+            </a>
+
+
+            {% elif post.category == 'service' %}
+
+            <a href="{{ url_for('service') }}"
+               class="btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Service
+
+            </a>
+
+            {% endif %}
+
+
+            <a href="{{ url_for('home') }}"
+               class="btn secondary">
+
+                <i class="fa-solid fa-house"></i>
+
+                Home
+
+            </a>
+
+
+        </div>
+
+
+    </article>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
 <footer class="footer">
 
+
     <div class="footer-top">
-        <h2 class="footer-logo">Motteck</h2>
+
+        <h2 class="footer-logo">
+            Motteck
+        </h2>
+
+
         <p class="footer-text">
-            Motteck is your trusted source for cars, trucks, bikes, motoring news, reviews, and automotive insights.
+
+            Motteck is your trusted source for cars, trucks,
+            bikes, motoring news, reviews, and automotive insights.
+
         </p>
+
     </div>
+
+
 
     <div class="footer-links">
 
-        <div class="footer-column">
-            <h3>Company</h3>
-            <a href="{{ url_for('contact') }}">Contact Us</a>
-            <a href="{{ url_for('partner_with_us') }}">Partner With Us</a>
-            <a href="{{ url_for('advertise') }}">Advertise With Us</a>
-        </div>
 
         <div class="footer-column">
-            <h3>Legal</h3>
-            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
-            <a href="{{ url_for('term') }}">Terms & Conditions</a>
-            <a href="{{ url_for('cookies') }}">Cookie Policy</a>
+
+            <h3>
+                Company
+            </h3>
+
+
+            <a href="{{ url_for('contact') }}">
+                Contact Us
+            </a>
+
+
+            <a href="{{ url_for('partner_with_us') }}">
+                Partner With Us
+            </a>
+
+
+            <a href="{{ url_for('advertise') }}">
+                Advertise With Us
+            </a>
+
         </div>
 
+
+
         <div class="footer-column">
-            <h3>Disclaimer</h3>
+
+            <h3>
+                Legal
+            </h3>
+
+
+            <a href="{{ url_for('privacy') }}">
+                Privacy Policy
+            </a>
+
+
+            <a href="{{ url_for('term') }}">
+                Terms & Conditions
+            </a>
+
+
+            <a href="{{ url_for('cookies') }}">
+                Cookie Policy
+            </a>
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+            <h3>
+                Disclaimer
+            </h3>
+
+
             <p class="small-text">
-                Information published on Motteck is for general informational purposes only. Please verify details independently before making decisions.
+
+                Information published on Motteck is for general
+                informational purposes only. Please verify details
+                independently before making decisions.
+
             </p>
+
         </div>
 
+
+
         <div class="footer-column">
-            <h3>Contact</h3>
-            <p>Email: motteckcompany@gmail.com</p>
-            <p>call: +254742022263</p>
+
+            <h3>
+                Contact
+            </h3>
+
+
+            <p>
+                Email: motteckcompany@gmail.com
+            </p>
+
+
+            <p>
+                Call: +254742022263
+            </p>
+
+
 
             <div class="social-box">
-                <p>Follow Us</p>
 
-                <a href="https://www.instagram.com/mott_eck" target="_blank">
+                <p>
+                    Follow Us
+                </p>
+
+
+                <a href="https://www.instagram.com/mott_eck"
+                   target="_blank"
+                   rel="noopener">
+
                     <i class="fa-brands fa-instagram"></i>
+
                 </a>
 
-                <a href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank">
+
+                <a href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09"
+                   target="_blank"
+                   rel="noopener">
+
                     <i class="fa-brands fa-square-x-twitter"></i>
+
                 </a>
 
-                <a href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank">
+
+                <a href="https://www.facebook.com/profile.php?id=100064234773365"
+                   target="_blank"
+                   rel="noopener">
+
                     <i class="fa-brands fa-facebook"></i>
+
                 </a>
 
-                <a href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v" target="_blank">
+
+                <a href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
+                   target="_blank"
+                   rel="noopener">
+
                     <i class="fa-brands fa-whatsapp"></i>
+
                 </a>
 
-                <a href="https://www.tiktok.com/@motteckauto" target="_blank">
+
+                <a href="https://www.tiktok.com/@motteckauto"
+                   target="_blank"
+                   rel="noopener">
+
                     <i class="fa-brands fa-tiktok"></i>
+
                 </a>
+
             </div>
+
         </div>
 
     </div>
 
+
+
     <div class="footer-bottom">
-        <p>&copy; 2026 Motteck. All Rights Reserved.</p>
+
+        <p>
+            &copy; 2026 Motteck. All Rights Reserved.
+        </p>
+
     </div>
+
 
 </footer>
 
-<!-- ================= VIEW TRACKING (REAL ENGAGEMENT) ================= -->
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
 <script>
-let startTime = Date.now();
-let counted = false;
 
-/* Only count view if user actually stays */
-setTimeout(() => {
-    counted = true;
-}, 10000); // 10 seconds minimum
+document.addEventListener("DOMContentLoaded", function(){
 
-window.addEventListener("beforeunload", function () {
-    let timeSpent = Math.floor((Date.now() - startTime) / 1000);
 
-    if (counted && timeSpent > 10) {
-        navigator.sendBeacon("/view/{{ post.id }}");
-    }
+    /* =================================================
+       MOBILE MENU
+    ================================================= */
+
+    const menuBtn =
+        document.querySelector(".menu-btn");
+
+    const menu =
+        document.getElementById("mobileMenu");
+
+
+    menuBtn.addEventListener("click", function(e){
+
+        e.stopPropagation();
+
+        menu.classList.toggle("show");
+
+    });
+
+
+    document.addEventListener("click", function(e){
+
+        if(
+            !menu.contains(e.target) &&
+            !menuBtn.contains(e.target)
+        ){
+
+            menu.classList.remove("show");
+
+        }
+
+    });
+
+
+
+    /* =================================================
+       COMMENT BUTTON SCROLL
+    ================================================= */
+
+    const commentButton =
+        document.getElementById("commentButton");
+
+    const commentsSection =
+        document.getElementById("commentsSection");
+
+
+    commentButton.addEventListener("click", function(){
+
+        commentsSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+
+        setTimeout(function(){
+
+            const input =
+                document.getElementById("commentInput");
+
+            if(input){
+                input.focus();
+            }
+
+        }, 500);
+
+    });
+
+
+
+    /* =================================================
+       SHARE
+    ================================================= */
+
+    const shareButton =
+        document.getElementById("shareButton");
+
+
+    shareButton.addEventListener("click", async function(){
+
+        const shareData = {
+
+            title: "{{ post.title|e }}",
+
+            text: "Check out this post on MOTTECK",
+
+            url: window.location.href
+
+        };
+
+
+        try {
+
+            if(navigator.share){
+
+                await navigator.share(shareData);
+
+            }else{
+
+                await navigator.clipboard.writeText(
+                    window.location.href
+                );
+
+                alert("Post link copied!");
+
+            }
+
+        } catch(error){
+
+            console.log("Share cancelled");
+
+        }
+
+    });
+
+
+
+    /* =================================================
+       LIKE
+    ================================================= */
+
+    const likeButton =
+        document.getElementById("likeButton");
+
+    const likeCount =
+        document.getElementById("likeCount");
+
+
+    likeButton.addEventListener("click", async function(){
+
+        try{
+
+            const response =
+                await fetch("/like/{{ post.id }}", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+
+                });
+
+
+            if(response.ok){
+
+                const data =
+                    await response.json();
+
+                if(data.likes !== undefined){
+
+                    likeCount.textContent =
+                        data.likes;
+
+                }
+
+                likeButton.classList.add("liked");
+
+            }
+
+        }catch(error){
+
+            console.log("Like error:", error);
+
+        }
+
+    });
+
+
+
+    /* =================================================
+       POST COMMENT
+    ================================================= */
+
+    const postCommentButton =
+        document.getElementById("postCommentButton");
+
+
+    const commentInput =
+        document.getElementById("commentInput");
+
+
+    const commentsList =
+        document.getElementById("commentsList");
+
+
+    postCommentButton.addEventListener(
+        "click",
+        async function(){
+
+            const comment =
+                commentInput.value.trim();
+
+
+            if(!comment){
+
+                alert("Please write a comment.");
+
+                return;
+
+            }
+
+
+            try{
+
+                const response =
+                    await fetch(
+                        "/comment/{{ post.id }}",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                comment: comment
+                            })
+
+                        }
+                    );
+
+
+                if(response.ok){
+
+                    const data =
+                        await response.json();
+
+
+                    const newComment =
+                        document.createElement("div");
+
+                    newComment.className =
+                        "comment";
+
+
+                    newComment.innerHTML = `
+
+                        <img
+                            src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                            class="comment-profile-image"
+                            alt="Profile">
+
+                        <div class="comment-body">
+
+                            <strong>
+                                ${data.full_name || "You"}
+                            </strong>
+
+                            <p>
+                                ${comment}
+                            </p>
+
+                            <small>
+                                Just now
+                            </small>
+
+                        </div>
+
+                    `;
+
+
+                    const noComments =
+                        commentsList.querySelector(
+                            ".no-comments"
+                        );
+
+
+                    if(noComments){
+                        noComments.remove();
+                    }
+
+
+                    commentsList.prepend(
+                        newComment
+                    );
+
+
+                    commentInput.value = "";
+
+                }else{
+
+                    alert(
+                        "Please log in to comment."
+                    );
+
+                }
+
+            }catch(error){
+
+                console.log(
+                    "Comment error:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /* =================================================
+       VIEW TRACKING
+    ================================================= */
+
+    let startTime =
+        Date.now();
+
+    let counted =
+        false;
+
+
+    setTimeout(function(){
+
+        counted = true;
+
+    }, 10000);
+
+
+    window.addEventListener(
+        "beforeunload",
+        function(){
+
+            let timeSpent =
+                Math.floor(
+                    (Date.now() - startTime) / 1000
+                );
+
+
+            if(
+                counted &&
+                timeSpent > 10
+            ){
+
+                navigator.sendBeacon(
+                    "/view/{{ post.id }}"
+                );
+
+            }
+
+        }
+    );
+
+
 });
 
-/* MOBILE MENU */
-const menuBtn = document.querySelector(".menu-btn");
-const menu = document.getElementById("mobileMenu");
-
-menuBtn.addEventListener("click", function(e){
-    e.stopPropagation();
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-});
-
-document.addEventListener("click", function(e){
-    if(!menu.contains(e.target) && !menuBtn.contains(e.target)){
-        menu.style.display = "none";
-    }
-});
 </script>
+
 
 </body>
 </html>
