@@ -799,7 +799,7 @@ def reject_submission(submission_id):
         return jsonify({
             "error": str(e)
         }), 500
-        
+    
 # ================= HOME =================
 @app.route('/')
 @app.route('/home')
