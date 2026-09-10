@@ -354,13 +354,9 @@ function toggleMenu() {
     const menu = document.getElementById("mobileMenu");
 
     if (menu.style.display === "flex") {
-
         menu.style.display = "none";
-
     } else {
-
         menu.style.display = "flex";
-
     }
 
 }
@@ -378,9 +374,7 @@ document.addEventListener("click", function(event) {
         !menu.contains(event.target) &&
         !button.contains(event.target)
     ) {
-
         menu.style.display = "none";
-
     }
 
 });
@@ -394,6 +388,8 @@ document.querySelector("#contact-form").addEventListener(
 
         e.preventDefault();
 
+        const form = this;
+
         const formMessage =
             document.getElementById("form-message");
 
@@ -404,65 +400,109 @@ document.querySelector("#contact-form").addEventListener(
             document.getElementById("submit-btn");
 
 
+        /* CLEAR OLD MESSAGE */
+
         formMessage.textContent = "";
+        formMessage.style.color = "";
+
+
+        /* SHOW LOADER */
 
         loader.style.display = "inline-block";
 
+
+        /* DISABLE BUTTON WHILE SENDING */
+
         submitBtn.disabled = true;
+        submitBtn.style.cursor = "not-allowed";
 
 
         try {
 
             const response = await fetch(
-                this.action,
+                form.action,
                 {
                     method: "POST",
-                    body: new FormData(this)
+                    body: new FormData(form),
+                    headers: {
+                        "Accept": "application/json"
+                    }
                 }
             );
 
 
-            const result = await response.json();
+            /* GET RESPONSE AS TEXT FIRST */
+
+            const responseText = await response.text();
+
+            let result;
+
+            try {
+                result = JSON.parse(responseText);
+            } catch (jsonError) {
+
+                console.error(
+                    "SERVER RESPONSE:",
+                    responseText
+                );
+
+                throw new Error(
+                    "Server returned an unexpected response."
+                );
+            }
 
 
-            loader.style.display = "none";
+            /* SUCCESS */
 
-            submitBtn.disabled = false;
-
-
-            if (result.status === "success") {
+            if (
+                response.ok &&
+                result.status === "success"
+            ) {
 
                 formMessage.style.color = "green";
 
                 formMessage.textContent =
                     "✅ " + result.message;
 
-                this.reset();
+                form.reset();
 
-            } else {
+            }
+
+            /* SERVER ERROR */
+
+            else {
 
                 formMessage.style.color = "red";
 
                 formMessage.textContent =
-                    "❌ " + result.message;
+                    "❌ " +
+                    (result.message ||
+                    "Failed to send message.");
 
             }
 
 
         } catch (err) {
 
-            console.error(err);
-
-            loader.style.display = "none";
-
-            submitBtn.disabled = false;
+            console.error(
+                "CONTACT FORM ERROR:",
+                err
+            );
 
             formMessage.style.color = "red";
 
             formMessage.textContent =
-                "❌ Network error. Try again later.";
+                "❌ Unable to send message. Please try again.";
 
         }
+
+
+        /* ALWAYS ENABLE BUTTON AGAIN */
+
+        loader.style.display = "none";
+
+        submitBtn.disabled = false;
+        submitBtn.style.cursor = "pointer";
 
     }
 );

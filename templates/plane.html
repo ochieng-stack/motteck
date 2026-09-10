@@ -265,38 +265,46 @@
 
 
     <a href="{{ url_for('home') }}">
+        <i class="fa-solid fa-house"></i>
         Home
     </a>
 
     <a href="{{ url_for('about') }}">
+        <i class="fa-solid fa-circle-info"></i>
         About
     </a>
 
     <a href="{{ url_for('car') }}">
+        <i class="fa-solid fa-car"></i>
         Cars
     </a>
 
 
     <a href="{{ url_for('truck') }}">
+        <i class="fa-solid fa-truck"></i>
         Trucks
     </a>
 
 
     <a href="{{ url_for('motobike') }}">
+        <i class="fa-solid fa-motorcycle"></i>
         Bikes
     </a>
 
 
     <a href="{{ url_for('plane') }}">
+        <i class="fa-solid fa-plane"></i>
         Aviation
     </a>
 
 
     <a href="{{ url_for('service') }}">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
         Service
     </a>
 
     <a href="{{ url_for('contact') }}">
+        <i class="fas fa-envelope"></i>
         Contact
     </a>
 
@@ -311,9 +319,7 @@
 <nav class="category-nav">
 
     <a
-        href="{{ url_for('car') }}"
-        class="active"
-    >
+        href="{{ url_for('car') }}">
         CAR
     </a>
 
@@ -328,7 +334,7 @@
     </a>
 
 
-    <a href="{{ url_for('plane') }}">
+    <a href="{{ url_for('plane') }}" class="active">
         AVIATION
     </a>
 
@@ -1298,11 +1304,11 @@ async function loadCategoryPosts() {
 
 
     const CACHE_KEY =
-        "motteck_car_cache";
+        "motteck_plane_cache";
 
 
     const CACHE_TIME_KEY =
-        "motteck_car_cache_time";
+        "motteck_plane_cache_time";
 
 
     const CACHE_MINUTES =
@@ -1489,7 +1495,7 @@ function renderPosts(posts) {
 ========================================================= */
 
 document
-    .getElementById("carSearch")
+    .getElementById("planeSearch")
     .addEventListener(
         "input",
         function() {
@@ -1503,7 +1509,7 @@ document
 
             document
                 .querySelectorAll(
-                    "#carPost .post-card"
+                    "#planePost .post-card"
                 )
                 .forEach(card => {
 
