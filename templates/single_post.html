@@ -12,6 +12,7 @@
 
 
     <!-- CATEGORY CSS -->
+
     <link rel="stylesheet"
           href="{{ url_for('static', filename='car.css') }}">
 
@@ -29,19 +30,23 @@
 
 
     <!-- SINGLE POST CSS -->
+
     <link rel="stylesheet"
           href="{{ url_for('static', filename='single_post.css') }}">
 
 
     <!-- FONT AWESOME -->
+
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
 
     {% if post.image_url %}
+
     <link rel="preload"
           as="image"
           href="{{ post.image_url }}">
+
     {% endif %}
 
 </head>
@@ -50,35 +55,239 @@
 <body>
 
 
-<!-- =====================================================
+<!-- =========================================================
      HEADER
-===================================================== -->
+========================================================= -->
 
 <header class="header">
 
     <h1 class="title">
+
         <a href="{{ url_for('home') }}">
             MOTTECK
         </a>
+
     </h1>
 
 
     <div class="top-actions">
 
-        <!-- PROFILE BUTTON -->
-        <a href="{{ url_for('profile') }}"
-           class="profile-btn"
-           title="Profile">
 
-            <i class="fa-solid fa-user"></i>
+        <!-- =================================================
+             LOGGED IN PROFILE DROPDOWN
+        ================================================== -->
 
-        </a>
+        {% if session.get("user_logged_in") %}
 
+        <div class="profile-dropdown">
 
-        <!-- HAMBURGER -->
-        <button class="menu-btn"
+            <button
                 type="button"
-                aria-label="Open menu">
+                class="profile-btn"
+                id="profileDropdownBtn">
+
+                <i class="fa-solid fa-user"></i>
+
+                <span>
+                    Profile
+                </span>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </button>
+
+
+            <!-- PROFILE DROPDOWN MENU -->
+
+            <div
+                class="profile-menu"
+                id="profileMenu">
+
+
+                <!-- PROFILE HEADER -->
+
+                <div class="profile-menu-header">
+
+                    {% if session.get("account_type") == "business" %}
+
+                    <i class="fa-solid fa-building"></i>
+
+                    <div>
+
+                        <strong>
+                            {{ session.get("full_name") }}
+                        </strong>
+
+                        <small>
+                            Business Account
+                        </small>
+
+                    </div>
+
+                    {% else %}
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <div>
+
+                        <strong>
+                            {{ session.get("full_name") }}
+                        </strong>
+
+                        <small>
+                            Individual Account
+                        </small>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="profile-menu-divider"></div>
+
+
+                <!-- VIEW PROFILE -->
+
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="profile-menu-item">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>
+                        View Profile
+                    </span>
+
+                </a>
+
+
+                <!-- SETTINGS -->
+
+                <a
+                    href="{{ url_for('settings') }}"
+                    class="profile-menu-item">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+
+                <!-- SUBMIT POST -->
+
+                <a
+                    href="{{ url_for('submit_post') }}"
+                    class="profile-menu-item">
+
+                    <i class="fa-solid fa-pen-to-square"></i>
+
+                    <span>
+                        Submit Post
+                    </span>
+
+                </a>
+
+
+                <!-- BUSINESS DASHBOARD -->
+
+                {% if session.get("account_type") == "business" %}
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="profile-menu-item">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <span>
+                        Business Dashboard
+                    </span>
+
+                </a>
+
+                {% endif %}
+
+
+                <!-- MY SUBMISSIONS -->
+
+                <a
+                    href="{{ url_for('my_submissions') }}"
+                    class="profile-menu-item">
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    <span>
+                        My Submissions
+                    </span>
+
+                </a>
+
+
+                <div class="profile-menu-divider"></div>
+
+
+                <!-- LOGOUT -->
+
+                <a
+                    href="{{ url_for('user_logout') }}"
+                    class="profile-menu-item logout-item">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- =================================================
+             LOGGED OUT BUTTONS
+        ================================================== -->
+
+        <div class="auth-buttons">
+
+            <a
+                href="{{ url_for('login_user') }}"
+                class="login-btn">
+
+                Login
+
+            </a>
+
+
+            <a
+                href="{{ url_for('register') }}"
+                class="signup-btn">
+
+                Sign Up
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             HAMBURGER
+        ================================================== -->
+
+        <button
+            class="menu-btn"
+            type="button"
+            aria-label="Open menu">
 
             <i class="fa-solid fa-bars"></i>
 
@@ -90,9 +299,9 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      CATEGORY NAVIGATION
-===================================================== -->
+========================================================= -->
 
 <nav class="category-nav">
 
@@ -120,68 +329,109 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      MOBILE MENU
-===================================================== -->
+========================================================= -->
 
-<div id="mobileMenu"
-     class="mobile-menu">
+<div
+    id="mobileMenu"
+    class="mobile-menu">
 
 
     <a href="{{ url_for('home') }}">
+
         <i class="fa-solid fa-house"></i>
-        <span>Home</span>
+
+        <span>
+            Home
+        </span>
+
     </a>
 
 
     <a href="{{ url_for('car') }}">
+
         <i class="fa-solid fa-car"></i>
-        <span>Cars</span>
+
+        <span>
+            Cars
+        </span>
+
     </a>
 
 
     <a href="{{ url_for('truck') }}">
+
         <i class="fa-solid fa-truck"></i>
-        <span>Trucks</span>
+
+        <span>
+            Trucks
+        </span>
+
     </a>
 
 
     <a href="{{ url_for('motobike') }}">
+
         <i class="fa-solid fa-motorcycle"></i>
-        <span>Bikes</span>
+
+        <span>
+            Bikes
+        </span>
+
     </a>
 
 
     <a href="{{ url_for('plane') }}">
+
         <i class="fa-solid fa-plane"></i>
-        <span>Aviation</span>
+
+        <span>
+            Aviation
+        </span>
+
     </a>
 
 
     <a href="{{ url_for('service') }}">
+
         <i class="fa-solid fa-wrench"></i>
-        <span>Service</span>
+
+        <span>
+            Service
+        </span>
+
     </a>
 
 
     <a href="{{ url_for('about') }}">
+
         <i class="fa-solid fa-circle-info"></i>
-        <span>About</span>
+
+        <span>
+            About
+        </span>
+
     </a>
 
 
     <a href="{{ url_for('contact') }}">
+
         <i class="fa-solid fa-envelope"></i>
-        <span>Contact</span>
+
+        <span>
+            Contact
+        </span>
+
     </a>
 
 </div>
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      SINGLE POST
-===================================================== -->
+========================================================= -->
 
 <main class="single-post-page">
 
@@ -257,17 +507,27 @@
             </div>
 
 
+            <!-- =================================================
+                 FOLLOW BUTTON
+            ================================================== -->
 
-            <!-- PROFILE BUTTON -->
+            {% if session.get("user_logged_in") %}
 
-            <a href="{{ url_for('profile') }}"
-               class="post-profile-button">
+            <button
+                type="button"
+                class="follow-button"
+                id="followButton"
+                data-user-id="{{ post.user_id }}">
 
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-user-plus"></i>
 
-                Profile
+                <span id="followText">
+                    Follow
+                </span>
 
-            </a>
+            </button>
+
+            {% endif %}
 
         </div>
 
@@ -280,7 +540,9 @@
         {% if post.title %}
 
         <h1 class="single-post-title">
+
             {{ post.title }}
+
         </h1>
 
         {% endif %}
@@ -309,9 +571,9 @@
                         or line.endswith('.webp')
                     ) %}
 
-                        <p>
-                            {{ line }}
-                        </p>
+                    <p>
+                        {{ line }}
+                    </p>
 
                     {% endif %}
 
@@ -332,7 +594,9 @@
         <div class="post-photo-gallery">
 
 
-            <!-- MAIN POST IMAGE -->
+            <!-- =================================================
+                 MAIN POST IMAGE
+            ================================================== -->
 
             {% if post.image_url %}
 
@@ -351,7 +615,10 @@
 
 
 
-            <!-- ADDITIONAL IMAGES STORED IN DESCRIPTION -->
+            <!-- =================================================
+                 ADDITIONAL IMAGES
+                 STORED INSIDE DESCRIPTION
+            ================================================== -->
 
             {% if post.description %}
 
@@ -399,9 +666,12 @@
         <div class="post-engagement">
 
 
+            <!-- COUNTS -->
+
             <div class="engagement-counts">
 
                 <span>
+
                     <i class="fa-solid fa-eye"></i>
 
                     <span id="viewCount">
@@ -409,6 +679,7 @@
                     </span>
 
                     views
+
                 </span>
 
 
@@ -428,6 +699,8 @@
 
 
 
+            <!-- BUTTONS -->
+
             <div class="engagement-buttons">
 
 
@@ -440,7 +713,9 @@
 
                     <i class="fa-regular fa-heart"></i>
 
-                    <span>Like</span>
+                    <span>
+                        Like
+                    </span>
 
                 </button>
 
@@ -455,7 +730,9 @@
 
                     <i class="fa-regular fa-comment"></i>
 
-                    <span>Comment</span>
+                    <span>
+                        Comment
+                    </span>
 
                 </button>
 
@@ -470,7 +747,9 @@
 
                     <i class="fa-solid fa-share"></i>
 
-                    <span>Share</span>
+                    <span>
+                        Share
+                    </span>
 
                 </button>
 
@@ -485,8 +764,9 @@
              COMMENTS
         ================================================== -->
 
-        <section class="comments-section"
-                 id="commentsSection">
+        <section
+            class="comments-section"
+            id="commentsSection">
 
 
             <h2>
@@ -494,9 +774,11 @@
             </h2>
 
 
+
             <!-- COMMENT FORM -->
 
             <div class="comment-form">
+
 
                 <div class="comment-avatar">
 
@@ -533,14 +815,17 @@
 
             <!-- EXISTING COMMENTS -->
 
-            <div id="commentsList"
-                 class="comments-list">
+            <div
+                id="commentsList"
+                class="comments-list">
+
 
                 {% if post.comments %}
 
                     {% for comment in post.comments %}
 
                     <div class="comment">
+
 
                         <img
                             src="{{ comment.profile_image or url_for('static', filename='images/default-avatar.png') }}"
@@ -551,9 +836,11 @@
                         <div class="comment-body">
 
                             <strong>
+
                                 {{ comment.full_name
                                    or comment.user_name
                                    or 'User' }}
+
                             </strong>
 
 
@@ -572,13 +859,17 @@
 
                     {% endfor %}
 
+
                 {% else %}
 
                     <p class="no-comments">
+
                         No comments yet. Be the first to comment.
+
                     </p>
 
                 {% endif %}
+
 
             </div>
 
@@ -595,8 +886,9 @@
 
             {% if post.category == 'car' %}
 
-            <a href="{{ url_for('car') }}"
-               class="btn">
+            <a
+                href="{{ url_for('car') }}"
+                class="btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
@@ -607,8 +899,9 @@
 
             {% elif post.category == 'truck' %}
 
-            <a href="{{ url_for('truck') }}"
-               class="btn">
+            <a
+                href="{{ url_for('truck') }}"
+                class="btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
@@ -619,8 +912,9 @@
 
             {% elif post.category == 'motobike' %}
 
-            <a href="{{ url_for('motobike') }}"
-               class="btn">
+            <a
+                href="{{ url_for('motobike') }}"
+                class="btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
@@ -631,8 +925,9 @@
 
             {% elif post.category == 'plane' %}
 
-            <a href="{{ url_for('plane') }}"
-               class="btn">
+            <a
+                href="{{ url_for('plane') }}"
+                class="btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
@@ -643,8 +938,9 @@
 
             {% elif post.category == 'service' %}
 
-            <a href="{{ url_for('service') }}"
-               class="btn">
+            <a
+                href="{{ url_for('service') }}"
+                class="btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
@@ -655,8 +951,9 @@
             {% endif %}
 
 
-            <a href="{{ url_for('home') }}"
-               class="btn secondary">
+            <a
+                href="{{ url_for('home') }}"
+                class="btn secondary">
 
                 <i class="fa-solid fa-house"></i>
 
@@ -674,9 +971,9 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      FOOTER
-===================================================== -->
+========================================================= -->
 
 <footer class="footer">
 
@@ -701,6 +998,8 @@
 
     <div class="footer-links">
 
+
+        <!-- COMPANY -->
 
         <div class="footer-column">
 
@@ -727,6 +1026,8 @@
 
 
 
+        <!-- LEGAL -->
+
         <div class="footer-column">
 
             <h3>
@@ -752,6 +1053,8 @@
 
 
 
+        <!-- DISCLAIMER -->
+
         <div class="footer-column">
 
             <h3>
@@ -770,6 +1073,8 @@
         </div>
 
 
+
+        <!-- CONTACT -->
 
         <div class="footer-column">
 
@@ -796,45 +1101,50 @@
                 </p>
 
 
-                <a href="https://www.instagram.com/mott_eck"
-                   target="_blank"
-                   rel="noopener">
+                <a
+                    href="https://www.instagram.com/mott_eck"
+                    target="_blank"
+                    rel="noopener">
 
                     <i class="fa-brands fa-instagram"></i>
 
                 </a>
 
 
-                <a href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09"
-                   target="_blank"
-                   rel="noopener">
+                <a
+                    href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09"
+                    target="_blank"
+                    rel="noopener">
 
                     <i class="fa-brands fa-square-x-twitter"></i>
 
                 </a>
 
 
-                <a href="https://www.facebook.com/profile.php?id=100064234773365"
-                   target="_blank"
-                   rel="noopener">
+                <a
+                    href="https://www.facebook.com/profile.php?id=100064234773365"
+                    target="_blank"
+                    rel="noopener">
 
                     <i class="fa-brands fa-facebook"></i>
 
                 </a>
 
 
-                <a href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
-                   target="_blank"
-                   rel="noopener">
+                <a
+                    href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
+                    target="_blank"
+                    rel="noopener">
 
                     <i class="fa-brands fa-whatsapp"></i>
 
                 </a>
 
 
-                <a href="https://www.tiktok.com/@motteckauto"
-                   target="_blank"
-                   rel="noopener">
+                <a
+                    href="https://www.tiktok.com/@motteckauto"
+                    target="_blank"
+                    rel="noopener">
 
                     <i class="fa-brands fa-tiktok"></i>
 
@@ -861,18 +1171,63 @@
 
 
 
-<!-- =====================================================
+<!-- =========================================================
      JAVASCRIPT
-===================================================== -->
+========================================================= -->
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
 
 
-    /* =================================================
+    /* =====================================================
+       PROFILE DROPDOWN
+    ===================================================== */
+
+    const profileDropdownBtn =
+        document.getElementById("profileDropdownBtn");
+
+    const profileMenu =
+        document.getElementById("profileMenu");
+
+
+    if(profileDropdownBtn && profileMenu){
+
+        profileDropdownBtn.addEventListener(
+            "click",
+            function(e){
+
+                e.stopPropagation();
+
+                profileMenu.classList.toggle("show");
+
+            }
+        );
+
+
+        document.addEventListener(
+            "click",
+            function(e){
+
+                if(
+                    !profileMenu.contains(e.target) &&
+                    !profileDropdownBtn.contains(e.target)
+                ){
+
+                    profileMenu.classList.remove("show");
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
        MOBILE MENU
-    ================================================= */
+    ===================================================== */
 
     const menuBtn =
         document.querySelector(".menu-btn");
@@ -881,33 +1236,90 @@ document.addEventListener("DOMContentLoaded", function(){
         document.getElementById("mobileMenu");
 
 
-    menuBtn.addEventListener("click", function(e){
+    if(menuBtn && menu){
 
-        e.stopPropagation();
+        menuBtn.addEventListener(
+            "click",
+            function(e){
 
-        menu.classList.toggle("show");
+                e.stopPropagation();
 
-    });
+                menu.classList.toggle("show");
 
-
-    document.addEventListener("click", function(e){
-
-        if(
-            !menu.contains(e.target) &&
-            !menuBtn.contains(e.target)
-        ){
-
-            menu.classList.remove("show");
-
-        }
-
-    });
+            }
+        );
 
 
+        document.addEventListener(
+            "click",
+            function(e){
 
-    /* =================================================
-       COMMENT BUTTON SCROLL
-    ================================================= */
+                if(
+                    !menu.contains(e.target) &&
+                    !menuBtn.contains(e.target)
+                ){
+
+                    menu.classList.remove("show");
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       FOLLOW BUTTON
+    ===================================================== */
+
+    const followButton =
+        document.getElementById("followButton");
+
+
+    if(followButton){
+
+        followButton.addEventListener(
+            "click",
+            function(){
+
+                const followText =
+                    document.getElementById("followText");
+
+
+                if(
+                    followText.textContent.trim() === "Follow"
+                ){
+
+                    followText.textContent =
+                        "Following";
+
+                    followButton.classList.add(
+                        "following"
+                    );
+
+                }else{
+
+                    followText.textContent =
+                        "Follow";
+
+                    followButton.classList.remove(
+                        "following"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       COMMENT BUTTON
+    ===================================================== */
 
     const commentButton =
         document.getElementById("commentButton");
@@ -916,79 +1328,107 @@ document.addEventListener("DOMContentLoaded", function(){
         document.getElementById("commentsSection");
 
 
-    commentButton.addEventListener("click", function(){
+    if(commentButton && commentsSection){
 
-        commentsSection.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+        commentButton.addEventListener(
+            "click",
+            function(){
+
+                commentsSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
 
 
-        setTimeout(function(){
+                setTimeout(
+                    function(){
 
-            const input =
-                document.getElementById("commentInput");
+                        const input =
+                            document.getElementById("commentInput");
 
-            if(input){
-                input.focus();
+                        if(input){
+
+                            input.focus();
+
+                        }
+
+                    },
+                    500
+                );
+
             }
+        );
 
-        }, 500);
-
-    });
-
+    }
 
 
-    /* =================================================
+
+    /* =====================================================
        SHARE
-    ================================================= */
+    ===================================================== */
 
     const shareButton =
         document.getElementById("shareButton");
 
 
-    shareButton.addEventListener("click", async function(){
+    if(shareButton){
 
-        const shareData = {
+        shareButton.addEventListener(
+            "click",
+            async function(){
 
-            title: "{{ post.title|e }}",
+                const shareData = {
 
-            text: "Check out this post on MOTTECK",
+                    title:
+                        "{{ post.title|e }}",
 
-            url: window.location.href
+                    text:
+                        "Check out this post on MOTTECK",
 
-        };
+                    url:
+                        window.location.href
+
+                };
 
 
-        try {
+                try{
 
-            if(navigator.share){
+                    if(navigator.share){
 
-                await navigator.share(shareData);
+                        await navigator.share(
+                            shareData
+                        );
 
-            }else{
+                    }else{
 
-                await navigator.clipboard.writeText(
-                    window.location.href
-                );
+                        await navigator.clipboard.writeText(
+                            window.location.href
+                        );
 
-                alert("Post link copied!");
+                        alert(
+                            "Post link copied!"
+                        );
+
+                    }
+
+                }catch(error){
+
+                    console.log(
+                        "Share cancelled"
+                    );
+
+                }
 
             }
+        );
 
-        } catch(error){
-
-            console.log("Share cancelled");
-
-        }
-
-    });
+    }
 
 
 
-    /* =================================================
+    /* =====================================================
        LIKE
-    ================================================= */
+    ===================================================== */
 
     const likeButton =
         document.getElementById("likeButton");
@@ -997,185 +1437,224 @@ document.addEventListener("DOMContentLoaded", function(){
         document.getElementById("likeCount");
 
 
-    likeButton.addEventListener("click", async function(){
+    if(likeButton && likeCount){
 
-        try{
+        likeButton.addEventListener(
+            "click",
+            async function(){
 
-            const response =
-                await fetch("/like/{{ post.id }}", {
+                try{
 
-                    method: "POST",
+                    const response =
+                        await fetch(
+                            "/like/{{ post.id }}",
+                            {
+                                method: "POST",
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-
-                });
-
-
-            if(response.ok){
-
-                const data =
-                    await response.json();
-
-                if(data.likes !== undefined){
-
-                    likeCount.textContent =
-                        data.likes;
-
-                }
-
-                likeButton.classList.add("liked");
-
-            }
-
-        }catch(error){
-
-            console.log("Like error:", error);
-
-        }
-
-    });
-
-
-
-    /* =================================================
-       POST COMMENT
-    ================================================= */
-
-    const postCommentButton =
-        document.getElementById("postCommentButton");
-
-
-    const commentInput =
-        document.getElementById("commentInput");
-
-
-    const commentsList =
-        document.getElementById("commentsList");
-
-
-    postCommentButton.addEventListener(
-        "click",
-        async function(){
-
-            const comment =
-                commentInput.value.trim();
-
-
-            if(!comment){
-
-                alert("Please write a comment.");
-
-                return;
-
-            }
-
-
-            try{
-
-                const response =
-                    await fetch(
-                        "/comment/{{ post.id }}",
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                comment: comment
-                            })
-
-                        }
-                    );
-
-
-                if(response.ok){
-
-                    const data =
-                        await response.json();
-
-
-                    const newComment =
-                        document.createElement("div");
-
-                    newComment.className =
-                        "comment";
-
-
-                    newComment.innerHTML = `
-
-                        <img
-                            src="{{ url_for('static', filename='images/default-avatar.png') }}"
-                            class="comment-profile-image"
-                            alt="Profile">
-
-                        <div class="comment-body">
-
-                            <strong>
-                                ${data.full_name || "You"}
-                            </strong>
-
-                            <p>
-                                ${comment}
-                            </p>
-
-                            <small>
-                                Just now
-                            </small>
-
-                        </div>
-
-                    `;
-
-
-                    const noComments =
-                        commentsList.querySelector(
-                            ".no-comments"
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                }
+                            }
                         );
 
 
-                    if(noComments){
-                        noComments.remove();
+                    if(response.ok){
+
+                        const data =
+                            await response.json();
+
+
+                        if(
+                            data.likes !== undefined
+                        ){
+
+                            likeCount.textContent =
+                                data.likes;
+
+                        }
+
+
+                        likeButton.classList.add(
+                            "liked"
+                        );
+
                     }
 
+                }catch(error){
 
-                    commentsList.prepend(
-                        newComment
-                    );
-
-
-                    commentInput.value = "";
-
-                }else{
-
-                    alert(
-                        "Please log in to comment."
+                    console.log(
+                        "Like error:",
+                        error
                     );
 
                 }
 
-            }catch(error){
+            }
+        );
 
-                console.log(
-                    "Comment error:",
-                    error
-                );
+    }
+
+
+
+    /* =====================================================
+       POST COMMENT
+    ===================================================== */
+
+    const postCommentButton =
+        document.getElementById(
+            "postCommentButton"
+        );
+
+    const commentInput =
+        document.getElementById(
+            "commentInput"
+        );
+
+    const commentsList =
+        document.getElementById(
+            "commentsList"
+        );
+
+
+    if(
+        postCommentButton &&
+        commentInput &&
+        commentsList
+    ){
+
+        postCommentButton.addEventListener(
+            "click",
+            async function(){
+
+                const comment =
+                    commentInput.value.trim();
+
+
+                if(!comment){
+
+                    alert(
+                        "Please write a comment."
+                    );
+
+                    return;
+
+                }
+
+
+                try{
+
+                    const response =
+                        await fetch(
+                            "/comment/{{ post.id }}",
+                            {
+
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        comment: comment
+                                    })
+
+                            }
+                        );
+
+
+                    if(response.ok){
+
+                        const data =
+                            await response.json();
+
+
+                        const newComment =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        newComment.className =
+                            "comment";
+
+
+                        newComment.innerHTML = `
+
+                            <img
+                                src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                                class="comment-profile-image"
+                                alt="Profile">
+
+                            <div class="comment-body">
+
+                                <strong>
+                                    ${data.full_name || "You"}
+                                </strong>
+
+                                <p>
+                                    ${comment}
+                                </p>
+
+                                <small>
+                                    Just now
+                                </small>
+
+                            </div>
+
+                        `;
+
+
+                        const noComments =
+                            commentsList.querySelector(
+                                ".no-comments"
+                            );
+
+
+                        if(noComments){
+
+                            noComments.remove();
+
+                        }
+
+
+                        commentsList.prepend(
+                            newComment
+                        );
+
+
+                        commentInput.value = "";
+
+
+                    }else{
+
+                        alert(
+                            "Please log in to comment."
+                        );
+
+                    }
+
+                }catch(error){
+
+                    console.log(
+                        "Comment error:",
+                        error
+                    );
+
+                }
 
             }
+        );
 
-        }
-    );
+    }
 
 
 
-    /* =================================================
+    /* =====================================================
        VIEW TRACKING
-    ================================================= */
+    ===================================================== */
 
     let startTime =
         Date.now();
@@ -1184,11 +1663,14 @@ document.addEventListener("DOMContentLoaded", function(){
         false;
 
 
-    setTimeout(function(){
+    setTimeout(
+        function(){
 
-        counted = true;
+            counted = true;
 
-    }, 10000);
+        },
+        10000
+    );
 
 
     window.addEventListener(
@@ -1222,4 +1704,5 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 </body>
+
 </html>
