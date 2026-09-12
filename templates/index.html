@@ -793,124 +793,78 @@ document.addEventListener(
 function createAuthorHeader(post) {
 
     const name =
+        post.full_name ||
         post.author_name ||
+        post.user_name ||
         post.business_name ||
         "MOTTECK User";
 
-    const category =
-        post.category || "";
+    const category = post.category || "";
 
     const picture =
+        post.profile_image ||
         post.author_profile_picture ||
         post.profile_picture ||
-        "";
+        "/static/images/default-avatar.png";
 
+    const safePicture = escapeHTML(picture);
+    const safeName = escapeHTML(name);
 
-    let avatarHTML;
-
-
-    if (picture) {
-
-        avatarHTML = `
-
-            <img
-                src="${picture}"
-                class="post-author-avatar"
-                alt="${name}"
-                loading="lazy"
-            >
-
-        `;
-
-    } else {
-
-        avatarHTML = `
-
-            <div class="post-author-avatar-placeholder">
-
-                <i class="fa-solid fa-user"></i>
-
-            </div>
-
-        `;
-
-    }
-
-
-    const isFollowing =
-        post.is_following === true;
-
+    const isFollowing = post.is_following === true;
 
     let followButton = "";
 
-
-    if (
-        post.user_id &&
-        post.viewer_is_author !== true
-    ) {
-
+    if (post.user_id && post.viewer_is_author !== true) {
         followButton = `
-
             <button
+                type="button"
                 class="follow-btn ${isFollowing ? "following" : ""}"
-                data-user-id="${post.user_id}"
-                onclick="toggleFollow('${post.user_id}', this)"
+                data-user-id="${escapeHTML(post.user_id)}"
+                onclick="toggleFollow('${escapeHTML(post.user_id)}', this)"
             >
-
                 ${isFollowing ? "Following" : "Follow"}
-
             </button>
-
         `;
-
     }
 
-
     return `
-
         <div class="post-author-header">
 
             <div class="post-author-left">
 
-                ${avatarHTML}
+                <a href="/profile/${encodeURIComponent(post.user_id || "")}" class="post-author-avatar-link" aria-label="View ${safeName}'s profile">
+                    <img
+                        src="${safePicture}"
+                        class="post-author-avatar"
+                        alt="${safeName}"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
+                    >
+                </a>
 
                 <div class="post-author-info">
 
                     <div class="post-author-name">
-
-                        ${escapeHTML(name)}
-
+                        ${safeName}
                     </div>
 
                     <div class="post-author-category">
-
-                        ${escapeHTML(
-                            getCategoryLabel(category)
-                        )}
-
+                        ${escapeHTML(getCategoryLabel(category))}
                     </div>
 
                     <div class="post-author-time">
-
-                        ${escapeHTML(
-                            post.time_ago || ""
-                        )}
-
+                        ${escapeHTML(post.time_ago || "")}
                     </div>
 
                 </div>
 
             </div>
 
-
             <div class="post-author-right">
-
                 ${followButton}
-
             </div>
 
         </div>
-
     `;
 }
 
@@ -988,144 +942,196 @@ function createPostCard(post) {
         post.image_url ||
         "/static/images/default.jpg";
 
-
-    if (
-        !image.startsWith("http") &&
-        !image.startsWith("/")
-    ) {
-
-        image =
-            "/static/" + image;
-
+    if (!image.startsWith("http") && !image.startsWith("/")) {
+        image = "/static/" + image;
     }
 
+    const title = escapeHTML(post.title || "");
+    const preview = post.description || "";
+    const postId = escapeHTML(post.id || "");
 
-    const title =
-        escapeHTML(post.title || "");
-
-
-    const preview =
-        post.description || "";
-
+    const commentCount =
+        Number(post.comments_count ?? post.comment_count ?? (Array.isArray(post.comments) ? post.comments.length : 0)) || 0;
 
     let badge = "";
 
-
     if (post.is_sponsored) {
-
         badge = `
-
             <span class="badge sponsored">
                 Sponsored
             </span>
-
         `;
-
     }
 
+    let commentsHTML = "";
+
+    if (Array.isArray(post.comments) && post.comments.length) {
+        commentsHTML = post.comments.map(comment => {
+            const commentName = escapeHTML(
+                comment.full_name ||
+                comment.user_name ||
+                comment.author_name ||
+                "MOTTECK User"
+            );
+
+            const commentImage = escapeHTML(
+                comment.profile_image ||
+                comment.author_profile_picture ||
+                "/static/images/default-avatar.png"
+            );
+
+            return `
+                <div class="home-comment-item">
+                    <img
+                        src="${commentImage}"
+                        class="home-comment-avatar"
+                        alt="${commentName}"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
+                    >
+                    <div class="home-comment-content">
+                        <strong>${commentName}</strong>
+                        <p>${escapeHTML(comment.comment || "")}</p>
+                        <small>${escapeHTML(comment.time_ago || "")}</small>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    } else {
+        commentsHTML = `
+            <div class="home-no-comments" id="no-comments-${postId}">
+                No comments yet. Be the first to comment.
+            </div>
+        `;
+    }
 
     return `
-
-        <div
-            class="post-card"
-            id="post-${post.id}"
-        >
+        <div class="post-card" id="post-${postId}">
 
             ${badge}
 
-
             <!-- AUTHOR -->
-
             ${createAuthorHeader(post)}
 
-
             <!-- IMAGE -->
-
-            <a href="/post/${post.id}">
-
+            <a href="/post/${postId}">
                 <img
-                    src="${image}"
+                    src="${escapeHTML(image)}"
                     class="post-image"
                     alt="${title}"
                     loading="lazy"
                     decoding="async"
                     width="400"
                     height="250"
+                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
                 >
-
             </a>
 
-
             <!-- CONTENT -->
-
             <div class="post-content">
 
-
-                <a href="/post/${post.id}">
-
+                <a href="/post/${postId}">
                     <h3 class="post-title">
-
                         ${title}
-
                     </h3>
-
                 </a>
 
-
                 <div class="post-text preview-lines">
-
                     ${formatText(preview)}
-
                 </div>
-
 
                 <!-- ACTIONS -->
-
                 <div class="post-actions">
 
-
                     <button
-                        id="like-btn-${post.id}"
+                        type="button"
+                        id="like-btn-${postId}"
+                        class="post-action-btn like-action"
+                        onclick="likePost('${postId}')"
+                        aria-label="Like post"
                     >
-
-                        ❤️
-
-                        <span
-                            id="like-count-${post.id}"
-                        >
-                            ${post.likes || 0}
+                        <i class="fa-regular fa-heart"></i>
+                        <span id="like-count-${postId}">
+                            ${Number(post.likes || 0)}
                         </span>
-
                     </button>
 
-
-                    <span class="views">
-
-                        👁️
-
-                        <span
-                            id="view-count-${post.id}"
-                        >
-                            ${post.views || 0}
+                    <button
+                        type="button"
+                        class="post-action-btn comment-action"
+                        onclick="toggleComments('${postId}')"
+                        aria-label="Comment on post"
+                    >
+                        <i class="fa-regular fa-comment"></i>
+                        <span id="comment-count-${postId}">
+                            ${commentCount}
                         </span>
+                    </button>
 
+                    <button
+                        type="button"
+                        class="post-action-btn share-action"
+                        onclick="sharePost('${postId}', '${escapeHTML(post.title || "MOTTECK Post").replace(/'/g, "\\'")}')"
+                        aria-label="Share post"
+                    >
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <span>Share</span>
+                    </button>
+
+                    <span class="views post-action-btn">
+                        <i class="fa-regular fa-eye"></i>
+                        <span id="view-count-${postId}">
+                            ${Number(post.views || 0)}
+                        </span>
                     </span>
 
+                </div>
 
-                    <a
-                        href="/post/${post.id}"
-                        class="see-more-btn"
+                <!-- COMMENTS -->
+                <div
+                    class="comments-section-home"
+                    id="comments-section-${postId}"
+                    style="display:none;"
+                >
+
+                    <div class="home-comment-form">
+                        <textarea
+                            id="comment-input-${postId}"
+                            class="home-comment-input"
+                            rows="2"
+                            maxlength="1000"
+                            placeholder="Write a comment..."
+                        ></textarea>
+
+                        <button
+                            type="button"
+                            class="home-comment-submit"
+                            onclick="postCommentHome('${postId}')"
+                        >
+                            <i class="fa-solid fa-paper-plane"></i>
+                            Comment
+                        </button>
+                    </div>
+
+                    <div
+                        class="home-comments-list"
+                        id="comments-list-${postId}"
                     >
-                        Read More
-                    </a>
-
+                        ${commentsHTML}
+                    </div>
 
                 </div>
+
+                <a
+                    href="/post/${postId}"
+                    class="see-more-btn"
+                >
+                    Read More
+                </a>
 
             </div>
 
         </div>
-
     `;
 }
 
@@ -1136,58 +1142,43 @@ function createPostCard(post) {
 
 async function toggleFollow(userId, button) {
 
-    if (!userId) return;
-
+    if (!userId || !button) return;
 
     try {
+        button.disabled = true;
 
-        const response =
-            await fetch(
-                `/toggle-follow/${userId}`,
-                {
-                    method: "POST"
-                }
-            );
+        const response = await fetch(
+            `/toggle-follow/${encodeURIComponent(userId)}`,
+            {
+                method: "POST",
+                credentials: "same-origin"
+            }
+        );
 
-
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
         if (data.login_required) {
-
-            window.location.href =
-                "{{ url_for('login_user') }}";
-
+            window.location.href = "{{ url_for('login_user') }}";
             return;
-
         }
 
-
         if (data.success) {
+            button.textContent = data.following ? "Following" : "Follow";
+            button.classList.toggle("following", data.following);
 
-            button.textContent =
-                data.following
-                    ? "Following"
-                    : "Follow";
-
-
-            button.classList.toggle(
-                "following",
-                data.following
-            );
-
+            document
+                .querySelectorAll(`.follow-btn[data-user-id="${CSS.escape(String(userId))}"]`)
+                .forEach(btn => {
+                    btn.textContent = data.following ? "Following" : "Follow";
+                    btn.classList.toggle("following", data.following);
+                });
         }
 
     } catch (error) {
-
-        console.error(
-            "Follow error:",
-            error
-        );
-
+        console.error("Follow error:", error);
+    } finally {
+        button.disabled = false;
     }
-
 }
 
 
@@ -1201,108 +1192,334 @@ function initPostFeatures() {
         .querySelectorAll(".post-card")
         .forEach(card => {
 
-            const likeBtn =
-                card.querySelector(
-                    "button[id^='like-btn-']"
-                );
-
-            if (!likeBtn) return;
-
-
-            const postId =
-                likeBtn.id.replace(
-                    "like-btn-",
-                    ""
-                );
-
-
-            const key =
-                `liked-${postId}`;
-
-
-            if (
-                localStorage.getItem(key)
-            ) {
-
-                likeBtn.style.backgroundColor =
-                    "#d6eefd";
-
-            }
-
-
-            likeBtn.addEventListener(
-                "click",
-                () => likePost(postId)
+            const likeBtn = card.querySelector(
+                "button[id^='like-btn-']"
             );
+
+            if (likeBtn) {
+                const postId = likeBtn.id.replace("like-btn-", "");
+                const key = `liked-${postId}`;
+
+                if (localStorage.getItem(key)) {
+                    likeBtn.classList.add("liked");
+                }
+            }
 
         });
 
+    initViewTracking();
 }
 
 
 function likePost(postId) {
 
-    const key =
-        `liked-${postId}`;
+    const key = `liked-${postId}`;
+    const button = document.getElementById(`like-btn-${postId}`);
 
-
-    if (
-        localStorage.getItem(key)
-    ) {
-
-        alert(
-            "You already liked this post!"
-        );
-
+    if (localStorage.getItem(key)) {
+        alert("You already liked this post!");
         return;
-
     }
 
+    if (button) {
+        button.disabled = true;
+    }
 
-    fetch(
-        `/like/${postId}`,
-        {
-            method: "POST"
-        }
-    )
-
+    fetch(`/like/${encodeURIComponent(postId)}`, {
+        method: "POST",
+        credentials: "same-origin"
+    })
     .then(res => res.json())
-
     .then(data => {
 
         if (data.success) {
 
-            const count =
-                document.getElementById(
-                    `like-count-${postId}`
-                );
-
-            if (count) {
-
-                count.textContent =
-                    data.likes;
-
-            }
-
-
-            localStorage.setItem(
-                key,
-                "true"
+            const count = document.getElementById(
+                `like-count-${postId}`
             );
 
+            if (count) {
+                count.textContent = data.likes ?? 0;
+            }
+
+            if (button) {
+                button.classList.add("liked");
+            }
+
+            localStorage.setItem(key, "true");
         }
 
     })
-
     .catch(error => {
+        console.error("Like error:", error);
+    })
+    .finally(() => {
+        if (button) {
+            button.disabled = false;
+        }
+    });
+}
 
-        console.error(
-            "Like error:",
-            error
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+function toggleComments(postId) {
+
+    const section = document.getElementById(
+        `comments-section-${postId}`
+    );
+
+    if (!section) return;
+
+    const isHidden =
+        section.style.display === "none" ||
+        !section.style.display;
+
+    section.style.display = isHidden ? "block" : "none";
+
+    if (isHidden) {
+        const input = document.getElementById(
+            `comment-input-${postId}`
         );
 
-    });
+        if (input) {
+            setTimeout(() => input.focus(), 100);
+        }
+    }
+}
 
+
+async function postCommentHome(postId) {
+
+    const input = document.getElementById(
+        `comment-input-${postId}`
+    );
+
+    const list = document.getElementById(
+        `comments-list-${postId}`
+    );
+
+    const count = document.getElementById(
+        `comment-count-${postId}`
+    );
+
+    const submitButton = document.querySelector(
+        `#comments-section-${CSS.escape(String(postId))} .home-comment-submit`
+    );
+
+    if (!input || !list) return;
+
+    const comment = input.value.trim();
+
+    if (!comment) {
+        input.focus();
+        return;
+    }
+
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+
+    try {
+        const response = await fetch(
+            `/comment/${encodeURIComponent(postId)}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({ comment: comment })
+            }
+        );
+
+        let data = {};
+
+        try {
+            data = await response.json();
+        } catch (e) {
+            data = {};
+        }
+
+        if (!response.ok) {
+            alert(
+                data.message ||
+                data.error ||
+                "Please log in to comment."
+            );
+            return;
+        }
+
+        const commentName = escapeHTML(
+            data.full_name ||
+            data.user_name ||
+            "MOTTECK User"
+        );
+
+        const commentImage = escapeHTML(
+            data.profile_image ||
+            "/static/images/default-avatar.png"
+        );
+
+        const commentTime = escapeHTML(
+            data.time_ago || "Just now"
+        );
+
+        const safeComment = escapeHTML(
+            data.comment || comment
+        );
+
+        const empty = list.querySelector(".home-no-comments");
+
+        if (empty) {
+            empty.remove();
+        }
+
+        const commentElement = document.createElement("div");
+        commentElement.className = "home-comment-item";
+
+        commentElement.innerHTML = `
+            <img
+                src="${commentImage}"
+                class="home-comment-avatar"
+                alt="${commentName}"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
+            >
+            <div class="home-comment-content">
+                <strong>${commentName}</strong>
+                <p>${safeComment}</p>
+                <small>${commentTime}</small>
+            </div>
+        `;
+
+        list.prepend(commentElement);
+
+        if (count) {
+            const current = parseInt(count.textContent || "0", 10) || 0;
+            count.textContent = data.comments_count ?? (current + 1);
+        }
+
+        input.value = "";
+
+    } catch (error) {
+        console.error("Comment error:", error);
+        alert("Unable to post your comment right now. Please try again.");
+    } finally {
+        if (submitButton) {
+            submitButton.disabled = false;
+        }
+    }
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+async function sharePost(postId, title) {
+
+    const postUrl =
+        `${window.location.origin}/post/${encodeURIComponent(postId)}`;
+
+    const shareData = {
+        title: title || "MOTTECK",
+        text: title || "Check out this post on MOTTECK",
+        url: postUrl
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+            return;
+        }
+
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(postUrl);
+            alert("Post link copied!");
+            return;
+        }
+
+        const tempInput = document.createElement("input");
+        tempInput.value = postUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        tempInput.remove();
+
+        alert("Post link copied!");
+
+    } catch (error) {
+        if (error && error.name !== "AbortError") {
+            console.error("Share error:", error);
+        }
+    }
+}
+
+
+/* =========================================================
+   VIEW TRACKING
+   Counts a view after 3 seconds, once per session.
+========================================================= */
+
+function initViewTracking() {
+
+    document
+        .querySelectorAll(".post-card")
+        .forEach(card => {
+
+            const id = card.id || "";
+            const postId = id.replace("post-", "");
+
+            if (!postId) return;
+
+            const viewedKey = `viewed-${postId}`;
+
+            if (sessionStorage.getItem(viewedKey)) {
+                return;
+            }
+
+            if (card.dataset.viewTimerStarted === "true") {
+                return;
+            }
+
+            card.dataset.viewTimerStarted = "true";
+
+            setTimeout(() => {
+
+                if (sessionStorage.getItem(viewedKey)) {
+                    return;
+                }
+
+                fetch(`/view/${encodeURIComponent(postId)}`, {
+                    method: "POST",
+                    credentials: "same-origin"
+                })
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.success || typeof data.views !== "undefined") {
+
+                        const count = document.getElementById(
+                            `view-count-${postId}`
+                        );
+
+                        if (count && typeof data.views !== "undefined") {
+                            count.textContent = data.views;
+                        }
+
+                        sessionStorage.setItem(viewedKey, "true");
+                    }
+
+                })
+                .catch(error => {
+                    console.error("View tracking error:", error);
+                });
+
+            }, 3000);
+        });
 }
 
 
