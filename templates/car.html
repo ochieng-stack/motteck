@@ -2,797 +2,442 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Cars | MOTTECK</title>
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='car.css') }}">
+          href="{{ url_for('static', filename='cars.css') }}">
 
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-
 
 <body>
 
-
-<!-- =========================================================
+<!-- =========================
      HEADER
-========================================================= -->
+========================= -->
 
 <header class="header">
 
-    <h1 class="title">
-
-        <a href="{{ url_for('home') }}">
-            MOTTECK
-        </a>
-
-    </h1>
-
+    <div class="title">
+        <a href="/">MOTTECK</a>
+    </div>
 
     <div class="top-actions">
 
+        {% if session.get("user_id") %}
 
-        {% if session.get("user_logged_in") %}
+        <div class="profile-dropdown" id="profileDropdown">
 
-        <!-- PROFILE -->
-
-        <div class="profile-dropdown">
-
-            <button
-                type="button"
-                class="profile-btn"
-                id="profileDropdownBtn"
-            >
+            <button type="button"
+                    class="profile-btn"
+                    id="profileBtn">
 
                 <i class="fa-solid fa-user"></i>
 
-                <span>
-                    Profile
-                </span>
+                <span>Profile</span>
 
-                <i class="fa-solid fa-chevron-down"></i>
+                <i class="fa-solid fa-chevron-down profile-arrow"></i>
 
             </button>
 
-
-            <div
-                class="profile-menu"
-                id="profileMenu"
-            >
-
+            <div class="profile-menu">
 
                 <div class="profile-menu-header">
 
-                    {% if session.get("account_type") == "business" %}
-
-                    <i class="fa-solid fa-building"></i>
-
-                    <div>
-
-                        <strong>
-                            {{ session.get("full_name") }}
-                        </strong>
-
-                        <small>
-                            Business Account
-                        </small>
-
-                    </div>
-
-                    {% else %}
-
                     <i class="fa-solid fa-user"></i>
 
                     <div>
-
                         <strong>
-                            {{ session.get("full_name") }}
+                            {{ session.get("full_name") or "MOTTECK User" }}
                         </strong>
 
                         <small>
-                            Individual Account
+                            My account
                         </small>
-
                     </div>
-
-                    {% endif %}
 
                 </div>
 
-
                 <div class="profile-menu-divider"></div>
 
-
-                <a
-                    href="{{ url_for('profile') }}"
-                    class="profile-menu-item"
-                >
+                <a href="/profile"
+                   class="profile-menu-item">
 
                     <i class="fa-solid fa-user"></i>
-
-                    <span>
-                        View Profile
-                    </span>
+                    View Profile
 
                 </a>
 
-
-                <a
-                    href="{{ url_for('settings') }}"
-                    class="profile-menu-item"
-                >
+                <a href="/settings"
+                   class="profile-menu-item">
 
                     <i class="fa-solid fa-gear"></i>
-
-                    <span>
-                        Settings
-                    </span>
+                    Settings
 
                 </a>
 
-
-                <a
-                    href="{{ url_for('submit_post') }}"
-                    class="profile-menu-item"
-                >
+                <a href="/submit-post"
+                   class="profile-menu-item">
 
                     <i class="fa-solid fa-pen-to-square"></i>
-
-                    <span>
-                        Submit Post
-                    </span>
+                    Submit Post
 
                 </a>
-
-
-                {% if session.get("account_type") == "business" %}
-
-                <a
-                    href="{{ url_for('dashboard') }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-chart-line"></i>
-
-                    <span>
-                        Business Dashboard
-                    </span>
-
-                </a>
-
-                {% endif %}
-
-
-                <a
-                    href="{{ url_for('my_submissions') }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-file-lines"></i>
-
-                    <span>
-                        My Submissions
-                    </span>
-
-                </a>
-
 
                 <div class="profile-menu-divider"></div>
 
-
-                <a
-                    href="{{ url_for('user_logout') }}"
-                    class="profile-menu-item logout-item"
-                >
+                <a href="/logout"
+                   class="profile-menu-item logout-item">
 
                     <i class="fa-solid fa-right-from-bracket"></i>
-
-                    <span>
-                        Logout
-                    </span>
+                    Logout
 
                 </a>
-
 
             </div>
 
         </div>
 
-
         {% else %}
-
-
-        <!-- LOGIN / SIGN UP -->
 
         <div class="auth-buttons">
 
-            <a
-                href="{{ url_for('login_user') }}"
-                class="login-btn"
-            >
+            <a href="{{ url_for('login_user') }}"
+               class="login-btn">
                 Login
             </a>
 
-
-            <a
-                href="{{ url_for('register') }}"
-                class="signup-btn"
-            >
+            <a href="/register"
+               class="signup-btn">
                 Sign Up
             </a>
 
         </div>
 
-
         {% endif %}
 
-
-        <!-- HAMBURGER -->
-
-        <button
-            class="menu-btn"
-            onclick="toggleMenu()"
-            type="button"
-        >
+        <button class="menu-btn"
+                id="menuBtn"
+                type="button"
+                aria-label="Open menu">
 
             <i class="fa-solid fa-bars"></i>
 
         </button>
-
 
     </div>
 
 </header>
 
 
-
-<!-- =========================================================
+<!-- =========================
      MOBILE MENU
-========================================================= -->
+========================= -->
 
-<div
-    id="mobileMenu"
-    class="mobile-menu"
->
+<div class="mobile-menu" id="mobileMenu">
 
-
-    <a href="{{ url_for('home') }}">
-        <i class="fa-solid fa-house"></i>
-        Home
-    </a>
-
-    <a href="{{ url_for('about') }}">
-        <i class="fa-solid fa-circle-info"></i>
-        About
-    </a>
-
-    <a href="{{ url_for('car') }}">
-        <i class="fa-solid fa-car"></i>
-        Cars
-    </a>
-
-
-    <a href="{{ url_for('truck') }}">
-        <i class="fa-solid fa-truck"></i>
-        Trucks
-    </a>
-
-
-    <a href="{{ url_for('motobike') }}">
-        <i class="fa-solid fa-motorcycle"></i>
-        Bikes
-    </a>
-
-
-    <a href="{{ url_for('plane') }}">
-        <i class="fa-solid fa-plane"></i>
-        Aviation
-    </a>
-
-
-    <a href="{{ url_for('service') }}">
-        <i class="fa-solid fa-screwdriver-wrench"></i>
-        Service
-    </a>
-
-    <a href="{{ url_for('contact') }}">
-        <i class="fas fa-envelope"></i>
-        Contact
-    </a>
+    <a href="/">Home</a>
+    <a href="/cars">Cars</a>
+    <a href="/trucks">Trucks</a>
+    <a href="/bikes">Bikes</a>
+    <a href="/aviation">Aviation</a>
+    <a href="/service">Service</a>
 
 </div>
 
 
-
-<!-- =========================================================
-     CATEGORY NAVIGATION
-========================================================= -->
+<!-- =========================
+     CATEGORY NAV
+========================= -->
 
 <nav class="category-nav">
 
-    <a
-        href="{{ url_for('car') }}"
-        class="active"
-    >
+    <a href="/cars" class="active">
         CAR
     </a>
 
-
-    <a href="{{ url_for('truck') }}">
+    <a href="/trucks">
         TRUCK
     </a>
 
-
-    <a href="{{ url_for('motobike') }}">
+    <a href="/bikes">
         BIKES
     </a>
 
-
-    <a href="{{ url_for('plane') }}">
+    <a href="/aviation">
         AVIATION
     </a>
 
-
-    <a href="{{ url_for('service') }}">
+    <a href="/service">
         SERVICE
     </a>
 
 </nav>
 
 
+<!-- =========================
+     SEARCH
+========================= -->
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
+<section class="category-search">
 
-<section class="main-section">
-
-
-    <!-- SEARCH -->
-
-    <div class="category-search">
-
-        <input
-            type="text"
-            id="carSearch"
-            placeholder="Search cars only..."
-        >
-
-    </div>
-
-
-    <!-- POSTS -->
-
-    <div
-        id="carPost"
-        class="post-container"
-    ></div>
-
+    <input
+        type="search"
+        id="carSearch"
+        class="search-input"
+        placeholder="Search cars..."
+        autocomplete="off"
+    >
 
 </section>
 
 
+<!-- =========================
+     POSTS
+========================= -->
 
-<!-- =========================================================
+<main>
+
+    <div class="post-container"
+         id="carPost">
+
+        <!-- Posts loaded by JavaScript -->
+
+    </div>
+
+</main>
+
+
+<!-- =========================
      FOOTER
-========================================================= -->
+========================= -->
 
 <footer class="footer">
 
-
     <div class="footer-top">
 
-        <h2 class="footer-logo">
-            Motteck
-        </h2>
-
+        <div class="footer-logo">
+            MOTTECK
+        </div>
 
         <p class="footer-text">
-
-            Motteck is your trusted source for cars,
-            trucks, bikes, motoring news, reviews,
-            and automotive insights.
-
+            MOTTECK is an automotive and transport media platform
+            bringing you cars, trucks, bikes, aviation, transport
+            news, reviews, guides and useful automotive services.
         </p>
 
     </div>
 
 
-
     <div class="footer-links">
-
-
-        <!-- COMPANY -->
 
         <div class="footer-column">
 
-            <h3>
-                Company
-            </h3>
+            <h3>Company</h3>
 
-
-            <a href="{{ url_for('contact') }}">
-                Contact Us
+            <a href="/about">
+                About Us
             </a>
 
+            <a href="/contact">
+                Contact
+            </a>
 
-            <a href="{{ url_for('partner_with_us') }}">
+            <a href="/partner">
                 Partner With Us
             </a>
 
-
-            <a href="{{ url_for('advertise') }}">
-                Advertise With Us
+            <a href="/advertise">
+                Advertise
             </a>
 
         </div>
 
 
-
-        <!-- LEGAL -->
-
         <div class="footer-column">
 
-            <h3>
-                Legal
-            </h3>
+            <h3>Legal</h3>
 
-
-            <a href="{{ url_for('privacy') }}">
+            <a href="/privacy">
                 Privacy Policy
             </a>
 
-
-            <a href="{{ url_for('term') }}">
+            <a href="/terms">
                 Terms & Conditions
             </a>
 
-
-            <a href="{{ url_for('cookies') }}">
+            <a href="/cookies">
                 Cookie Policy
             </a>
 
         </div>
 
 
-
-        <!-- DISCLAIMER -->
-
         <div class="footer-column">
 
-            <h3>
-                Disclaimer
-            </h3>
-
+            <h3>Disclaimer</h3>
 
             <p class="small-text">
-
-                Information published on Motteck is for
-                general informational purposes only.
-                Please verify details independently
-                before making decisions.
-
+                Information published on MOTTECK is provided
+                for general informational purposes and should
+                not be considered professional advice.
             </p>
 
         </div>
 
 
-
-        <!-- CONTACT -->
-
         <div class="footer-column">
 
-            <h3>
-                Contact
-            </h3>
-
+            <h3>Contact</h3>
 
             <p>
-                Email: motteckcompany@gmail.com
+                Have a question or business inquiry?
             </p>
 
-
-            <p>
-                Call: +254742022263
-            </p>
+            <a href="/contact">
+                Contact MOTTECK
+            </a>
 
 
             <div class="social-box">
 
-                <p>
-                    Follow Us
-                </p>
+                <p>Follow us</p>
 
-
-                <a
-                    href="https://www.instagram.com/mott_eck"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-
+                <a href="#"
+                   aria-label="Instagram">
                     <i class="fa-brands fa-instagram"></i>
-
                 </a>
 
-
-                <a
-                    href="https://x.com/motteck254"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-
-                    <i class="fa-brands fa-square-x-twitter"></i>
-
+                <a href="#"
+                   aria-label="X">
+                    <i class="fa-brands fa-x-twitter"></i>
                 </a>
 
-
-                <a
-                    href="https://www.facebook.com/profile.php?id=100064234773365"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-
-                    <i class="fa-brands fa-facebook"></i>
-
+                <a href="#"
+                   aria-label="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
                 </a>
 
-
-                <a
-                    href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-
+                <a href="#"
+                   aria-label="WhatsApp">
                     <i class="fa-brands fa-whatsapp"></i>
-
                 </a>
 
-
-                <a
-                    href="https://www.tiktok.com/@motteckauto"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-
+                <a href="#"
+                   aria-label="TikTok">
                     <i class="fa-brands fa-tiktok"></i>
-
                 </a>
 
             </div>
 
         </div>
 
-
     </div>
-
 
 
     <div class="footer-bottom">
 
         <p>
-            &copy; 2026 Motteck. All Rights Reserved.
+            © 2026 MOTTECK. All rights reserved.
         </p>
 
     </div>
 
-
 </footer>
-
 
 
 <script>
 
+/* =========================
+   MOBILE MENU
+========================= */
 
-/* =========================================================
+const menuBtn = document.getElementById("menuBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+
+if (menuBtn && mobileMenu) {
+
+    menuBtn.addEventListener("click", function () {
+
+        if (mobileMenu.style.display === "flex") {
+            mobileMenu.style.display = "none";
+        } else {
+            mobileMenu.style.display = "flex";
+        }
+
+    });
+
+}
+
+
+/* =========================
+   PROFILE DROPDOWN
+========================= */
+
+const profileDropdown =
+    document.getElementById("profileDropdown");
+
+const profileBtn =
+    document.getElementById("profileBtn");
+
+if (profileDropdown && profileBtn) {
+
+    profileBtn.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        profileDropdown.classList.toggle("active");
+
+    });
+
+    document.addEventListener("click", function () {
+
+        profileDropdown.classList.remove("active");
+
+    });
+
+}
+
+
+/* =========================
    CATEGORY
-========================================================= */
+========================= */
 
 const category = "car";
 
 
-const postContainer =
-    document.getElementById("carPost");
-
-
-
-/* =========================================================
-   MOBILE MENU
-========================================================= */
-
-function toggleMenu() {
-
-    const menu =
-        document.getElementById("mobileMenu");
-
-
-    menu.style.display =
-        menu.style.display === "flex"
-            ? "none"
-            : "flex";
-
-}
-
-
-
-/* =========================================================
-   CLOSE MOBILE MENU WHEN CLICKING OUTSIDE
-========================================================= */
-
-document.addEventListener(
-    "click",
-    function(event) {
-
-        const menu =
-            document.getElementById("mobileMenu");
-
-        const button =
-            document.querySelector(".menu-btn");
-
-
-        if (
-            menu &&
-            button &&
-            !menu.contains(event.target) &&
-            !button.contains(event.target)
-        ) {
-
-            menu.style.display = "none";
-
-        }
-
-    }
-);
-
-
-
-/* =========================================================
-   PROFILE DROPDOWN
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-
-        const button =
-            document.getElementById(
-                "profileDropdownBtn"
-            );
-
-
-        const dropdown =
-            document.querySelector(
-                ".profile-dropdown"
-            );
-
-
-        if (!button || !dropdown) {
-            return;
-        }
-
-
-        button.addEventListener(
-            "click",
-            function(event) {
-
-                event.stopPropagation();
-
-
-                dropdown.classList.toggle(
-                    "active"
-                );
-
-            }
-        );
-
-
-        document.addEventListener(
-            "click",
-            function(event) {
-
-                if (
-                    !dropdown.contains(
-                        event.target
-                    )
-                ) {
-
-                    dropdown.classList.remove(
-                        "active"
-                    );
-
-                }
-
-            }
-        );
-
-    }
-);
-
-
-
-/* =========================================================
+/* =========================
    CATEGORY LABEL
-========================================================= */
+========================= */
 
 function getCategoryLabel(category) {
 
-    const value =
-        String(category || "")
-            .toLowerCase();
+    const labels = {
 
+        car: "Cars",
+        truck: "Trucks",
+        bike: "Bikes",
+        aviation: "Aviation",
+        service: "Service"
 
-    if (
-        value === "car" ||
-        value === "cars"
-    ) {
+    };
 
-        return "Cars";
-
-    }
-
-
-    if (
-        value === "motobike" ||
-        value === "motorbike" ||
-        value === "motorbikes"
-    ) {
-
-        return "Bikes";
-
-    }
-
-
-    if (
-        value === "truck" ||
-        value === "trucks"
-    ) {
-
-        return "Trucks";
-
-    }
-
-
-    if (
-        value === "plane" ||
-        value === "aviation"
-    ) {
-
-        return "Aviation";
-
-    }
-
-
-    if (
-        value === "service" ||
-        value === "services"
-    ) {
-
-        return "Service";
-
-    }
-
-
-    return category || "";
+    return labels[category] || category || "MOTTECK";
 
 }
 
 
-
-/* =========================================================
+/* =========================
    ESCAPE HTML
-========================================================= */
+========================= */
 
 function escapeHTML(value) {
 
-    return String(value || "")
+    return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -802,92 +447,61 @@ function escapeHTML(value) {
 }
 
 
-
-/* =========================================================
+/* =========================
    FORMAT TEXT
-========================================================= */
+========================= */
 
 function formatText(text) {
 
-    if (!text) return "";
+    text = String(text || "");
 
+    if (text.length > 220) {
+        text = text.substring(0, 220) + "...";
+    }
 
-    text =
-        text.replace(
-            /https?:\/\/\S+\.(jpg|jpeg|png|gif|webp)/gi,
-            ""
-        );
-
-
-    text =
-        text
-            .replace(/\n+/g, " ")
-            .replace(/\s+/g, " ")
-            .trim();
-
-
-    return `<p>${escapeHTML(text)}</p>`;
+    return escapeHTML(text)
+        .replace(/\n/g, "<br>");
 
 }
 
 
-
-/* =========================================================
+/* =========================
    AUTHOR HEADER
-========================================================= */
+   SAME AS HOMEPAGE
+========================= */
 
 function createAuthorHeader(post) {
 
-
     const name =
+        post.full_name ||
         post.author_name ||
+        post.user_name ||
         post.business_name ||
         "MOTTECK User";
 
+    const category =
+        post.category || "";
 
     const picture =
+        post.profile_image ||
         post.author_profile_picture ||
         post.profile_picture ||
-        "";
+        "/static/images/default-avatar.png";
 
+    const safePicture =
+        escapeHTML(picture);
 
-    let avatar;
+    const safeName =
+        escapeHTML(name);
 
-
-    if (picture) {
-
-        avatar = `
-
-            <img
-                src="${picture}"
-                class="post-author-avatar"
-                alt="${escapeHTML(name)}"
-                loading="lazy"
-            >
-
-        `;
-
-    } else {
-
-        avatar = `
-
-            <div class="post-author-avatar-placeholder">
-
-                <i class="fa-solid fa-user"></i>
-
-            </div>
-
-        `;
-
-    }
-
-
-    const following =
+    const isFollowing =
         post.is_following === true;
-
 
     let followButton = "";
 
+    /*
+       Do not show Follow on the user's own post.
+    */
 
     if (
         post.user_id &&
@@ -897,15 +511,13 @@ function createAuthorHeader(post) {
         followButton = `
 
             <button
-                class="follow-btn ${following ? "following" : ""}"
-                onclick="toggleFollow('${post.user_id}', this)"
+                type="button"
+                class="follow-btn ${isFollowing ? "following" : ""}"
+                data-user-id="${escapeHTML(post.user_id)}"
+                onclick="toggleFollow('${escapeHTML(post.user_id)}', this)"
             >
 
-                ${
-                    following
-                        ? "Following"
-                        : "Follow"
-                }
+                ${isFollowing ? "Following" : "Follow"}
 
             </button>
 
@@ -918,46 +530,42 @@ function createAuthorHeader(post) {
 
         <div class="post-author-header">
 
-
             <div class="post-author-left">
 
-                ${avatar}
+                <a
+                    href="/profile/${encodeURIComponent(post.user_id || "")}"
+                    class="post-author-avatar-link"
+                    aria-label="View ${safeName}'s profile"
+                >
+
+                    <img
+                        src="${safePicture}"
+                        class="post-author-avatar"
+                        alt="${safeName}"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
+                    >
+
+                </a>
 
 
                 <div class="post-author-info">
 
-
                     <div class="post-author-name">
-
-                        ${escapeHTML(name)}
-
+                        ${safeName}
                     </div>
-
 
                     <div class="post-author-category">
-
-                        ${escapeHTML(
-                            getCategoryLabel(
-                                post.category
-                            )
-                        )}
-
+                        ${escapeHTML(getCategoryLabel(category))}
                     </div>
-
 
                     <div class="post-author-time">
-
-                        ${escapeHTML(
-                            post.time_ago || ""
-                        )}
-
+                        ${escapeHTML(post.time_ago || "")}
                     </div>
-
 
                 </div>
 
             </div>
-
 
 
             <div class="post-author-right">
@@ -966,7 +574,6 @@ function createAuthorHeader(post) {
 
             </div>
 
-
         </div>
 
     `;
@@ -974,13 +581,12 @@ function createAuthorHeader(post) {
 }
 
 
-
-/* =========================================================
-   POST CARD
-========================================================= */
+/* =========================
+   CREATE POST CARD
+   SAME STRUCTURE AS HOMEPAGE
+========================= */
 
 function createPostCard(post) {
-
 
     let image =
         post.image ||
@@ -999,8 +605,33 @@ function createPostCard(post) {
     }
 
 
-    let badge = "";
+    const title =
+        escapeHTML(post.title || "");
 
+    const preview =
+        post.description || "";
+
+    const postId =
+        escapeHTML(post.id || "");
+
+
+    const commentCount =
+        Number(
+            post.comments_count ??
+            post.comment_count ??
+            (
+                Array.isArray(post.comments)
+                    ? post.comments.length
+                    : 0
+            )
+        ) || 0;
+
+
+    /* =========================
+       SPONSORED BADGE
+    ========================= */
+
+    let badge = "";
 
     if (post.is_sponsored) {
 
@@ -1015,13 +646,94 @@ function createPostCard(post) {
     }
 
 
+    /* =========================
+       COMMENTS
+    ========================= */
+
+    let commentsHTML = "";
+
+
+    if (
+        Array.isArray(post.comments) &&
+        post.comments.length
+    ) {
+
+        commentsHTML =
+            post.comments.map(comment => {
+
+                const commentName =
+                    escapeHTML(
+                        comment.full_name ||
+                        comment.user_name ||
+                        comment.author_name ||
+                        "MOTTECK User"
+                    );
+
+
+                const commentImage =
+                    escapeHTML(
+                        comment.profile_image ||
+                        comment.author_profile_picture ||
+                        "/static/images/default-avatar.png"
+                    );
+
+
+                return `
+
+                    <div class="home-comment-item">
+
+                        <img
+                            src="${commentImage}"
+                            class="home-comment-avatar"
+                            alt="${commentName}"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
+                        >
+
+                        <div class="home-comment-content">
+
+                            <strong>
+                                ${commentName}
+                            </strong>
+
+                            <p>
+                                ${escapeHTML(comment.comment || "")}
+                            </p>
+
+                            <small>
+                                ${escapeHTML(comment.time_ago || "")}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join("");
+
+    } else {
+
+        commentsHTML = `
+
+            <div
+                class="home-no-comments"
+                id="no-comments-${postId}"
+            >
+                No comments yet. Be the first to comment.
+            </div>
+
+        `;
+
+    }
+
+
     return `
 
         <div
             class="post-card"
-            id="post-${post.id}"
+            id="post-${postId}"
         >
-
 
             ${badge}
 
@@ -1029,16 +741,17 @@ function createPostCard(post) {
             ${createAuthorHeader(post)}
 
 
-            <a href="/post/${post.id}">
+            <a href="/post/${postId}">
 
                 <img
-                    src="${image}"
+                    src="${escapeHTML(image)}"
                     class="post-image"
-                    alt="${escapeHTML(post.title)}"
+                    alt="${title}"
                     loading="lazy"
                     decoding="async"
                     width="400"
                     height="250"
+                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
                 >
 
             </a>
@@ -1047,14 +760,10 @@ function createPostCard(post) {
             <div class="post-content">
 
 
-                <a href="/post/${post.id}">
+                <a href="/post/${postId}">
 
                     <h3 class="post-title">
-
-                        ${escapeHTML(
-                            post.title
-                        )}
-
+                        ${title}
                     </h3>
 
                 </a>
@@ -1062,57 +771,140 @@ function createPostCard(post) {
 
                 <div class="post-text preview-lines">
 
-                    ${formatText(
-                        post.description || ""
-                    )}
+                    ${formatText(preview)}
 
                 </div>
 
+
+                <!-- =========================
+                     POST ACTIONS
+                ========================= -->
 
                 <div class="post-actions">
 
 
                     <button
-                        id="like-btn-${post.id}"
+                        type="button"
+                        id="like-btn-${postId}"
+                        class="post-action-btn like-action"
+                        onclick="likePost('${postId}')"
+                        aria-label="Like post"
                     >
 
-                        ❤️
+                        <i class="fa-regular fa-heart"></i>
 
-                        <span
-                            id="like-count-${post.id}"
-                        >
-                            ${post.likes || 0}
+                        <span id="like-count-${postId}">
+                            ${Number(post.likes || 0)}
                         </span>
 
                     </button>
 
 
-                    <span class="views">
+                    <button
+                        type="button"
+                        class="post-action-btn comment-action"
+                        onclick="toggleComments('${postId}')"
+                        aria-label="Comment on post"
+                    >
 
-                        👁️
+                        <i class="fa-regular fa-comment"></i>
 
-                        <span
-                            id="view-count-${post.id}"
-                        >
-                            ${post.views || 0}
+                        <span id="comment-count-${postId}">
+                            ${commentCount}
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="post-action-btn share-action"
+                        onclick="sharePost('${postId}', '${escapeHTML(post.title || "MOTTECK Post").replace(/'/g, "\\'")}')"
+                        aria-label="Share post"
+                    >
+
+                        <i class="fa-solid fa-share-nodes"></i>
+
+                        <span>
+                            Share
+                        </span>
+
+                    </button>
+
+
+                    <span class="views post-action-btn">
+
+                        <i class="fa-regular fa-eye"></i>
+
+                        <span id="view-count-${postId}">
+                            ${Number(post.views || 0)}
                         </span>
 
                     </span>
 
 
-                    <a
-                        href="/post/${post.id}"
-                        class="see-more-btn"
+                </div>
+
+
+                <!-- =========================
+                     COMMENTS SECTION
+                ========================= -->
+
+                <div
+                    class="comments-section-home"
+                    id="comments-section-${postId}"
+                    style="display:none;"
+                >
+
+
+                    <div class="home-comment-form">
+
+                        <textarea
+                            id="comment-input-${postId}"
+                            class="home-comment-input"
+                            rows="2"
+                            maxlength="1000"
+                            placeholder="Write a comment..."
+                        ></textarea>
+
+
+                        <button
+                            type="button"
+                            class="home-comment-submit"
+                            onclick="postCommentHome('${postId}')"
+                        >
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                            Comment
+
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="home-comments-list"
+                        id="comments-list-${postId}"
                     >
-                        Read More
-                    </a>
+
+                        ${commentsHTML}
+
+                    </div>
 
 
                 </div>
 
 
-            </div>
+                <a
+                    href="/post/${postId}"
+                    class="see-more-btn"
+                >
+                    Read More
+                </a>
 
+
+            </div>
 
         </div>
 
@@ -1121,25 +913,28 @@ function createPostCard(post) {
 }
 
 
-
-/* =========================================================
+/* =========================
    FOLLOW
-========================================================= */
+========================= */
 
-async function toggleFollow(
-    userId,
-    button
-) {
+async function toggleFollow(userId, button) {
+
+    if (!userId || !button) {
+        return;
+    }
 
 
     try {
 
+        button.disabled = true;
+
 
         const response =
             await fetch(
-                `/toggle-follow/${userId}`,
+                `/toggle-follow/${encodeURIComponent(userId)}`,
                 {
-                    method: "POST"
+                    method: "POST",
+                    credentials: "same-origin"
                 }
             );
 
@@ -1171,8 +966,31 @@ async function toggleFollow(
                 data.following
             );
 
-        }
 
+            /*
+               Update every Follow button
+               belonging to this same user.
+            */
+
+            document
+                .querySelectorAll(
+                    `.follow-btn[data-user-id="${CSS.escape(String(userId))}"]`
+                )
+                .forEach(btn => {
+
+                    btn.textContent =
+                        data.following
+                            ? "Following"
+                            : "Follow";
+
+                    btn.classList.toggle(
+                        "following",
+                        data.following
+                    );
+
+                });
+
+        }
 
     } catch (error) {
 
@@ -1181,257 +999,337 @@ async function toggleFollow(
             error
         );
 
+    } finally {
+
+        button.disabled = false;
+
     }
 
 }
 
 
-
-/* =========================================================
+/* =========================
    LIKE
-========================================================= */
+========================= */
 
-function initLikes() {
+async function likePost(postId) {
 
+    const likeBtn =
+        document.getElementById(
+            `like-btn-${postId}`
+        );
 
-    document
-        .querySelectorAll(
-            ".post-card button[id^='like-btn-']"
-        )
-        .forEach(button => {
-
-
-            const postId =
-                button.id.replace(
-                    "like-btn-",
-                    ""
-                );
-
-
-            const key =
-                `liked-${postId}`;
-
-
-            if (
-                localStorage.getItem(key)
-            ) {
-
-                button.style.backgroundColor =
-                    "#d6eefd";
-
-            }
-
-
-            button.addEventListener(
-                "click",
-                () => {
-
-
-                    if (
-                        localStorage.getItem(key)
-                    ) {
-
-                        alert(
-                            "You already liked this post!"
-                        );
-
-                        return;
-
-                    }
-
-
-                    fetch(
-                        `/like/${postId}`,
-                        {
-                            method: "POST"
-                        }
-                    )
-
-
-                    .then(
-                        res => res.json()
-                    )
-
-
-                    .then(
-                        data => {
-
-
-                            if (data.success) {
-
-
-                                const count =
-                                    document.getElementById(
-                                        `like-count-${postId}`
-                                    );
-
-
-                                if (count) {
-
-                                    count.textContent =
-                                        data.likes;
-
-                                }
-
-
-                                localStorage.setItem(
-                                    key,
-                                    "true"
-                                );
-
-
-                                button.style.backgroundColor =
-                                    "#d6eefd";
-
-                            }
-
-                        }
-                    );
-
-
-                }
-            );
-
-        });
-
-}
-
-
-
-/* =========================================================
-   LOAD CATEGORY POSTS
-========================================================= */
-
-async function loadCategoryPosts() {
-
-
-    const CACHE_KEY =
-        "motteck_car_cache";
-
-
-    const CACHE_TIME_KEY =
-        "motteck_car_cache_time";
-
-
-    const CACHE_MINUTES =
-        15;
-
-
-
-    /* CACHE */
-
-    const saved =
-        localStorage.getItem(
-            CACHE_KEY
+    const likeCount =
+        document.getElementById(
+            `like-count-${postId}`
         );
 
 
-    const savedTime =
-        localStorage.getItem(
-            CACHE_TIME_KEY
-        );
-
-
-    if (
-        saved &&
-        savedTime
-    ) {
-
-
-        const age =
-            Date.now() -
-            parseInt(savedTime);
-
-
-        if (
-            age <
-            CACHE_MINUTES *
-            60 *
-            1000
-        ) {
-
-
-            try {
-
-                renderPosts(
-                    JSON.parse(saved)
-                );
-
-            } catch (error) {
-
-                console.error(
-                    "Cache error:",
-                    error
-                );
-
-            }
-
-        }
-
+    if (!likeBtn) {
+        return;
     }
 
 
+    const storageKey =
+        `motteck_liked_${postId}`;
 
-    /* DATABASE */
+
+    if (localStorage.getItem(storageKey)) {
+
+        return;
+
+    }
+
 
     try {
+
+        likeBtn.disabled = true;
 
 
         const response =
             await fetch(
-                "/get_posts"
+                `/like/${encodeURIComponent(postId)}`,
+                {
+                    method: "POST",
+                    credentials: "same-origin"
+                }
             );
 
 
-        const posts =
+        const data =
             await response.json();
 
 
-        if (
-            !Array.isArray(posts)
-        ) {
+        if (data.login_required) {
 
-            console.error(posts);
+            window.location.href =
+                "{{ url_for('login_user') }}";
 
             return;
 
         }
 
 
-        const categoryPosts =
-            posts.filter(post => {
+        if (data.success) {
 
-                return String(
-                    post.category || ""
-                ).toLowerCase()
-                === category.toLowerCase();
+            if (likeCount) {
 
-            });
+                likeCount.textContent =
+                    Number(
+                        data.likes ??
+                        Number(likeCount.textContent || 0) + 1
+                    );
 
-
-        renderPosts(
-            categoryPosts
-        );
+            }
 
 
-        localStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify(
-                categoryPosts
-            )
-        );
+            likeBtn.classList.add("liked");
 
 
-        localStorage.setItem(
-            CACHE_TIME_KEY,
-            Date.now()
-        );
+            const icon =
+                likeBtn.querySelector("i");
 
+            if (icon) {
+
+                icon.classList.remove(
+                    "fa-regular"
+                );
+
+                icon.classList.add(
+                    "fa-solid"
+                );
+
+            }
+
+
+            localStorage.setItem(
+                storageKey,
+                "1"
+            );
+
+        }
 
     } catch (error) {
 
         console.error(
-            "Category load error:",
+            "Like error:",
+            error
+        );
+
+    } finally {
+
+        likeBtn.disabled = false;
+
+    }
+
+}
+
+
+/* =========================
+   TOGGLE COMMENTS
+========================= */
+
+function toggleComments(postId) {
+
+    const section =
+        document.getElementById(
+            `comments-section-${postId}`
+        );
+
+
+    if (!section) {
+        return;
+    }
+
+
+    if (section.style.display === "none") {
+
+        section.style.display = "block";
+
+    } else {
+
+        section.style.display = "none";
+
+    }
+
+}
+
+
+/* =========================
+   POST COMMENT
+========================= */
+
+async function postCommentHome(postId) {
+
+    const input =
+        document.getElementById(
+            `comment-input-${postId}`
+        );
+
+    const commentsList =
+        document.getElementById(
+            `comments-list-${postId}`
+        );
+
+    const commentCount =
+        document.getElementById(
+            `comment-count-${postId}`
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    const comment =
+        input.value.trim();
+
+
+    if (!comment) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/comment/${encodeURIComponent(postId)}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({
+                        comment: comment
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.login_required) {
+
+            window.location.href =
+                "{{ url_for('login_user') }}";
+
+            return;
+
+        }
+
+
+        if (!data.success) {
+
+            console.error(
+                data.message || "Comment failed"
+            );
+
+            return;
+
+        }
+
+
+        input.value = "";
+
+
+        if (commentCount) {
+
+            commentCount.textContent =
+                Number(
+                    data.comments_count ||
+                    Number(commentCount.textContent || 0) + 1
+                );
+
+        }
+
+
+        /*
+           Remove "No comments yet"
+        */
+
+        const noComments =
+            document.getElementById(
+                `no-comments-${postId}`
+            );
+
+        if (noComments) {
+            noComments.remove();
+        }
+
+
+        if (commentsList) {
+
+            const commentName =
+                escapeHTML(
+                    data.full_name ||
+                    data.user_name ||
+                    "MOTTECK User"
+                );
+
+
+            const commentImage =
+                escapeHTML(
+                    data.profile_image ||
+                    "/static/images/default-avatar.png"
+                );
+
+
+            const newComment =
+                document.createElement("div");
+
+            newComment.className =
+                "home-comment-item";
+
+
+            newComment.innerHTML = `
+
+                <img
+                    src="${commentImage}"
+                    class="home-comment-avatar"
+                    alt="${commentName}"
+                    onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
+                >
+
+                <div class="home-comment-content">
+
+                    <strong>
+                        ${commentName}
+                    </strong>
+
+                    <p>
+                        ${escapeHTML(
+                            data.comment ||
+                            comment
+                        )}
+                    </p>
+
+                    <small>
+                        ${escapeHTML(
+                            data.time_ago ||
+                            "Just now"
+                        )}
+                    </small>
+
+                </div>
+
+            `;
+
+
+            commentsList.prepend(
+                newComment
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Comment error:",
             error
         );
 
@@ -1440,117 +1338,462 @@ async function loadCategoryPosts() {
 }
 
 
+/* =========================
+   SHARE
+========================= */
 
-/* =========================================================
-   RENDER
-========================================================= */
+async function sharePost(postId, title) {
 
-function renderPosts(posts) {
-
-
-    postContainer.innerHTML = "";
-
-
-    if (!posts.length) {
+    const shareUrl =
+        `${window.location.origin}/post/${encodeURIComponent(postId)}`;
 
 
-        postContainer.innerHTML = `
+    if (navigator.share) {
 
-            <div class="no-posts">
+        try {
 
-                <h3>
-                    No posts yet
-                </h3>
+            await navigator.share({
 
+                title:
+                    title || "MOTTECK Post",
 
-                <p>
-                    There are no published
-                    posts in this category yet.
-                </p>
+                text:
+                    "Check out this post on MOTTECK",
 
-            </div>
+                url:
+                    shareUrl
 
-        `;
+            });
 
+        } catch (error) {
+
+            /*
+               User cancelled sharing.
+            */
+
+        }
 
         return;
 
     }
 
 
-    posts.forEach(post => {
+    try {
 
-        postContainer.innerHTML +=
-            createPostCard(post);
+        await navigator.clipboard.writeText(
+            shareUrl
+        );
 
-    });
+        alert(
+            "Post link copied!"
+        );
 
+    } catch (error) {
 
-    initLikes();
+        prompt(
+            "Copy this link:",
+            shareUrl
+        );
+
+    }
 
 }
 
 
+/* =========================
+   VIEW TRACKING
+   AFTER 3 SECONDS
+========================= */
 
-/* =========================================================
+function initViewTracking() {
+
+    document
+        .querySelectorAll(".post-card")
+        .forEach(card => {
+
+            const postId =
+                card.id.replace(
+                    "post-",
+                    ""
+                );
+
+
+            if (!postId) {
+                return;
+            }
+
+
+            const sessionKey =
+                `motteck_viewed_${postId}`;
+
+
+            if (
+                sessionStorage.getItem(
+                    sessionKey
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            setTimeout(async function () {
+
+                if (
+                    sessionStorage.getItem(
+                        sessionKey
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/view/${encodeURIComponent(postId)}`,
+                            {
+                                method: "POST",
+                                credentials: "same-origin"
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        const viewCount =
+                            document.getElementById(
+                                `view-count-${postId}`
+                            );
+
+
+                        if (viewCount) {
+
+                            viewCount.textContent =
+                                Number(
+                                    data.views || 0
+                                );
+
+                        }
+
+
+                        sessionStorage.setItem(
+                            sessionKey,
+                            "1"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "View tracking error:",
+                        error
+                    );
+
+                }
+
+            }, 3000);
+
+        });
+
+}
+
+
+/* =========================
+   RENDER POSTS
+========================= */
+
+function renderPosts(posts) {
+
+    const container =
+        document.getElementById(
+            "carPost"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    if (!posts || !posts.length) {
+
+        container.innerHTML = `
+
+            <div class="no-posts">
+
+                <i class="fa-solid fa-car"></i>
+
+                <p>
+                    No car posts available yet.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        posts
+            .map(post => createPostCard(post))
+            .join("");
+
+
+    initViewTracking();
+
+}
+
+
+/* =========================
+   LOAD CATEGORY POSTS
+========================= */
+
+async function loadCategoryPosts() {
+
+    const container =
+        document.getElementById(
+            "carPost"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const cacheKey =
+        "motteck_car_cache";
+
+
+    const cacheTimeKey =
+        "motteck_car_cache_time";
+
+
+    const cached =
+        localStorage.getItem(
+            cacheKey
+        );
+
+
+    const cachedTime =
+        Number(
+            localStorage.getItem(
+                cacheTimeKey
+            ) || 0
+        );
+
+
+    const now =
+        Date.now();
+
+
+    /*
+       Use cached posts for 15 minutes.
+    */
+
+    if (
+        cached &&
+        now - cachedTime < 15 * 60 * 1000
+    ) {
+
+        try {
+
+            const posts =
+                JSON.parse(cached);
+
+            renderPosts(posts);
+
+        } catch (error) {
+
+            console.error(
+                "Cache error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/get_posts",
+                {
+                    credentials: "same-origin"
+                }
+            );
+
+
+        if (!response.ok) {
+            throw new Error(
+                "Failed to load posts"
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        let posts = [];
+
+
+        if (Array.isArray(data)) {
+
+            posts = data;
+
+        } else if (
+            Array.isArray(data.posts)
+        ) {
+
+            posts = data.posts;
+
+        }
+
+
+        /*
+           Only show CAR posts.
+        */
+
+        posts =
+            posts.filter(post =>
+                String(
+                    post.category || ""
+                ).toLowerCase() === category
+            );
+
+
+        localStorage.setItem(
+            cacheKey,
+            JSON.stringify(posts)
+        );
+
+
+        localStorage.setItem(
+            cacheTimeKey,
+            String(now)
+        );
+
+
+        renderPosts(posts);
+
+
+    } catch (error) {
+
+        console.error(
+            "Category posts error:",
+            error
+        );
+
+
+        if (!cached) {
+
+            container.innerHTML = `
+
+                <div class="no-posts">
+
+                    <p>
+                        Unable to load car posts right now.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+}
+
+
+/* =========================
    SEARCH
-========================================================= */
+========================= */
 
-document
-    .getElementById("carSearch")
-    .addEventListener(
+const carSearch =
+    document.getElementById(
+        "carSearch"
+    );
+
+
+if (carSearch) {
+
+    carSearch.addEventListener(
         "input",
-        function() {
-
+        function () {
 
             const query =
                 this.value
-                    .toLowerCase()
-                    .trim();
+                    .trim()
+                    .toLowerCase();
 
 
-            document
-                .querySelectorAll(
+            const cards =
+                document.querySelectorAll(
                     "#carPost .post-card"
-                )
-                .forEach(card => {
+                );
 
 
-                    const text =
-                        card.textContent
-                            .toLowerCase();
+            cards.forEach(card => {
 
+                const text =
+                    card.textContent
+                        .toLowerCase();
+
+
+                if (
+                    !query ||
+                    text.includes(query)
+                ) {
 
                     card.style.display =
-                        text.includes(query)
-                            ? ""
-                            : "none";
+                        "";
 
-                });
+                } else {
+
+                    card.style.display =
+                        "none";
+
+                }
+
+            });
 
         }
     );
 
+}
 
 
-/* =========================================================
+/* =========================
    START
-========================================================= */
+========================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
+    function () {
 
         loadCategoryPosts();
 
     }
 );
 
-
 </script>
 
-
 </body>
-
 </html>
-
