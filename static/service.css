@@ -18,9 +18,7 @@ body{
     min-height: 100vh;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 .header{
     display: flex;
     justify-content: space-between;
@@ -46,14 +44,12 @@ body{
     text-decoration: none;
 }
 
-/* RIGHT SIDE ACTIONS */
 .top-actions{
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* HAMBURGER */
 .menu-btn{
     background: none;
     border: none;
@@ -62,9 +58,7 @@ body{
     cursor: pointer;
 }
 
-/* =========================
-   CATEGORY NAV
-========================= */
+/* CATEGORY NAV */
 .category-nav {
     display: flex;
     justify-content: center;
@@ -126,10 +120,7 @@ body{
     border-bottom: 1px solid #222;
 }
 
-
-/* =====================
-   SEARCH BAR
-===================== */
+/* SEARCH BAR */
 .category-search{
     margin-top: 140px;
     display: flex;
@@ -151,10 +142,8 @@ body{
 .search-input:focus {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
-/* ==========================
-   AUTH BUTTONS
-========================== */
 
+/* AUTH BUTTONS */
 .auth-buttons{
     display:flex;
     align-items:center;
@@ -171,8 +160,6 @@ body{
     transition:.3s ease;
 }
 
-/* Login */
-
 .login-btn{
     color:white;
     border:2px solid white;
@@ -184,8 +171,6 @@ body{
     box-shadow:0 4px 12px rgba(255,255,255,.18);
 }
 
-/* Signup */
-
 .signup-btn{
     background:#2196f3;
     color:white;
@@ -196,8 +181,7 @@ body{
     box-shadow:0 4px 12px rgba(33,150,243,.35);
 }
 
-/* Profile */
-
+/* PROFILE */
 .profile-btn{
     display:flex;
     align-items:center;
@@ -218,15 +202,11 @@ body{
 .profile-btn i{
     font-size:15px;
 }
-/* =========================
-   PROFILE DROPDOWN
-========================= */
 
+/* PROFILE DROPDOWN */
 .profile-dropdown {
     position: relative;
 }
-
-/* Profile button */
 
 .profile-btn {
     display: flex;
@@ -257,44 +237,29 @@ body{
     transition: transform .25s ease;
 }
 
-/* Rotate arrow when menu opens */
-
 .profile-dropdown.active .profile-arrow {
     transform: rotate(180deg);
 }
-
-/* Dropdown */
 
 .profile-menu {
     position: absolute;
     top: calc(100% + 10px);
     right: 0;
-
     width: 245px;
-
     background: #ffffff;
-
     border-radius: 12px;
-
     box-shadow:
         0 10px 30px rgba(0, 0, 0, 0.20);
-
     overflow: hidden;
-
     opacity: 0;
     visibility: hidden;
-
     transform: translateY(-8px);
-
     transition:
         opacity .2s ease,
         transform .2s ease,
         visibility .2s ease;
-
     z-index: 3000;
 }
-
-/* Open dropdown */
 
 .profile-dropdown.active .profile-menu {
     opacity: 1;
@@ -302,46 +267,35 @@ body{
     transform: translateY(0);
 }
 
-/* Account information */
-
 .profile-menu-header {
     display: flex;
     align-items: center;
     gap: 12px;
-
     padding: 15px;
-
     background: #f7f7f7;
 }
 
 .profile-menu-header > i {
     width: 38px;
     height: 38px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: #2196f3;
     color: white;
-
     border-radius: 50%;
-
     font-size: 16px;
 }
 
 .profile-menu-header div {
     display: flex;
     flex-direction: column;
-
     min-width: 0;
 }
 
 .profile-menu-header strong {
     color: #222;
-
     font-size: 14px;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -349,48 +303,31 @@ body{
 
 .profile-menu-header small {
     color: #777;
-
     font-size: 12px;
-
     margin-top: 3px;
 }
-
-/* Divider */
 
 .profile-menu-divider {
     height: 1px;
     background: #eeeeee;
 }
 
-/* Menu items */
-
 .profile-menu-item {
     display: flex;
-
     align-items: center;
-
     gap: 12px;
-
     width: 100%;
-
     padding: 12px 15px;
-
     color: #222;
-
     text-decoration: none;
-
     font-size: 14px;
-
     transition: background .2s ease;
 }
 
 .profile-menu-item i {
     width: 20px;
-
     text-align: center;
-
     color: #555;
-
     font-size: 15px;
 }
 
@@ -401,8 +338,6 @@ body{
 .profile-menu-item:hover i {
     color: #2196f3;
 }
-
-/* Logout */
 
 .profile-menu-item.logout-item {
     color: #d32f2f;
@@ -415,10 +350,8 @@ body{
 .profile-menu-item.logout-item:hover {
     background: #fff1f1;
 }
-/* =========================
-   POSTS DESKTOP ONLY
-========================= */
 
+/* POSTS DESKTOP ONLY */
 .post-container{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
@@ -510,10 +443,7 @@ body{
     color: white;
 }
 
-/* =========================
-   FOOTER
-========================= */
-
+/* FOOTER */
 .footer{
     background:#0f0f0f;
     color:#ffffff;
@@ -522,7 +452,6 @@ body{
     border-top:1px solid #222;
 }
 
-/* TOP BRAND AREA */
 .footer-top{
     max-width:1200px;
     margin:0 auto 35px;
@@ -544,7 +473,6 @@ body{
     line-height:1.7;
 }
 
-/* GRID LINKS */
 .footer-links{
     max-width:1200px;
     margin:0 auto;
@@ -554,7 +482,6 @@ body{
     padding:20px 0 30px;
 }
 
-/* EACH COLUMN */
 .footer-column h3{
     font-size:16px;
     margin-bottom:14px;
@@ -602,7 +529,6 @@ body{
     font-weight:600;
 }
 
-/* ICON ROW */
 .social-box{
     display:flex;
     flex-wrap:wrap;
@@ -614,7 +540,6 @@ body{
     width:100%;
 }
 
-/* ICON LINKS */
 .social-box a{
     width:42px;
     height:42px;
@@ -650,25 +575,16 @@ body{
     color:#9c9c9c;
 }
 
-/* =========================
-   TABLET
-========================= */
-
+/* TABLET */
 @media (max-width: 992px){
-
     .footer-links{
         grid-template-columns:repeat(2,1fr);
         gap:28px;
     }
-
 }
 
-/* =========================
-   MOBILE
-========================= */
-
+/* MOBILE */
 @media (max-width: 768px){
-
     .footer{
         padding:45px 16px 18px;
     }
@@ -703,12 +619,9 @@ body{
     .footer-bottom{
         margin-top:10px;
     }
-
 }
 
-/* =========================
-   MOBILE MENU
-========================= */
+/* MOBILE MENU */
 .mobile-menu{
     position: fixed;
     top: 60px;
@@ -737,12 +650,9 @@ body{
     background: #2196f3;
 }
 
-/* =========================
-   MOBILE FIX
-========================= */
+/* MOBILE FIX */
 @media screen and (max-width: 900px){
 
-    /* HEADER */
     .header{
         height:56px;
         padding:10px 14px;
@@ -757,7 +667,6 @@ body{
         font-size:22px;
     }
 
-    /* CATEGORY NAV */
     .category-nav{
         top:56px;
         padding:10px 8px;
@@ -777,7 +686,6 @@ body{
         flex-shrink:0;
     }
 
-    /* REMOVE BIG GAP */
     .category-search{
         margin-top:110px;
         padding:10px;
@@ -790,7 +698,6 @@ body{
         font-size:14px;
     }
 
-    /* POSTS MOBILE FIX */
     .post-container{
         display:flex;
         flex-direction:column;
@@ -823,5 +730,471 @@ body{
         font-size:14px;
         -webkit-line-clamp:2;
     }
+}
+
+
+/* =========================================================
+   MOTTECK POST FEATURES
+   Added without changing the existing Cars design
+========================================================= */
+
+
+/* SPONSORED BADGE */
+
+.badge.sponsored{
+    display:inline-block;
+    align-self:flex-start;
+    margin:10px 12px 0;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#2e7d32;
+    color:#ffffff;
+    font-size:12px;
+    font-weight:600;
+}
+
+
+/* AUTHOR HEADER */
+
+.post-author-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 14px;
+    background:#ffffff;
+}
+
+
+.post-author-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+}
+
+
+.post-author-avatar-link{
+    display:block;
+    width:44px;
+    height:44px;
+    min-width:44px;
+    border-radius:50%;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+
+.post-author-avatar{
+    width:44px !important;
+    height:44px !important;
+    min-width:44px;
+    object-fit:cover !important;
+    border-radius:50% !important;
+    display:block;
+}
+
+
+.post-author-info{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+}
+
+
+.post-author-name{
+    color:#111111;
+    font-size:14px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
+.post-author-category{
+    color:#777777;
+    font-size:12px;
+    margin-top:3px;
+}
+
+
+.post-author-time{
+    color:#999999;
+    font-size:11px;
+    margin-top:3px;
+}
+
+
+.post-author-right{
+    flex-shrink:0;
+}
+
+
+/* FOLLOW BUTTON */
+
+.follow-btn{
+    border:1px solid #2196f3;
+    background:#2196f3;
+    color:#ffffff;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+
+.follow-btn:hover{
+    background:#1976d2;
+    border-color:#1976d2;
+}
+
+
+.follow-btn.following{
+    background:#ffffff;
+    color:#2196f3;
+    border-color:#2196f3;
+}
+
+
+.follow-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+
+/* KEEP POST IMAGE LOOKING LIKE THE ORIGINAL */
+
+.post-card .post-image{
+    width:100% !important;
+    height:210px !important;
+    object-fit:cover !important;
+    border-radius:0 !important;
+    display:block;
+}
+
+
+/* POST ACTIONS */
+
+.post-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    padding-top:4px;
+}
+
+
+.post-action-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    background:transparent;
+    border:none;
+    color:#555555;
+    font-size:13px;
+    cursor:pointer;
+    padding:6px 8px;
+    border-radius:6px;
+    text-decoration:none;
+    transition:.2s ease;
+}
+
+
+.post-action-btn:hover{
+    background:#f1f1f1;
+    color:#2196f3;
+}
+
+
+.like-action.liked{
+    color:#2196f3;
+}
+
+
+.like-action.liked i{
+    font-weight:900;
+}
+
+
+.views{
+    cursor:default;
+}
+
+
+.views:hover{
+    background:transparent;
+    color:#555555;
+}
+
+
+/* COMMENTS */
+
+.comments-section-home{
+    margin-top:4px;
+    padding-top:10px;
+    border-top:1px solid #eeeeee;
+}
+
+
+.home-comment-form{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+
+.home-comment-input{
+    width:100%;
+    min-height:70px;
+    resize:vertical;
+    padding:10px 12px;
+    border:1px solid #dddddd;
+    border-radius:8px;
+    outline:none;
+    font-family:sans-serif;
+    font-size:14px;
+    line-height:1.5;
+}
+
+
+.home-comment-input:focus{
+    border-color:#2196f3;
+    box-shadow:0 0 0 2px rgba(33,150,243,.08);
+}
+
+
+.home-comment-submit{
+    align-self:flex-start;
+    border:none;
+    background:#2196f3;
+    color:#ffffff;
+    padding:7px 13px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+
+.home-comment-submit:hover{
+    background:#1976d2;
+}
+
+
+.home-comments-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:12px;
+}
+
+
+.home-comment-item{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    padding:8px 0;
+}
+
+
+.home-comment-avatar{
+    width:32px !important;
+    height:32px !important;
+    min-width:32px;
+    object-fit:cover !important;
+    border-radius:50% !important;
+    display:block;
+}
+
+
+.home-comment-content{
+    min-width:0;
+    flex:1;
+}
+
+
+.home-comment-content strong{
+    display:block;
+    color:#222222;
+    font-size:13px;
+    margin-bottom:2px;
+}
+
+
+.home-comment-content p{
+    margin:0;
+    color:#555555;
+    font-size:13px;
+    line-height:1.5;
+    word-break:break-word;
+}
+
+
+.home-comment-content small{
+    display:block;
+    margin-top:3px;
+    color:#999999;
+    font-size:11px;
+}
+
+
+.home-no-comments{
+    color:#888888;
+    font-size:13px;
+    padding:10px 0;
+}
+
+
+/* READ MORE */
+
+.post-content .see-more-btn{
+    display:inline-block;
+    align-self:flex-start;
+    text-decoration:none;
+    margin-top:2px;
+}
+
+
+/* DESKTOP AUTHOR IMAGE OVERRIDE */
+
+@media screen and (min-width:901px){
+
+    .post-card .post-author-avatar{
+        width:44px !important;
+        height:44px !important;
+    }
 
 }
+
+
+/* MOBILE FEATURE OVERRIDES
+   These come AFTER .post-card img so the avatars
+   are not accidentally enlarged to 220px.
+*/
+
+@media screen and (max-width:900px){
+
+    .post-author-header{
+        padding:10px 12px;
+    }
+
+    .post-author-avatar-link{
+        width:40px;
+        height:40px;
+        min-width:40px;
+    }
+
+    .post-author-avatar{
+        width:40px !important;
+        height:40px !important;
+        min-width:40px;
+    }
+
+    .post-author-name{
+        font-size:13px;
+    }
+
+    .post-author-category{
+        font-size:11px;
+    }
+
+    .post-author-time{
+        font-size:10px;
+    }
+
+    .follow-btn{
+        padding:6px 11px;
+        font-size:11px;
+    }
+
+    .post-card .post-image{
+        width:100% !important;
+        height:220px !important;
+        object-fit:cover !important;
+    }
+
+    .post-actions{
+        gap:4px;
+    }
+
+    .post-action-btn{
+        padding:6px 6px;
+        font-size:12px;
+    }
+
+    .home-comment-input{
+        font-size:13px;
+    }
+
+    .home-comment-submit{
+        font-size:12px;
+    }
+
+}
+/* =========================================================
+   ACTUAL USER PROFILE PICTURE
+========================================================= */
+
+.post-author-avatar-link{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    display:block;
+    border-radius:50%;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+.post-author-avatar{
+    width:44px !important;
+    height:44px !important;
+    min-width:44px;
+    min-height:44px;
+    display:block;
+    object-fit:cover !important;
+    border-radius:50% !important;
+}
+
+/* Only appears when the user has NO profile picture */
+
+.post-author-avatar-placeholder{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    border-radius:50%;
+    background:#e9e9e9;
+    color:#777;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+}
+
+@media screen and (max-width:900px){
+
+    .post-author-avatar-link{
+        width:40px;
+        height:40px;
+        min-width:40px;
+    }
+
+    .post-author-avatar{
+        width:40px !important;
+        height:40px !important;
+        min-width:40px;
+        min-height:40px;
+    }
+
+    .post-author-avatar-placeholder{
+        width:40px;
+        height:40px;
+        min-width:40px;
+        font-size:16px;
+    }
+
+}
+
