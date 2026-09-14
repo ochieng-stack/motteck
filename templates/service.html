@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Service | MOTTECK</title>
+    <title>SERVICE | MOTTECK</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='service.css') }}">
@@ -42,6 +42,7 @@
 
         {% if session.get("user_logged_in") %}
 
+
         <!-- PROFILE -->
 
         <div class="profile-dropdown">
@@ -58,7 +59,7 @@
                     Profile
                 </span>
 
-                <i class="fa-solid fa-chevron-down"></i>
+                <i class="fa-solid fa-chevron-down profile-arrow"></i>
 
             </button>
 
@@ -265,48 +266,76 @@
 
 
     <a href="{{ url_for('home') }}">
+
         <i class="fa-solid fa-house"></i>
+
         Home
+
     </a>
+
 
     <a href="{{ url_for('about') }}">
+
         <i class="fa-solid fa-circle-info"></i>
+
         About
+
     </a>
 
+
     <a href="{{ url_for('car') }}">
+
         <i class="fa-solid fa-car"></i>
+
         Cars
+
     </a>
 
 
     <a href="{{ url_for('truck') }}">
+
         <i class="fa-solid fa-truck"></i>
+
         Trucks
+
     </a>
 
 
     <a href="{{ url_for('motobike') }}">
+
         <i class="fa-solid fa-motorcycle"></i>
+
         Bikes
+
     </a>
 
 
     <a href="{{ url_for('plane') }}">
+
         <i class="fa-solid fa-plane"></i>
+
         Aviation
+
     </a>
 
 
     <a href="{{ url_for('service') }}">
+
         <i class="fa-solid fa-screwdriver-wrench"></i>
+
         Service
+
     </a>
 
+
     <a href="{{ url_for('contact') }}">
+
         <i class="fas fa-envelope"></i>
+
         Contact
+
     </a>
+
 
 </div>
 
@@ -317,6 +346,7 @@
 ========================================================= -->
 
 <nav class="category-nav">
+
 
     <a
         href="{{ url_for('car') }}">
@@ -343,6 +373,7 @@
         SERVICE
     </a>
 
+
 </nav>
 
 
@@ -361,7 +392,9 @@
         <input
             type="text"
             id="serviceSearch"
-            placeholder="Search parts/insurance......"
+            class="search-input"
+            placeholder="Search service only..."
+            autocomplete="off"
         >
 
     </div>
@@ -564,6 +597,7 @@
 
                 </a>
 
+
             </div>
 
         </div>
@@ -586,6 +620,10 @@
 
 
 
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
 <script>
 
 
@@ -595,9 +633,23 @@
 
 const category = "service";
 
-
 const postContainer =
     document.getElementById("servicePost");
+
+
+
+/* =========================================================
+   CACHE
+========================================================= */
+
+const CACHE_KEY =
+    "motteck_service_cache";
+
+const CACHE_TIME_KEY =
+    "motteck_service_cache_time";
+
+const CACHE_MINUTES =
+    15;
 
 
 
@@ -610,6 +662,9 @@ function toggleMenu() {
     const menu =
         document.getElementById("mobileMenu");
 
+    if (!menu) {
+        return;
+    }
 
     menu.style.display =
         menu.style.display === "flex"
@@ -621,7 +676,7 @@ function toggleMenu() {
 
 
 /* =========================================================
-   CLOSE MOBILE MENU WHEN CLICKING OUTSIDE
+   CLOSE MOBILE MENU
 ========================================================= */
 
 document.addEventListener(
@@ -633,7 +688,6 @@ document.addEventListener(
 
         const button =
             document.querySelector(".menu-btn");
-
 
         if (
             menu &&
@@ -659,18 +713,15 @@ document.addEventListener(
     "DOMContentLoaded",
     function() {
 
-
         const button =
             document.getElementById(
                 "profileDropdownBtn"
             );
 
-
         const dropdown =
             document.querySelector(
                 ".profile-dropdown"
             );
-
 
         if (!button || !dropdown) {
             return;
@@ -682,7 +733,6 @@ document.addEventListener(
             function(event) {
 
                 event.stopPropagation();
-
 
                 dropdown.classList.toggle(
                     "active"
@@ -717,80 +767,19 @@ document.addEventListener(
 
 
 /* =========================================================
-   CATEGORY LABEL
-========================================================= */
-
-function getCategoryLabel(category) {
-
-    const value =
-        String(category || "")
-            .toLowerCase();
-
-
-    if (
-        value === "car" ||
-        value === "cars"
-    ) {
-
-        return "Cars";
-
-    }
-
-
-    if (
-        value === "motobike" ||
-        value === "motorbike" ||
-        value === "motorbikes"
-    ) {
-
-        return "Bikes";
-
-    }
-
-
-    if (
-        value === "truck" ||
-        value === "trucks"
-    ) {
-
-        return "Trucks";
-
-    }
-
-
-    if (
-        value === "plane" ||
-        value === "aviation"
-    ) {
-
-        return "Aviation";
-
-    }
-
-
-    if (
-        value === "service" ||
-        value === "services"
-    ) {
-
-        return "Service";
-
-    }
-
-
-    return category || "";
-
-}
-
-
-
-/* =========================================================
    ESCAPE HTML
 ========================================================= */
 
 function escapeHTML(value) {
 
-    return String(value || "")
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+    return String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -807,105 +796,189 @@ function escapeHTML(value) {
 
 function formatText(text) {
 
-    if (!text) return "";
+    if (!text) {
+        return "";
+    }
 
-
-    text =
-        text.replace(
-            /https?:\/\/\S+\.(jpg|jpeg|png|gif|webp)/gi,
-            ""
-        );
-
-
-    text =
-        text
-            .replace(/\n+/g, " ")
-            .replace(/\s+/g, " ")
-            .trim();
-
-
-    return `<p>${escapeHTML(text)}</p>`;
+    return escapeHTML(text)
+        .replace(/\n/g, "<br>");
 
 }
 
 
 
 /* =========================================================
-   AUTHOR HEADER
+   CATEGORY LABEL
+========================================================= */
+
+function getCategoryLabel(value) {
+
+    const categoryValue =
+        String(value || "")
+            .toLowerCase();
+
+    if (
+        categoryValue === "car" ||
+        categoryValue === "cars"
+    ) {
+        return "Cars";
+    }
+
+    if (
+        categoryValue === "bike" ||
+        categoryValue === "motobike" ||
+        categoryValue === "motorbike" ||
+        categoryValue === "motorbikes"
+    ) {
+        return "Bikes";
+    }
+
+    if (
+        categoryValue === "truck" ||
+        categoryValue === "trucks"
+    ) {
+        return "Trucks";
+    }
+
+    if (
+        categoryValue === "plane" ||
+        categoryValue === "aviation"
+    ) {
+        return "Aviation";
+    }
+
+    if (
+        categoryValue === "service" ||
+        categoryValue === "services"
+    ) {
+        return "Service";
+    }
+
+    return value || "";
+
+}
+/* =========================================================
+   CREATE AUTHORHEADER
 ========================================================= */
 
 function createAuthorHeader(post) {
 
-
     const name =
+        post.full_name ||
         post.author_name ||
+        post.user_name ||
         post.business_name ||
         "MOTTECK User";
 
+    const category =
+        post.category || "service";
 
+    /*
+       IMPORTANT:
+       Use the actual profile picture uploaded
+       by the user.
+
+       We check all profile-image fields that
+       your backend may return.
+    */
     const picture =
+        post.profile_image ||
         post.author_profile_picture ||
         post.profile_picture ||
         "";
 
+    const safeName =
+        escapeHTML(name);
 
-    let avatar;
+    const safePicture =
+        escapeHTML(picture);
 
+    const userId =
+        String(post.user_id || "");
 
-    if (picture) {
-
-        avatar = `
-
-            <img
-                src="${picture}"
-                class="post-author-avatar"
-                alt="${escapeHTML(name)}"
-                loading="lazy"
-            >
-
-        `;
-
-    } else {
-
-        avatar = `
-
-            <div class="post-author-avatar-placeholder">
-
-                <i class="fa-solid fa-user"></i>
-
-            </div>
-
-        `;
-
-    }
-
-
-    const following =
+    const isFollowing =
         post.is_following === true;
-
 
     let followButton = "";
 
 
+    /*
+       Don't show Follow on the user's own post.
+    */
     if (
-        post.user_id &&
+        userId &&
         post.viewer_is_author !== true
     ) {
 
         followButton = `
 
             <button
-                class="follow-btn ${following ? "following" : ""}"
-                onclick="toggleFollow('${post.user_id}', this)"
+                type="button"
+                class="follow-btn ${isFollowing ? "following" : ""}"
+                data-user-id="${escapeHTML(userId)}"
+                onclick="toggleFollow('${escapeHTML(userId)}', this)"
             >
 
-                ${
-                    following
-                        ? "Following"
-                        : "Follow"
-                }
+                ${isFollowing ? "Following" : "Follow"}
 
             </button>
+
+        `;
+    }
+
+
+    /*
+       PROFILE PICTURE
+
+       If the user has uploaded a profile picture,
+       display that actual image.
+
+       Only if there is no picture do we show
+       the small default user icon.
+    */
+
+    let avatarHTML;
+
+    if (safePicture) {
+
+        avatarHTML = `
+
+            <a
+                href="/profile/${encodeURIComponent(userId)}"
+                class="post-author-avatar-link"
+                aria-label="View ${safeName}'s profile"
+            >
+
+                <img
+                    src="${safePicture}"
+                    class="post-author-avatar"
+                    alt="${safeName}"
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.onerror=null; this.style.display='none';"
+                >
+
+            </a>
+
+        `;
+
+    } else {
+
+        avatarHTML = `
+
+            <a
+                href="/profile/${encodeURIComponent(userId)}"
+                class="post-author-avatar-link"
+                aria-label="View ${safeName}'s profile"
+            >
+
+                <span class="post-author-avatar-placeholder">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </span>
+
+            </a>
 
         `;
 
@@ -916,32 +989,25 @@ function createAuthorHeader(post) {
 
         <div class="post-author-header">
 
-
             <div class="post-author-left">
 
-                ${avatar}
-
+                ${avatarHTML}
 
                 <div class="post-author-info">
 
-
                     <div class="post-author-name">
 
-                        ${escapeHTML(name)}
+                        ${safeName}
 
                     </div>
-
 
                     <div class="post-author-category">
 
                         ${escapeHTML(
-                            getCategoryLabel(
-                                post.category
-                            )
+                            getCategoryLabel(category)
                         )}
 
                     </div>
-
 
                     <div class="post-author-time">
 
@@ -951,11 +1017,9 @@ function createAuthorHeader(post) {
 
                     </div>
 
-
                 </div>
 
             </div>
-
 
 
             <div class="post-author-right">
@@ -964,20 +1028,149 @@ function createAuthorHeader(post) {
 
             </div>
 
-
         </div>
 
     `;
+}
+
+
+/* =========================================================
+   CREATE COMMENTS
+========================================================= */
+
+function createCommentsHTML(post) {
+
+
+    if (
+        !Array.isArray(post.comments) ||
+        post.comments.length === 0
+    ) {
+
+        return `
+
+            <div
+                class="home-no-comments"
+                id="no-comments-${escapeHTML(post.id)}"
+            >
+
+                No comments yet. Be the first to comment.
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    return post.comments.map(
+        comment => {
+
+
+            const name =
+                comment.full_name ||
+                comment.user_name ||
+                comment.author_name ||
+                "MOTTECK User";
+
+
+            const image =
+                comment.profile_image ||
+                comment.author_profile_picture ||
+                comment.profile_picture ||
+                "";
+
+
+            let avatar;
+
+
+            if (image) {
+
+                avatar = `
+
+                    <img
+                        src="${escapeHTML(image)}"
+                        class="home-comment-avatar"
+                        alt="${escapeHTML(name)}"
+                        loading="lazy"
+                        onerror="this.style.display='none';"
+                    >
+
+                `;
+
+            } else {
+
+                avatar = `
+
+                    <span class="home-comment-avatar-placeholder">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </span>
+
+                `;
+
+            }
+
+
+
+            return `
+
+                <div class="home-comment-item">
+
+
+                    ${avatar}
+
+
+                    <div class="home-comment-content">
+
+                        <strong>
+
+                            ${escapeHTML(name)}
+
+                        </strong>
+
+
+                        <p>
+
+                            ${escapeHTML(
+                                comment.comment || ""
+                            )}
+
+                        </p>
+
+
+                        <small>
+
+                            ${escapeHTML(
+                                comment.time_ago || ""
+                            )}
+
+                        </small>
+
+                    </div>
+
+
+                </div>
+
+            `;
+
+        }
+    ).join("");
 
 }
 
 
 
 /* =========================================================
-   POST CARD
+   CREATE POST CARD
 ========================================================= */
 
 function createPostCard(post) {
+
+
+    const postId =
+        String(post.id || "");
 
 
     let image =
@@ -997,6 +1190,31 @@ function createPostCard(post) {
     }
 
 
+
+    const title =
+        escapeHTML(
+            post.title || ""
+        );
+
+
+    const description =
+        post.description || "";
+
+
+
+    const commentCount =
+        Number(
+            post.comments_count ??
+            post.comment_count ??
+            (
+                Array.isArray(post.comments)
+                    ? post.comments.length
+                    : 0
+            )
+        ) || 0;
+
+
+
     let badge = "";
 
 
@@ -1005,7 +1223,9 @@ function createPostCard(post) {
         badge = `
 
             <span class="badge sponsored">
+
                 Sponsored
+
             </span>
 
         `;
@@ -1013,106 +1233,232 @@ function createPostCard(post) {
     }
 
 
+
+    const commentsHTML =
+        createCommentsHTML(post);
+
+
+
     return `
 
-        <div
+        <article
             class="post-card"
-            id="post-${post.id}"
+            id="post-${escapeHTML(postId)}"
         >
 
 
             ${badge}
 
 
+            <!-- AUTHOR -->
+
             ${createAuthorHeader(post)}
 
 
-            <a href="/post/${post.id}">
+
+            <!-- IMAGE -->
+
+            <a href="/post/${encodeURIComponent(postId)}">
 
                 <img
-                    src="${image}"
+                    src="${escapeHTML(image)}"
                     class="post-image"
-                    alt="${escapeHTML(post.title)}"
+                    alt="${title}"
                     loading="lazy"
                     decoding="async"
                     width="400"
                     height="250"
+                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
                 >
 
             </a>
 
 
+
+            <!-- CONTENT -->
+
             <div class="post-content">
 
 
-                <a href="/post/${post.id}">
+                <a
+                    href="/post/${encodeURIComponent(postId)}"
+                    style="text-decoration:none;"
+                >
 
                     <h3 class="post-title">
 
-                        ${escapeHTML(
-                            post.title
-                        )}
+                        ${title}
 
                     </h3>
 
                 </a>
 
 
+
                 <div class="post-text preview-lines">
 
-                    ${formatText(
-                        post.description || ""
-                    )}
+                    ${formatText(description)}
 
                 </div>
 
 
+
+                <!-- ACTIONS -->
+
                 <div class="post-actions">
 
 
+                    <!-- LIKE -->
+
                     <button
-                        id="like-btn-${post.id}"
+                        type="button"
+                        id="like-btn-${escapeHTML(postId)}"
+                        class="post-action-btn like-action"
+                        onclick="likePost('${escapeHTML(postId)}')"
+                        aria-label="Like post"
                     >
 
-                        ❤️
+                        <i class="fa-regular fa-heart"></i>
 
                         <span
-                            id="like-count-${post.id}"
+                            id="like-count-${escapeHTML(postId)}"
                         >
-                            ${post.likes || 0}
+                            ${Number(post.likes || 0)}
                         </span>
 
                     </button>
 
 
-                    <span class="views">
 
-                        👁️
+                    <!-- COMMENT -->
+
+                    <button
+                        type="button"
+                        class="post-action-btn comment-action"
+                        onclick="toggleComments('${escapeHTML(postId)}')"
+                        aria-label="Comment on post"
+                    >
+
+                        <i class="fa-regular fa-comment"></i>
 
                         <span
-                            id="view-count-${post.id}"
+                            id="comment-count-${escapeHTML(postId)}"
                         >
-                            ${post.views || 0}
+                            ${commentCount}
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- SHARE -->
+
+                    <button
+                        type="button"
+                        class="post-action-btn share-action"
+                        onclick="sharePost('${escapeHTML(postId)}', '${title.replace(/'/g, "\\'")}')"
+                        aria-label="Share post"
+                    >
+
+                        <i class="fa-solid fa-share-nodes"></i>
+
+                        <span>
+                            Share
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- VIEWS -->
+
+                    <span class="views post-action-btn">
+
+                        <i class="fa-regular fa-eye"></i>
+
+                        <span
+                            id="view-count-${escapeHTML(postId)}"
+                        >
+                            ${Number(post.views || 0)}
                         </span>
 
                     </span>
 
 
-                    <a
-                        href="/post/${post.id}"
-                        class="see-more-btn"
+                </div>
+
+
+
+                <!-- COMMENTS SECTION -->
+
+                <div
+                    class="comments-section-home"
+                    id="comments-section-${escapeHTML(postId)}"
+                    style="display:none;"
+                >
+
+
+                    <!-- COMMENT FORM -->
+
+                    <div class="home-comment-form">
+
+                        <textarea
+                            id="comment-input-${escapeHTML(postId)}"
+                            class="home-comment-input"
+                            rows="2"
+                            maxlength="1000"
+                            placeholder="Write a comment..."
+                        ></textarea>
+
+
+                        <button
+                            type="button"
+                            class="home-comment-submit"
+                            onclick="postCommentHome('${escapeHTML(postId)}')"
+                        >
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                            Comment
+
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- COMMENTS -->
+
+                    <div
+                        class="home-comments-list"
+                        id="comments-list-${escapeHTML(postId)}"
                     >
-                        Read More
-                    </a>
+
+                        ${commentsHTML}
+
+                    </div>
 
 
                 </div>
 
 
+
+                <!-- READ MORE -->
+
+                <a
+                    href="/post/${encodeURIComponent(postId)}"
+                    class="see-more-btn"
+                >
+
+                    Read More
+
+                </a>
+
+
             </div>
 
 
-        </div>
+        </article>
 
     `;
 
@@ -1124,20 +1470,26 @@ function createPostCard(post) {
    FOLLOW
 ========================================================= */
 
-async function toggleFollow(
-    userId,
-    button
-) {
+async function toggleFollow(userId, button) {
+
+
+    if (!userId || !button) {
+        return;
+    }
 
 
     try {
 
 
+        button.disabled = true;
+
+
         const response =
             await fetch(
-                `/toggle-follow/${userId}`,
+                `/toggle-follow/${encodeURIComponent(userId)}`,
                 {
-                    method: "POST"
+                    method: "POST",
+                    credentials: "same-origin"
                 }
             );
 
@@ -1158,16 +1510,29 @@ async function toggleFollow(
 
         if (data.success) {
 
-            button.textContent =
-                data.following
-                    ? "Following"
-                    : "Follow";
+
+            const following =
+                data.following === true;
 
 
-            button.classList.toggle(
-                "following",
-                data.following
-            );
+            document
+                .querySelectorAll(
+                    `.follow-btn[data-user-id="${CSS.escape(String(userId))}"]`
+                )
+                .forEach(btn => {
+
+                    btn.textContent =
+                        following
+                            ? "Following"
+                            : "Follow";
+
+
+                    btn.classList.toggle(
+                        "following",
+                        following
+                    );
+
+                });
 
         }
 
@@ -1179,6 +1544,10 @@ async function toggleFollow(
             error
         );
 
+    } finally {
+
+        button.disabled = false;
+
     }
 
 }
@@ -1189,12 +1558,122 @@ async function toggleFollow(
    LIKE
 ========================================================= */
 
+async function likePost(postId) {
+
+
+    if (!postId) {
+        return;
+    }
+
+
+    const storageKey =
+        `motteck_liked_${postId}`;
+
+
+    if (
+        localStorage.getItem(storageKey)
+    ) {
+
+        return;
+
+    }
+
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `/like/${encodeURIComponent(postId)}`,
+                {
+                    method: "POST",
+                    credentials: "same-origin"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.login_required) {
+
+            window.location.href =
+                "{{ url_for('login_user') }}";
+
+            return;
+
+        }
+
+
+        if (data.success) {
+
+
+            const count =
+                document.getElementById(
+                    `like-count-${postId}`
+                );
+
+
+            if (count) {
+
+                count.textContent =
+                    Number(
+                        data.likes ??
+                        count.textContent ??
+                        0
+                    );
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    `like-btn-${postId}`
+                );
+
+
+            if (button) {
+
+                button.classList.add(
+                    "liked"
+                );
+
+            }
+
+
+            localStorage.setItem(
+                storageKey,
+                "1"
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Like error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   INITIALIZE LIKES
+========================================================= */
+
 function initLikes() {
 
 
     document
         .querySelectorAll(
-            ".post-card button[id^='like-btn-']"
+            ".like-action"
         )
         .forEach(button => {
 
@@ -1206,91 +1685,332 @@ function initLikes() {
                 );
 
 
-            const key =
-                `liked-${postId}`;
-
-
             if (
-                localStorage.getItem(key)
+                localStorage.getItem(
+                    `motteck_liked_${postId}`
+                )
             ) {
 
-                button.style.backgroundColor =
-                    "#d6eefd";
+                button.classList.add(
+                    "liked"
+                );
+
+            }
+
+        });
+
+}
+
+
+
+/* =========================================================
+   TOGGLE COMMENTS
+========================================================= */
+
+function toggleComments(postId) {
+
+
+    const section =
+        document.getElementById(
+            `comments-section-${postId}`
+        );
+
+
+    if (!section) {
+        return;
+    }
+
+
+    if (
+        section.style.display === "none" ||
+        section.style.display === ""
+    ) {
+
+        section.style.display =
+            "block";
+
+    } else {
+
+        section.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   POST COMMENT
+========================================================= */
+
+async function postCommentHome(postId) {
+
+
+    const input =
+        document.getElementById(
+            `comment-input-${postId}`
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    const comment =
+        input.value.trim();
+
+
+    if (!comment) {
+        return;
+    }
+
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `/comment/${encodeURIComponent(postId)}`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    credentials: "same-origin",
+
+                    body:
+                        JSON.stringify({
+                            comment: comment
+                        })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.login_required) {
+
+            window.location.href =
+                "{{ url_for('login_user') }}";
+
+            return;
+
+        }
+
+
+        if (data.success) {
+
+
+            input.value = "";
+
+
+            const list =
+                document.getElementById(
+                    `comments-list-${postId}`
+                );
+
+
+            const noComments =
+                document.getElementById(
+                    `no-comments-${postId}`
+                );
+
+
+            if (noComments) {
+
+                noComments.remove();
 
             }
 
 
-            button.addEventListener(
-                "click",
-                () => {
+            if (list) {
 
 
-                    if (
-                        localStorage.getItem(key)
-                    ) {
-
-                        alert(
-                            "You already liked this post!"
-                        );
-
-                        return;
-
-                    }
-
-
-                    fetch(
-                        `/like/${postId}`,
-                        {
-                            method: "POST"
-                        }
-                    )
-
-
-                    .then(
-                        res => res.json()
-                    )
-
-
-                    .then(
-                        data => {
-
-
-                            if (data.success) {
-
-
-                                const count =
-                                    document.getElementById(
-                                        `like-count-${postId}`
-                                    );
-
-
-                                if (count) {
-
-                                    count.textContent =
-                                        data.likes;
-
-                                }
-
-
-                                localStorage.setItem(
-                                    key,
-                                    "true"
-                                );
-
-
-                                button.style.backgroundColor =
-                                    "#d6eefd";
-
-                            }
-
-                        }
+                const commentName =
+                    escapeHTML(
+                        data.full_name ||
+                        data.user_name ||
+                        "{{ session.get('full_name', 'MOTTECK User') }}"
                     );
 
 
+                const commentImage =
+                    data.profile_image || "";
+
+
+                let avatarHTML;
+
+
+                if (commentImage) {
+
+                    avatarHTML = `
+
+                        <img
+                            src="${escapeHTML(commentImage)}"
+                            class="home-comment-avatar"
+                            alt="${commentName}"
+                            onerror="this.style.display='none';"
+                        >
+
+                    `;
+
+                } else {
+
+                    avatarHTML = `
+
+                        <span class="home-comment-avatar-placeholder">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </span>
+
+                    `;
+
                 }
+
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "home-comment-item";
+
+
+                item.innerHTML = `
+
+                    ${avatarHTML}
+
+                    <div class="home-comment-content">
+
+                        <strong>
+                            ${commentName}
+                        </strong>
+
+                        <p>
+                            ${escapeHTML(comment)}
+                        </p>
+
+                        <small>
+                            Just now
+                        </small>
+
+                    </div>
+
+                `;
+
+
+                list.prepend(item);
+
+            }
+
+
+
+            const count =
+                document.getElementById(
+                    `comment-count-${postId}`
+                );
+
+
+            if (count) {
+
+                count.textContent =
+                    Number(
+                        count.textContent || 0
+                    ) + 1;
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Comment error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+async function sharePost(
+    postId,
+    title
+) {
+
+
+    const url =
+        `${window.location.origin}/post/${postId}`;
+
+
+    try {
+
+
+        if (navigator.share) {
+
+
+            await navigator.share({
+
+                title:
+                    title ||
+                    "MOTTECK Post",
+
+                text:
+                    title ||
+                    "Check this out on MOTTECK",
+
+                url: url
+
+            });
+
+
+            return;
+
+        }
+
+
+        if (
+            navigator.clipboard
+        ) {
+
+            await navigator.clipboard.writeText(
+                url
             );
 
-        });
+
+            alert(
+                "Post link copied!"
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.log(
+            "Share cancelled:",
+            error
+        );
+
+    }
 
 }
 
@@ -1303,21 +2023,6 @@ function initLikes() {
 async function loadCategoryPosts() {
 
 
-    const CACHE_KEY =
-        "motteck_service_cache";
-
-
-    const CACHE_TIME_KEY =
-        "motteck_service_cache_time";
-
-
-    const CACHE_MINUTES =
-        15;
-
-
-
-    /* CACHE */
-
     const saved =
         localStorage.getItem(
             CACHE_KEY
@@ -1329,6 +2034,10 @@ async function loadCategoryPosts() {
             CACHE_TIME_KEY
         );
 
+
+    /*
+       Show cached posts first.
+    */
 
     if (
         saved &&
@@ -1370,41 +2079,57 @@ async function loadCategoryPosts() {
 
 
 
-    /* DATABASE */
+    /*
+       Get latest posts from database.
+    */
 
     try {
 
 
         const response =
             await fetch(
-                "/get_posts"
+                "/get_posts",
+                {
+                    credentials:
+                        "same-origin"
+                }
             );
 
 
-        const posts =
-            await response.json();
+        if (!response.ok) {
 
-
-        if (
-            !Array.isArray(posts)
-        ) {
-
-            console.error(posts);
-
-            return;
+            throw new Error(
+                "Failed to load posts"
+            );
 
         }
 
 
+        const data =
+            await response.json();
+
+
+        const posts =
+            Array.isArray(data)
+                ? data
+                : (
+                    data.posts ||
+                    data.data ||
+                    []
+                );
+
+
         const categoryPosts =
-            posts.filter(post => {
+            posts.filter(
+                post => {
 
-                return String(
-                    post.category || ""
-                ).toLowerCase()
-                === category.toLowerCase();
+                    return String(
+                        post.category || ""
+                    ).toLowerCase()
+                    === category;
 
-            });
+                }
+            );
 
 
         renderPosts(
@@ -1428,10 +2153,33 @@ async function loadCategoryPosts() {
 
     } catch (error) {
 
+
         console.error(
             "Category load error:",
             error
         );
+
+
+        if (
+            !postContainer.innerHTML.trim()
+        ) {
+
+            postContainer.innerHTML = `
+
+                <p style="
+                    grid-column:1/-1;
+                    text-align:center;
+                    padding:40px;
+                    color:#777;
+                ">
+
+                    Unable to load posts right now.
+
+                </p>
+
+            `;
+
+        }
 
     }
 
@@ -1440,16 +2188,16 @@ async function loadCategoryPosts() {
 
 
 /* =========================================================
-   RENDER
+   RENDER POSTS
 ========================================================= */
 
 function renderPosts(posts) {
 
 
-    postContainer.innerHTML = "";
-
-
-    if (!posts.length) {
+    if (
+        !Array.isArray(posts) ||
+        posts.length === 0
+    ) {
 
 
         postContainer.innerHTML = `
@@ -1460,10 +2208,9 @@ function renderPosts(posts) {
                     No posts yet
                 </h3>
 
-
                 <p>
                     There are no published
-                    posts in this category yet.
+                    posts in the Cars category yet.
                 </p>
 
             </div>
@@ -1476,12 +2223,14 @@ function renderPosts(posts) {
     }
 
 
-    posts.forEach(post => {
 
-        postContainer.innerHTML +=
-            createPostCard(post);
-
-    });
+    postContainer.innerHTML =
+        posts
+            .map(
+                post =>
+                    createPostCard(post)
+            )
+            .join("");
 
 
     initLikes();
@@ -1496,15 +2245,15 @@ function renderPosts(posts) {
 
 document
     .getElementById("serviceSearch")
-    .addEventListener(
+    ?.addEventListener(
         "input",
         function() {
 
 
             const query =
                 this.value
-                    .toLowerCase()
-                    .trim();
+                    .trim()
+                    .toLowerCase();
 
 
             document
@@ -1537,7 +2286,7 @@ document
 
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
+    function() {
 
         loadCategoryPosts();
 
