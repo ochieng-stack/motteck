@@ -859,15 +859,11 @@ function getCategoryLabel(value) {
     return value || "";
 
 }
-
-
-
 /* =========================================================
-   AUTHOR HEADER
+   CREATE AUTHORHEADER
 ========================================================= */
 
 function createAuthorHeader(post) {
-
 
     const name =
         post.full_name ||
@@ -876,37 +872,41 @@ function createAuthorHeader(post) {
         post.business_name ||
         "MOTTECK User";
 
+    const category =
+        post.category || "Cars";
 
+    /*
+       IMPORTANT:
+       Use the actual profile picture uploaded
+       by the user.
+
+       We check all profile-image fields that
+       your backend may return.
+    */
     const picture =
         post.profile_image ||
         post.author_profile_picture ||
         post.profile_picture ||
         "";
 
-
     const safeName =
         escapeHTML(name);
-
 
     const safePicture =
         escapeHTML(picture);
 
-
     const userId =
         String(post.user_id || "");
 
-
     const isFollowing =
         post.is_following === true;
-
 
     let followButton = "";
 
 
     /*
-       Do not show Follow on own post.
+       Don't show Follow on the user's own post.
     */
-
     if (
         userId &&
         post.viewer_is_author !== true
@@ -926,13 +926,20 @@ function createAuthorHeader(post) {
             </button>
 
         `;
-
     }
 
 
+    /*
+       PROFILE PICTURE
+
+       If the user has uploaded a profile picture,
+       display that actual image.
+
+       Only if there is no picture do we show
+       the small default user icon.
+    */
 
     let avatarHTML;
-
 
     if (safePicture) {
 
@@ -949,7 +956,8 @@ function createAuthorHeader(post) {
                     class="post-author-avatar"
                     alt="${safeName}"
                     loading="lazy"
-                    onerror="this.style.display='none';"
+                    decoding="async"
+                    onerror="this.onerror=null; this.style.display='none';"
                 >
 
             </a>
@@ -979,17 +987,13 @@ function createAuthorHeader(post) {
     }
 
 
-
     return `
 
         <div class="post-author-header">
 
-
             <div class="post-author-left">
 
-
                 ${avatarHTML}
-
 
                 <div class="post-author-info">
 
@@ -999,17 +1003,13 @@ function createAuthorHeader(post) {
 
                     </div>
 
-
                     <div class="post-author-category">
 
                         ${escapeHTML(
-                            getCategoryLabel(
-                                post.category || category
-                            )
+                            getCategoryLabel(category)
                         )}
 
                     </div>
-
 
                     <div class="post-author-time">
 
@@ -1021,9 +1021,7 @@ function createAuthorHeader(post) {
 
                 </div>
 
-
             </div>
-
 
 
             <div class="post-author-right">
@@ -1032,13 +1030,10 @@ function createAuthorHeader(post) {
 
             </div>
 
-
         </div>
 
     `;
-
 }
-
 
 
 /* =========================================================
