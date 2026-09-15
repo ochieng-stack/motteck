@@ -1088,10 +1088,10 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/service')
-def service():
+@app.route('/spare_part')
+def spare_part():
     return render_template(
-        'service.html',
+        'spare_part.html',
         logged_in=session.get('logged_in', False)
     )
 
