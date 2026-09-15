@@ -838,28 +838,235 @@ def profile():
 
     user_id = session.get("user_id")
 
-    # Count posts
-    posts = supabase.table("posts") \
-        .select("id") \
-        .eq("user_id", user_id) \
-        .execute()
+    try:
 
-    posts_count = len(posts.data) if posts.data else 0
+        # ================= GET PROFILE =================
 
-    # Temporary values
-    followers_count = 0
-    following_count = 0
+        profile_response = (
+            supabase
+            .table("profiles")
+            .select("*")
+            .eq("id", user_id)
+            .limit(1)
+            .execute()
+        )
 
-    return render_template(
-        "profile.html",
-        full_name=session.get("full_name"),
-        email=session.get("email"),
-        account_type=session.get("account_type"),
-        posts_count=posts_count,
-        followers_count=followers_count,
-        following_count=following_count
-    )
+        profile_data = (
+            profile_response.data[0]
+            if profile_response.data
+            else {}
+        )
 
+        # ================= COUNT POSTS =================
+
+        posts_response = (
+            supabase
+            .table("posts")
+            .select("id")
+            .eq("user_id", user_id)
+            .execute()
+        )
+
+        posts_count = (
+            len(posts_response.data)
+            if posts_response.data
+            else 0
+        )
+
+        # ================= COUNT FOLLOWERS =================
+
+        followers_response = (
+            supabase
+            .table("follows")
+            .select("id")
+            .eq("following_id", user_id)
+            .execute()
+        )
+
+        followers_count = (
+            len(followers_response.data)
+            if followers_response.data
+            else 0
+        )
+
+        # ================= COUNT FOLLOWING =================
+
+        following_response = (
+            supabase
+            .table("follows")
+            .select("id")
+            .eq("follower_id", user_id)
+            .execute()
+        )
+
+        following_count = (
+            len(following_response.data)
+            if following_response.data
+            else 0
+        )
+
+        # ================= PROFILE INFORMATION =================
+
+        full_name = (
+            profile_data.get("full_name")
+            or session.get("full_name")
+            or "MOTTECK User"
+        )
+
+        email = (
+            session.get("email")
+            or ""
+        )
+
+        account_type = (
+            profile_data.get("account_type")
+            or session.get("account_type")
+            or "individual"
+        )
+
+        profile_picture = profile_data.get(
+            "profile_image"
+        )
+
+        return render_template(
+            "profile.html",
+
+            full_name=full_name,
+
+            email=email,
+
+            account_type=account_type,
+
+            profile_picture=profile_picture,
+
+            posts_count=posts_count,
+
+            followers_count=followers_count,
+
+            following_count=following_count
+        )
+
+    except Exception as e:
+
+        print(
+            "PROFILE PAGE ERROR:",
+            repr(e)
+        )
+
+        flash(
+            "We couldn't load your profile right now.",
+            "error"
+        )
+
+        return redirect(url_for("home"))
+    
+# ================= PROFILE PHOTO UPLOAD =================
+@app.route("/upload-profile-picture", methods=["POST"])
+def upload_profile_picture():
+
+    # User must be logged in
+    if not session.get("user_logged_in") or not session.get("user_id"):
+        flash("Please log in first.", "error")
+        return redirect(url_for("login_user"))
+
+    user_id = session.get("user_id")
+
+    profile_photo = request.files.get("profile_photo")
+
+    # Make sure a file was selected
+    if not profile_photo or not profile_photo.filename:
+        flash("Please choose a profile photo.", "error")
+        return redirect(url_for("profile"))
+
+    # Allowed image extensions
+    allowed_extensions = {
+        "jpg",
+        "jpeg",
+        "png",
+        "webp"
+    }
+
+    filename = profile_photo.filename.lower()
+
+    if "." not in filename:
+        flash("Invalid image file.", "error")
+        return redirect(url_for("profile"))
+
+    extension = filename.rsplit(".", 1)[1]
+
+    if extension not in allowed_extensions:
+        flash(
+            "Please upload a JPG, JPEG, PNG or WEBP image.",
+            "error"
+        )
+        return redirect(url_for("profile"))
+
+    try:
+
+        # ================= CLOUDINARY =================
+
+        upload_result = cloudinary.uploader.upload(
+            profile_photo,
+            folder="motteck/profiles",
+            resource_type="image"
+        )
+
+        profile_image_url = upload_result.get("secure_url")
+
+        if not profile_image_url:
+            flash(
+                "We couldn't upload your profile photo.",
+                "error"
+            )
+            return redirect(url_for("profile"))
+
+        # ================= SAVE TO PROFILE =================
+
+        update_response = (
+            supabase
+            .table("profiles")
+            .update({
+                "profile_image": profile_image_url
+            })
+            .eq("id", user_id)
+            .execute()
+        )
+
+        if not update_response.data:
+
+            print(
+                "PROFILE PHOTO DATABASE UPDATE FAILED:",
+                update_response
+            )
+
+            flash(
+                "Your photo uploaded but could not be saved to your profile.",
+                "error"
+            )
+
+            return redirect(url_for("profile"))
+
+        flash(
+            "Your profile photo has been updated successfully!",
+            "success"
+        )
+
+        return redirect(url_for("profile"))
+
+    except Exception as e:
+
+        print(
+            "PROFILE PHOTO UPLOAD ERROR:",
+            repr(e)
+        )
+
+        flash(
+            "We couldn't update your profile photo. Please try again.",
+            "error"
+        )
+
+        return redirect(url_for("profile"))
+    
 # ================= USER SETTINGS =================
 @app.route("/settings")
 def settings():
@@ -1871,13 +2078,107 @@ def google_callback():
 # ================= GET POSTS =================
 @app.route("/get_posts")
 def get_posts():
-
     try:
-        posts = supabase.table("posts").select("*").execute().data or []
+        posts = (
+            supabase
+            .table("posts")
+            .select("*")
+            .execute()
+            .data
+            or []
+        )
+
+        # Current logged-in user
+        viewer_id = None
+
+        if session.get("user_logged_in") and session.get("user_id"):
+            viewer_id = str(session["user_id"])
+
+        # Get all author IDs from the posts
+        author_ids = list({
+            str(post["user_id"])
+            for post in posts
+            if post.get("user_id")
+        })
+
+        # ---------------------------------------
+        # GET AUTHOR PROFILES
+        # ---------------------------------------
+
+        profiles_map = {}
+
+        if author_ids:
+            profile_response = (
+                supabase
+                .table("profiles")
+                .select(
+                    "id,full_name,account_type,profile_image,business_name"
+                )
+                .in_("id", author_ids)
+                .execute()
+            )
+
+            for profile in profile_response.data or []:
+                profiles_map[str(profile["id"])] = profile
+
+        # ---------------------------------------
+        # GET WHO VIEWER IS FOLLOWING
+        # ---------------------------------------
+
+        following_ids = set()
+
+        if viewer_id and author_ids:
+            follow_response = (
+                supabase
+                .table("follows")
+                .select("following_id")
+                .eq("follower_id", viewer_id)
+                .in_("following_id", author_ids)
+                .execute()
+            )
+
+            following_ids = {
+                str(row["following_id"])
+                for row in (follow_response.data or [])
+            }
+
+        # ---------------------------------------
+        # ENRICH EACH POST
+        # ---------------------------------------
 
         for post in posts:
-            post["time_ago"] = time_ago(post.get("created_at", ""))
 
+            author_id = (
+                str(post["user_id"])
+                if post.get("user_id")
+                else None
+            )
+
+            profile = profiles_map.get(author_id, {})
+
+            post["full_name"] = profile.get("full_name")
+            post["business_name"] = profile.get("business_name")
+            post["account_type"] = profile.get("account_type")
+            post["profile_image"] = profile.get("profile_image")
+
+            # Is current viewer following this author?
+            post["is_following"] = (
+                author_id in following_ids
+                if author_id
+                else False
+            )
+
+            # Don't show Follow on your own post
+            post["viewer_is_author"] = (
+                viewer_id is not None
+                and author_id == viewer_id
+            )
+
+            post["time_ago"] = time_ago(
+                post.get("created_at", "")
+            )
+
+        # Newest first
         posts.sort(
             key=lambda x: x.get("created_at", ""),
             reverse=True
@@ -1886,7 +2187,11 @@ def get_posts():
         return jsonify(posts)
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("GET POSTS ERROR:", e)
+
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 # ================= GET SINGLE POST (EDIT) =================
 @app.route("/get_post/<int:post_id>")
@@ -2397,7 +2702,98 @@ def mark_notification_read(notification_id):
             "error": str(e)
         }), 500
 
+@app.route("/toggle-follow/<user_id>", methods=["POST"])
+def toggle_follow(user_id):
+    try:
+        # User must be logged in
+        if not session.get("user_logged_in") or not session.get("user_id"):
+            return jsonify({
+                "success": False,
+                "login_required": True
+            }), 401
 
+        follower_id = str(session["user_id"])
+        following_id = str(user_id)
+
+        # Prevent following yourself
+        if follower_id == following_id:
+            return jsonify({
+                "success": False,
+                "error": "You cannot follow yourself."
+            }), 400
+
+        # Make sure the account exists
+        target_response = (
+            supabase
+            .table("profiles")
+            .select("id")
+            .eq("id", following_id)
+            .limit(1)
+            .execute()
+        )
+
+        if not target_response.data:
+            return jsonify({
+                "success": False,
+                "error": "User not found."
+            }), 404
+
+        # Check whether the relationship already exists
+        existing_response = (
+            supabase
+            .table("follows")
+            .select("id")
+            .eq("follower_id", follower_id)
+            .eq("following_id", following_id)
+            .limit(1)
+            .execute()
+        )
+
+        existing = (
+            existing_response.data[0]
+            if existing_response.data
+            else None
+        )
+
+        # Already following -> UNFOLLOW
+        if existing:
+            (
+                supabase
+                .table("follows")
+                .delete()
+                .eq("id", existing["id"])
+                .execute()
+            )
+
+            return jsonify({
+                "success": True,
+                "following": False
+            })
+
+        # Not following -> FOLLOW
+        (
+            supabase
+            .table("follows")
+            .insert({
+                "follower_id": follower_id,
+                "following_id": following_id
+            })
+            .execute()
+        )
+
+        return jsonify({
+            "success": True,
+            "following": True
+        })
+
+    except Exception as e:
+        print("TOGGLE FOLLOW ERROR:", e)
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+    
 # ================= CONTACT =================
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
