@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
@@ -11,92 +12,276 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='profile.css') }}">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
 
 <body>
 
-    <div class="profile-container">
+<div class="profile-container">
 
-        <div class="profile-header">
+    <!-- ================= PROFILE HEADER ================= -->
 
-            <img src="{{ profile_picture or url_for('static', filename='images/default-avatar.png') }}"
-                 alt="Profile Picture"
-                 class="profile-image">
+    <div class="profile-header">
 
-            <h1>{{ full_name }}</h1>
-            <div class="profile-stats">
-                
-                <div class="stat-box">
-                    <h3>{{ posts_count or 0 }}</h3>
-                    <p>Posts</p>
-                </div>
-                <div class="stat-box">
-                    <h3>{{ followers_count or 0 }}</h3>
-                    <p>Followers</p>
-                </div>
-                <div class="stat-box">
-                    <h3>{{ following_count or 0 }}</h3>
-                    <p>Following</p>
-                </div>
+        <!-- PROFILE PHOTO -->
+
+        <div class="profile-photo-wrapper">
+
+            <img
+                src="{{ profile_picture or url_for('static', filename='images/default-avatar.png') }}"
+                alt="Profile Picture"
+                class="profile-image"
+                id="profileImage"
+            >
+
+            <!-- Change Photo -->
+
+            <form
+                action="{{ url_for('upload_profile_picture') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                id="profilePhotoForm"
+            >
+
+                <input
+                    type="file"
+                    name="profile_photo"
+                    id="profilePhotoInput"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    hidden
+                >
+
+                <label
+                    for="profilePhotoInput"
+                    class="change-photo-btn"
+                >
+                    <i class="fa-solid fa-camera"></i>
+                    Change Photo
+                </label>
+
+            </form>
+
+        </div>
+
+
+        <!-- NAME -->
+
+        <h1>{{ full_name }}</h1>
+
+
+        <!-- ACCOUNT TYPE -->
+
+        <p class="account-type">
+            {{ account_type|capitalize }} Account
+        </p>
+
+
+        <!-- ================= PROFILE STATS ================= -->
+
+        <div class="profile-stats">
+
+            <div class="stat-box">
+
+                <strong>
+                    {{ posts_count or 0 }}
+                </strong>
+
+                <span>
+                    Posts
+                </span>
+
             </div>
-            
-            <p>{{ email }}</p>
 
-            <p class="account-type">
-                {{ account_type|capitalize }} Account
-            </p>
 
-        </div>
+            <div class="stat-box">
 
-        {% if account_type == "individual" %}
+                <strong>
+                    {{ followers_count or 0 }}
+                </strong>
 
-        <div class="profile-menu">
+                <span>
+                    Followers
+                </span>
 
-            <a href="{{ url_for('submit_post') }}">Submit Post</a>
+            </div>
 
-            <a href="{{ url_for('my_submissions') }}">My Submissions</a>
 
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <div class="stat-box">
 
-            <a href="{{ url_for('notifications') }}">Notification</a>
+                <strong>
+                    {{ following_count or 0 }}
+                </strong>
 
-            <a href="{{ url_for('settings') }}">Settings</a>
+                <span>
+                    Following
+                </span>
 
-        </div>
-
-        {% elif account_type == "business" %}
-
-        <div class="profile-menu">
-
-            <a href="{{ url_for('submit_post') }}">Submit Post</a>
-
-            <a href="{{ url_for('my_submissions') }}">My Submissions</a>
-
-            <a href="{{ url_for('notifications') }}">Notification</a>
-
-            <a href="{{ url_for('sponsored_posts') }}">Sponsored Posts</a>
-
-            <a href="{{ url_for('featured_posts') }}">Featured Posts</a>
-
-            <a href="{{ url_for('dashboard') }}">Business Dashboard</a>
-
-            <a href="{{ url_for('settings') }}">Business Settings</a>
+            </div>
 
         </div>
 
-        {% endif %}
 
-        <div class="logout-btn">
+        <!-- EMAIL -->
 
-            <a href="{{ url_for('user_logout') }}">
-
-                Logout
-
-            </a>
-
-        </div>
+        <p class="profile-email">
+            <i class="fa-regular fa-envelope"></i>
+            {{ email }}
+        </p>
 
     </div>
+
+
+    <!-- ================= PROFILE MENU ================= -->
+
+    {% if account_type == "individual" %}
+
+    <div class="profile-menu">
+
+        <a href="{{ url_for('submit_post') }}">
+            <i class="fa-solid fa-plus"></i>
+            Submit Post
+        </a>
+
+        <a href="{{ url_for('my_submissions') }}">
+            <i class="fa-solid fa-file-lines"></i>
+            My Submissions
+        </a>
+
+        <a href="{{ url_for('dashboard') }}">
+            <i class="fa-solid fa-chart-line"></i>
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('notifications') }}">
+            <i class="fa-regular fa-bell"></i>
+            Notifications
+        </a>
+
+        <a href="{{ url_for('settings') }}">
+            <i class="fa-solid fa-gear"></i>
+            Settings
+        </a>
+
+    </div>
+
+    {% elif account_type == "business" %}
+
+    <div class="profile-menu">
+
+        <a href="{{ url_for('submit_post') }}">
+            <i class="fa-solid fa-plus"></i>
+            Submit Post
+        </a>
+
+        <a href="{{ url_for('my_submissions') }}">
+            <i class="fa-solid fa-file-lines"></i>
+            My Submissions
+        </a>
+
+        <a href="{{ url_for('notifications') }}">
+            <i class="fa-regular fa-bell"></i>
+            Notifications
+        </a>
+
+        <a href="{{ url_for('sponsored_posts') }}">
+            <i class="fa-solid fa-bullhorn"></i>
+            Sponsored Posts
+        </a>
+
+        <a href="{{ url_for('featured_posts') }}">
+            <i class="fa-solid fa-star"></i>
+            Featured Posts
+        </a>
+
+        <a href="{{ url_for('dashboard') }}">
+            <i class="fa-solid fa-chart-line"></i>
+            Business Dashboard
+        </a>
+
+        <a href="{{ url_for('settings') }}">
+            <i class="fa-solid fa-gear"></i>
+            Business Settings
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ================= LOGOUT ================= -->
+
+    <div class="logout-btn">
+
+        <a href="{{ url_for('user_logout') }}">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            Logout
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PHOTO PREVIEW ================= -->
+
+<script>
+
+const photoInput = document.getElementById("profilePhotoInput");
+const profileImage = document.getElementById("profileImage");
+const photoForm = document.getElementById("profilePhotoForm");
+
+photoInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    // Check that it is actually an image
+    if (!file.type.startsWith("image/")) {
+
+        alert("Please select an image file.");
+
+        this.value = "";
+
+        return;
+    }
+
+    // Maximum 5MB
+    if (file.size > 5 * 1024 * 1024) {
+
+        alert("Profile photo must be 5MB or smaller.");
+
+        this.value = "";
+
+        return;
+    }
+
+    // Show preview immediately
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+
+        profileImage.src = event.target.result;
+
+    };
+
+    reader.readAsDataURL(file);
+
+
+    // Automatically upload
+    photoForm.submit();
+
+});
+
+</script>
 
 </body>
 
