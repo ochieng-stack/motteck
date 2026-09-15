@@ -254,9 +254,9 @@
         Home
     </a>
 
-    <a href="{{ url_for('service') }}">
+    <a href="{{ url_for('spare_parts') }}">
         <i class="fa-solid fa-screwdriver-wrench"></i>
-        Service
+        Spare Parts
     </a>
 
     <a href="{{ url_for('about') }}">
@@ -297,8 +297,8 @@
         Aviation
     </a>
 
-    <a href="/service">
-        Service
+    <a href="/spare_part">
+        Spare Part
     </a>
 
 </div>
@@ -345,8 +345,8 @@
         </li>
 
         <li>
-            <a href="/service" class="linkup">
-                SERVICE
+            <a href="/spare_part" class="linkup">
+                Spare Part
             </a>
         </li>
 
@@ -906,10 +906,10 @@ function getCategoryLabel(category) {
     }
 
     if (
-        value === "service" ||
-        value === "services"
+        value === "spare_part" ||
+        value === "spare_part"
     ) {
-        return "Service";
+        return "Spare_part";
     }
 
     return category || "";

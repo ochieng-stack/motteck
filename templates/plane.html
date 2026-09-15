@@ -319,11 +319,11 @@
     </a>
 
 
-    <a href="{{ url_for('service') }}">
+    <a href="{{ url_for('spare_part') }}">
 
         <i class="fa-solid fa-screwdriver-wrench"></i>
 
-        Service
+        Spare Parts
 
     </a>
 
@@ -369,8 +369,8 @@
     </a>
 
 
-    <a href="{{ url_for('service') }}" >
-        SERVICE
+    <a href="{{ url_for('spare_part') }}" >
+        SPARE PARTS
     </a>
 
 
@@ -848,10 +848,10 @@ function getCategoryLabel(value) {
     }
 
     if (
-        categoryValue === "service" ||
-        categoryValue === "services"
+        categoryValue === "spare_part" ||
+        categoryValue === "spare_part"
     ) {
-        return "Service";
+        return "Spare_part";
     }
 
     return value || "";

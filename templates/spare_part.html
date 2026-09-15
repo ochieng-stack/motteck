@@ -8,10 +8,10 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title> MOTOBIKE | MOTTECK</title>
+    <title>SPARE_PARTS | MOTTECK</title>
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='motobike.css') }}">
+          href="{{ url_for('static', filename='spare_part.css') }}">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
@@ -359,7 +359,7 @@
     </a>
 
 
-    <a href="{{ url_for('motobike') }}" class="active">
+    <a href="{{ url_for('motobike') }}">
         BIKES
     </a>
 
@@ -369,7 +369,7 @@
     </a>
 
 
-    <a href="{{ url_for('spare_part') }}" >
+    <a href="{{ url_for('spare_part') }}" class="active">
         SPARE PARTS
     </a>
 
@@ -391,9 +391,9 @@
 
         <input
             type="text"
-            id="motobikeSearch"
+            id="spare_partSearch"
             class="search-input"
-            placeholder="Search motobike only..."
+            placeholder="Search spare_parts only..."
             autocomplete="off"
         >
 
@@ -403,7 +403,7 @@
     <!-- POSTS -->
 
     <div
-        id="motobikePost"
+        id="spare_partPost"
         class="post-container"
     ></div>
 
@@ -631,10 +631,10 @@
    CATEGORY
 ========================================================= */
 
-const category = "motobike";
+const category = "spare_part";
 
 const postContainer =
-    document.getElementById("motobikePost");
+    document.getElementById("spare_partPost");
 
 
 
@@ -643,10 +643,10 @@ const postContainer =
 ========================================================= */
 
 const CACHE_KEY =
-    "motteck_motobike_cache";
+    "motteck_spare_part_cache";
 
 const CACHE_TIME_KEY =
-    "motteck_motobike_cache_time";
+    "motteck_spare_part_cache_time";
 
 const CACHE_MINUTES =
     15;
@@ -848,10 +848,10 @@ function getCategoryLabel(value) {
     }
 
     if (
-        categoryValue === "spare-part" ||
+        categoryValue === "spare_part" ||
         categoryValue === "spare_part"
     ) {
-        return "spare_part";
+        return "Spare_part";
     }
 
     return value || "";
@@ -871,7 +871,7 @@ function createAuthorHeader(post) {
         "MOTTECK User";
 
     const category =
-        post.category || "motobike";
+        post.category || "spare_part";
 
     /*
        IMPORTANT:
@@ -2244,7 +2244,7 @@ function renderPosts(posts) {
 ========================================================= */
 
 document
-    .getElementById("motobikeSearch")
+    .getElementById("spare_partSearch")
     ?.addEventListener(
         "input",
         function() {
@@ -2258,7 +2258,7 @@ document
 
             document
                 .querySelectorAll(
-                    "#motobikePost .post-card"
+                    "#Spare_partPost .post-card"
                 )
                 .forEach(card => {
 

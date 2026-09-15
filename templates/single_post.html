@@ -26,7 +26,7 @@
           href="{{ url_for('static', filename='truck.css') }}">
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='service.css') }}">
+          href="{{ url_for('static', filename='spare_part.css') }}">
 
 
     <!-- SINGLE POST CSS -->
@@ -321,8 +321,8 @@
         AVIATION
     </a>
 
-    <a href="{{ url_for('service') }}">
-        SERVICE
+    <a href="{{ url_for('spare_part') }}">
+        SPARE PARTS
     </a>
 
 </nav>
@@ -393,12 +393,12 @@
     </a>
 
 
-    <a href="{{ url_for('service') }}">
+    <a href="{{ url_for('spare_part') }}">
 
         <i class="fa-solid fa-wrench"></i>
 
         <span>
-            Service
+            Spare Parts
         </span>
 
     </a>
@@ -936,15 +936,15 @@
             </a>
 
 
-            {% elif post.category == 'service' %}
+            {% elif post.category == 'spare_part' %}
 
             <a
-                href="{{ url_for('service') }}"
+                href="{{ url_for('spare_part') }}"
                 class="btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
-                Back to Service
+                Back to Spare Parts
 
             </a>
 

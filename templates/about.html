@@ -1,37 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About MOTTECK</title>
+
+    <title> About MOTTECK</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
 <header class="site-header">
 
     <div class="nav-left">
-        <a href="{{ url_for('home') }}" class="logo"> MOTTECK</a>
+        <a href="{{ url_for('home') }}" class="logo">
+            MOTTECK
+        </a>
     </div>
+
     <div class="nav-right">
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        {% if session.get("user_logged_in") %}
+
+        <div class="profile-dropdown">
+
+            <button
+                type="button"
+                class="profile-btn"
+                id="profileDropdownBtn"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+                <span>Profile</span>
+
+                <i class="fa-solid fa-chevron-down profile-arrow"></i>
+
+            </button>
+
+
+            <div class="profile-menu" id="profileMenu">
+
+                <div class="profile-menu-header">
+
+                    {% if session.get("account_type") == "business" %}
+
+                    <i class="fa-solid fa-building"></i>
+
+                    <div>
+
+                        <strong>
+                            {{ session.get("full_name") }}
+                        </strong>
+
+                        <small>
+                            Business Account
+                        </small>
+
+                    </div>
+
+                    {% else %}
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <div>
+
+                        <strong>
+                            {{ session.get("full_name") }}
+                        </strong>
+
+                        <small>
+                            Individual Account
+                        </small>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="profile-menu-divider"></div>
+
+
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>
+                        View Profile
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('settings') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('submit_post') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-pen-to-square"></i>
+
+                    <span>
+                        Submit Post
+                    </span>
+
+                </a>
+
+
+                {% if session.get("account_type") == "business" %}
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <span>
+                        Business Dashboard
+                    </span>
+
+                </a>
+
+                {% endif %}
+
+
+                <a
+                    href="{{ url_for('my_submissions') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    <span>
+                        My Submissions
+                    </span>
+
+                </a>
+
+
+                <div class="profile-menu-divider"></div>
+
+
+                <a
+                    href="{{ url_for('user_logout') }}"
+                    class="profile-menu-item logout-item"
+                >
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="auth-buttons">
+
+            <a
+                href="{{ url_for('login_user') }}"
+                class="login-btn"
+            >
+                Login
+            </a>
+
+            <a
+                href="{{ url_for('register') }}"
+                class="signup-btn"
+            >
+                Sign Up
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <button
+            class="menu-btn"
+            onclick="toggleMenu()"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
     </div>
 
 </header>
 
-<!-- ================= MOBILE MENU ================= -->
+
+<!-- =========================================================
+     MOBILE MENU
+========================================================= -->
+
 <div id="mobileMenu" class="mobile-menu">
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('service') }}">Service</a>
-    <a href="{{ url_for('about') }}">About</a>
-    <a href="{{ url_for('contact') }}">Contact</a>
+
+    <a href="{{ url_for('home') }}">
+        <i class="fa-solid fa-house"></i>
+        Home
+    </a>
+
+    <a href="{{ url_for('spare_parts') }}">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        Spare Parts
+    </a>
+
+    <a href="{{ url_for('about') }}">
+        <i class="fa-solid fa-circle-info"></i>
+        About
+    </a>
+
+    <a href="{{ url_for('contact') }}">
+        <i class="fas fa-envelope"></i>
+        Contact
+    </a>
+
 </div>
+
 
 <section>
     <div class="container">
@@ -140,7 +358,67 @@
 function toggleMenu() {
     const menu = document.getElementById("mobileMenu");
     menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-}  
+} 
+
+/* =========================================================
+   PROFILE DROPDOWN
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const profileBtn =
+            document.getElementById(
+                "profileDropdownBtn"
+            );
+
+        const profileDropdown =
+            document.querySelector(
+                ".profile-dropdown"
+            );
+
+        if (
+            !profileBtn ||
+            !profileDropdown
+        ) {
+            return;
+        }
+
+        profileBtn.addEventListener(
+            "click",
+            function (event) {
+
+                event.stopPropagation();
+
+                profileDropdown
+                    .classList
+                    .toggle("active");
+
+            }
+        );
+
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    !profileDropdown
+                        .contains(event.target)
+                ) {
+
+                    profileDropdown
+                        .classList
+                        .remove("active");
+
+                }
+
+            }
+        );
+
+    }
+);
 </script>   
 </body>
 </html>
