@@ -254,7 +254,7 @@
         Home
     </a>
 
-    <a href="{{ url_for('spare_parts') }}">
+    <a href="{{ url_for('spare_part') }}">
         <i class="fa-solid fa-screwdriver-wrench"></i>
         Spare Parts
     </a>
@@ -950,9 +950,6 @@ function createPostCard(post) {
     const preview = post.description || "";
     const postId = escapeHTML(post.id || "");
 
-    const commentCount =
-        Number(post.comments_count ?? post.comment_count ?? (Array.isArray(post.comments) ? post.comments.length : 0)) || 0;
-
     let badge = "";
 
     if (post.is_sponsored) {
@@ -960,48 +957,6 @@ function createPostCard(post) {
             <span class="badge sponsored">
                 Sponsored
             </span>
-        `;
-    }
-
-    let commentsHTML = "";
-
-    if (Array.isArray(post.comments) && post.comments.length) {
-        commentsHTML = post.comments.map(comment => {
-            const commentName = escapeHTML(
-                comment.full_name ||
-                comment.user_name ||
-                comment.author_name ||
-                "MOTTECK User"
-            );
-
-            const commentImage = escapeHTML(
-                comment.profile_image ||
-                comment.author_profile_picture ||
-                "/static/images/default-avatar.png"
-            );
-
-            return `
-                <div class="home-comment-item">
-                    <img
-                        src="${commentImage}"
-                        class="home-comment-avatar"
-                        alt="${commentName}"
-                        loading="lazy"
-                        onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
-                    >
-                    <div class="home-comment-content">
-                        <strong>${commentName}</strong>
-                        <p>${escapeHTML(comment.comment || "")}</p>
-                        <small>${escapeHTML(comment.time_ago || "")}</small>
-                    </div>
-                </div>
-            `;
-        }).join("");
-    } else {
-        commentsHTML = `
-            <div class="home-no-comments" id="no-comments-${postId}">
-                No comments yet. Be the first to comment.
-            </div>
         `;
     }
 
@@ -1058,18 +1013,6 @@ function createPostCard(post) {
 
                     <button
                         type="button"
-                        class="post-action-btn comment-action"
-                        onclick="toggleComments('${postId}')"
-                        aria-label="Comment on post"
-                    >
-                        <i class="fa-regular fa-comment"></i>
-                        <span id="comment-count-${postId}">
-                            ${commentCount}
-                        </span>
-                    </button>
-
-                    <button
-                        type="button"
                         class="post-action-btn share-action"
                         onclick="sharePost('${postId}', '${escapeHTML(post.title || "MOTTECK Post").replace(/'/g, "\\'")}')"
                         aria-label="Share post"
@@ -1084,41 +1027,6 @@ function createPostCard(post) {
                             ${Number(post.views || 0)}
                         </span>
                     </span>
-
-                </div>
-
-                <!-- COMMENTS -->
-                <div
-                    class="comments-section-home"
-                    id="comments-section-${postId}"
-                    style="display:none;"
-                >
-
-                    <div class="home-comment-form">
-                        <textarea
-                            id="comment-input-${postId}"
-                            class="home-comment-input"
-                            rows="2"
-                            maxlength="1000"
-                            placeholder="Write a comment..."
-                        ></textarea>
-
-                        <button
-                            type="button"
-                            class="home-comment-submit"
-                            onclick="postCommentHome('${postId}')"
-                        >
-                            <i class="fa-solid fa-paper-plane"></i>
-                            Comment
-                        </button>
-                    </div>
-
-                    <div
-                        class="home-comments-list"
-                        id="comments-list-${postId}"
-                    >
-                        ${commentsHTML}
-                    </div>
 
                 </div>
 
@@ -1258,160 +1166,6 @@ function likePost(postId) {
             button.disabled = false;
         }
     });
-}
-
-
-/* =========================================================
-   COMMENTS
-========================================================= */
-
-function toggleComments(postId) {
-
-    const section = document.getElementById(
-        `comments-section-${postId}`
-    );
-
-    if (!section) return;
-
-    const isHidden =
-        section.style.display === "none" ||
-        !section.style.display;
-
-    section.style.display = isHidden ? "block" : "none";
-
-    if (isHidden) {
-        const input = document.getElementById(
-            `comment-input-${postId}`
-        );
-
-        if (input) {
-            setTimeout(() => input.focus(), 100);
-        }
-    }
-}
-
-
-async function postCommentHome(postId) {
-
-    const input = document.getElementById(
-        `comment-input-${postId}`
-    );
-
-    const list = document.getElementById(
-        `comments-list-${postId}`
-    );
-
-    const count = document.getElementById(
-        `comment-count-${postId}`
-    );
-
-    const submitButton = document.querySelector(
-        `#comments-section-${CSS.escape(String(postId))} .home-comment-submit`
-    );
-
-    if (!input || !list) return;
-
-    const comment = input.value.trim();
-
-    if (!comment) {
-        input.focus();
-        return;
-    }
-
-    if (submitButton) {
-        submitButton.disabled = true;
-    }
-
-    try {
-        const response = await fetch(
-            `/comment/${encodeURIComponent(postId)}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "same-origin",
-                body: JSON.stringify({ comment: comment })
-            }
-        );
-
-        let data = {};
-
-        try {
-            data = await response.json();
-        } catch (e) {
-            data = {};
-        }
-
-        if (!response.ok) {
-            alert(
-                data.message ||
-                data.error ||
-                "Please log in to comment."
-            );
-            return;
-        }
-
-        const commentName = escapeHTML(
-            data.full_name ||
-            data.user_name ||
-            "MOTTECK User"
-        );
-
-        const commentImage = escapeHTML(
-            data.profile_image ||
-            "/static/images/default-avatar.png"
-        );
-
-        const commentTime = escapeHTML(
-            data.time_ago || "Just now"
-        );
-
-        const safeComment = escapeHTML(
-            data.comment || comment
-        );
-
-        const empty = list.querySelector(".home-no-comments");
-
-        if (empty) {
-            empty.remove();
-        }
-
-        const commentElement = document.createElement("div");
-        commentElement.className = "home-comment-item";
-
-        commentElement.innerHTML = `
-            <img
-                src="${commentImage}"
-                class="home-comment-avatar"
-                alt="${commentName}"
-                loading="lazy"
-                onerror="this.onerror=null;this.src='/static/images/default-avatar.png';"
-            >
-            <div class="home-comment-content">
-                <strong>${commentName}</strong>
-                <p>${safeComment}</p>
-                <small>${commentTime}</small>
-            </div>
-        `;
-
-        list.prepend(commentElement);
-
-        if (count) {
-            const current = parseInt(count.textContent || "0", 10) || 0;
-            count.textContent = data.comments_count ?? (current + 1);
-        }
-
-        input.value = "";
-
-    } catch (error) {
-        console.error("Comment error:", error);
-        alert("Unable to post your comment right now. Please try again.");
-    } finally {
-        if (submitButton) {
-            submitButton.disabled = false;
-        }
-    }
 }
 
 
