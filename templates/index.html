@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
 </head>
 
 <body>
@@ -29,16 +30,18 @@
 
     <div class="nav-center">
 
-        <form action="#" method="GET" class="search-form">
+        <form action="#" method="GET" class="search-form" id="homeSearchForm">
 
             <input
                 type="text"
                 id="searchInput"
-                placeholder="Search cars, trucks, guides..."
+                placeholder="Search cars, trucks, bikes, spare parts, guides..."
+                autocomplete="off"
+                aria-label="Search MOTTECK"
                 required
             >
 
-            <button type="submit">
+            <button type="submit" aria-label="Search">
                 <i class="fa fa-search"></i>
             </button>
 
@@ -351,6 +354,24 @@
         </li>
 
     </ul>
+
+</section>
+
+
+<!-- =========================================================
+     SEARCH RESULTS
+========================================================= -->
+
+<section class="pagethree" id="search-results-section" style="display:none;">
+
+    <h2 class="brows" id="search-results-title">
+        Search Results
+    </h2>
+
+    <div
+        id="search-results"
+        class="post-container"
+    ></div>
 
 </section>
 
@@ -935,6 +956,50 @@ function escapeHTML(value) {
    POST CARD
 ========================================================= */
 
+function isSalePost(post) {
+
+    const values = [
+        post.post_type,
+        post.type,
+        post.listing_type,
+        post.content_type,
+        post.intent,
+        post.sale_type
+    ]
+    .filter(Boolean)
+    .map(value => String(value).toLowerCase());
+
+    const explicitSale =
+        post.is_for_sale === true ||
+        post.for_sale === true ||
+        post.is_listing === true ||
+        values.some(value =>
+            value === "sale" ||
+            value === "for_sale" ||
+            value === "forsale" ||
+            value === "listing" ||
+            value === "marketplace"
+        );
+
+    if (explicitSale) {
+        return true;
+    }
+
+    return false;
+}
+
+
+function getSellerActionLabel(post) {
+
+    const accountType =
+        String(post.account_type || "").toLowerCase();
+
+    return accountType === "business"
+        ? "Contact Business"
+        : "Contact Seller";
+}
+
+
 function createPostCard(post) {
 
     let image =
@@ -952,16 +1017,62 @@ function createPostCard(post) {
 
     let badge = "";
 
+    if (post.is_featured) {
+        badge += `
+            <span class="badge featured">
+                Featured
+            </span>
+        `;
+    }
+
     if (post.is_sponsored) {
-        badge = `
+        badge += `
             <span class="badge sponsored">
                 Sponsored
             </span>
         `;
     }
 
+    const salePost = isSalePost(post);
+
+    let saleActions = "";
+
+    if (salePost && postId) {
+
+        const sellerLabel =
+            escapeHTML(getSellerActionLabel(post));
+
+        saleActions = `
+            <div class="sale-contact-actions">
+
+                <a
+                    href="/post/${postId}?contact=seller"
+                    class="post-contact-btn contact-seller-btn"
+                    aria-label="${sellerLabel}"
+                >
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>${sellerLabel}</span>
+                </a>
+
+                <a
+                    href="/post/${postId}?request=motteck"
+                    class="post-contact-btn request-motteck-btn"
+                    aria-label="Request MOTTECK"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Request MOTTECK</span>
+                </a>
+
+            </div>
+        `;
+    }
+
     return `
-        <div class="post-card" id="post-${postId}">
+        <div
+            class="post-card"
+            id="post-${postId}"
+            data-post-type="${salePost ? "sale" : "normal"}"
+        >
 
             ${badge}
 
@@ -1036,6 +1147,8 @@ function createPostCard(post) {
                 >
                     Read More
                 </a>
+
+                ${saleActions}
 
             </div>
 
@@ -1341,6 +1454,8 @@ async function loadHomePosts() {
                 const data =
                     JSON.parse(saved);
 
+                    collectHomeSearchPosts(data);
+
 
                 featured.innerHTML = "";
 
@@ -1404,6 +1519,8 @@ async function loadHomePosts() {
 
         const data =
             await res.json();
+
+        collectHomeSearchPosts(data);
 
 
         if (data.error) {
@@ -1477,12 +1594,178 @@ async function loadHomePosts() {
 
 
 /* =========================================================
+   HOMEPAGE SEARCH
+   Keeps the existing post -> /post/<id> structure.
+   Search is intentionally lightweight: it filters the posts
+   already loaded on the homepage.
+========================================================= */
+
+let motteckSearchPosts = [];
+
+function normalizeSearchValue(value) {
+
+    return String(value || "")
+        .toLowerCase()
+        .trim();
+}
+
+
+function collectHomeSearchPosts(data) {
+
+    const allPosts = [
+        ...(data.featured || []),
+        ...(data.trending || []),
+        ...(data.recent || [])
+    ];
+
+    const unique = new Map();
+
+    allPosts.forEach(post => {
+
+        if (post && post.id) {
+            unique.set(String(post.id), post);
+        }
+
+    });
+
+    motteckSearchPosts =
+        Array.from(unique.values());
+}
+
+
+function searchPostMatches(post, query) {
+
+    const q = normalizeSearchValue(query);
+
+    if (!q) return false;
+
+    const searchableText = [
+        post.title,
+        post.description,
+        post.category,
+        post.post_type,
+        post.type,
+        post.listing_type,
+        post.content_type,
+        post.make,
+        post.model,
+        post.year,
+        post.location,
+        post.town,
+        post.business_name,
+        post.full_name
+    ]
+    .filter(value => value !== null && value !== undefined)
+    .map(value => normalizeSearchValue(value))
+    .join(" ");
+
+    const terms = q.split(/\s+/).filter(Boolean);
+
+    return terms.every(term =>
+        searchableText.includes(term)
+    );
+}
+
+
+function performHomepageSearch(query) {
+
+    const section =
+        document.getElementById("search-results-section");
+
+    const results =
+        document.getElementById("search-results");
+
+    const title =
+        document.getElementById("search-results-title");
+
+    if (!section || !results || !title) {
+        return;
+    }
+
+    const cleanQuery =
+        String(query || "").trim();
+
+    if (!cleanQuery) {
+
+        section.style.display = "none";
+        results.innerHTML = "";
+        return;
+    }
+
+    const matchedPosts =
+        motteckSearchPosts.filter(post =>
+            searchPostMatches(post, cleanQuery)
+        );
+
+    section.style.display = "block";
+
+    title.textContent =
+        matchedPosts.length
+            ? `Results for "${cleanQuery}"`
+            : `No results for "${cleanQuery}"`;
+
+    if (!matchedPosts.length) {
+
+        results.innerHTML = `
+            <div class="home-search-empty">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <p>No matching MOTTECK posts were found.</p>
+                <small>
+                    Try a vehicle name, category, spare part,
+                    service, or guide topic.
+                </small>
+            </div>
+        `;
+
+        return;
+    }
+
+    results.innerHTML =
+        matchedPosts
+            .map(post => createPostCard(post))
+            .join("");
+
+    initPostFeatures();
+
+    section.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+function initHomepageSearch() {
+
+    const form =
+        document.getElementById("homeSearchForm");
+
+    const input =
+        document.getElementById("searchInput");
+
+    if (!form || !input) {
+        return;
+    }
+
+    form.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        performHomepageSearch(input.value);
+
+    });
+
+}
+
+
+/* =========================================================
    START
 ========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
+
+        initHomepageSearch();
 
         showSkeletons();
 
