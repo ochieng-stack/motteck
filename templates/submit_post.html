@@ -180,6 +180,339 @@
             </div>
 
 
+            <!-- =========================
+                 INDIVIDUAL POST TYPE
+            ========================== -->
+
+            {% if account_type == "individual" %}
+
+            <div class="form-group">
+
+                <label>
+                    Post Type
+                </label>
+
+                <div class="post-type-options">
+
+                    <!-- NORMAL POST -->
+
+                    <label class="post-type-card">
+
+                        <input
+                            type="radio"
+                            name="post_type"
+                            value="normal"
+                            checked
+                        >
+
+                        <span>
+
+                            <strong>
+                                Normal
+                            </strong>
+
+                            <small>
+                                Regular post for the MOTTECK community
+                            </small>
+
+                        </span>
+
+                    </label>
+
+
+                    <!-- FOR SALE -->
+
+                    <label class="post-type-card">
+
+                        <input
+                            type="radio"
+                            name="post_type"
+                            value="for_sale"
+                        >
+
+                        <span>
+
+                            <strong>
+                                For Sale
+                            </strong>
+
+                            <small>
+                                List an item you want to sell through MOTTECK
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- =========================
+                     INDIVIDUAL SALE OPTIONS
+                ========================== -->
+
+                <div
+                    id="individual-sale-options"
+                    class="promotion-duration"
+                    style="display: none;"
+                >
+
+                    <div class="duration-heading">
+
+                        <h3>
+                            How would you like to sell?
+                        </h3>
+
+                        <p>
+                            Choose whether buyers should contact you directly
+                            or whether MOTTECK should handle buyer requests.
+                        </p>
+
+                    </div>
+
+
+                    <div class="post-type-options">
+
+                        <!-- DIRECT SALE -->
+
+                        <label class="post-type-card">
+
+                            <input
+                                type="radio"
+                                name="sale_method"
+                                value="direct"
+                            >
+
+                            <span>
+
+                                <strong>
+                                    Direct Sale
+                                </strong>
+
+                                <small>
+                                    Pay for your listing and allow interested
+                                    buyers to contact you directly.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+
+                        <!-- MOTTECK COMMISSION -->
+
+                        <label class="post-type-card">
+
+                            <input
+                                type="radio"
+                                name="sale_method"
+                                value="commission"
+                            >
+
+                            <span>
+
+                                <strong>
+                                    Sell Through MOTTECK
+                                </strong>
+
+                                <small>
+                                    No direct seller contact. Buyers send a
+                                    request to MOTTECK and MOTTECK handles
+                                    the connection.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- DIRECT LISTING DURATION -->
+
+                    <div
+                        id="direct-listing-duration"
+                        style="display: none; margin-top: 20px;"
+                    >
+
+                        <div class="duration-heading">
+
+                            <h3>
+                                Choose Listing Duration
+                            </h3>
+
+                            <p>
+                                Your listing fee will depend on how long
+                                you want your item advertised.
+                            </p>
+
+                        </div>
+
+
+                        <div class="duration-options">
+
+                            <label class="duration-card">
+
+                                <input
+                                    type="radio"
+                                    name="listing_duration"
+                                    value="1_day"
+                                >
+
+                                <span class="duration-content">
+
+                                    <strong>
+                                        1 Day
+                                    </strong>
+
+                                    <small>
+                                        Fee: Set by MOTTECK
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+
+                            <label class="duration-card">
+
+                                <input
+                                    type="radio"
+                                    name="listing_duration"
+                                    value="7_days"
+                                >
+
+                                <span class="duration-content">
+
+                                    <strong>
+                                        1 Week
+                                    </strong>
+
+                                    <small>
+                                        Fee: Set by MOTTECK
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+
+                            <label class="duration-card">
+
+                                <input
+                                    type="radio"
+                                    name="listing_duration"
+                                    value="1_month"
+                                >
+
+                                <span class="duration-content">
+
+                                    <strong>
+                                        1 Month
+                                    </strong>
+
+                                    <small>
+                                        Fee: Set by MOTTECK
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="promotion-note">
+
+                            <strong>
+                                Direct Seller Contact
+                            </strong>
+
+                            <p>
+                                After your listing is approved and the required
+                                listing fee is paid, interested buyers can use
+                                the Contact Seller option on your listing.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- COMMISSION DETAILS -->
+
+                    <div
+                        id="commission-details"
+                        style="display: none; margin-top: 20px;"
+                    >
+
+                        <div class="promotion-note">
+
+                            <strong>
+                                Sell Through MOTTECK
+                            </strong>
+
+                            <p>
+                                Buyers will not receive your direct contact
+                                details through the listing. They will use
+                                Request MOTTECK and we will handle the buyer
+                                connection.
+                            </p>
+
+                            <p style="margin-top: 10px;">
+                                <strong>
+                                    MOTTECK commission:
+                                </strong>
+                                The applicable commission percentage will be
+                                displayed and agreed before your listing is
+                                accepted.
+                            </p>
+
+                            <p style="margin-top: 10px;">
+                                A commission applies when a sale is completed
+                                through a buyer introduced by MOTTECK.
+                            </p>
+
+                        </div>
+
+
+                        <label
+                            class="post-type-card"
+                            style="margin-top: 15px;"
+                        >
+
+                            <input
+                                type="checkbox"
+                                id="commission-agreement"
+                                name="commission_agreed"
+                                value="yes"
+                            >
+
+                            <span>
+
+                                <strong>
+                                    I agree to the MOTTECK commission terms
+                                </strong>
+
+                                <small>
+                                    I understand that MOTTECK may charge the
+                                    applicable commission when a sale is
+                                    completed through a MOTTECK-generated lead.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
             <!-- BUSINESS POST TYPE -->
 
             {% if account_type == "business" %}
@@ -496,11 +829,235 @@
          POST TYPE JAVASCRIPT
     ========================== -->
 
-    {% if account_type == "business" %}
-
     <script>
 
-        const postTypeInputs =
+        /*
+         * INDIVIDUAL SELLING OPTIONS
+         */
+
+        const individualPostTypeInputs =
+            document.querySelectorAll(
+                'input[name="post_type"]'
+            );
+
+        const individualSaleOptions =
+            document.getElementById(
+                "individual-sale-options"
+            );
+
+        const saleMethodInputs =
+            document.querySelectorAll(
+                'input[name="sale_method"]'
+            );
+
+        const directListingDuration =
+            document.getElementById(
+                "direct-listing-duration"
+            );
+
+        const commissionDetails =
+            document.getElementById(
+                "commission-details"
+            );
+
+        const listingDurationInputs =
+            document.querySelectorAll(
+                'input[name="listing_duration"]'
+            );
+
+        const commissionAgreement =
+            document.getElementById(
+                "commission-agreement"
+            );
+
+
+        function updateIndividualSaleOptions() {
+
+            const selectedPostType =
+                document.querySelector(
+                    'input[name="post_type"]:checked'
+                );
+
+            /*
+             * Only show the individual selling section
+             * when the user chooses For Sale.
+             */
+
+            if (
+                selectedPostType &&
+                selectedPostType.value === "for_sale" &&
+                individualSaleOptions
+            ) {
+
+                individualSaleOptions.style.display = "block";
+
+            } else if (individualSaleOptions) {
+
+                individualSaleOptions.style.display = "none";
+
+                saleMethodInputs.forEach(function(input) {
+                    input.checked = false;
+                });
+
+                listingDurationInputs.forEach(function(input) {
+                    input.checked = false;
+                    input.required = false;
+                });
+
+                if (directListingDuration) {
+                    directListingDuration.style.display = "none";
+                }
+
+                if (commissionDetails) {
+                    commissionDetails.style.display = "none";
+                }
+
+                if (commissionAgreement) {
+                    commissionAgreement.checked = false;
+                    commissionAgreement.required = false;
+                }
+
+            }
+
+        }
+
+
+        function updateIndividualSaleMethod() {
+
+            const selectedSaleMethod =
+                document.querySelector(
+                    'input[name="sale_method"]:checked'
+                );
+
+            if (!selectedSaleMethod) {
+
+                if (directListingDuration) {
+                    directListingDuration.style.display = "none";
+                }
+
+                if (commissionDetails) {
+                    commissionDetails.style.display = "none";
+                }
+
+                listingDurationInputs.forEach(function(input) {
+                    input.required = false;
+                });
+
+                if (commissionAgreement) {
+                    commissionAgreement.required = false;
+                }
+
+                return;
+            }
+
+
+            /*
+             * DIRECT SALE
+             */
+
+            if (selectedSaleMethod.value === "direct") {
+
+                if (directListingDuration) {
+                    directListingDuration.style.display = "block";
+                }
+
+                if (commissionDetails) {
+                    commissionDetails.style.display = "none";
+                }
+
+                listingDurationInputs.forEach(function(input) {
+                    input.required = true;
+                });
+
+                if (commissionAgreement) {
+                    commissionAgreement.checked = false;
+                    commissionAgreement.required = false;
+                }
+
+            }
+
+
+            /*
+             * SELL THROUGH MOTTECK
+             */
+
+            if (selectedSaleMethod.value === "commission") {
+
+                if (directListingDuration) {
+                    directListingDuration.style.display = "none";
+                }
+
+                if (commissionDetails) {
+                    commissionDetails.style.display = "block";
+                }
+
+                listingDurationInputs.forEach(function(input) {
+                    input.required = false;
+                    input.checked = false;
+                });
+
+                if (commissionAgreement) {
+                    commissionAgreement.required = true;
+                }
+
+            }
+
+        }
+
+
+        individualPostTypeInputs.forEach(function(input) {
+
+            input.addEventListener(
+                "change",
+                function() {
+
+                    /*
+                     * The individual sale controls are only
+                     * present for individual accounts.
+                     */
+
+                    if (
+                        individualSaleOptions &&
+                        saleMethodInputs.length > 0
+                    ) {
+                        updateIndividualSaleOptions();
+                    }
+
+                }
+            );
+
+        });
+
+
+        saleMethodInputs.forEach(function(input) {
+
+            input.addEventListener(
+                "change",
+                updateIndividualSaleMethod
+            );
+
+        });
+
+
+        if (
+            individualSaleOptions &&
+            saleMethodInputs.length > 0
+        ) {
+
+            updateIndividualSaleOptions();
+            updateIndividualSaleMethod();
+
+        }
+
+
+        /*
+         * BUSINESS PROMOTION OPTIONS
+         *
+         * Existing business Sponsored / Featured
+         * functionality remains unchanged.
+         */
+
+        const businessPostTypeInputs =
             document.querySelectorAll(
                 'input[name="post_type"]'
             );
@@ -533,13 +1090,13 @@
                     'input[name="post_type"]:checked'
                 );
 
-
             if (
                 selectedPostType &&
                 (
                     selectedPostType.value === "sponsored" ||
                     selectedPostType.value === "featured"
-                )
+                ) &&
+                promotionDuration
             ) {
 
                 promotionDuration.style.display = "block";
@@ -552,19 +1109,19 @@
                 });
 
 
-                /*
-                 * Show the correct prices
-                 * depending on the selected post type.
-                 */
-
                 if (selectedPostType.value === "sponsored") {
 
                     sponsoredPrices.forEach(function(price) {
+
                         price.style.display = "block";
+
                     });
 
+
                     featuredPrices.forEach(function(price) {
+
                         price.style.display = "none";
+
                     });
 
                 }
@@ -573,16 +1130,21 @@
                 if (selectedPostType.value === "featured") {
 
                     sponsoredPrices.forEach(function(price) {
+
                         price.style.display = "none";
+
                     });
 
+
                     featuredPrices.forEach(function(price) {
+
                         price.style.display = "block";
+
                     });
 
                 }
 
-            } else {
+            } else if (promotionDuration) {
 
                 promotionDuration.style.display = "none";
 
@@ -594,12 +1156,18 @@
 
                 });
 
+
                 sponsoredPrices.forEach(function(price) {
+
                     price.style.display = "none";
+
                 });
 
+
                 featuredPrices.forEach(function(price) {
+
                     price.style.display = "none";
+
                 });
 
             }
@@ -607,7 +1175,7 @@
         }
 
 
-        postTypeInputs.forEach(function(input) {
+        businessPostTypeInputs.forEach(function(input) {
 
             input.addEventListener(
                 "change",
@@ -617,11 +1185,16 @@
         });
 
 
-        updatePromotionDuration();
+        /*
+         * Only run the business promotion logic when
+         * the promotion section exists.
+         */
+
+        if (promotionDuration) {
+            updatePromotionDuration();
+        }
 
     </script>
-
-    {% endif %}
 
 </body>
 
