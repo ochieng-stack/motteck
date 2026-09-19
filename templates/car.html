@@ -1149,11 +1149,38 @@ function createPostCard(post) {
 
 
 
+    const typeValues = [
+        post.post_type, post.type, post.listing_type,
+        post.content_type, post.intent, post.sale_type
+    ].filter(Boolean).map(value => String(value).toLowerCase().trim());
+
+    const salePost =
+        typeValues.some(value =>
+            ["sale", "for_sale", "forsale", "listing", "marketplace"].includes(value)
+        ) || post.is_for_sale === true || post.for_sale === true || post.is_listing === true;
+
+    const sellerLabel =
+        String(post.account_type || "").toLowerCase() === "business"
+            ? "Contact Business"
+            : "Contact Seller";
+
+    const saleActions = salePost ? `
+        <div class="sale-contact-actions">
+            <a href="/post/${encodeURIComponent(postId)}?contact=seller" class="post-contact-btn">
+                <i class="fa-solid fa-phone"></i> ${sellerLabel}
+            </a>
+            <a href="/post/${encodeURIComponent(postId)}?request=motteck" class="post-contact-btn request-motteck-btn">
+                <i class="fa-solid fa-handshake"></i> Request MOTTECK
+            </a>
+        </div>
+    ` : "";
+
     return `
 
         <article
-            class="post-card"
+            class="post-card ${salePost ? "sale-post" : "normal-post"}"
             id="post-${escapeHTML(postId)}"
+            data-post-type="${salePost ? "sale" : "normal"}"
         >
 
 
@@ -1285,6 +1312,7 @@ function createPostCard(post) {
 
                 </a>
 
+                ${saleActions}
 
             </div>
 
@@ -1751,9 +1779,9 @@ async function loadCategoryPosts() {
 
             try {
 
-                renderPosts(
-                    JSON.parse(saved)
-                );
+                const cachedPosts = JSON.parse(saved);
+                motteckCategoryPosts = cachedPosts;
+                renderPosts(cachedPosts);
 
             } catch (error) {
 
@@ -1823,9 +1851,8 @@ async function loadCategoryPosts() {
             );
 
 
-        renderPosts(
-            categoryPosts
-        );
+        motteckCategoryPosts = categoryPosts;
+        renderPosts(categoryPosts);
 
 
         localStorage.setItem(
@@ -1934,40 +1961,48 @@ function renderPosts(posts) {
    SEARCH
 ========================================================= */
 
+let motteckCategoryPosts = [];
+
+function searchCategoryPosts(query) {
+    const q = String(query || "").trim().toLowerCase();
+
+    if (!q) {
+        renderPosts(motteckCategoryPosts);
+        return;
+    }
+
+    const results = motteckCategoryPosts.filter(post => {
+        const searchableText = [
+            post.title, post.description, post.category,
+            post.post_type, post.type, post.listing_type,
+            post.content_type, post.make, post.model, post.year,
+            post.location, post.town, post.business_name,
+            post.full_name, post.author_name
+        ].filter(v => v !== null && v !== undefined)
+         .map(v => String(v).toLowerCase())
+         .join(" ");
+
+        return searchableText.includes(q);
+    });
+
+    if (!results.length) {
+        postContainer.innerHTML = `
+            <div class="no-posts">
+                <h3>No results found</h3>
+                <p>We couldn't find a car matching "${escapeHTML(query)}".</p>
+            </div>
+        `;
+        return;
+    }
+
+    renderPosts(results);
+}
+
 document
     .getElementById("carSearch")
-    ?.addEventListener(
-        "input",
-        function() {
-
-
-            const query =
-                this.value
-                    .trim()
-                    .toLowerCase();
-
-
-            document
-                .querySelectorAll(
-                    "#carPost .post-card"
-                )
-                .forEach(card => {
-
-
-                    const text =
-                        card.textContent
-                            .toLowerCase();
-
-
-                    card.style.display =
-                        text.includes(query)
-                            ? ""
-                            : "none";
-
-                });
-
-        }
-    );
+    ?.addEventListener("input", function() {
+        searchCategoryPosts(this.value);
+    });
 
 
 

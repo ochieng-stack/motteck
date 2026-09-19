@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>truck | MOTTECK</title>
+    <title> TRUCK | MOTTECK</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='truck.css') }}">
@@ -323,7 +323,7 @@
 
         <i class="fa-solid fa-screwdriver-wrench"></i>
 
-        Spare Parts
+        Spare Part
 
     </a>
 
@@ -393,7 +393,7 @@
             type="text"
             id="truckSearch"
             class="search-input"
-            placeholder="Search truck only..."
+            placeholder="Search Trucks only..."
             autocomplete="off"
         >
 
@@ -624,6 +624,7 @@
      JAVASCRIPT
 ========================================================= -->
 
+
 <script>
 
 
@@ -851,7 +852,7 @@ function getCategoryLabel(value) {
         categoryValue === "spare_part" ||
         categoryValue === "spare_part"
     ) {
-        return "Spare_part";
+        return "spare_part";
     }
 
     return value || "";
@@ -1032,8 +1033,60 @@ function createAuthorHeader(post) {
 
     `;
 }
+/* =========================================================
+   TOGGLE FOR FOLLOW
+========================================================= */
 
+async function toggleFollow(userId, button) {
+    if (!userId || !button) return;
 
+    try {
+        button.disabled = true;
+
+        const response = await fetch(
+            `/toggle-follow/${encodeURIComponent(userId)}`,
+            {
+                method: "POST",
+                credentials: "same-origin"
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.login_required) {
+            window.location.href = "{{ url_for('login_user') }}";
+            return;
+        }
+
+        if (data.success) {
+
+            const following = data.following === true;
+
+            document
+                .querySelectorAll(
+                    `.follow-btn[data-user-id="${CSS.escape(String(userId))}"]`
+                )
+                .forEach(btn => {
+
+                    btn.textContent =
+                        following ? "Following" : "Follow";
+
+                    btn.classList.toggle(
+                        "following",
+                        following
+                    );
+                });
+        }
+
+    } catch (error) {
+
+        console.error("Follow error:", error);
+
+    } finally {
+
+        button.disabled = false;
+    }
+}
 
 
 /* =========================================================
@@ -1076,9 +1129,6 @@ function createPostCard(post) {
 
 
 
-  
-
-
     let badge = "";
 
 
@@ -1098,14 +1148,38 @@ function createPostCard(post) {
 
 
 
-  
+    const typeValues = [
+        post.post_type, post.type, post.listing_type,
+        post.content_type, post.intent, post.sale_type
+    ].filter(Boolean).map(value => String(value).toLowerCase().trim());
 
+    const salePost =
+        typeValues.some(value =>
+            ["sale", "for_sale", "forsale", "listing", "marketplace"].includes(value)
+        ) || post.is_for_sale === true || post.for_sale === true || post.is_listing === true;
+
+    const sellerLabel =
+        String(post.account_type || "").toLowerCase() === "business"
+            ? "Contact Business"
+            : "Contact Seller";
+
+    const saleActions = salePost ? `
+        <div class="sale-contact-actions">
+            <a href="/post/${encodeURIComponent(postId)}?contact=seller" class="post-contact-btn">
+                <i class="fa-solid fa-phone"></i> ${sellerLabel}
+            </a>
+            <a href="/post/${encodeURIComponent(postId)}?request=motteck" class="post-contact-btn request-motteck-btn">
+                <i class="fa-solid fa-handshake"></i> Request MOTTECK
+            </a>
+        </div>
+    ` : "";
 
     return `
 
         <article
-            class="post-card"
+            class="post-card ${salePost ? "sale-post" : "normal-post"}"
             id="post-${escapeHTML(postId)}"
+            data-post-type="${salePost ? "sale" : "normal"}"
         >
 
 
@@ -1195,7 +1269,7 @@ function createPostCard(post) {
                     <button
                         type="button"
                         class="post-action-btn share-action"
-                        onclick="sharePost('${escapeHTML(postId)}', '${title.replace(/'/g, "\\'")}')"
+                        onclick="sharePost('${post.id}', '${escapeHTML(post.title || "MOTTECK Post")}')"
                         aria-label="Share post"
                     >
 
@@ -1237,6 +1311,7 @@ function createPostCard(post) {
 
                 </a>
 
+                ${saleActions}
 
             </div>
 
@@ -1484,76 +1559,181 @@ function initLikes() {
 
 }
 
-
 /* =========================================================
    SHARE
 ========================================================= */
+async function sharePost(postId, title = "MOTTECK") {
 
-async function sharePost(
-    postId,
-    title
-) {
+    if (!postId) return;
 
+    const postUrl =
+        `${window.location.origin}/post/${encodeURIComponent(postId)}`;
 
-    const url =
-        `${window.location.origin}/post/${postId}`;
+    const shareText =
+        `${title}\n\nCheck out this post on MOTTECK.`;
 
+    // ---------------------------------------
+    // NATIVE PHONE / BROWSER SHARE
+    // ---------------------------------------
 
-    try {
+    if (navigator.share) {
 
-
-        if (navigator.share) {
-
+        try {
 
             await navigator.share({
-
-                title:
-                    title ||
-                    "MOTTECK Post",
-
-                text:
-                    title ||
-                    "Check this out on MOTTECK",
-
-                url: url
-
+                title: title || "MOTTECK",
+                text: shareText,
+                url: postUrl
             });
-
 
             return;
 
-        }
+        } catch (error) {
 
-
-        if (
-            navigator.clipboard
-        ) {
-
-            await navigator.clipboard.writeText(
-                url
-            );
-
-
-            alert(
-                "Post link copied!"
-            );
+            // User closed the share menu
+            if (error.name === "AbortError") {
+                return;
+            }
 
         }
+    }
 
+    // ---------------------------------------
+    // DESKTOP FALLBACK
+    // ---------------------------------------
+
+    showShareMenu(postId, postUrl, title);
+}
+
+function showShareMenu(postId, postUrl, title) {
+
+    document
+        .querySelector(".motteck-share-overlay")
+        ?.remove();
+
+    const encodedUrl =
+        encodeURIComponent(postUrl);
+
+    const encodedText =
+        encodeURIComponent(
+            `${title || "MOTTECK"} - Check out this post on MOTTECK`
+        );
+
+    const overlay = document.createElement("div");
+
+    overlay.className = "motteck-share-overlay";
+
+    overlay.innerHTML = `
+        <div class="motteck-share-box">
+
+            <div class="motteck-share-header">
+
+                <h3>Share post</h3>
+
+                <button
+                    type="button"
+                    class="motteck-share-close"
+                    onclick="closeShareMenu()"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+            <div class="motteck-share-options">
+
+                <a
+                    href="https://wa.me/?text=${encodedText}%20${encodedUrl}"
+                    target="_blank"
+                    rel="noopener"
+                    class="share-option"
+                >
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </a>
+
+                <a
+                    href="https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}"
+                    target="_blank"
+                    rel="noopener"
+                    class="share-option"
+                >
+                    <i class="fa-brands fa-facebook"></i>
+                    <span>Facebook</span>
+                </a>
+
+                <a
+                    href="https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}"
+                    target="_blank"
+                    rel="noopener"
+                    class="share-option"
+                >
+                    <i class="fa-brands fa-x-twitter"></i>
+                    <span>X</span>
+                </a>
+
+                <button
+                    type="button"
+                    class="share-option"
+                    onclick="copyPostLink('${escapeHTML(postUrl)}')"
+                >
+                    <i class="fa-solid fa-link"></i>
+                    <span>Copy link</span>
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    overlay.addEventListener("click", function(event) {
+
+        if (event.target === overlay) {
+            closeShareMenu();
+        }
+
+    });
+
+    document.body.appendChild(overlay);
+}
+
+function closeShareMenu() {
+
+    const overlay =
+        document.querySelector(".motteck-share-overlay");
+
+    if (overlay) {
+        overlay.remove();
+    }
+}
+
+async function copyPostLink(url) {
+
+    try {
+
+        await navigator.clipboard.writeText(url);
+
+        const button =
+            document.querySelector(
+                ".motteck-share-box .share-option:last-child span"
+            );
+
+        if (button) {
+            button.textContent = "Copied!";
+        }
+
+        setTimeout(() => {
+            closeShareMenu();
+        }, 900);
 
     } catch (error) {
 
-        console.log(
-            "Share cancelled:",
-            error
-        );
+        console.error("Copy link error:", error);
+
+        alert("Unable to copy the link.");
 
     }
-
 }
-
-
-
 /* =========================================================
    LOAD CATEGORY POSTS
 ========================================================= */
@@ -1598,9 +1778,9 @@ async function loadCategoryPosts() {
 
             try {
 
-                renderPosts(
-                    JSON.parse(saved)
-                );
+                const cachedPosts = JSON.parse(saved);
+                motteckCategoryPosts = cachedPosts;
+                renderPosts(cachedPosts);
 
             } catch (error) {
 
@@ -1670,9 +1850,8 @@ async function loadCategoryPosts() {
             );
 
 
-        renderPosts(
-            categoryPosts
-        );
+        motteckCategoryPosts = categoryPosts;
+        renderPosts(categoryPosts);
 
 
         localStorage.setItem(
@@ -1781,40 +1960,48 @@ function renderPosts(posts) {
    SEARCH
 ========================================================= */
 
+let motteckCategoryPosts = [];
+
+function searchCategoryPosts(query) {
+    const q = String(query || "").trim().toLowerCase();
+
+    if (!q) {
+        renderPosts(motteckCategoryPosts);
+        return;
+    }
+
+    const results = motteckCategoryPosts.filter(post => {
+        const searchableText = [
+            post.title, post.description, post.category,
+            post.post_type, post.type, post.listing_type,
+            post.content_type, post.make, post.model, post.year,
+            post.location, post.town, post.business_name,
+            post.full_name, post.author_name
+        ].filter(v => v !== null && v !== undefined)
+         .map(v => String(v).toLowerCase())
+         .join(" ");
+
+        return searchableText.includes(q);
+    });
+
+    if (!results.length) {
+        postContainer.innerHTML = `
+            <div class="no-posts">
+                <h3>No results found</h3>
+                <p>We couldn't find a truck matching "${escapeHTML(query)}".</p>
+            </div>
+        `;
+        return;
+    }
+
+    renderPosts(results);
+}
+
 document
     .getElementById("truckSearch")
-    ?.addEventListener(
-        "input",
-        function() {
-
-
-            const query =
-                this.value
-                    .trim()
-                    .toLowerCase();
-
-
-            document
-                .querySelectorAll(
-                    "#truckPost .post-card"
-                )
-                .forEach(card => {
-
-
-                    const text =
-                        card.textContent
-                            .toLowerCase();
-
-
-                    card.style.display =
-                        text.includes(query)
-                            ? ""
-                            : "none";
-
-                });
-
-        }
-    );
+    ?.addEventListener("input", function() {
+        searchCategoryPosts(this.value);
+    });
 
 
 
