@@ -576,8 +576,354 @@ def admin_submissions():
         return jsonify({
             "error": str(e)
         }), 500
+# =========================================================
+# ADMIN - MOTTECK LEADS
+# =========================================================
 
+@app.route("/admin/leads")
+def admin_leads():
 
+    if not session.get("logged_in"):
+
+        return jsonify({
+            "error": "Unauthorized"
+        }), 403
+
+    try:
+
+        # =========================================
+        # GET LEADS
+        # =========================================
+
+        response = (
+            supabase
+            .table("leads")
+            .select("*")
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        leads = response.data or []
+
+        # =========================================
+        # ENRICH LEADS
+        # =========================================
+
+        for lead in leads:
+
+            # -------------------------------------
+            # GET POST
+            # -------------------------------------
+
+            post_id = lead.get("post_id")
+
+            if post_id:
+
+                try:
+
+                    post_response = (
+                        supabase
+                        .table("posts")
+                        .select(
+                            "id,title,user_id"
+                        )
+                        .eq("id", post_id)
+                        .single()
+                        .execute()
+                    )
+
+                    post = (
+                        post_response.data
+                        or {}
+                    )
+
+                    lead["post_title"] = (
+                        post.get("title")
+                        or "Untitled post"
+                    )
+
+                except Exception:
+
+                    lead["post_title"] = (
+                        "Post unavailable"
+                    )
+
+            else:
+
+                lead["post_title"] = (
+                    "Unknown post"
+                )
+
+            # -------------------------------------
+            # SELLER / BUSINESS
+            # -------------------------------------
+
+            seller_id = lead.get(
+                "seller_id"
+            )
+
+            if seller_id:
+
+                try:
+
+                    seller_response = (
+                        supabase
+                        .table("profiles")
+                        .select(
+                            "id,full_name,email,"
+                            "account_type,business_name"
+                        )
+                        .eq("id", seller_id)
+                        .single()
+                        .execute()
+                    )
+
+                    seller = (
+                        seller_response.data
+                        or {}
+                    )
+
+                    lead["seller_name"] = (
+                        seller.get("business_name")
+                        or seller.get("full_name")
+                        or "Unknown seller"
+                    )
+
+                    lead["seller_email"] = (
+                        seller.get("email")
+                        or ""
+                    )
+
+                    lead["seller_account_type"] = (
+                        seller.get("account_type")
+                        or "individual"
+                    )
+
+                except Exception:
+
+                    lead["seller_name"] = (
+                        "Unknown seller"
+                    )
+
+                    lead["seller_email"] = ""
+                    lead["seller_account_type"] = ""
+
+            else:
+
+                lead["seller_name"] = (
+                    "Unknown seller"
+                )
+
+                lead["seller_email"] = ""
+                lead["seller_account_type"] = ""
+
+            # -------------------------------------
+            # INTERESTED USER
+            # -------------------------------------
+
+            interested_user_id = lead.get(
+                "interested_user_id"
+            )
+
+            if interested_user_id:
+
+                try:
+
+                    interested_response = (
+                        supabase
+                        .table("profiles")
+                        .select(
+                            "id,full_name,email,"
+                            "account_type"
+                        )
+                        .eq(
+                            "id",
+                            interested_user_id
+                        )
+                        .single()
+                        .execute()
+                    )
+
+                    interested_user = (
+                        interested_response.data
+                        or {}
+                    )
+
+                    lead["interested_user_name"] = (
+                        interested_user.get(
+                            "full_name"
+                        )
+                        or "Unknown user"
+                    )
+
+                    lead["interested_user_email"] = (
+                        interested_user.get(
+                            "email"
+                        )
+                        or ""
+                    )
+
+                except Exception:
+
+                    lead["interested_user_name"] = (
+                        "Unknown user"
+                    )
+
+                    lead["interested_user_email"] = ""
+
+            else:
+
+                lead["interested_user_name"] = (
+                    "Unknown user"
+                )
+
+                lead["interested_user_email"] = ""
+
+        # =========================================
+        # SUMMARY
+        # =========================================
+
+        total = len(leads)
+
+        seller_leads = sum(
+            1
+            for lead in leads
+            if lead.get("lead_type")
+            == "contact_seller"
+        )
+
+        business_leads = sum(
+            1
+            for lead in leads
+            if lead.get("lead_type")
+            == "contact_business"
+        )
+
+        motteck_requests = sum(
+            1
+            for lead in leads
+            if lead.get("lead_type")
+            == "request_motteck"
+        )
+
+        new_leads = sum(
+            1
+            for lead in leads
+            if lead.get("status", "new")
+            == "new"
+        )
+
+        return jsonify({
+
+            "success": True,
+
+            "leads": leads,
+
+            "summary": {
+
+                "total": total,
+
+                "contact_seller":
+                    seller_leads,
+
+                "contact_business":
+                    business_leads,
+
+                "request_motteck":
+                    motteck_requests,
+
+                "new":
+                    new_leads
+            }
+        })
+
+    except Exception as e:
+
+        print(
+            "ADMIN LEADS ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+# =========================================================
+# ADMIN - UPDATE LEAD STATUS
+# =========================================================
+
+@app.route(
+    "/admin/leads/<int:lead_id>/status",
+    methods=["POST"]
+)
+def update_lead_status(lead_id):
+
+    if not session.get("logged_in"):
+
+        return jsonify({
+            "success": False,
+            "error": "Unauthorized"
+        }), 403
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        ) or {}
+
+        status = (
+            data.get("status")
+            or ""
+        ).strip().lower()
+
+        allowed_statuses = [
+            "new",
+            "contacted",
+            "converted",
+            "closed"
+        ]
+
+        if status not in allowed_statuses:
+
+            return jsonify({
+                "success": False,
+                "error": "Invalid lead status."
+            }), 400
+
+        response = (
+            supabase
+            .table("leads")
+            .update({
+                "status": status
+            })
+            .eq("id", lead_id)
+            .execute()
+        )
+
+        if not response.data:
+
+            return jsonify({
+                "success": False,
+                "error": "Lead not found."
+            }), 404
+
+        return jsonify({
+            "success": True,
+            "message": "Lead status updated."
+        })
+
+    except Exception as e:
+
+        print(
+            "UPDATE LEAD STATUS ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+    
 # =========================================================
 # ADMIN - APPROVE & PUBLISH SUBMISSION
 # =========================================================
@@ -681,14 +1027,50 @@ def approve_submission(submission_id):
             "category": submission.get("category"),
             "image_url": image_url,
             "description": submission.get("description"),
+
+            # ==============================
+            # post type
+            # ==============================
+            "post_type" : submission.get(
+                "post_type",
+                "normal"
+            ),
+
+            # ==========================================
+            # INDIVIDUAL SALE INFORMATION
+            # ==========================================
+
+            "sale_method": submission.get(
+                "sale_method"
+            ),
+
+            "listing_duration":submission.get(
+                "listingg_duration"
+            ),
+
+            "commission_agreed": submission.get(
+                "commission_agreed",
+                False
+            ),
+
+            # =====================================
+            # ENGAMENT
+            # =====================================
+
             "likes": 0,
             "views": 0,
+
+            # =====================================
+            # BUSINESS PROMOTION
+            # ====================================
+
             "is_featured": is_featured,
             "is_sponsored": is_sponsored,
             "sponsored_until": sponsored_until,
             "ad_clicks": 0,
             "ad_views": 0,
-            "ad_earnings": 0
+            "ad_earnings":0,
+
         }
 
         post_response = (
@@ -1442,65 +1824,183 @@ def submit_post():
         flash("Please enter a description.", "error")
         return redirect(url_for("submit_post"))
 
-    # ================= POST TYPE SECURITY =================
+# ================= POST TYPE SECURITY =================
+
+# ---------------------------------------------------------
+# INDIVIDUAL ACCOUNTS
+# ---------------------------------------------------------
 
     if account_type == "individual":
 
-        # Individuals can only submit normal posts
+    # Individuals can submit:
+    # normal
+    # for_sale
+
+      if post_type not in [
+          "normal",
+        "for_sale"
+        ]:
         post_type = "normal"
 
-        # No promotion for individuals
+    # Defaults for individual submissions
+    promotion_duration = ""
+    promotion_price = None
+
+    # ---------------------------------------------
+    # INDIVIDUAL SALE SETTINGS
+    # ---------------------------------------------
+
+    sale_method = request.form.get(
+        "sale_method",
+        ""
+    ).strip().lower()
+
+    listing_duration = request.form.get(
+        "listing_duration",
+        ""
+    ).strip().lower()
+
+    commission_agreed_raw = request.form.get(
+        "commission_agreed"
+    )
+
+    commission_agreed = (
+        commission_agreed_raw
+        in ["true", "1", "yes", "on"]
+    )
+
+    # Normal individual post
+    if post_type == "normal":
+
+        sale_method = ""
+        listing_duration = ""
+        commission_agreed = False
+
+    # Individual item for sale
+    elif post_type == "for_sale":
+
+        # Valid sale methods
+        if sale_method not in [
+            "direct_sale",
+            "sell_through_motteck"
+        ]:
+
+            flash(
+                "Please choose how you want to sell your item.",
+                "error"
+            )
+
+            return redirect(
+                url_for("submit_post")
+            )
+
+        # -----------------------------------------
+        # DIRECT SALE
+        # -----------------------------------------
+
+        if sale_method == "direct_sale":
+
+            if listing_duration not in [
+                "1_day",
+                "1_week",
+                "1_month"
+            ]:
+
+                flash(
+                    "Please choose a listing duration.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("submit_post")
+                )
+
+            # Direct sale does not require MOTTECK
+            # commission agreement.
+            commission_agreed = False
+
+        # -----------------------------------------
+        # SELL THROUGH MOTTECK
+        # -----------------------------------------
+
+        elif sale_method == "sell_through_motteck":
+
+            # MOTTECK commission agreement is required.
+            if not commission_agreed:
+
+                flash(
+                    "Please agree to the MOTTECK commission terms.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("submit_post")
+                )
+
+            # No direct seller listing duration
+            listing_duration = ""
+
+
+# ---------------------------------------------------------
+# BUSINESS ACCOUNTS
+# ---------------------------------------------------------
+
+        elif account_type == "business":
+
+             # Businesses use:
+            # normal
+            # sponsored
+            # featured
+
+             if post_type not in [
+                 "normal",
+                 "sponsored",
+                 "featured"
+                 ]:
+
+                 post_type = "normal"
+
+    # Businesses do not use individual
+    # sale settings here.
+
+    sale_method = ""
+    listing_duration = ""
+    commission_agreed = False
+
+    # ================= PROMOTION VALIDATION =================
+
+    if post_type == "normal":
+
         promotion_duration = ""
         promotion_price = None
 
-    elif account_type == "business":
+    else:
 
-        # Only these three types are allowed
-        if post_type not in [
-            "normal",
-            "sponsored",
-            "featured"
-        ]:
-            post_type = "normal"
+        if not promotion_duration:
 
-        # ================= PROMOTION VALIDATION =================
+            flash(
+                "Please choose a promotion duration.",
+                "error"
+            )
 
-        if post_type == "normal":
+            return redirect(
+                url_for("submit_post")
+            )
 
-            # Normal posts do not require promotion
-            promotion_duration = ""
-            promotion_price = None
+        if promotion_duration not in PROMOTION_PRICES[post_type]:
 
-        else:
+            flash(
+                "Invalid promotion duration selected.",
+                "error"
+            )
 
-            # Sponsored and Featured MUST have a duration
-            if not promotion_duration:
+            return redirect(
+                url_for("submit_post")
+            )
 
-                flash(
-                    "Please choose a promotion duration.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("submit_post")
-                )
-
-            # Make sure duration is valid for the selected post type
-            if promotion_duration not in PROMOTION_PRICES[post_type]:
-
-                flash(
-                    "Invalid promotion duration selected.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("submit_post")
-                )
-
-            # Get the REAL price from the backend
-            promotion_price = PROMOTION_PRICES[
-                post_type
-            ][promotion_duration]
+        promotion_price = PROMOTION_PRICES[
+            post_type
+        ][promotion_duration]
 
     # ================= IMAGES =================
 
@@ -1586,7 +2086,43 @@ def submit_post():
 
         "image_urls": image_urls,
 
+        # =========================================
+        # POST TYPE
+        # =========================================
+
         "post_type": post_type,
+
+        # =========================================
+        # INDIVIDUAL SALE INFORMATION
+        # =========================================
+
+        "sale_method": (
+            sale_method
+            if post_type == "for_sale"
+            else None
+        ),
+
+        "listing_duration": (
+            listing_duration
+            if (
+                post_type == "for_sale"
+                and sale_method == "direct_sale"
+                )
+                else None
+        ),
+
+        "commission_agreed": (
+            commission_agreed
+            if (
+                post_type == "for_sale"
+                and sale_method == "sell_through_motteck"
+            )
+            else False
+        ),
+
+        # =========================================
+        # BUSINESS PROMOTION
+        # =========================================
 
         "promotion_duration": (
             promotion_duration
@@ -1600,7 +2136,8 @@ def submit_post():
         "promotion_price": promotion_price,
 
         "status": "pending"
-    }
+
+        }
 
     try:
 
@@ -1831,17 +2368,11 @@ def featured_posts():
             for post in posts
         )
 
-        total_comments = sum(
-            int(post.get("comments_count") or 0)
-            for post in posts
-        )
-
         return render_template(
             "featured_posts.html",
             posts=posts,
             total_views=total_views,
             total_likes=total_likes,
-            total_comments=total_comments
         )
 
     except Exception as e:
@@ -2505,21 +3036,156 @@ def edit_post(post_id):
 @app.route('/post/<int:post_id>')
 def single_post(post_id):
 
-    response = supabase.table("posts")\
-        .select("*")\
-        .eq("id", post_id)\
-        .execute()
+    try:
 
-    if not response.data:
-        return "Post not found", 404
+        # =========================================
+        # GET POST
+        # =========================================
 
-    post = response.data[0]
+        response = (
+            supabase
+            .table("posts")
+            .select("*")
+            .eq("id", post_id)
+            .execute()
+        )
 
-    return render_template(
-        "single_post.html",
-        post=post
-    )
+        if not response.data:
+            return "Post not found", 404
 
+        post = response.data[0]
+
+        # =========================================
+        # CHECK FOR LEAD ACTION
+        # =========================================
+
+        contact_action = request.args.get("contact")
+        request_action = request.args.get("request")
+
+        lead_type = None
+
+        # Contact Seller
+        if contact_action == "seller":
+            lead_type = "contact_seller"
+
+        # Contact Business
+        elif contact_action == "business":
+            lead_type = "contact_business"
+
+        # Request MOTTECK
+        elif request_action == "motteck":
+            lead_type = "request_motteck"
+
+        # =========================================
+        # RECORD LEAD
+        # =========================================
+
+        if lead_type:
+
+            # User must be logged in
+            if not session.get("user_logged_in"):
+
+                flash(
+                    "Please log in to continue.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "login_user",
+                        next=request.full_path
+                    )
+                )
+
+            interested_user_id = session.get(
+                "user_id"
+            )
+
+            seller_id = post.get(
+                "user_id"
+            )
+
+            # =====================================
+            # PREVENT SELLER FROM CREATING
+            # LEADS ON THEIR OWN POST
+            # =====================================
+
+            if (
+                interested_user_id
+                and seller_id
+                and str(interested_user_id)
+                == str(seller_id)
+            ):
+
+                flash(
+                    "You cannot contact yourself through your own listing.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "single_post",
+                        post_id=post_id
+                    )
+                )
+
+            # =====================================
+            # SAVE LEAD
+            # =====================================
+
+            lead_data = {
+
+                "post_id": post_id,
+
+                "seller_id": seller_id,
+
+                "interested_user_id":
+                    interested_user_id,
+
+                "lead_type": lead_type,
+
+                "status": "new"
+            }
+
+            try:
+
+                supabase \
+                    .table("leads") \
+                    .insert(lead_data) \
+                    .execute()
+
+                print(
+                    "MOTTECK LEAD CREATED:",
+                    lead_data
+                )
+
+            except Exception as lead_error:
+
+                print(
+                    "LEAD CREATION ERROR:",
+                    repr(lead_error)
+                )
+
+                # Do not stop the user from viewing
+                # the post if lead recording fails.
+
+        # =========================================
+        # RENDER POST
+        # =========================================
+
+        return render_template(
+            "single_post.html",
+            post=post
+        )
+
+    except Exception as e:
+
+        print(
+            "SINGLE POST ERROR:",
+            repr(e)
+        )
+
+        return "Unable to load post.", 500
 
 # ================= LIKE =================
 @app.route('/like/<int:post_id>', methods=['POST'])
