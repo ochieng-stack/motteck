@@ -178,7 +178,7 @@
             </button>
 
         </div>
-
+   
 
         <div id="submissions">
 
@@ -189,7 +189,49 @@
         </div>
 
     </div>
+    <!-- =================================================
+        MOTTECK leads 
+    ============================================== -->
 
+    <div class="submissions-box">
+
+    <div class="submission-header">
+
+        <h3>
+            MOTTECK Leads
+            <span id="leadCount" class="pending-count">0</span>
+        </h3>
+
+        <button
+            type="button"
+            class="refresh-btn"
+            onclick="loadLeads()"
+        >
+            🔄 Refresh
+        </button>
+
+    </div>
+
+
+    <div
+        id="leadSummary"
+        style="
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            margin-bottom:20px;
+        "
+    ></div>
+    
+    <div id="leads">
+        
+        <div class="loading-submissions">
+            Loading leads...
+        </div>
+    
+    </div>
+
+</div>
 
     <!-- =========================================================
          ALL PUBLISHED POSTS
@@ -423,6 +465,16 @@ const actionMessage =
 const confirmActionBtn =
     document.getElementById("confirmActionBtn");
 
+const leadsContainer =
+    document.getElementById("leads");
+
+const leadCount =
+    document.getElementById("leadCount");
+
+const leadSummary =
+    document.getElementById("leadSummary");
+
+let allLeads = [];
 
 let allPosts = [];
 
@@ -432,7 +484,321 @@ let pendingAction = null;
 
 let pendingSubmissionId = null;
 
+async function loadLeads() {
 
+    if (!leadsContainer) {
+        return;
+    }
+
+    leadsContainer.innerHTML = `
+        <div class="loading-submissions">
+            Loading leads...
+        </div>
+    `;
+
+    try {
+
+        const response = await fetch(
+            "/admin/leads"
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error || "Unable to load leads."
+            );
+        }
+
+        allLeads = data.leads || [];
+
+        const summary =
+            data.summary || {};
+
+        leadCount.textContent =
+            summary.new || 0;
+
+        leadSummary.innerHTML = `
+
+            <div class="lead-chip">
+                TOTAL:
+                <strong>
+                    ${summary.total || 0}
+                </strong>
+            </div>
+
+            <div class="lead-chip">
+                SELLER:
+                <strong>
+                    ${summary.contact_seller || 0}
+                </strong>
+            </div>
+
+            <div class="lead-chip">
+                BUSINESS:
+                <strong>
+                    ${summary.contact_business || 0}
+                </strong>
+            </div>
+
+            <div class="lead-chip">
+                MOTTECK:
+                <strong>
+                    ${summary.request_motteck || 0}
+                </strong>
+            </div>
+
+            <div class="lead-chip">
+                NEW:
+                <strong>
+                    ${summary.new || 0}
+                </strong>
+            </div>
+
+        `;
+
+        renderLeads();
+
+    } catch (error) {
+
+        console.error(
+            "LOAD LEADS ERROR:",
+            error
+        );
+
+        leadsContainer.innerHTML = `
+            <div class="loading-submissions">
+                Unable to load leads.
+                Please try again.
+            </div>
+        `;
+    }
+}
+function renderLeads() {
+
+    if (!allLeads.length) {
+
+        leadsContainer.innerHTML = `
+            <div class="loading-submissions">
+                No MOTTECK leads yet.
+            </div>
+        `;
+
+        return;
+    }
+
+    leadsContainer.innerHTML = allLeads.map(
+        lead => {
+
+            const leadType =
+                lead.lead_type || "";
+
+            let leadTypeLabel =
+                "Unknown";
+
+            if (
+                leadType ===
+                "contact_seller"
+            ) {
+                leadTypeLabel =
+                    "Contact Seller";
+            }
+
+            else if (
+                leadType ===
+                "contact_business"
+            ) {
+                leadTypeLabel =
+                    "Contact Business";
+            }
+
+            else if (
+                leadType ===
+                "request_motteck"
+            ) {
+                leadTypeLabel =
+                    "Request MOTTECK";
+            }
+
+            const status =
+                lead.status || "new";
+
+            const date =
+                lead.created_at
+                    ? new Date(
+                        lead.created_at
+                    ).toLocaleString()
+                    : "Unknown";
+
+            return `
+
+                <div
+                    class="submission-card"
+                    style="margin-bottom:15px;"
+                >
+
+                    <div
+                        class="submission-header"
+                    >
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(
+                                    lead.post_title ||
+                                    "Untitled Post"
+                                )}
+                            </strong>
+
+                        </div>
+
+                        <span
+                            class="status-badge"
+                        >
+                            ${escapeHTML(
+                                status.toUpperCase()
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="submission-details"
+                    >
+
+                        <div class="detail-row">
+                            <strong>
+                                Date:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(date)}
+                            </span>
+                        </div>
+
+
+                        <div class="detail-row">
+                            <strong>
+                                Seller / Business:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    lead.seller_name ||
+                                    "Unknown"
+                                )}
+                            </span>
+                        </div>
+
+
+                        <div class="detail-row">
+                            <strong>
+                                Interested User:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    lead.interested_user_name ||
+                                    "Unknown"
+                                )}
+                            </span>
+                        </div>
+
+
+                        <div class="detail-row">
+                            <strong>
+                                Lead Type:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    leadTypeLabel
+                                )}
+                            </span>
+                        </div>
+
+
+                        <div class="detail-row">
+                            <strong>
+                                Seller Email:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    lead.seller_email ||
+                                    "Not available"
+                                )}
+                            </span>
+                        </div>
+
+
+                        <div class="detail-row">
+                            <strong>
+                                Interested User Email:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    lead.interested_user_email ||
+                                    "Not available"
+                                )}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        style="
+                            margin-top:15px;
+                            display:flex;
+                            gap:8px;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <button
+                            type="button"
+                            onclick="updateLeadStatus(
+                                ${lead.id},
+                                'contacted'
+                            )"
+                        >
+                            Mark Contacted
+                        </button>
+
+
+                        <button
+                            type="button"
+                            onclick="updateLeadStatus(
+                                ${lead.id},
+                                'converted'
+                            )"
+                        >
+                            Mark Converted
+                        </button>
+
+
+                        <button
+                            type="button"
+                            onclick="updateLeadStatus(
+                                ${lead.id},
+                                'closed'
+                            )"
+                        >
+                            Close
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+        }
+    ).join("");
+}
 /* =========================================================
    LOAD PUBLISHED POSTS
 ========================================================= */
@@ -748,6 +1114,23 @@ function renderSubmissions(submissions){
                   `;
 
 
+        const saleMethod = submission.sale_method === "direct_sale"
+            ? "Direct Sale"
+            : submission.sale_method === "sell_through_motteck"
+                ? "Sell Through MOTTECK"
+                : "Not applicable";
+
+        const listingDuration = submission.listing_duration
+            ? submission.listing_duration.replaceAll("_", " ")
+            : "Not applicable";
+
+        const commissionAgreed =
+            submission.commission_agreed === true ||
+            submission.commission_agreed === "true"
+                ? "Yes"
+                : "No";          
+
+
         const description =
             escapeHTML(
                 submission.description || ""
@@ -967,6 +1350,30 @@ function renderSubmissions(submissions){
 
                     </div>
 
+
+                    <div class="detail-row">
+
+                        <strong>Sale Method:</strong>
+
+                        <span>${escapeHTML(saleMethod)}</span>
+
+                    </div>
+                    
+                    <div class="detail-row">
+                        
+                        <strong>Listing Duration:</strong>
+                        
+                        <span>${escapeHTML(listingDuration)}</span>
+                        
+                    </div>
+                    
+                    <div class="detail-row">
+                        
+                        <strong>MOTTECK Commission:</strong>
+                        
+                        <span>${commissionAgreed}</span>
+                        
+                    </div>
                 </div>
 
             </div>
@@ -2123,11 +2530,9 @@ form.addEventListener(
 ========================================================= */
 
 loadPosts();
-
 loadAnalytics();
-
 loadSubmissions();
-
+loadLeads();
 </script>
 
 </body>
