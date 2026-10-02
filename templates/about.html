@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title> About MOTTECK</title>
+    <title>About MOTTECK</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 
 <body>
@@ -37,15 +38,10 @@
                 class="profile-btn"
                 id="profileDropdownBtn"
             >
-
                 <i class="fa-solid fa-user"></i>
-
                 <span>Profile</span>
-
                 <i class="fa-solid fa-chevron-down profile-arrow"></i>
-
             </button>
-
 
             <div class="profile-menu" id="profileMenu">
 
@@ -56,7 +52,6 @@
                     <i class="fa-solid fa-building"></i>
 
                     <div>
-
                         <strong>
                             {{ session.get("full_name") }}
                         </strong>
@@ -64,7 +59,6 @@
                         <small>
                             Business Account
                         </small>
-
                     </div>
 
                     {% else %}
@@ -72,7 +66,6 @@
                     <i class="fa-solid fa-user"></i>
 
                     <div>
-
                         <strong>
                             {{ session.get("full_name") }}
                         </strong>
@@ -80,58 +73,37 @@
                         <small>
                             Individual Account
                         </small>
-
                     </div>
 
                     {% endif %}
 
                 </div>
 
-
                 <div class="profile-menu-divider"></div>
-
 
                 <a
                     href="{{ url_for('profile') }}"
                     class="profile-menu-item"
                 >
-
                     <i class="fa-solid fa-user"></i>
-
-                    <span>
-                        View Profile
-                    </span>
-
+                    <span>View Profile</span>
                 </a>
-
 
                 <a
                     href="{{ url_for('settings') }}"
                     class="profile-menu-item"
                 >
-
                     <i class="fa-solid fa-gear"></i>
-
-                    <span>
-                        Settings
-                    </span>
-
+                    <span>Settings</span>
                 </a>
-
 
                 <a
                     href="{{ url_for('submit_post') }}"
                     class="profile-menu-item"
                 >
-
                     <i class="fa-solid fa-pen-to-square"></i>
-
-                    <span>
-                        Submit Post
-                    </span>
-
+                    <span>Submit Post</span>
                 </a>
-
 
                 {% if session.get("account_type") == "business" %}
 
@@ -139,46 +111,28 @@
                     href="{{ url_for('dashboard') }}"
                     class="profile-menu-item"
                 >
-
                     <i class="fa-solid fa-chart-line"></i>
-
-                    <span>
-                        Business Dashboard
-                    </span>
-
+                    <span>Business Dashboard</span>
                 </a>
 
                 {% endif %}
-
 
                 <a
                     href="{{ url_for('my_submissions') }}"
                     class="profile-menu-item"
                 >
-
                     <i class="fa-solid fa-file-lines"></i>
-
-                    <span>
-                        My Submissions
-                    </span>
-
+                    <span>My Submissions</span>
                 </a>
 
-
                 <div class="profile-menu-divider"></div>
-
 
                 <a
                     href="{{ url_for('user_logout') }}"
                     class="profile-menu-item logout-item"
                 >
-
                     <i class="fa-solid fa-right-from-bracket"></i>
-
-                    <span>
-                        Logout
-                    </span>
-
+                    <span>Logout</span>
                 </a>
 
             </div>
@@ -207,14 +161,11 @@
 
         {% endif %}
 
-
         <button
             class="menu-btn"
             onclick="toggleMenu()"
         >
-
             <i class="fa-solid fa-bars"></i>
-
         </button>
 
     </div>
@@ -233,7 +184,7 @@
         Home
     </a>
 
-    <a href="{{ url_for('spare_parts') }}">
+    <a href="{{ url_for('spare_part') }}">
         <i class="fa-solid fa-screwdriver-wrench"></i>
         Spare Parts
     </a>
@@ -251,118 +202,904 @@
 </div>
 
 
-<section>
+<!-- =========================================================
+     ABOUT HERO
+========================================================= -->
+
+<section class="about-hero">
+
     <div class="container">
-        <h2 class="subtitle">ABOUT US</h2>
 
-        <img src="{{ url_for('static', filename='images/one.png') }}" alt="Motteck About Us" height="500" width="500">
+        <div class="about-hero-content">
 
-        <p>Welcome to <strong>Motteck</strong>, your trusted destination for everything in the automotive world. We are passionate about helping drivers, buyers, enthusiasts, and businesses stay informed, connected, and ahead in a fast-moving industry.</p>
+            <div class="about-hero-text">
 
-        <p>Motteck is a modern automotive platform focused on everything on wheels — from cars, trucks, motorcycles, and aviation to the latest developments in electric vehicles, hybrid technology, and future mobility solutions.</p>
+                <span class="eyebrow">
+                    <i class="fa-solid fa-location-dot"></i>
+                    PROUDLY BUILT IN KENYA
+                </span>
 
-        <p>Our goal is to deliver valuable content that helps people make smarter decisions. From honest vehicle reviews and comparisons to industry news, buying guides, and practical ownership advice, we simplify the motoring journey for everyone.</p>
+                <h1>
+                    Connecting People With
+                    <span>What They Need.</span>
+                </h1>
 
-        <p>We also go beyond information. Through our growing network of trusted dealerships and partners, we help clients find vehicles that match their needs without the stress of moving from dealership to dealership. Whether you're searching for a family car, business vehicle, or upgrade, we help make the process easier.</p>
+                <p>
+                    MOTTECK is a Kenyan marketplace and connection platform
+                    designed to make it easier for people to find vehicles,
+                    spare parts, automotive products, services, and the
+                    businesses that provide them.
+                </p>
 
-        <p>In addition, Motteck connects users with useful services such as insurance guidance, spare parts sourcing, maintenance support, engine care tips, oil recommendations, and trusted automotive solutions.</p>
+                <p>
+                    Instead of spending hours searching from one business
+                    to another, customers can come to MOTTECK, tell us what
+                    they are looking for, discover available options, and
+                    connect with the right seller or business.
+                </p>
 
-        <p>Whether you are a car lover, truck enthusiast, motorcycle rider, first-time buyer, or business owner, Motteck is your reliable source for automotive insights, services, and opportunities.</p>
+            </div>
 
-        <h2 class="subtitle">OUR FOCUS AREAS</h2>
+            <div class="about-hero-image">
 
-        <ol>
-            <li>Car, Truck, Motorcycle, and Aviation Reviews</li>
-            <li>Vehicle Buying Assistance & Dealership Connections</li>
-            <li>Insurance Guidance & Vehicle Protection Tips</li>
-            <li>Spare Parts Sourcing & Automotive Services</li>
-            <li>Engine Maintenance, Oil Guides & Repair Advice</li>
-            <li>Technology, EV Trends, Mobility & Industry News</li>
-        </ol>
+                <img
+                    src="{{ url_for('static', filename='images/one.png') }}"
+                    alt="MOTTECK marketplace"
+                >
 
-        <h2 class="subtitle">OUR VISION</h2>
+            </div>
 
-        <p>To become a leading automotive platform that informs, connects, and empowers people through trusted content, useful services, and smart solutions for the future of transport.</p>
+        </div>
+
     </div>
+
 </section>
+
+
+<!-- =========================================================
+     WHAT IS MOTTECK
+========================================================= -->
+
+<section class="about-section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="eyebrow">
+                <i class="fa-solid fa-circle-info"></i>
+                ABOUT MOTTECK
+            </span>
+
+            <h2>
+                What is MOTTECK?
+            </h2>
+
+        </div>
+
+        <div class="about-text">
+
+            <p>
+                MOTTECK is a Kenyan digital marketplace built to bring
+                customers and businesses closer together.
+            </p>
+
+            <p>
+                Our platform brings together vehicle listings, automotive
+                products, spare parts, services, businesses, and useful
+                automotive information in one place.
+            </p>
+
+            <p>
+                But MOTTECK is about more than simply displaying listings.
+                Our goal is to help people actually find what they are
+                looking for.
+            </p>
+
+            <p>
+                If a customer is looking for a particular car, truck,
+                motorcycle, spare part, service, or another automotive
+                solution, they can approach MOTTECK and tell us what they
+                need. We help identify relevant options and connect the
+                customer with the appropriate business or seller.
+            </p>
+
+            <p>
+                At the same time, MOTTECK gives businesses a platform where
+                they can showcase what they offer and reach customers who
+                are actively looking for their products and services.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     HOW MOTTECK WORKS
+========================================================= -->
+
+<section class="how-it-works">
+
+    <div class="container">
+
+        <div class="section-heading centered">
+
+            <span class="eyebrow">
+                <i class="fa-solid fa-route"></i>
+                HOW IT WORKS
+            </span>
+
+            <h2>
+                Tell Us What You Need.
+                <br>
+                We'll Help You Find It.
+            </h2>
+
+            <p>
+                MOTTECK is designed to simplify the process of finding
+                the right product, service, or business.
+            </p>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-comment-dots"></i>
+                </div>
+
+                <span class="step-number">01</span>
+
+                <h3>
+                    Tell Us What You Need
+                </h3>
+
+                <p>
+                    Tell MOTTECK what you are looking for. It could be a
+                    vehicle, spare part, service, garage, or another
+                    automotive solution.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <span class="step-number">02</span>
+
+                <h3>
+                    We Help Find Options
+                </h3>
+
+                <p>
+                    MOTTECK helps identify relevant businesses, sellers,
+                    products, or services that may match what you are
+                    looking for.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+
+                <span class="step-number">03</span>
+
+                <h3>
+                    You Choose
+                </h3>
+
+                <p>
+                    We present suitable options so you can consider them
+                    and decide which one is right for you.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-icon">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+
+                <span class="step-number">04</span>
+
+                <h3>
+                    We Connect You
+                </h3>
+
+                <p>
+                    Once you choose an option, MOTTECK helps connect you
+                    directly with the relevant seller or business.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     VALUE FOR CLIENTS
+========================================================= -->
+
+<section class="value-section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="eyebrow">
+                <i class="fa-solid fa-user"></i>
+                FOR CLIENTS
+            </span>
+
+            <h2>
+                Making It Easier to Find What You Need
+            </h2>
+
+            <p>
+                Finding the right vehicle, product, part, or service can
+                take time. MOTTECK is designed to make that process
+                simpler.
+            </p>
+
+        </div>
+
+
+        <div class="value-grid">
+
+            <div class="value-card">
+
+                <i class="fa-solid fa-clock"></i>
+
+                <h3>
+                    Save Time
+                </h3>
+
+                <p>
+                    Spend less time searching through different businesses
+                    and platforms for what you need.
+                </p>
+
+            </div>
+
+
+            <div class="value-card">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <h3>
+                    Discover Options
+                </h3>
+
+                <p>
+                    Discover relevant vehicles, products, businesses and
+                    services from different sources through one platform.
+                </p>
+
+            </div>
+
+
+            <div class="value-card">
+
+                <i class="fa-solid fa-handshake"></i>
+
+                <h3>
+                    Get Connected
+                </h3>
+
+                <p>
+                    MOTTECK helps connect customers with the seller or
+                    business behind the option they choose.
+                </p>
+
+            </div>
+
+
+            <div class="value-card">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                <h3>
+                    Make Your Choice
+                </h3>
+
+                <p>
+                    We help you discover options, while you remain in
+                    control of the final decision.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     VALUE FOR BUSINESSES
+========================================================= -->
+
+<section class="business-section">
+
+    <div class="container">
+
+        <div class="business-content">
+
+            <div class="business-text">
+
+                <span class="eyebrow">
+                    <i class="fa-solid fa-building"></i>
+                    FOR BUSINESSES
+                </span>
+
+                <h2>
+                    Helping Businesses Reach the Right Customers
+                </h2>
+
+                <p>
+                    MOTTECK is also built for businesses.
+                </p>
+
+                <p>
+                    Whether you sell vehicles, spare parts, provide
+                    automotive services, operate a garage, dealership,
+                    workshop, or another relevant business, MOTTECK gives
+                    you a place to showcase what you offer.
+                </p>
+
+                <p>
+                    Our goal is not simply to give businesses another
+                    place to advertise. We want to create meaningful
+                    connections between businesses and people who are
+                    looking for what those businesses provide.
+                </p>
+
+                <p>
+                    Businesses can create a presence on MOTTECK, publish
+                    relevant listings and content, and receive opportunities
+                    to connect with potential customers through the
+                    platform.
+                </p>
+
+            </div>
+
+
+            <div class="business-benefits">
+
+                <div class="benefit">
+
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+
+                    <div>
+                        <h3>Business Visibility</h3>
+
+                        <p>
+                            Showcase your products and services to people
+                            searching for relevant solutions.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="benefit">
+
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <div>
+                        <h3>Reach Potential Customers</h3>
+
+                        <p>
+                            Put your business in front of customers who
+                            may already be looking for what you offer.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="benefit">
+
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-phone-volume"></i>
+                    </div>
+
+                    <div>
+                        <h3>Generate Connections</h3>
+
+                        <p>
+                            MOTTECK is designed to turn customer interest
+                            into meaningful business connections.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="benefit">
+
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+
+                    <div>
+                        <h3>Grow Your Presence</h3>
+
+                        <p>
+                            Build your business presence on a platform
+                            focused on automotive and mobility needs.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MARKETPLACE
+========================================================= -->
+
+<section class="marketplace-section">
+
+    <div class="container">
+
+        <div class="section-heading centered">
+
+            <span class="eyebrow">
+                <i class="fa-solid fa-store"></i>
+                THE MOTTECK MARKETPLACE
+            </span>
+
+            <h2>
+                More Than Just a Listing Website
+            </h2>
+
+            <p>
+                MOTTECK brings products, services, businesses, information,
+                and customers together in one growing platform.
+            </p>
+
+        </div>
+
+
+        <div class="focus-grid">
+
+            <div class="focus-card">
+                <i class="fa-solid fa-car"></i>
+
+                <h3>Cars</h3>
+
+                <p>
+                    Discover cars and connect with relevant sellers and
+                    businesses.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <i class="fa-solid fa-truck"></i>
+
+                <h3>Trucks</h3>
+
+                <p>
+                    Explore trucks and commercial vehicle opportunities.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <i class="fa-solid fa-motorcycle"></i>
+
+                <h3>Motorbikes</h3>
+
+                <p>
+                    Find motorcycles and businesses serving riders.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                <h3>Spare Parts</h3>
+
+                <p>
+                    Find parts and businesses that can help with your
+                    automotive needs.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <i class="fa-solid fa-wrench"></i>
+
+                <h3>Services</h3>
+
+                <p>
+                    Discover garages, workshops, maintenance and other
+                    automotive services.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <i class="fa-solid fa-plane"></i>
+
+                <h3>Aviation</h3>
+
+                <p>
+                    Explore aviation-related businesses, information and
+                    opportunities.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <i class="fa-solid fa-book-open"></i>
+
+                <h3>Guides & Information</h3>
+
+                <p>
+                    Access useful automotive guides, reviews and practical
+                    information.
+                </p>
+            </div>
+
+
+            <div class="focus-card">
+                <i class="fa-solid fa-users"></i>
+
+                <h3>Community</h3>
+
+                <p>
+                    Discover automotive content and connect with a growing
+                    community of enthusiasts and businesses.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     OUR PURPOSE
+========================================================= -->
+
+<section class="purpose-section">
+
+    <div class="container">
+
+        <div class="purpose-box">
+
+            <span class="eyebrow">
+                <i class="fa-solid fa-bullseye"></i>
+                OUR PURPOSE
+            </span>
+
+            <h2>
+                Making Connections Simpler
+            </h2>
+
+            <p>
+                At the heart of MOTTECK is a simple idea:
+                <strong>
+                    people should be able to find what they need
+                    without having to search everywhere themselves.
+                </strong>
+            </p>
+
+            <p>
+                We are building MOTTECK to become a trusted place where
+                customers can discover solutions and businesses can reach
+                the people who need what they offer.
+            </p>
+
+            <p>
+                As MOTTECK grows, our platform will continue to bring
+                together more businesses, products, services and customers,
+                creating a stronger marketplace for Kenya's automotive and
+                mobility ecosystem.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     VISION
+========================================================= -->
+
+<section class="vision-section">
+
+    <div class="container">
+
+        <div class="vision-content">
+
+            <div class="vision-icon">
+                <i class="fa-solid fa-eye"></i>
+            </div>
+
+            <span class="eyebrow">
+                OUR VISION
+            </span>
+
+            <h2>
+                To Build a Trusted Marketplace That Connects Demand With Supply
+            </h2>
+
+            <p>
+                We envision MOTTECK growing into a platform where customers
+                can easily find products and services they need, while
+                businesses can build visibility, generate opportunities,
+                and connect with the right customers.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     CALL TO ACTION
+========================================================= -->
+
+<section class="about-cta">
+
+    <div class="container">
+
+        <div class="cta-content">
+
+            <span class="eyebrow">
+                <i class="fa-solid fa-handshake"></i>
+                GET STARTED WITH MOTTECK
+            </span>
+
+            <h2>
+                Looking for Something?
+            </h2>
+
+            <p>
+                Explore MOTTECK, discover available options, or tell us
+                what you are looking for and let us help connect you with
+                the right business or seller.
+            </p>
+
+            <div class="cta-buttons">
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="cta-primary"
+                >
+                    Explore MOTTECK
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+                <a
+                    href="{{ url_for('contact') }}"
+                    class="cta-secondary"
+                >
+                    Contact Us
+                    <i class="fa-solid fa-envelope"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
 <footer class="footer">
 
     <div class="footer-top">
-        <h2 class="footer-logo">Motteck</h2>
+
+        <h2 class="footer-logo">
+            Motteck
+        </h2>
+
         <p class="footer-text">
-            Motteck is your trusted source for cars, trucks, bikes, motoring news, reviews, and automotive insights.
+            MOTTECK is a Kenyan marketplace and connection platform
+            helping customers discover vehicles, products, services and
+            businesses while helping businesses reach potential customers.
         </p>
+
     </div>
+
 
     <div class="footer-links">
 
         <div class="footer-column">
+
             <h3>Company</h3>
-            <a href="{{ url_for('contact') }}">Contact Us</a>
-            <a href="{{ url_for('partner_with_us') }}">Partner With Us</a>
-            <a href="{{ url_for('advertise') }}">Advertise With Us</a>
+
+            <a href="{{ url_for('contact') }}">
+                Contact Us
+            </a>
+
+            <a href="{{ url_for('partner_with_us') }}">
+                Partner With Us
+            </a>
+
+            <a href="{{ url_for('advertise') }}">
+                Advertise With Us
+            </a>
+
         </div>
 
+
         <div class="footer-column">
+
             <h3>Legal</h3>
-            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
-            <a href="{{ url_for('term') }}">Terms & Conditions</a>
-            <a href="{{ url_for('cookies') }}">Cookie Policy</a>
+
+            <a href="{{ url_for('privacy') }}">
+                Privacy Policy
+            </a>
+
+            <a href="{{ url_for('term') }}">
+                Terms & Conditions
+            </a>
+
+            <a href="{{ url_for('cookies') }}">
+                Cookie Policy
+            </a>
+
         </div>
 
+
         <div class="footer-column">
+
             <h3>Disclaimer</h3>
+
             <p class="small-text">
-                Information published on Motteck is for general informational purposes only. Please verify details independently before making decisions.
+                Information published on MOTTECK is for general
+                informational purposes only. Customers and businesses
+                should verify relevant details independently before
+                making decisions or transactions.
             </p>
+
         </div>
 
+
         <div class="footer-column">
+
             <h3>Contact</h3>
-            <p>Email: motteckcompany@gmail.com</p>
-            <p>call: +254742022263</p>
+
+            <p>
+                Email: motteckcompany@gmail.com
+            </p>
+
+            <p>
+                Call: +254742022263
+            </p>
 
             <div class="social-box">
+
                 <p>Follow Us</p>
 
-                <a href="https://www.instagram.com/mott_eck" target="_blank">
+                <a
+                    href="https://www.instagram.com/mott_eck"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <i class="fa-brands fa-instagram"></i>
                 </a>
 
-                <a href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09" target="_blank">
+                <a
+                    href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <i class="fa-brands fa-square-x-twitter"></i>
                 </a>
 
-                <a href="https://www.facebook.com/profile.php?id=100064234773365" target="_blank">
+                <a
+                    href="https://www.facebook.com/profile.php?id=100064234773365"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <i class="fa-brands fa-facebook"></i>
                 </a>
 
-                <a href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v" target="_blank">
+                <a
+                    href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
 
-                <a href="https://www.tiktok.com/@motteckauto" target="_blank">
+                <a
+                    href="https://www.tiktok.com/@motteckauto"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <i class="fa-brands fa-tiktok"></i>
+                </a>
+
             </div>
+
         </div>
 
     </div>
 
+
     <div class="footer-bottom">
-        <p>&copy; 2026 Motteck. All Rights Reserved.</p>
+
+        <p>
+            &copy; 2026 Motteck. All Rights Reserved.
+        </p>
+
     </div>
 
 </footer>
-<script>
-  /* ================= HAMBURGER MENU ================= */
-function toggleMenu() {
-    const menu = document.getElementById("mobileMenu");
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-} 
 
-/* =========================================================
-   PROFILE DROPDOWN
-========================================================= */
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+/* ================= HAMBURGER MENU ================= */
+
+function toggleMenu() {
+
+    const menu = document.getElementById("mobileMenu");
+
+    menu.style.display =
+        menu.style.display === "flex"
+            ? "none"
+            : "flex";
+}
+
+
+/* ================= PROFILE DROPDOWN ================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -404,8 +1141,9 @@ document.addEventListener(
             function (event) {
 
                 if (
-                    !profileDropdown
-                        .contains(event.target)
+                    !profileDropdown.contains(
+                        event.target
+                    )
                 ) {
 
                     profileDropdown
@@ -419,6 +1157,8 @@ document.addEventListener(
 
     }
 );
-</script>   
+
+</script>
+
 </body>
 </html>
