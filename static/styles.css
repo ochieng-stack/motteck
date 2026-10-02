@@ -1432,14 +1432,14 @@ body {
 
     .sticky-categories {
         position: fixed;
-        top: 95px;
+        top: 100px;
         left: 0;
         width: 100%;
         z-index: 999;
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
         padding: 10px;
         overflow-x: auto;
         transform: translateY(-120%);

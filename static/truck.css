@@ -930,123 +930,78 @@ body{
     background:transparent;
     color:#555555;
 }
+/* =========================================
+   CONTACT / REQUEST BUTTONS
+   ========================================= */
 
-
-/* COMMENTS */
-
-.comments-section-home{
-    margin-top:4px;
-    padding-top:10px;
-    border-top:1px solid #eeeeee;
+.sale-contact-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
-
-.home-comment-form{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+.post-contact-btn,
+.request-motteck-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    white-space: nowrap;
 }
 
-
-.home-comment-input{
-    width:100%;
-    min-height:70px;
-    resize:vertical;
-    padding:10px 12px;
-    border:1px solid #dddddd;
-    border-radius:8px;
-    outline:none;
-    font-family:sans-serif;
-    font-size:14px;
-    line-height:1.5;
+/* Contact Seller / Contact Business */
+.post-contact-btn {
+    background: #111;
+    color: #fff;
 }
 
-
-.home-comment-input:focus{
-    border-color:#2196f3;
-    box-shadow:0 0 0 2px rgba(33,150,243,.08);
+.post-contact-btn:hover {
+    background: #333;
+    transform: translateY(-1px);
 }
 
-
-.home-comment-submit{
-    align-self:flex-start;
-    border:none;
-    background:#2196f3;
-    color:#ffffff;
-    padding:7px 13px;
-    border-radius:6px;
-    cursor:pointer;
-    font-size:13px;
+/* Request MOTTECK */
+.request-motteck-btn {
+    background: #f1f1f1;
+    color: #111;
+    border: 1px solid #d6d6d6;
 }
 
-
-.home-comment-submit:hover{
-    background:#1976d2;
+.request-motteck-btn:hover {
+    background: #e5e5e5;
+    transform: translateY(-1px);
 }
 
-
-.home-comments-list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-top:12px;
+/* Icons */
+.post-contact-btn i,
+.request-motteck-btn i {
+    font-size: 13px;
 }
 
+/* Mobile */
+@media (max-width: 600px) {
 
-.home-comment-item{
-    display:flex;
-    align-items:flex-start;
-    gap:9px;
-    padding:8px 0;
+    .sale-contact-actions {
+        gap: 8px;
+    }
+
+    .post-contact-btn,
+    .request-motteck-btn {
+        padding: 8px 11px;
+        font-size: 12px;
+    }
 }
 
-
-.home-comment-avatar{
-    width:32px !important;
-    height:32px !important;
-    min-width:32px;
-    object-fit:cover !important;
-    border-radius:50% !important;
-    display:block;
-}
-
-
-.home-comment-content{
-    min-width:0;
-    flex:1;
-}
-
-
-.home-comment-content strong{
-    display:block;
-    color:#222222;
-    font-size:13px;
-    margin-bottom:2px;
-}
-
-
-.home-comment-content p{
-    margin:0;
-    color:#555555;
-    font-size:13px;
-    line-height:1.5;
-    word-break:break-word;
-}
-
-
-.home-comment-content small{
-    display:block;
-    margin-top:3px;
-    color:#999999;
-    font-size:11px;
-}
-
-
-.home-no-comments{
-    color:#888888;
-    font-size:13px;
-    padding:10px 0;
-}
 
 
 /* READ MORE */
