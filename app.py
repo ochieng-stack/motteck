@@ -1544,7 +1544,8 @@ def login():
         if FAILED_ATTEMPTS[ip]["locked_until"] > time.time():
             return render_template(
                 "admin.html",
-                error="Too many attempts. Try later."
+                error="Too many attempts. Try later.",
+                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
             )
 
     if request.method == "POST":
@@ -1556,8 +1557,9 @@ def login():
         if not verify_recaptcha(recaptcha_token):
             return render_template(
                 "admin.html",
-                error="reCAPTCHA expired or was already used. Please complete the reCAPTCHA again."
-                )
+                error="reCAPTCHA expired or was already used. Please complete the reCAPTCHA again.",
+                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+            )
 
         if username == ADMIN_USER and bcrypt.checkpw(
             password.encode(),
@@ -1579,16 +1581,14 @@ def login():
 
         return render_template(
             "admin.html",
-            error="Invalid login"
+            error="Invalid login",
+            recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
         )
 
-    return render_template("admin.html")
-
-
-@app.route('/logout')
-def logout():
-    session.pop("logged_in", None)
-    return redirect(url_for("home"))
+    return render_template(
+        "admin.html",
+        recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+    )
 
 # ================= FORGOT PASSWORD =================
 @app.route("/forgot-password", methods=["GET", "POST"])
