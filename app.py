@@ -1341,7 +1341,151 @@ def profile():
         )
 
         return redirect(url_for("home"))
-    
+# =========================================================
+# PUBLIC USER PROFILE
+# =========================================================
+
+@app.route("/profile/<user_id>")
+def public_profile(user_id):
+
+    try:
+
+        # =========================================
+        # GET PUBLIC PROFILE
+        # =========================================
+
+        profile_response = (
+            supabase
+            .table("profiles")
+            .select(
+                "id,full_name,account_type,"
+                "profile_image,business_name,"
+                "business_category,business_town,"
+                "business_description,business_website,"
+                "business_social_media,bio,is_verified"
+            )
+            .eq("id", user_id)
+            .limit(1)
+            .execute()
+        )
+
+        if not profile_response.data:
+            return "Profile not found", 404
+
+        profile = profile_response.data[0]
+
+        # =========================================
+        # GET USER POSTS
+        # =========================================
+
+        posts_response = (
+            supabase
+            .table("posts")
+            .select("*")
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        posts = posts_response.data or []
+
+        # Add time ago
+        for post in posts:
+            post["time_ago"] = time_ago(
+                post.get("created_at", "")
+            )
+
+        # =========================================
+        # COUNTS
+        # =========================================
+
+        posts_count = len(posts)
+
+        followers_response = (
+            supabase
+            .table("follows")
+            .select("id")
+            .eq("following_id", user_id)
+            .execute()
+        )
+
+        followers_count = len(
+            followers_response.data or []
+        )
+
+        following_response = (
+            supabase
+            .table("follows")
+            .select("id")
+            .eq("follower_id", user_id)
+            .execute()
+        )
+
+        following_count = len(
+            following_response.data or []
+        )
+
+        # =========================================
+        # FOLLOW STATUS
+        # =========================================
+
+        viewer_id = session.get("user_id")
+
+        is_following = False
+
+        if viewer_id and str(viewer_id) != str(user_id):
+
+            follow_response = (
+                supabase
+                .table("follows")
+                .select("id")
+                .eq("follower_id", viewer_id)
+                .eq("following_id", user_id)
+                .limit(1)
+                .execute()
+            )
+
+            is_following = bool(
+                follow_response.data
+            )
+
+        # =========================================
+        # DISPLAY NAME
+        # =========================================
+
+        display_name = (
+            profile.get("business_name")
+            if profile.get("account_type") == "business"
+            and profile.get("business_name")
+            else profile.get("full_name")
+            or "MOTTECK User"
+        )
+
+        # =========================================
+        # RENDER PUBLIC PROFILE
+        # =========================================
+
+        return render_template(
+            "public_profile.html",
+            profile=profile,
+            display_name=display_name,
+            posts=posts,
+            posts_count=posts_count,
+            followers_count=followers_count,
+            following_count=following_count,
+            is_following=is_following,
+            viewer_id=viewer_id
+        )
+
+    except Exception as e:
+
+        print(
+            "PUBLIC PROFILE ERROR:",
+            repr(e)
+        )
+
+        return "Unable to load profile", 500
+        
 # ================= PROFILE PHOTO UPLOAD =================
 @app.route("/upload-profile-picture", methods=["POST"])
 def upload_profile_picture():
@@ -2605,11 +2749,134 @@ def google_callback():
         )
 
         return redirect(url_for("login_user"))
-     
-# ================= GET POSTS =================
+ # =========================================================
+# ENRICH POSTS WITH AUTHOR PROFILE INFORMATION
+# =========================================================
+
+def enrich_posts_with_profiles(posts, viewer_id=None):
+    """
+    Adds public author information to every post.
+
+    Uses:
+        posts.user_id
+            ↓
+        profiles.id
+
+    Adds:
+        full_name
+        business_name
+        account_type
+        profile_image
+        is_following
+        viewer_is_author
+        time_ago
+    """
+
+    if not posts:
+        return posts
+
+    # ---------------------------------------
+    # GET AUTHOR IDS
+    # ---------------------------------------
+
+    author_ids = list({
+        str(post["user_id"])
+        for post in posts
+        if post.get("user_id")
+    })
+
+    # ---------------------------------------
+    # GET AUTHOR PROFILES
+    # ---------------------------------------
+
+    profiles_map = {}
+
+    if author_ids:
+        profile_response = (
+            supabase
+            .table("profiles")
+            .select(
+                "id,full_name,account_type,"
+                "profile_image,business_name,bio,is_verified"
+            )
+            .in_("id", author_ids)
+            .execute()
+        )
+
+        for profile in profile_response.data or []:
+            profiles_map[str(profile["id"])] = profile
+
+    # ---------------------------------------
+    # GET WHO VIEWER IS FOLLOWING
+    # ---------------------------------------
+
+    following_ids = set()
+
+    if viewer_id and author_ids:
+
+        follow_response = (
+            supabase
+            .table("follows")
+            .select("following_id")
+            .eq("follower_id", viewer_id)
+            .in_("following_id", author_ids)
+            .execute()
+        )
+
+        following_ids = {
+            str(row["following_id"])
+            for row in (follow_response.data or [])
+        }
+
+    # ---------------------------------------
+    # ENRICH EACH POST
+    # ---------------------------------------
+
+    for post in posts:
+
+        author_id = (
+            str(post["user_id"])
+            if post.get("user_id")
+            else None
+        )
+
+        profile = profiles_map.get(author_id, {})
+
+        post["full_name"] = profile.get("full_name")
+        post["business_name"] = profile.get("business_name")
+        post["account_type"] = profile.get("account_type")
+        post["profile_image"] = profile.get("profile_image")
+
+        # Optional public profile information
+        post["bio"] = profile.get("bio")
+        post["is_verified"] = profile.get("is_verified", False)
+
+        # Follow information
+        post["is_following"] = (
+            author_id in following_ids
+            if author_id
+            else False
+        )
+
+        post["viewer_is_author"] = (
+            viewer_id is not None
+            and author_id == viewer_id
+        )
+
+        post["time_ago"] = time_ago(
+            post.get("created_at", "")
+        )
+
+    return posts    
+# =========================================================
+# GET POSTS
+# =========================================================
+
 @app.route("/get_posts")
 def get_posts():
+
     try:
+
         posts = (
             supabase
             .table("posts")
@@ -2622,92 +2889,17 @@ def get_posts():
         # Current logged-in user
         viewer_id = None
 
-        if session.get("user_logged_in") and session.get("user_id"):
+        if (
+            session.get("user_logged_in")
+            and session.get("user_id")
+        ):
             viewer_id = str(session["user_id"])
 
-        # Get all author IDs from the posts
-        author_ids = list({
-            str(post["user_id"])
-            for post in posts
-            if post.get("user_id")
-        })
-
-        # ---------------------------------------
-        # GET AUTHOR PROFILES
-        # ---------------------------------------
-
-        profiles_map = {}
-
-        if author_ids:
-            profile_response = (
-                supabase
-                .table("profiles")
-                .select(
-                    "id,full_name,account_type,profile_image,business_name"
-                )
-                .in_("id", author_ids)
-                .execute()
-            )
-
-            for profile in profile_response.data or []:
-                profiles_map[str(profile["id"])] = profile
-
-        # ---------------------------------------
-        # GET WHO VIEWER IS FOLLOWING
-        # ---------------------------------------
-
-        following_ids = set()
-
-        if viewer_id and author_ids:
-            follow_response = (
-                supabase
-                .table("follows")
-                .select("following_id")
-                .eq("follower_id", viewer_id)
-                .in_("following_id", author_ids)
-                .execute()
-            )
-
-            following_ids = {
-                str(row["following_id"])
-                for row in (follow_response.data or [])
-            }
-
-        # ---------------------------------------
-        # ENRICH EACH POST
-        # ---------------------------------------
-
-        for post in posts:
-
-            author_id = (
-                str(post["user_id"])
-                if post.get("user_id")
-                else None
-            )
-
-            profile = profiles_map.get(author_id, {})
-
-            post["full_name"] = profile.get("full_name")
-            post["business_name"] = profile.get("business_name")
-            post["account_type"] = profile.get("account_type")
-            post["profile_image"] = profile.get("profile_image")
-
-            # Is current viewer following this author?
-            post["is_following"] = (
-                author_id in following_ids
-                if author_id
-                else False
-            )
-
-            # Don't show Follow on your own post
-            post["viewer_is_author"] = (
-                viewer_id is not None
-                and author_id == viewer_id
-            )
-
-            post["time_ago"] = time_ago(
-                post.get("created_at", "")
-            )
+        # Add author/profile information
+        posts = enrich_posts_with_profiles(
+            posts,
+            viewer_id
+        )
 
         # Newest first
         posts.sort(
@@ -2718,7 +2910,11 @@ def get_posts():
         return jsonify(posts)
 
     except Exception as e:
-        print("GET POSTS ERROR:", e)
+
+        print(
+            "GET POSTS ERROR:",
+            repr(e)
+        )
 
         return jsonify({
             "error": str(e)
@@ -2748,12 +2944,28 @@ def get_post(post_id):
 # ================= HOME POSTS =================
 @app.route("/get_home_posts")
 def get_home_posts():
-
     try:
-        all_posts = supabase.table("posts").select("*").execute().data or []
+        all_posts = (
+            supabase
+            .table("posts")
+            .select("*")
+            .execute()
+            .data
+            or []
+        )
 
-        for post in all_posts:
-            post["time_ago"] = time_ago(post.get("created_at", ""))
+        viewer_id = None
+
+        if (
+            session.get("user_logged_in")
+            and session.get("user_id")
+        ):
+            viewer_id = str(session["user_id"])
+
+        all_posts = enrich_posts_with_profiles(
+            all_posts,
+            viewer_id
+        )
 
         # ==========================================
         # FEATURED (manual picks only, max 4)
@@ -2772,7 +2984,6 @@ def get_home_posts():
         sponsored = []
 
         for post in all_posts:
-
             if not post.get("is_sponsored"):
                 continue
 
@@ -2790,7 +3001,7 @@ def get_home_posts():
                 if expiry_date > datetime.utcnow():
                     sponsored.append(post)
 
-            except:
+            except Exception:
                 sponsored.append(post)
 
         sponsored = sorted(
@@ -2816,7 +3027,6 @@ def get_home_posts():
         # only real engagement wins
         # ==========================================
         def trending_score(post):
-
             views = post.get("views", 0) or 0
             likes = post.get("likes", 0) or 0
             clicks = post.get("clicks", 0) or 0
@@ -2829,11 +3039,10 @@ def get_home_posts():
 
             return score
 
-        # only posts with enough activity can trend
+        # Only posts with enough activity can trend
         trending_candidates = []
 
         for post in organic_posts:
-
             views = post.get("views", 0) or 0
             likes = post.get("likes", 0) or 0
             clicks = post.get("clicks", 0) or 0
@@ -2841,9 +3050,9 @@ def get_home_posts():
             score = trending_score(post)
 
             if (
-                views >= 30 and
-                (likes >= 2 or clicks >= 3) and
-                score >= 25
+                views >= 30
+                and (likes >= 2 or clicks >= 3)
+                and score >= 25
             ):
                 trending_candidates.append(post)
 
@@ -2877,7 +3086,6 @@ def get_home_posts():
         sponsor_index = 0
 
         for i, post in enumerate(recent):
-
             mixed_recent.append(post)
 
             if (i + 1) % 3 == 0:
@@ -2887,6 +3095,7 @@ def get_home_posts():
                     )
                     sponsor_index += 1
 
+        # Add any remaining sponsored posts
         while sponsor_index < len(sponsored):
             mixed_recent.append(
                 sponsored[sponsor_index]
@@ -2901,10 +3110,11 @@ def get_home_posts():
         })
 
     except Exception as e:
+        print("HOME POSTS ERROR:", repr(e))
+
         return jsonify({
             "error": str(e)
         }), 500
-
 
 # ================= ADD POST =================
 @app.route('/add_post', methods=['POST'])
@@ -3056,6 +3266,55 @@ def single_post(post_id):
         post = response.data[0]
 
         # =========================================
+        # GET AUTHOR PROFILE
+        # =========================================
+
+        author_id = post.get("user_id")
+
+        if author_id:
+
+            profile_response = (
+                supabase
+                .table("profiles")
+                .select(
+                    "id,full_name,account_type,"
+                    "profile_image,business_name,bio,is_verified"
+                )
+                .eq("id", author_id)
+                .limit(1)
+                .execute()
+            )
+
+            profile = (
+                profile_response.data[0]
+                if profile_response.data
+                else {}
+            )
+
+            post["full_name"] = profile.get("full_name")
+            post["business_name"] = profile.get("business_name")
+            post["account_type"] = profile.get("account_type")
+            post["profile_image"] = profile.get("profile_image")
+            post["bio"] = profile.get("bio")
+            post["is_verified"] = profile.get(
+                "is_verified",
+                False
+            )
+
+        else:
+
+            post["full_name"] = None
+            post["business_name"] = None
+            post["account_type"] = None
+            post["profile_image"] = None
+            post["bio"] = None
+            post["is_verified"] = False
+
+        post["time_ago"] = time_ago(
+            post.get("created_at", "")
+        )
+
+        # =========================================
         # CHECK FOR LEAD ACTION
         # =========================================
 
@@ -3134,16 +3393,10 @@ def single_post(post_id):
             # =====================================
 
             lead_data = {
-
                 "post_id": post_id,
-
                 "seller_id": seller_id,
-
-                "interested_user_id":
-                    interested_user_id,
-
+                "interested_user_id": interested_user_id,
                 "lead_type": lead_type,
-
                 "status": "new"
             }
 
