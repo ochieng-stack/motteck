@@ -1341,31 +1341,18 @@ def profile():
         )
 
         return redirect(url_for("home"))
-# =========================================================
-# PUBLIC USER PROFILE
-# =========================================================
-
-@app.route("/profile/<user_id>")
+# ================= PUBLIC PROFILE =================
+@app.route('/profile/<user_id>')
 def public_profile(user_id):
-
     try:
-
         # =========================================
-        # GET PUBLIC PROFILE
+        # GET PROFILE
         # =========================================
-
         profile_response = (
             supabase
             .table("profiles")
-            .select(
-                "id,full_name,account_type,"
-                "profile_image,business_name,"
-                "business_category,business_town,"
-                "business_description,business_website,"
-                "business_social_media,bio,is_verified"
-            )
+            .select("*")
             .eq("id", user_id)
-            .limit(1)
             .execute()
         )
 
@@ -1377,7 +1364,6 @@ def public_profile(user_id):
         # =========================================
         # GET USER POSTS
         # =========================================
-
         posts_response = (
             supabase
             .table("posts")
@@ -1387,50 +1373,112 @@ def public_profile(user_id):
             .execute()
         )
 
-        posts = posts_response.data or []
-
-        # Add time ago
-        for post in posts:
-            post["time_ago"] = time_ago(
-                post.get("created_at", "")
-            )
+        all_posts = posts_response.data or []
 
         # =========================================
-        # COUNTS
+        # ONLY SHOW ACTIVE LISTINGS
         # =========================================
+        from datetime import datetime, timezone
 
-        posts_count = len(posts)
+        active_posts = []
 
+        for post in all_posts:
+
+            # -----------------------------------------
+            # SPARE PARTS STAY ACTIVE
+            # -----------------------------------------
+            if post.get("category") == "spare_part":
+                active_posts.append(post)
+                continue
+
+            # -----------------------------------------
+            # NO LISTING DURATION = ACTIVE
+            # -----------------------------------------
+            listing_duration = post.get("listing_duration")
+
+            if not listing_duration:
+                active_posts.append(post)
+                continue
+
+            # -----------------------------------------
+            # CALCULATE EXPIRY
+            # -----------------------------------------
+            created_at = post.get("created_at")
+
+            if not created_at:
+                active_posts.append(post)
+                continue
+
+            try:
+                created_dt = datetime.fromisoformat(
+                    created_at.replace("Z", "+00:00")
+                )
+
+                now = datetime.now(timezone.utc)
+
+                if listing_duration == "1_day":
+                    expiry_seconds = 24 * 60 * 60
+
+                elif listing_duration == "1_week":
+                    expiry_seconds = 7 * 24 * 60 * 60
+
+                elif listing_duration == "1_month":
+                    expiry_seconds = 30 * 24 * 60 * 60
+
+                else:
+                    # Unknown duration — keep visible
+                    active_posts.append(post)
+                    continue
+
+                expiry_time = created_dt.timestamp() + expiry_seconds
+
+                if now.timestamp() < expiry_time:
+                    active_posts.append(post)
+
+            except Exception:
+                # If the date cannot be read, don't accidentally hide
+                # the listing.
+                active_posts.append(post)
+
+        # =========================================
+        # ENRICH POSTS WITH PROFILE INFORMATION
+        # =========================================
+        viewer_id = session.get("user_id")
+
+        active_posts = enrich_posts_with_profiles(
+            active_posts,
+            viewer_id
+        )
+
+        # =========================================
+        # FOLLOWER COUNT
+        # =========================================
         followers_response = (
             supabase
             .table("follows")
-            .select("id")
+            .select("id", count="exact")
             .eq("following_id", user_id)
             .execute()
         )
 
-        followers_count = len(
-            followers_response.data or []
-        )
+        followers_count = followers_response.count or 0
 
+        # =========================================
+        # FOLLOWING COUNT
+        # =========================================
         following_response = (
             supabase
             .table("follows")
-            .select("id")
+            .select("id", count="exact")
             .eq("follower_id", user_id)
             .execute()
         )
 
-        following_count = len(
-            following_response.data or []
-        )
+        following_count = following_response.count or 0
 
         # =========================================
-        # FOLLOW STATUS
+        # CHECK IF CURRENT VIEWER FOLLOWS THIS USER
         # =========================================
-
-        viewer_id = session.get("user_id")
-
         is_following = False
 
         if viewer_id and str(viewer_id) != str(user_id):
@@ -1441,36 +1489,35 @@ def public_profile(user_id):
                 .select("id")
                 .eq("follower_id", viewer_id)
                 .eq("following_id", user_id)
-                .limit(1)
                 .execute()
             )
 
-            is_following = bool(
-                follow_response.data
-            )
+            is_following = bool(follow_response.data)
 
         # =========================================
         # DISPLAY NAME
         # =========================================
-
-        display_name = (
-            profile.get("business_name")
-            if profile.get("account_type") == "business"
+        if (
+            profile.get("account_type") == "business"
             and profile.get("business_name")
-            else profile.get("full_name")
-            or "MOTTECK User"
-        )
+        ):
+            display_name = profile.get("business_name")
+
+        else:
+            display_name = (
+                profile.get("full_name")
+                or "MOTTECK User"
+            )
 
         # =========================================
         # RENDER PUBLIC PROFILE
         # =========================================
-
         return render_template(
             "public_profile.html",
             profile=profile,
             display_name=display_name,
-            posts=posts,
-            posts_count=posts_count,
+            posts=active_posts,
+            posts_count=len(active_posts),
             followers_count=followers_count,
             following_count=following_count,
             is_following=is_following,
@@ -1478,12 +1525,7 @@ def public_profile(user_id):
         )
 
     except Exception as e:
-
-        print(
-            "PUBLIC PROFILE ERROR:",
-            repr(e)
-        )
-
+        print("PUBLIC PROFILE ERROR:", repr(e))
         return "Unable to load profile", 500
         
 # ================= PROFILE PHOTO UPLOAD =================
