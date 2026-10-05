@@ -447,42 +447,47 @@
 
 
             <div class="post-user-left">
-
-
-                <!-- PROFILE IMAGE -->
-
-                {% if post.profile_image %}
-
-                <img
+                
+                
+                <a href="/profile/{{ post.user_id }}" class="post-profile-link"aria-label="View {{ post.full_name or post.business_name or 'MOTTECK User' }}'s profile">
+                    
+                    {% if post.profile_image %}
+                    <img
                     src="{{ post.profile_image }}"
                     alt="Profile"
                     class="post-profile-image"
                     loading="eager"
-                    decoding="async">
+                    decoding="async"
+                    onerror="this.onerror=null;this.src='/static/images/default-avatar.png';">
+                    
+                    {% else %}
 
-                {% else %}
-
-                <img
+                    <img
                     src="{{ url_for('static', filename='images/default-avatar.png') }}"
                     alt="Profile"
                     class="post-profile-image"
                     loading="eager"
-                    decoding="async">
+                    decoding="async"
+                    >
 
-                {% endif %}
+                   {% endif %}
+                
+                </a>
 
 
                 <!-- USER INFORMATION -->
 
                 <div class="post-user-info">
-
+                    
                     <div class="post-user-name">
-
-                        {{ post.full_name
-                           or post.user_name
-                           or post.business_name
-                           or 'MOTTECK User' }}
-
+                        <a href="/profile/{{ post.user_id }}" class="post-user-name-link">
+                            {{ post.full_name
+                                or post.business_name
+                                or post.user_name
+                                or 'MOTTECK User' }}
+                            
+                        </a>
+                    
                     </div>
 
 
