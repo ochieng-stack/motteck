@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ display_name }} - MOTTECK
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/public_profile.css') }}">
+<div class="public-profile-page">
+
+    <!-- ================= PROFILE HEADER ================= -->
+    <section class="profile-header">
+
+        <div class="profile-avatar">
+            {% if profile.profile_image %}
+                <img src="{{ profile.profile_image }}" alt="{{ display_name }}">
+            {% else %}
+                <div class="profile-avatar-placeholder">
+                    {{ display_name[:1]|upper }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="profile-info">
+
+            <div class="profile-name-row">
+
+                <h1>{{ display_name }}</h1>
+
+                {% if profile.is_verified %}
+                    <span class="verified-badge" title="Verified">
+                        ✓
+                    </span>
+                {% endif %}
+
+            </div>
+
+            <div class="profile-type">
+                {% if profile.account_type == 'business' %}
+                    Business
+                {% else %}
+                    Individual
+                {% endif %}
+            </div>
+
+            <!-- ================= PROFILE STATS ================= -->
+            <div class="profile-stats">
+
+                <div class="profile-stat">
+                    <strong>{{ posts_count }}</strong>
+                    <span>Posts</span>
+                </div>
+
+                <div class="profile-stat">
+                    <strong>{{ followers_count }}</strong>
+                    <span>Followers</span>
+                </div>
+
+                <div class="profile-stat">
+                    <strong>{{ following_count }}</strong>
+                    <span>Following</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= LISTINGS ================= -->
+    <section class="profile-listings">
+
+        <div class="profile-listings-header">
+            <h2>Posts</h2>
+
+            {% if posts_count > 0 %}
+                <span>{{ posts_count }} active</span>
+            {% endif %}
+        </div>
+
+
+        {% if posts %}
+
+            <div class="profile-posts-grid">
+
+                {% for post in posts %}
+
+                    <article class="profile-post-card">
+
+                        <a href="{{ url_for('single_post', post_id=post.id) }}"
+                           class="profile-post-image-link">
+
+                            {% if post.image_url %}
+
+                                <img
+                                    src="{{ post.image_url }}"
+                                    alt="{{ post.title }}"
+                                    class="profile-post-image"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <div class="profile-post-no-image">
+                                    <span>MOTTECK</span>
+                                </div>
+
+                            {% endif %}
+
+                        </a>
+
+
+                        <div class="profile-post-content">
+
+                            <div class="profile-post-category">
+                                {{ post.category|replace('_', ' ')|title }}
+                            </div>
+
+                            <h3>
+                                {{ post.title }}
+                            </h3>
+
+
+                            <div class="profile-post-actions">
+
+                                <a
+                                    href="{{ url_for('single_post', post_id=post.id) }}"
+                                    class="profile-btn primary-btn"
+                                >
+                                    View Post
+                                </a>
+
+                                <a
+                                    href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+                                    class="profile-btn secondary-btn"
+                                >
+                                    Request MOTTECK
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <!-- ================= EMPTY PROFILE ================= -->
+
+            <div class="profile-empty">
+
+                <div class="profile-empty-icon">
+                    +
+                </div>
+
+                <h3>No posts available</h3>
+
+                <p>
+                    This user currently has no active listings on MOTTECK.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}
