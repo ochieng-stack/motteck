@@ -1,65 +1,276 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-{{ display_name }} - MOTTECK
-{% endblock %}
+<head>
 
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/public_profile.css') }}">
-<div class="public-profile-page">
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ display_name }} | MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='profile.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     MOTTECK HEADER
+     ========================================================= -->
+
+<header class="main-header">
+
+    <div class="header-container">
+
+
+        <!-- ================= MOTTECK LOGO ================= -->
+
+        <a href="{{ url_for('home') }}" class="logo">
+            MOTTECK
+        </a>
+
+
+        <!-- ================= DESKTOP NAVIGATION ================= -->
+
+        <nav class="desktop-nav">
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('service') }}">
+                Service
+            </a>
+
+            <a href="{{ url_for('about') }}">
+                About
+            </a>
+
+            <a href="{{ url_for('contact') }}">
+                Contact
+            </a>
+
+
+            {% if session.get('user_logged_in') %}
+
+                <a href="{{ url_for('profile') }}">
+                    Profile
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}">
+                    Login
+                </a>
+
+                <a href="{{ url_for('register') }}" class="signup-link">
+                    Sign Up
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+
+        <!-- ================= MOBILE HAMBURGER ================= -->
+
+        <button
+            class="hamburger-btn"
+            id="hamburgerBtn"
+            type="button"
+            aria-label="Open menu"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         MOBILE MENU
+         ===================================================== -->
+
+    <div class="mobile-menu" id="mobileMenu">
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('service') }}">
+            Service
+        </a>
+
+        <a href="{{ url_for('about') }}">
+            About
+        </a>
+
+        <a href="{{ url_for('contact') }}">
+            Contact
+        </a>
+
+
+        {% if session.get('user_logged_in') %}
+
+            <a href="{{ url_for('profile') }}">
+                Profile
+            </a>
+
+        {% else %}
+
+            <a href="{{ url_for('login') }}">
+                Login
+            </a>
+
+            <a href="{{ url_for('register') }}">
+                Sign Up
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     PUBLIC PROFILE
+     ========================================================= -->
+
+<main class="public-profile-container">
+
 
     <!-- ================= PROFILE HEADER ================= -->
-    <section class="profile-header">
 
-        <div class="profile-avatar">
+    <section class="public-profile-header">
+
+
+        <!-- PROFILE PHOTO -->
+
+        <div class="public-profile-photo-wrapper">
+
             {% if profile.profile_image %}
-                <img src="{{ profile.profile_image }}" alt="{{ display_name }}">
+
+                <img
+                    src="{{ profile.profile_image }}"
+                    alt="{{ display_name }}"
+                    class="public-profile-image"
+                >
+
             {% else %}
-                <div class="profile-avatar-placeholder">
+
+                <div class="public-profile-placeholder">
                     {{ display_name[:1]|upper }}
                 </div>
+
             {% endif %}
+
         </div>
 
-        <div class="profile-info">
 
-            <div class="profile-name-row">
 
-                <h1>{{ display_name }}</h1>
+        <!-- PROFILE INFORMATION -->
+
+        <div class="public-profile-info">
+
+
+            <!-- NAME -->
+
+            <div class="public-profile-name-row">
+
+                <h1>
+                    {{ display_name }}
+                </h1>
+
 
                 {% if profile.is_verified %}
-                    <span class="verified-badge" title="Verified">
+
+                    <span
+                        class="public-verified-badge"
+                        title="Verified"
+                    >
                         ✓
                     </span>
+
                 {% endif %}
 
             </div>
 
-            <div class="profile-type">
-                {% if profile.account_type == 'business' %}
+
+
+            <!-- ACCOUNT TYPE -->
+
+            <p class="public-profile-account-type">
+
+                {% if profile.account_type == "business" %}
+
                     Business
+
                 {% else %}
+
                     Individual
+
                 {% endif %}
-            </div>
+
+            </p>
+
+
 
             <!-- ================= PROFILE STATS ================= -->
-            <div class="profile-stats">
 
-                <div class="profile-stat">
-                    <strong>{{ posts_count }}</strong>
-                    <span>Posts</span>
+            <div class="public-profile-stats">
+
+
+                <div class="public-profile-stat">
+
+                    <strong>
+                        {{ posts_count or 0 }}
+                    </strong>
+
+                    <span>
+                        Posts
+                    </span>
+
                 </div>
 
-                <div class="profile-stat">
-                    <strong>{{ followers_count }}</strong>
-                    <span>Followers</span>
+
+
+                <div class="public-profile-stat">
+
+                    <strong>
+                        {{ followers_count or 0 }}
+                    </strong>
+
+                    <span>
+                        Followers
+                    </span>
+
                 </div>
 
-                <div class="profile-stat">
-                    <strong>{{ following_count }}</strong>
-                    <span>Following</span>
+
+
+                <div class="public-profile-stat">
+
+                    <strong>
+                        {{ following_count or 0 }}
+                    </strong>
+
+                    <span>
+                        Following
+                    </span>
+
                 </div>
+
 
             </div>
 
@@ -68,108 +279,221 @@
     </section>
 
 
-    <!-- ================= LISTINGS ================= -->
-    <section class="profile-listings">
 
-        <div class="profile-listings-header">
-            <h2>Posts</h2>
+    <!-- =====================================================
+         POSTS
+         ===================================================== -->
+
+    <section class="public-profile-posts">
+
+
+        <!-- POSTS HEADER -->
+
+        <div class="public-profile-posts-header">
+
+            <h2>
+                Posts
+            </h2>
+
 
             {% if posts_count > 0 %}
-                <span>{{ posts_count }} active</span>
+
+                <span>
+                    {{ posts_count }} active
+                </span>
+
             {% endif %}
+
         </div>
 
 
+
+        <!-- =================================================
+             POSTS AVAILABLE
+             ================================================= -->
+
         {% if posts %}
 
-            <div class="profile-posts-grid">
+
+            <div class="public-profile-grid">
+
 
                 {% for post in posts %}
 
-                    <article class="profile-post-card">
 
-                        <a href="{{ url_for('single_post', post_id=post.id) }}"
-                           class="profile-post-image-link">
+                    <article class="public-profile-card">
+
+
+                        <!-- ================= POST IMAGE ================= -->
+
+                        <a
+                            href="{{ url_for('single_post', post_id=post.id) }}"
+                            class="public-profile-card-image-link"
+                        >
+
 
                             {% if post.image_url %}
 
                                 <img
                                     src="{{ post.image_url }}"
                                     alt="{{ post.title }}"
-                                    class="profile-post-image"
+                                    class="public-profile-card-image"
                                     loading="lazy"
                                 >
 
                             {% else %}
 
-                                <div class="profile-post-no-image">
-                                    <span>MOTTECK</span>
+                                <div class="public-profile-no-image">
+                                    MOTTECK
                                 </div>
 
                             {% endif %}
 
+
                         </a>
 
 
-                        <div class="profile-post-content">
 
-                            <div class="profile-post-category">
-                                {{ post.category|replace('_', ' ')|title }}
+                        <!-- ================= POST CONTENT ================= -->
+
+                        <div class="public-profile-card-content">
+
+
+                            <!-- CATEGORY -->
+
+                            <div class="public-profile-card-category">
+
+                                {{ post.category
+                                   |replace('_', ' ')
+                                   |title }}
+
                             </div>
+
+
+
+                            <!-- TITLE -->
 
                             <h3>
                                 {{ post.title }}
                             </h3>
 
 
-                            <div class="profile-post-actions">
+
+                            <!-- ================= ACTIONS ================= -->
+
+                            <div class="public-profile-card-actions">
+
+
+                                <!-- VIEW POST -->
 
                                 <a
                                     href="{{ url_for('single_post', post_id=post.id) }}"
-                                    class="profile-btn primary-btn"
+                                    class="public-profile-view-btn"
                                 >
                                     View Post
                                 </a>
 
+
+
+                                <!-- REQUEST MOTTECK -->
+
                                 <a
                                     href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
-                                    class="profile-btn secondary-btn"
+                                    class="public-profile-request-btn"
                                 >
                                     Request MOTTECK
                                 </a>
 
+
                             </div>
+
 
                         </div>
 
+
                     </article>
+
 
                 {% endfor %}
 
+
             </div>
+
 
         {% else %}
 
-            <!-- ================= EMPTY PROFILE ================= -->
 
-            <div class="profile-empty">
+            <!-- =================================================
+                 NO POSTS
+                 ================================================= -->
 
-                <div class="profile-empty-icon">
+            <div class="public-profile-empty">
+
+
+                <div class="public-profile-empty-icon">
                     +
                 </div>
 
-                <h3>No posts available</h3>
+
+                <h3>
+                    No posts available
+                </h3>
+
 
                 <p>
                     This user currently has no active listings on MOTTECK.
                 </p>
 
+
             </div>
+
 
         {% endif %}
 
+
     </section>
 
-</div>
 
-{% endblock %}
+</main>
+
+
+
+<!-- =========================================================
+     MOBILE MENU SCRIPT
+     ========================================================= -->
+
+<script>
+
+const hamburgerBtn = document.getElementById("hamburgerBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+
+if (hamburgerBtn && mobileMenu) {
+
+    hamburgerBtn.addEventListener("click", function () {
+
+        mobileMenu.classList.toggle("active");
+
+        const icon = hamburgerBtn.querySelector("i");
+
+        if (mobileMenu.classList.contains("active")) {
+
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-xmark");
+
+        } else {
+
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+
+        }
+
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>
