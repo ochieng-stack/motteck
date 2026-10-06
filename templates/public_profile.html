@@ -211,7 +211,7 @@
         <i class="fa-solid fa-car-side"></i>
         Accessories
     </a>   
-             
+
     <a href="{{ url_for('spare_part') }}">
         <i class="fa-solid fa-screwdriver-wrench"></i>
         Spare Parts
@@ -706,32 +706,77 @@
 
 <script>
 
-const hamburgerBtn = document.getElementById("hamburgerBtn");
-const mobileMenu = document.getElementById("mobileMenu");
+/* ================= HAMBURGER MENU ================= */
 
-if (hamburgerBtn && mobileMenu) {
+function toggleMenu() {
 
-    hamburgerBtn.addEventListener("click", function () {
+    const menu = document.getElementById("mobileMenu");
 
-        mobileMenu.classList.toggle("active");
+    menu.style.display =
+        menu.style.display === "flex"
+            ? "none"
+            : "flex";
+}
 
-        const icon = hamburgerBtn.querySelector("i");
 
-        if (mobileMenu.classList.contains("active")) {
+/* ================= PROFILE DROPDOWN ================= */
 
-            icon.classList.remove("fa-bars");
-            icon.classList.add("fa-xmark");
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-        } else {
+        const profileBtn =
+            document.getElementById(
+                "profileDropdownBtn"
+            );
 
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
+        const profileDropdown =
+            document.querySelector(
+                ".profile-dropdown"
+            );
 
+        if (
+            !profileBtn ||
+            !profileDropdown
+        ) {
+            return;
         }
 
-    });
+        profileBtn.addEventListener(
+            "click",
+            function (event) {
 
-}
+                event.stopPropagation();
+
+                profileDropdown
+                    .classList
+                    .toggle("active");
+
+            }
+        );
+
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    !profileDropdown.contains(
+                        event.target
+                    )
+                ) {
+
+                    profileDropdown
+                        .classList
+                        .remove("active");
+
+                }
+
+            }
+        );
+
+    }
+);
 
 </script>
 
