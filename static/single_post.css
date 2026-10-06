@@ -1064,8 +1064,8 @@ body {
     .category-nav {
         top: 56px;
         height: 44px;
-        justify-content: flex-start;
-        gap: 5px;
+        justify-content: space-evenly;
+        gap: 6px;
         padding: 4px 10px;
     }
 
