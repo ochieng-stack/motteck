@@ -1689,7 +1689,7 @@ def motobike():
 
 
 @app.route('/accessorie')
-def accessorrie():
+def accessorie():
     return render_template(
         'accessorie.html',
         logged_in=session.get('logged_in', False)
