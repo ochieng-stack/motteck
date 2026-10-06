@@ -1688,10 +1688,10 @@ def motobike():
     )
 
 
-@app.route('/plane')
-def plane():
+@app.route('/accessorie')
+def accessorrie():
     return render_template(
-        'plane.html',
+        'accessorie.html',
         logged_in=session.get('logged_in', False)
     )
 
