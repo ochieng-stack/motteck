@@ -20,7 +20,7 @@
           href="{{ url_for('static', filename='motobike.css') }}">
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='plane.css') }}">
+          href="{{ url_for('static', filename='accessorie.css') }}">
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='truck.css') }}">
@@ -317,8 +317,8 @@
         BIKE
     </a>
 
-    <a href="{{ url_for('plane') }}">
-        AVIATION
+    <a href="{{ url_for('accessorie') }}">
+        ACCESSORIE
     </a>
 
     <a href="{{ url_for('spare_part') }}">
@@ -382,12 +382,12 @@
     </a>
 
 
-    <a href="{{ url_for('plane') }}">
+    <a href="{{ url_for('accessorie') }}">
 
-        <i class="fa-solid fa-plane"></i>
+        <i class="fa-solid fa-accessorie"></i>
 
         <span>
-            Aviation
+            ACCESSORIE
         </span>
 
     </a>
@@ -794,15 +794,15 @@
             </a>
 
 
-            {% elif post.category == 'plane' %}
+            {% elif post.category == 'accessorie' %}
 
             <a
-                href="{{ url_for('plane') }}"
+                href="{{ url_for('accessorie') }}"
                 class="btn">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
-                Back to Aviation
+                Back to Accessorie
 
             </a>
 

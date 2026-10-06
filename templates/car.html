@@ -310,11 +310,11 @@
     </a>
 
 
-    <a href="{{ url_for('plane') }}">
+    <a href="{{ url_for('accessorie') }}">
 
-        <i class="fa-solid fa-plane"></i>
+        <i class="fa-solid fa-accessorie"></i>
 
-        Aviation
+        Accessorie
 
     </a>
 
@@ -366,8 +366,8 @@
     </a>
 
 
-    <a href="{{ url_for('plane') }}">
-        AVIATION
+    <a href="{{ url_for('accessorie') }}">
+        ACCESSORIE
     </a>
 
 
@@ -843,10 +843,10 @@ function getCategoryLabel(value) {
     }
 
     if (
-        categoryValue === "plane" ||
-        categoryValue === "aviation"
+        categoryValue === "accessorie" ||
+        categoryValue === "accessorie"
     ) {
-        return "Aviation";
+        return "Accessorie";
     }
 
     if (

@@ -8,10 +8,10 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title> TRUCK | MOTTECK</title>
+    <title> AVIATION | MOTTECK</title>
 
     <link rel="stylesheet"
-          href="{{ url_for('static', filename='truck.css') }}">
+          href="{{ url_for('static', filename='accessorie.css') }}">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
@@ -354,7 +354,7 @@
     </a>
 
 
-    <a href="{{ url_for('truck') }}" class="active">
+    <a href="{{ url_for('truck') }}" >
         TRUCK
     </a>
 
@@ -364,8 +364,8 @@
     </a>
 
 
-    <a href="{{ url_for('accessorie') }}">
-        ACCESSORIE
+    <a href="{{ url_for('accessorie') }}" class="active">
+        ACESSORIE
     </a>
 
 
@@ -391,9 +391,9 @@
 
         <input
             type="text"
-            id="truckSearch"
+            id="accessorieSearch"
             class="search-input"
-            placeholder="Search Trucks only..."
+            placeholder="Search Accessories i.e rims,tyres,Speakers..."
             autocomplete="off"
         >
 
@@ -403,7 +403,7 @@
     <!-- POSTS -->
 
     <div
-        id="truckPost"
+        id="accessoriePost"
         class="post-container"
     ></div>
 
@@ -624,7 +624,6 @@
      JAVASCRIPT
 ========================================================= -->
 
-
 <script>
 
 
@@ -632,10 +631,10 @@
    CATEGORY
 ========================================================= */
 
-const category = "truck";
+const category = "accessorie";
 
 const postContainer =
-    document.getElementById("truckPost");
+    document.getElementById("accessoriePost");
 
 
 
@@ -644,10 +643,10 @@ const postContainer =
 ========================================================= */
 
 const CACHE_KEY =
-    "motteck_truck_cache";
+    "motteck_accessorie_cache";
 
 const CACHE_TIME_KEY =
-    "motteck_truck_cache_time";
+    "motteck_accessorie_cache_time";
 
 const CACHE_MINUTES =
     15;
@@ -843,16 +842,16 @@ function getCategoryLabel(value) {
 
     if (
         categoryValue === "accessorie" ||
-        categoryValue === "accessories"
+        categoryValue === "accessorie"
     ) {
-        return "Accessories";
+        return "accessorie";
     }
 
     if (
         categoryValue === "spare_part" ||
-        categoryValue === "spare_parts"
+        categoryValue === "spare_part"
     ) {
-        return "spare_parts";
+        return "spare_part";
     }
 
     return value || "";
@@ -872,7 +871,7 @@ function createAuthorHeader(post) {
         "MOTTECK User";
 
     const category =
-        post.category || "truck";
+        post.category || "accessorie";
 
     /*
        IMPORTANT:
@@ -1927,7 +1926,7 @@ function renderPosts(posts) {
 
                 <p>
                     There are no published
-                    posts in the truck category yet.
+                    posts in the accessorie category yet.
                 </p>
 
             </div>
@@ -1988,7 +1987,7 @@ function searchCategoryPosts(query) {
         postContainer.innerHTML = `
             <div class="no-posts">
                 <h3>No results found</h3>
-                <p>We couldn't find a truck matching "${escapeHTML(query)}".</p>
+                <p>We couldn't find a accessorie matching "${escapeHTML(query)}".</p>
             </div>
         `;
         return;
@@ -1998,7 +1997,7 @@ function searchCategoryPosts(query) {
 }
 
 document
-    .getElementById("truckSearch")
+    .getElementById("accessorieSearch")
     ?.addEventListener("input", function() {
         searchCategoryPosts(this.value);
     });
