@@ -888,7 +888,7 @@ body {
 
 .sticky-categories {
     position: fixed;
-    top: 72px;
+    top: 75px;
     left: 0;
     width: 100%;
     background: rgba(0, 0, 0, .92);
@@ -1432,7 +1432,7 @@ body {
 
     .sticky-categories {
         position: fixed;
-        top: 100px;
+        top: 105px;
         left: 0;
         width: 100%;
         z-index: 999;
