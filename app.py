@@ -3764,25 +3764,83 @@ def contact():
         firstname = request.form.get("firstname", "").strip()
         lastname = request.form.get("lastname", "").strip()
         email = request.form.get("email", "").strip()
+        inquiry_type = request.form.get("inquiry_type", "").strip()
         message = request.form.get("text", "").strip()
 
-        if not firstname or not email or not message:
+        # ================= VALIDATION =================
+
+        if not firstname or not email or not inquiry_type or not message:
             return jsonify({
                 "status": "error",
                 "message": "Please fill all required fields"
             })
 
         try:
+
+            # ================= SEND EMAIL =================
+
             resend.Emails.send({
                 "from": "contact@motteck.onrender.com",
-                "to": "motteckcompany@gmail.com",
-                "subject": f"Motteck Contact - {firstname} {lastname}",
+
+                # YOUR MOTTECK CONTACT EMAIL
+                "to": "mottecknetwork@gmail.com",
+
+                "subject": f"MOTTECK Contact - {inquiry_type} - {firstname} {lastname}",
+
+                # When you click Reply in your email,
+                # the reply will go directly to the person who contacted you.
                 "reply_to": email,
+
                 "html": f"""
-                    <h2>New Contact Message</h2>
-                    <p><strong>Name:</strong> {firstname} {lastname}</p>
-                    <p><strong>Email:</strong> {email}</p>
-                    <p><strong>Message:</strong><br>{message}</p>
+                    <div style="
+                        font-family: Arial, sans-serif;
+                        max-width: 650px;
+                        margin: auto;
+                        color: #222;
+                    ">
+
+                        <h2 style="
+                            background: #111;
+                            color: white;
+                            padding: 18px;
+                            margin: 0;
+                        ">
+                            New MOTTECK Contact Message
+                        </h2>
+
+                        <div style="padding: 20px;">
+
+                            <p>
+                                <strong>Inquiry Type:</strong>
+                                {inquiry_type}
+                            </p>
+
+                            <p>
+                                <strong>Name:</strong>
+                                {firstname} {lastname}
+                            </p>
+
+                            <p>
+                                <strong>Email:</strong>
+                                {email}
+                            </p>
+
+                            <hr>
+
+                            <p>
+                                <strong>Message:</strong>
+                            </p>
+
+                            <p style="
+                                white-space: pre-line;
+                                line-height: 1.6;
+                            ">
+                                {message}
+                            </p>
+
+                        </div>
+
+                    </div>
                 """
             })
 
@@ -3792,6 +3850,7 @@ def contact():
             })
 
         except Exception as e:
+
             print("CONTACT ERROR:", str(e))
 
             return jsonify({
@@ -3800,7 +3859,6 @@ def contact():
             })
 
     return render_template("contact.html")
-
 
 # ================= RUN =================
 if __name__ == "__main__":
