@@ -3780,7 +3780,7 @@ def contact():
             # ================= SEND EMAIL =================
 
             resend.Emails.send({
-                "from": "contact@motteck.onrender.com",
+                "from": "contact@mottecknetwork.com",
 
                 # YOUR MOTTECK CONTACT EMAIL
                 "to": "mottecknetwork@gmail.com",
