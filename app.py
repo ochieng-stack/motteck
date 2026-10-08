@@ -1816,42 +1816,189 @@ def forgot_password():
 
     return render_template("forgot_password.html")
 
+# ================= PASSWORD RECOVERY CONFIRM =================
+@app.route("/auth/confirm")
+def auth_confirm():
+
+    token_hash = request.args.get("token_hash")
+    auth_type = request.args.get("type")
+
+    if not token_hash or auth_type != "recovery":
+        flash(
+            "This password reset link is invalid or has expired.",
+            "error"
+        )
+        return redirect(url_for("forgot_password"))
+
+    try:
+
+        response = supabase.auth.verify_otp({
+            "token_hash": token_hash,
+            "type": "recovery"
+        })
+
+        session_data = response.session
+
+        if not session_data:
+            flash(
+                "This password reset link is invalid or has expired.",
+                "error"
+            )
+            return redirect(url_for("forgot_password"))
+
+        # Store the recovery session in the server-side Flask session.
+        session["password_reset_access_token"] = (
+            session_data.access_token
+        )
+
+        session["password_reset_refresh_token"] = (
+            session_data.refresh_token
+        )
+
+        session["password_reset_user_id"] = (
+            session_data.user.id
+        )
+
+        return redirect(url_for("reset_password"))
+
+    except Exception as e:
+
+        print(
+            "PASSWORD RECOVERY CONFIRM ERROR:",
+            repr(e)
+        )
+
+        flash(
+            "This password reset link is invalid or has expired.",
+            "error"
+        )
+
+        return redirect(url_for("forgot_password"))
+
 # ================= RESET PASSWORD =================
 @app.route("/reset-password", methods=["GET", "POST"])
 def reset_password():
 
+    # User must arrive here through a valid password recovery link.
+    if not session.get("password_reset_user_id"):
+        flash(
+            "Please request a new password reset link.",
+            "error"
+        )
+        return redirect(url_for("forgot_password"))
+
     if request.method == "POST":
 
-        password = request.form.get("password")
-        confirm_password = request.form.get("confirm_password")
+        password = request.form.get("password", "")
+        confirm_password = request.form.get(
+            "confirm_password",
+            ""
+        )
 
         if not password or not confirm_password:
-            flash("Please fill in both password fields.", "error")
+
+            flash(
+                "Please fill in both password fields.",
+                "error"
+            )
+
+            return redirect(url_for("reset_password"))
+
+        if len(password) < 6:
+
+            flash(
+                "Your password must be at least 6 characters long.",
+                "error"
+            )
+
             return redirect(url_for("reset_password"))
 
         if password != confirm_password:
-            flash("Passwords do not match.", "error")
+
+            flash(
+                "Passwords do not match.",
+                "error"
+            )
+
             return redirect(url_for("reset_password"))
 
         try:
+
+            access_token = session.get(
+                "password_reset_access_token"
+            )
+
+            refresh_token = session.get(
+                "password_reset_refresh_token"
+            )
+
+            if not access_token or not refresh_token:
+
+                flash(
+                    "Your password reset session has expired. "
+                    "Please request a new reset link.",
+                    "error"
+                )
+
+                return redirect(url_for("forgot_password"))
+
+            # Restore the Supabase recovery session.
+            supabase.auth.set_session(
+                access_token,
+                refresh_token
+            )
+
+            # Update password.
             supabase.auth.update_user({
                 "password": password
             })
 
+            # Remove the recovery session immediately.
+            session.pop(
+                "password_reset_access_token",
+                None
+            )
+
+            session.pop(
+                "password_reset_refresh_token",
+                None
+            )
+
+            session.pop(
+                "password_reset_user_id",
+                None
+            )
+
+            # Make sure the user is NOT left logged in
+            # after changing their password.
+            session.pop("user_logged_in", None)
+            session.pop("user_id", None)
+            session.pop("email", None)
+            session.pop("full_name", None)
+            session.pop("account_type", None)
+
             flash(
-                "Your password has been changed successfully.",
+                "Your password has been changed successfully. "
+                "Please log in with your new password.",
                 "success"
             )
 
             return redirect(url_for("login_user"))
 
         except Exception as e:
-            print("PASSWORD UPDATE ERROR:", str(e))
+
+            print(
+                "PASSWORD UPDATE ERROR:",
+                repr(e)
+            )
 
             flash(
-                "Unable to update your password.",
+                "Unable to update your password. "
+                "Please request a new reset link and try again.",
                 "error"
             )
+
+            return redirect(url_for("reset_password"))
 
     return render_template("reset_password.html")
 
