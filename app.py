@@ -2005,22 +2005,18 @@ def reset_password():
 # ================= GOOGLE LOGIN =================
 @app.route("/auth/google")
 def google_login():
-
     try:
         response = supabase.auth.sign_in_with_oauth({
             "provider": "google",
             "options": {
-                "redirect_to": url_for(
-                    "google_callback",
-                    _external=True
-                )
+                "redirect_to": "https://mottecknetwork.com/auth/callback"
             }
         })
 
         return redirect(response.url)
 
     except Exception as e:
-        print("GOOGLE LOGIN ERROR:", str(e))
+        print("GOOGLE LOGIN ERROR:", repr(e))
 
         flash(
             "Unable to start Google login.",
