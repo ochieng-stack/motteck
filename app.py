@@ -2883,9 +2883,7 @@ def delete_post(post_id):
 # ================= GOOGLE CALLBACK =================
 @app.route("/auth/callback")
 def google_callback():
-
     try:
-
         code = request.args.get("code")
 
         if not code:
@@ -2896,39 +2894,51 @@ def google_callback():
             return redirect(url_for("login_user"))
 
         # ================= EXCHANGE GOOGLE CODE =================
-
         response = supabase.auth.exchange_code_for_session(code)
 
         user = response.user
 
         if not user:
-
             flash(
                 "We couldn't complete your Google login. Please try again.",
                 "error"
             )
-
             return redirect(url_for("login_user"))
 
-
         # ================= FIND EXISTING PROFILE =================
-
-        profile_response = supabase.table("profiles") \
-            .select("*") \
-            .eq("id", user.id) \
+        profile_response = (
+            supabase
+            .table("profiles")
+            .select("*")
+            .eq("id", user.id)
             .execute()
-
-        profile = (
-            profile_response.data[0]
-            if profile_response.data
-            else None
         )
 
+        profile_data = profile_response.data
+
+        # Safely determine whether a valid profile was returned
+        profile = None
+
+        if isinstance(profile_data, list):
+            if profile_data and isinstance(profile_data[0], dict):
+                profile = profile_data[0]
+
+        elif isinstance(profile_data, dict):
+            profile = profile_data
+
+        # Debug information for Render logs
+        print(
+            "GOOGLE PROFILE TYPE:",
+            type(profile_data).__name__
+        )
+
+        print(
+            "GOOGLE PROFILE VALID:",
+            isinstance(profile, dict)
+        )
 
         # ================= EXISTING MOTTECK USER =================
-
         if profile:
-
             session["user_logged_in"] = True
             session["user_id"] = user.id
             session["email"] = user.email
@@ -2944,52 +2954,45 @@ def google_callback():
 
             return redirect(url_for("home"))
 
-
         # ================= NEW GOOGLE USER =================
-
-        # Safely read Google metadata
         metadata = user.user_metadata
 
-        if not isinstance(metadata, dict):
-            metadata = {}
-
-
-        full_name = (
-            metadata.get("full_name")
-            or metadata.get("name")
-            or metadata.get("display_name")
-            or (
-                user.email.split("@")[0]
-                if user.email
-                else "MOTTECK User"
+        if isinstance(metadata, dict):
+            full_name = (
+                metadata.get("full_name")
+                or metadata.get("name")
+                or metadata.get("display_name")
             )
-        )
+        else:
+            full_name = None
 
+        # Fallback to email username
+        if not full_name:
+            if user.email:
+                full_name = user.email.split("@")[0]
+            else:
+                full_name = "MOTTECK User"
 
-        # ================= STORE TEMPORARY GOOGLE DATA =================
-
+        # Store temporary Google information
         session["google_user_id"] = user.id
         session["google_email"] = user.email
         session["google_full_name"] = full_name
 
-
-        # Send new Google user to account type selection
-
-        return redirect(
-            url_for("choose_account_type")
-        )
-
+        return redirect(url_for("choose_account_type"))
 
     except Exception as e:
-
-        print("GOOGLE CALLBACK ERROR:", repr(e))
+        print(
+            "GOOGLE CALLBACK ERROR:",
+            repr(e)
+        )
 
         flash(
-            "Google login could not be completed. Please try again.",
+            "Google login could not be completed.",
             "error"
         )
 
         return redirect(url_for("login_user"))
+    
  # =========================================================
 # ENRICH POSTS WITH AUTHOR PROFILE INFORMATION
 # =========================================================
