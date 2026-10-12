@@ -2004,7 +2004,7 @@ def reset_password():
 
  # ================= GOOGLE =================================
 
- @app.route("/auth/google")
+@app.route("/auth/google")
 def google_login():
     try:
         redirect_url = url_for("google_callback", _external=True)
