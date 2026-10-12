@@ -2002,7 +2002,24 @@ def reset_password():
 
     return render_template("reset_password.html")
 
+ # ================= GOOGLE =================================
 
+ @app.route("/auth/google")
+def google_login():
+    try:
+        redirect_url = url_for("google_callback", _external=True)
+
+        return supabase.auth.sign_in_with_oauth({
+            "provider": "google",
+            "options": {
+                "redirect_to": redirect_url
+            }
+        }).url
+
+    except Exception as e:
+        print("GOOGLE LOGIN ERROR:", repr(e))
+        return f"Google login failed: {str(e)}", 500
+        
  # ================= GOOGLE CALLBACK =================
 @app.route("/auth/callback")
 def google_callback():
