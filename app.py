@@ -2002,85 +2002,66 @@ def reset_password():
 
     return render_template("reset_password.html")
 
-# ================= GOOGLE CALLBACK =================
+
+ # ================= GOOGLE CALLBACK =================
 @app.route("/auth/callback")
 def google_callback():
     try:
         code = request.args.get("code")
 
         if not code:
-            flash("Google login could not be completed. Please try again.", "error")
-            return redirect(url_for("login_user"))
+            return "Google login failed: no authorization code received.", 400
 
-        response = supabase.auth.exchange_code_for_session(code)
+        # Exchange Google's authorization code with Supabase
+        auth_response = supabase.auth.exchange_code_for_session(code)
 
-        user = response.user
+        supabase_session = auth_response.session
+
+        if not supabase_session:
+            return "Google login failed: no session returned.", 400
+
+        user = supabase_session.user
 
         if not user:
-            flash("We couldn't complete your Google login. Please try again.", "error")
-            return redirect(url_for("login_user"))
+            return "Google login failed: no user returned.", 400
 
-        # Check whether this Google user already has a MOTTECK profile
+        email = user.email
+
+        if not email:
+            return "Google login failed: no email returned.", 400
+
+        # Find the MOTTECK profile belonging to this Google user
         profile_response = (
-            supabase.table("profiles")
-            .select("*")
+            supabase
+            .table("profiles")
+            .select("id, full_name, account_type")
             .eq("id", user.id)
             .execute()
         )
 
-        profile = (
-            profile_response.data[0]
-            if profile_response.data
-            else None
-        )
+        profile = profile_response.data
 
-        # Existing MOTTECK user
-        if profile:
-            session["user_logged_in"] = True
-            session["user_id"] = user.id
-            session["email"] = user.email
-            session["full_name"] = profile.get("full_name")
-            session["account_type"] = profile.get("account_type")
+        if not profile:
+            supabase.auth.sign_out()
+            return redirect(url_for("login", error="Please register first."))
 
-            session.pop("google_user_id", None)
-            session.pop("google_email", None)
-            session.pop("google_full_name", None)
+        profile = profile[0]
 
-            flash("Welcome back!", "success")
+        # Your normal Flask login session
+        session["user_logged_in"] = True
+        session["user_id"] = str(user.id)
+        session["email"] = email
+        session["full_name"] = profile["full_name"]
+        session["account_type"] = profile["account_type"]
 
-            return redirect(url_for("home"))
+        print("GOOGLE LOGIN SUCCESS:", email)
 
-        # New Google user
-        metadata = user.user_metadata
-
-        # Supabase normally returns metadata as a dictionary,
-        # but protect against it being returned as a string.
-        if isinstance(metadata, dict):
-            full_name = (
-                metadata.get("full_name")
-                or metadata.get("name")
-                or metadata.get("display_name")
-            )
-        else:
-            full_name = None
-
-        # Fallback if Google did not provide a usable name
-        if not full_name:
-            if user.email:
-                full_name = user.email.split("@")[0]
-            else:
-                full_name = "MOTTECK User"
-
-        session["google_user_id"] = user.id
-        session["google_email"] = user.email
-        session["google_full_name"] = full_name
-
-        return redirect(url_for("choose_account_type"))
+        return redirect(url_for("home"))
 
     except Exception as e:
         print("GOOGLE CALLBACK ERROR:", repr(e))
-        flash("Google login could not be completed.", "error")
-        return redirect(url_for("login_user"))
+        return f"Google login failed: {str(e)}", 500
+
 # ================= CHOOSE GOOGLE ACCOUNT TYPE =================
 @app.route("/choose-account-type", methods=["GET", "POST"])
 def choose_account_type():
