@@ -2,215 +2,455 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Admin Dashboard - Motteck</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='admin_dashboard.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='admin_dashboard.css') }}"
+    >
 
 </head>
 
 
 <body>
 
-<header>
-    <h2>Motteck Admin Dashboard</h2>
 
-    <a href="/logout" style="color:white;">
+<header>
+
+    <h2>
+        Motteck Admin Dashboard
+    </h2>
+
+    <a
+        href="/logout"
+        style="color:white;"
+    >
         Logout
     </a>
+
 </header>
+
 
 
 <div class="container">
 
 
-    <!-- =========================================================
-         ANALYTICS
-    ========================================================== -->
+<!-- =========================================================
+     ANALYTICS
+========================================================= -->
 
-    <div class="form-box">
+<div class="form-box">
 
-        <h3>Analytics</h3>
+    <h3>
+        Analytics
+    </h3>
 
-        <div id="analytics">
-            Loading analytics...
-        </div>
+    <div id="analytics">
 
-    </div>
-
-
-    <!-- =========================================================
-         SPONSORED TABLE
-    ========================================================== -->
-
-    <div class="form-box">
-
-        <h3>Sponsored Ads Tracker</h3>
-
-        <div id="sponsorTable">
-            Loading sponsored ads...
-        </div>
+        Loading analytics...
 
     </div>
 
+</div>
 
-    <!-- =========================================================
-         CREATE ADMIN POST
-    ========================================================== -->
 
-    <div class="form-box">
 
-        <h3>Create Post</h3>
+<!-- =========================================================
+     SPONSORED ADS TRACKER
+========================================================= -->
 
-        <form id="postForm" enctype="multipart/form-data">
+<div class="form-box">
+
+    <h3>
+        Sponsored Ads Tracker
+    </h3>
+
+    <div id="sponsorTable">
+
+        Loading sponsored ads...
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     CREATE ADMIN POST
+========================================================= -->
+
+<div class="form-box">
+
+    <h3>
+        Create Post
+    </h3>
+
+
+    <form
+        id="postForm"
+        enctype="multipart/form-data"
+    >
+
+
+        <!-- TITLE -->
+
+        <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            required
+        >
+
+
+
+        <!-- CATEGORY -->
+
+        <select
+            name="category"
+            id="create_category"
+            onchange="updateCreateFields()"
+            required
+        >
+
+            <option value="">
+                Select Category
+            </option>
+
+            <option value="car">
+                Car
+            </option>
+
+            <option value="motorbike">
+                Motorbike / Bike
+            </option>
+
+            <option value="truck">
+                Truck / Bus
+            </option>
+
+            <option value="train">
+                Train / Rail
+            </option>
+
+            <option value="plane">
+                Aviation
+            </option>
+
+            <option value="spare_part">
+                Spare Part
+            </option>
+
+            <option value="Accessorie">
+                Accessorie
+            </option>
+
+            <option value="service">
+                Service
+            </option>
+
+        </select>
+
+
+
+        <!-- =================================================
+             VEHICLE INFORMATION
+        ================================================== -->
+
+        <div
+            id="createVehicleFields"
+            style="display:none;"
+        >
+
+            <h4>
+                Vehicle Information
+            </h4>
+
+
+            <!-- VEHICLE TYPE -->
 
             <input
                 type="text"
-                name="title"
-                placeholder="Title"
-                required
+                name="vehicle_type"
+                id="create_vehicle_type"
+                placeholder="Vehicle Type e.g. Sedan, SUV, Pickup"
             >
 
 
-            <select name="category">
+            <!-- YEAR -->
 
-                <option value="car">
-                    Car
+            <input
+                type="number"
+                name="year"
+                id="create_year"
+                placeholder="Year e.g. 2022"
+                min="1900"
+                max="2100"
+            >
+
+
+            <!-- MILEAGE -->
+
+            <input
+                type="text"
+                name="mileage"
+                id="create_mileage"
+                placeholder="Mileage e.g. 85,000 KM"
+            >
+
+
+            <!-- CONDITION -->
+
+            <select
+                name="condition"
+                id="create_condition"
+            >
+
+                <option value="">
+                    Select Condition
                 </option>
 
-                <option value="truck">
-                    Truck
+                <option value="New">
+                    New
                 </option>
 
-                <option value="motobike">
-                    Bike
+                <option value="Used">
+                    Used
                 </option>
 
-                <option value="plane">
-                    Aviation
+                <option value="Foreign Used">
+                    Foreign Used
                 </option>
 
-                <option value="spare_part">
-                    Spare part
+                <option value="Local Used">
+                    Local Used
                 </option>
 
             </select>
 
+        </div>
+
+
+
+        <!-- =================================================
+             POST TYPE
+        ================================================== -->
+
+        <select
+            name="post_type"
+            id="create_post_type"
+        >
+
+            <option value="normal">
+                Normal Listing
+            </option>
+
+            <option value="sponsored">
+                Sponsored
+            </option>
+
+            <option value="featured">
+                Featured
+            </option>
+
+        </select>
+
+
+
+        <!-- =================================================
+             PROMOTION DURATION
+        ================================================== -->
+
+        <select
+            name="promotion_duration"
+            id="create_promotion_duration"
+        >
+
+            <option value="">
+                No Promotion
+            </option>
+
+            <option value="24_hours">
+                24 Hours
+            </option>
+
+            <option value="3_days">
+                3 Days
+            </option>
+
+            <option value="1_week">
+                1 Week
+            </option>
+
+            <option value="1_month">
+                1 Month
+            </option>
+
+        </select>
+
+
+
+        <!-- IMAGE -->
+
+        <input
+            type="file"
+            name="image"
+            accept="image/*"
+            required
+        >
+
+
+
+        <!-- DESCRIPTION -->
+
+        <textarea
+            name="description"
+            placeholder="Description"
+            required
+        ></textarea>
+
+
+
+        <!-- FEATURED -->
+
+        <label>
 
             <input
-                type="file"
-                name="image"
-                accept="image/*"
-                required
+                type="checkbox"
+                name="is_featured"
             >
 
+            Featured
 
-            <textarea
-                name="description"
-                placeholder="Description"
-                required
-            ></textarea>
+        </label>
 
 
-            <label>
 
-                <input
-                    type="checkbox"
-                    name="is_featured"
-                >
+        <!-- SPONSORED -->
 
-                Featured
+        <label>
 
-            </label>
-
-
-            <label>
-
-                <input
-                    type="checkbox"
-                    name="is_sponsored"
-                >
-
-                Sponsored
-
-            </label>
-
-
-            <button
-                type="submit"
-                id="publishBtn"
+            <input
+                type="checkbox"
+                name="is_sponsored"
             >
-                Publish
-            </button>
 
-        </form>
+            Sponsored
 
-    </div>
+        </label>
 
 
-    <!-- =========================================================
-         PENDING USER SUBMISSIONS
-    ========================================================== -->
 
-    <div class="submissions-box">
+        <button
+            type="submit"
+            id="publishBtn"
+        >
 
-        <div class="submission-header">
+            Publish
 
-            <h3>
-                Submitted Posts
-                <span
-                    id="pendingCount"
-                    class="pending-count"
-                >
-                    0
-                </span>
-            </h3>
+        </button>
 
-            <button
-                type="button"
-                class="refresh-btn"
-                onclick="loadSubmissions()"
-            >
-                🔄 Refresh
-            </button>
 
-        </div>
-   
+    </form>
 
-        <div id="submissions">
+</div>
 
-            <div class="loading-submissions">
-                Loading submitted posts...
-            </div>
 
-        </div>
 
-    </div>
-    <!-- =================================================
-        MOTTECK leads 
-    ============================================== -->
+<!-- =========================================================
+     PENDING USER SUBMISSIONS
+========================================================= -->
 
-    <div class="submissions-box">
+<div class="submissions-box">
+
 
     <div class="submission-header">
 
         <h3>
-            MOTTECK Leads
-            <span id="leadCount" class="pending-count">0</span>
+
+            Submitted Posts
+
+            <span
+                id="pendingCount"
+                class="pending-count"
+            >
+                0
+            </span>
+
         </h3>
+
+
+        <button
+            type="button"
+            class="refresh-btn"
+            onclick="loadSubmissions()"
+        >
+
+            🔄 Refresh
+
+        </button>
+
+    </div>
+
+
+
+    <div id="submissions">
+
+        <div class="loading-submissions">
+
+            Loading submitted posts...
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     MOTTECK LEADS
+========================================================= -->
+
+<div class="submissions-box">
+
+
+    <div class="submission-header">
+
+        <h3>
+
+            MOTTECK Leads
+
+            <span
+                id="leadCount"
+                class="pending-count"
+            >
+                0
+            </span>
+
+        </h3>
+
 
         <button
             type="button"
             class="refresh-btn"
             onclick="loadLeads()"
         >
+
             🔄 Refresh
+
         </button>
 
     </div>
+
 
 
     <div
@@ -222,55 +462,70 @@
             margin-bottom:20px;
         "
     ></div>
-    
+
+
+
     <div id="leads">
-        
+
         <div class="loading-submissions">
+
             Loading leads...
+
         </div>
-    
-    </div>
-
-</div>
-
-    <!-- =========================================================
-         ALL PUBLISHED POSTS
-    ========================================================== -->
-
-    <div class="posts-box">
-
-        <h3>
-            All Posts
-        </h3>
-
-        <div id="posts"></div>
 
     </div>
 
 
 </div>
+
+
+
+<!-- =========================================================
+     ALL PUBLISHED POSTS
+========================================================= -->
+
+<div class="posts-box">
+
+
+    <h3>
+        All Posts
+    </h3>
+
+
+    <div id="posts"></div>
+
+
+</div>
+
+
+</div>
+
 
 
 <!-- =========================================================
      EDIT POST MODAL
-========================================================== -->
+========================================================= -->
 
 <div
     id="editModal"
     class="modal"
 >
 
+
     <div class="modal-content">
+
 
         <h3>
             Edit Post
         </h3>
 
 
+
         <form
             id="editForm"
             enctype="multipart/form-data"
         >
+
 
             <input
                 type="hidden"
@@ -279,33 +534,53 @@
             >
 
 
+
+            <!-- TITLE -->
+
             <input
                 type="text"
                 name="title"
                 id="edit_title"
                 placeholder="Title"
+                required
             >
 
+
+
+            <!-- CATEGORY -->
 
             <select
                 name="category"
                 id="edit_category"
+                onchange="updateEditFields()"
             >
 
                 <option value="car">
                     Car
                 </option>
 
-                <option value="truck">
-                    Truck
+                <option value="motorbike">
+                    Motorbike / Bike
                 </option>
 
-                <option value="motobike">
-                    Bike
+                <option value="truck">
+                    Truck / Bus
+                </option>
+
+                <option value="train">
+                    Train / Rail
                 </option>
 
                 <option value="plane">
                     Aviation
+                </option>
+
+                <option value="spare_part">
+                    Spare Part
+                </option>
+
+                <option value="Accessorie">
+                    Accessorie
                 </option>
 
                 <option value="service">
@@ -315,11 +590,141 @@
             </select>
 
 
+
+            <!-- VEHICLE FIELDS -->
+
+            <div
+                id="editVehicleFields"
+                style="display:none;"
+            >
+
+                <h4>
+                    Vehicle Information
+                </h4>
+
+
+                <input
+                    type="text"
+                    name="vehicle_type"
+                    id="edit_vehicle_type"
+                    placeholder="Vehicle Type"
+                >
+
+
+                <input
+                    type="number"
+                    name="year"
+                    id="edit_year"
+                    placeholder="Year"
+                    min="1900"
+                    max="2100"
+                >
+
+
+                <input
+                    type="text"
+                    name="mileage"
+                    id="edit_mileage"
+                    placeholder="Mileage"
+                >
+
+
+                <select
+                    name="condition"
+                    id="edit_condition"
+                >
+
+                    <option value="">
+                        Select Condition
+                    </option>
+
+                    <option value="New">
+                        New
+                    </option>
+
+                    <option value="Used">
+                        Used
+                    </option>
+
+                    <option value="Foreign Used">
+                        Foreign Used
+                    </option>
+
+                    <option value="Local Used">
+                        Local Used
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- POST TYPE -->
+
+            <select
+                name="post_type"
+                id="edit_post_type"
+            >
+
+                <option value="normal">
+                    Normal Listing
+                </option>
+
+                <option value="sponsored">
+                    Sponsored
+                </option>
+
+                <option value="featured">
+                    Featured
+                </option>
+
+            </select>
+
+
+
+            <!-- PROMOTION -->
+
+            <select
+                name="promotion_duration"
+                id="edit_promotion_duration"
+            >
+
+                <option value="">
+                    No Promotion
+                </option>
+
+                <option value="24_hours">
+                    24 Hours
+                </option>
+
+                <option value="3_days">
+                    3 Days
+                </option>
+
+                <option value="1_week">
+                    1 Week
+                </option>
+
+                <option value="1_month">
+                    1 Month
+                </option>
+
+            </select>
+
+
+
+            <!-- DESCRIPTION -->
+
             <textarea
                 name="description"
                 id="edit_description"
+                placeholder="Description"
             ></textarea>
 
+
+
+            <!-- IMAGE -->
 
             <input
                 type="file"
@@ -327,6 +732,9 @@
                 accept="image/*"
             >
 
+
+
+            <!-- FEATURED -->
 
             <label>
 
@@ -341,6 +749,9 @@
             </label>
 
 
+
+            <!-- SPONSORED -->
+
             <label>
 
                 <input
@@ -354,74 +765,100 @@
             </label>
 
 
+
             <button type="submit">
+
                 Save Changes
+
             </button>
+
 
 
             <button
                 type="button"
                 onclick="closeModal()"
             >
+
                 Close
+
             </button>
 
+
         </form>
+
 
     </div>
 
 </div>
 
 
+
 <!-- =========================================================
      APPROVE / REJECT MODAL
-========================================================== -->
+========================================================= -->
 
 <div
     id="actionModal"
     class="action-modal"
 >
 
+
     <div class="action-modal-content">
 
+
         <h3 id="actionTitle">
+
             Confirm Action
+
         </h3>
 
+
         <p id="actionMessage">
+
             Are you sure?
+
         </p>
 
 
+
         <div class="modal-actions">
+
 
             <button
                 type="button"
                 class="cancel-action"
                 onclick="closeActionModal()"
             >
+
                 Cancel
+
             </button>
+
 
 
             <button
                 type="button"
                 id="confirmActionBtn"
             >
+
                 Confirm
+
             </button>
 
+
         </div>
+
 
     </div>
 
 </div>
 
 
+
 <script>
 
 /* =========================================================
-   EXISTING DASHBOARD VARIABLES
+   MAIN VARIABLES
 ========================================================= */
 
 const postsContainer =
@@ -443,15 +880,12 @@ const publishBtn =
     document.getElementById("publishBtn");
 
 
-/* =========================================================
-   SUBMISSION VARIABLES
-========================================================= */
-
 const submissionsContainer =
     document.getElementById("submissions");
 
 const pendingCount =
     document.getElementById("pendingCount");
+
 
 const actionModal =
     document.getElementById("actionModal");
@@ -465,6 +899,7 @@ const actionMessage =
 const confirmActionBtn =
     document.getElementById("confirmActionBtn");
 
+
 const leadsContainer =
     document.getElementById("leads");
 
@@ -473,6 +908,7 @@ const leadCount =
 
 const leadSummary =
     document.getElementById("leadSummary");
+
 
 let allLeads = [];
 
@@ -484,442 +920,168 @@ let pendingAction = null;
 
 let pendingSubmissionId = null;
 
-async function loadLeads() {
-
-    if (!leadsContainer) {
-        return;
-    }
-
-    leadsContainer.innerHTML = `
-        <div class="loading-submissions">
-            Loading leads...
-        </div>
-    `;
-
-    try {
-
-        const response = await fetch(
-            "/admin/leads"
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error || "Unable to load leads."
-            );
-        }
-
-        allLeads = data.leads || [];
-
-        const summary =
-            data.summary || {};
-
-        leadCount.textContent =
-            summary.new || 0;
-
-        leadSummary.innerHTML = `
-
-            <div class="lead-chip">
-                TOTAL:
-                <strong>
-                    ${summary.total || 0}
-                </strong>
-            </div>
-
-            <div class="lead-chip">
-                SELLER:
-                <strong>
-                    ${summary.contact_seller || 0}
-                </strong>
-            </div>
-
-            <div class="lead-chip">
-                BUSINESS:
-                <strong>
-                    ${summary.contact_business || 0}
-                </strong>
-            </div>
-
-            <div class="lead-chip">
-                MOTTECK:
-                <strong>
-                    ${summary.request_motteck || 0}
-                </strong>
-            </div>
-
-            <div class="lead-chip">
-                NEW:
-                <strong>
-                    ${summary.new || 0}
-                </strong>
-            </div>
-
-        `;
-
-        renderLeads();
-
-    } catch (error) {
-
-        console.error(
-            "LOAD LEADS ERROR:",
-            error
-        );
-
-        leadsContainer.innerHTML = `
-            <div class="loading-submissions">
-                Unable to load leads.
-                Please try again.
-            </div>
-        `;
-    }
-}
-function renderLeads() {
-
-    if (!allLeads.length) {
-
-        leadsContainer.innerHTML = `
-            <div class="loading-submissions">
-                No MOTTECK leads yet.
-            </div>
-        `;
-
-        return;
-    }
-
-    leadsContainer.innerHTML = allLeads.map(
-        lead => {
-
-            const leadType =
-                lead.lead_type || "";
-
-            let leadTypeLabel =
-                "Unknown";
-
-            if (
-                leadType ===
-                "contact_seller"
-            ) {
-                leadTypeLabel =
-                    "Contact Seller";
-            }
-
-            else if (
-                leadType ===
-                "contact_business"
-            ) {
-                leadTypeLabel =
-                    "Contact Business";
-            }
-
-            else if (
-                leadType ===
-                "request_motteck"
-            ) {
-                leadTypeLabel =
-                    "Request MOTTECK";
-            }
-
-            const status =
-                lead.status || "new";
-
-            const date =
-                lead.created_at
-                    ? new Date(
-                        lead.created_at
-                    ).toLocaleString()
-                    : "Unknown";
-
-            return `
-
-                <div
-                    class="submission-card"
-                    style="margin-bottom:15px;"
-                >
-
-                    <div
-                        class="submission-header"
-                    >
-
-                        <div>
-
-                            <strong>
-                                ${escapeHTML(
-                                    lead.post_title ||
-                                    "Untitled Post"
-                                )}
-                            </strong>
-
-                        </div>
-
-                        <span
-                            class="status-badge"
-                        >
-                            ${escapeHTML(
-                                status.toUpperCase()
-                            )}
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="submission-details"
-                    >
-
-                        <div class="detail-row">
-                            <strong>
-                                Date:
-                            </strong>
-
-                            <span>
-                                ${escapeHTML(date)}
-                            </span>
-                        </div>
-
-
-                        <div class="detail-row">
-                            <strong>
-                                Seller / Business:
-                            </strong>
-
-                            <span>
-                                ${escapeHTML(
-                                    lead.seller_name ||
-                                    "Unknown"
-                                )}
-                            </span>
-                        </div>
-
-
-                        <div class="detail-row">
-                            <strong>
-                                Interested User:
-                            </strong>
-
-                            <span>
-                                ${escapeHTML(
-                                    lead.interested_user_name ||
-                                    "Unknown"
-                                )}
-                            </span>
-                        </div>
-
-
-                        <div class="detail-row">
-                            <strong>
-                                Lead Type:
-                            </strong>
-
-                            <span>
-                                ${escapeHTML(
-                                    leadTypeLabel
-                                )}
-                            </span>
-                        </div>
-
-
-                        <div class="detail-row">
-                            <strong>
-                                Seller Email:
-                            </strong>
-
-                            <span>
-                                ${escapeHTML(
-                                    lead.seller_email ||
-                                    "Not available"
-                                )}
-                            </span>
-                        </div>
-
-
-                        <div class="detail-row">
-                            <strong>
-                                Interested User Email:
-                            </strong>
-
-                            <span>
-                                ${escapeHTML(
-                                    lead.interested_user_email ||
-                                    "Not available"
-                                )}
-                            </span>
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            margin-top:15px;
-                            display:flex;
-                            gap:8px;
-                            flex-wrap:wrap;
-                        "
-                    >
-
-                        <button
-                            type="button"
-                            onclick="updateLeadStatus(
-                                ${lead.id},
-                                'contacted'
-                            )"
-                        >
-                            Mark Contacted
-                        </button>
-
-
-                        <button
-                            type="button"
-                            onclick="updateLeadStatus(
-                                ${lead.id},
-                                'converted'
-                            )"
-                        >
-                            Mark Converted
-                        </button>
-
-
-                        <button
-                            type="button"
-                            onclick="updateLeadStatus(
-                                ${lead.id},
-                                'closed'
-                            )"
-                        >
-                            Close
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-        }
-    ).join("");
-}
-/* =========================================================
-   LOAD PUBLISHED POSTS
-========================================================= */
-
-function loadPosts(){
-
-    fetch("/get_posts")
-
-    .then(res => res.json())
-
-    .then(data => {
-
-        if(data.error){
-
-            console.error(data.error);
-
-            return;
-
-        }
-
-        allPosts = data;
-
-        render(data);
-
-        loadSponsors(data);
-
-    })
-
-    .catch(error => {
-
-        console.error(
-            "LOAD POSTS ERROR:",
-            error
-        );
-
-    });
-
-}
 
 
 /* =========================================================
-   LOAD SUBMITTED POSTS
+   CATEGORY HELPERS
 ========================================================= */
 
-function loadSubmissions(){
+function isVehicleCategory(category){
 
-    submissionsContainer.innerHTML = `
-        <div class="loading-submissions">
-            Loading submitted posts...
-        </div>
-    `;
+    if(!category){
+        return false;
+    }
 
+    const value =
+        String(category).toLowerCase();
 
-    fetch("/admin/submissions")
-
-    .then(res => {
-
-        if(!res.ok){
-
-            throw new Error(
-                "Unable to load submissions."
-            );
-
-        }
-
-        return res.json();
-
-    })
-
-    .then(data => {
-
-        if(data.error){
-
-            throw new Error(data.error);
-
-        }
-
-
-        allSubmissions =
-            data.submissions || [];
-
-
-        pendingCount.textContent =
-            allSubmissions.length;
-
-
-        renderSubmissions(
-            allSubmissions
-        );
-
-    })
-
-    .catch(error => {
-
-        console.error(
-            "SUBMISSIONS ERROR:",
-            error
-        );
-
-
-        submissionsContainer.innerHTML = `
-            <div class="submission-error">
-                ❌ Unable to load submitted posts.
-                Please refresh and try again.
-            </div>
-        `;
-
-    });
+    return (
+        value === "car" ||
+        value === "motorbike" ||
+        value === "bike" ||
+        value === "truck" ||
+        value === "bus" ||
+        value === "train"
+    );
 
 }
+
+
+
+function categoryLabel(category){
+
+    if(!category){
+        return "Unknown";
+    }
+
+    const value =
+        String(category).toLowerCase();
+
+    if(value === "car"){
+        return "Car";
+    }
+
+    if(
+        value === "motorbike" ||
+        value === "bike"
+    ){
+        return "Motorbike / Bike";
+    }
+
+    if(
+        value === "truck" ||
+        value === "bus"
+    ){
+        return "Truck / Bus";
+    }
+
+    if(value === "train"){
+        return "Train / Rail";
+    }
+
+    if(value === "plane"){
+        return "Aviation";
+    }
+
+    if(value === "spare_part"){
+        return "Spare Part";
+    }
+
+    if(
+        value === "accessorie" ||
+        value === "accessory"
+    ){
+        return "Accessorie";
+    }
+
+    if(value === "service"){
+        return "Service";
+    }
+
+    return category;
+
+}
+
+
+
+/* =========================================================
+   CREATE POST VEHICLE FIELDS
+========================================================= */
+
+function updateCreateFields(){
+
+    const category =
+        document.getElementById(
+            "create_category"
+        ).value;
+
+
+    const fields =
+        document.getElementById(
+            "createVehicleFields"
+        );
+
+
+    if(isVehicleCategory(category)){
+
+        fields.style.display =
+            "block";
+
+    }else{
+
+        fields.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   EDIT POST VEHICLE FIELDS
+========================================================= */
+
+function updateEditFields(){
+
+    const category =
+        document.getElementById(
+            "edit_category"
+        ).value;
+
+
+    const fields =
+        document.getElementById(
+            "editVehicleFields"
+        );
+
+
+    if(isVehicleCategory(category)){
+
+        fields.style.display =
+            "block";
+
+    }else{
+
+        fields.style.display =
+            "none";
+
+    }
+
+}
+
 
 
 /* =========================================================
    ESCAPE HTML
-   Prevent submitted text from injecting HTML/JS
 ========================================================= */
 
 function escapeHTML(value){
 
-    if(value === null ||
-       value === undefined){
+    if(
+        value === null ||
+        value === undefined
+    ){
 
         return "";
 
@@ -928,17 +1090,33 @@ function escapeHTML(value){
 
     return String(value)
 
-        .replace(/&/g, "&amp;")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
 
-        .replace(/</g, "&lt;")
+        .replace(
+            /</g,
+            "&lt;"
+        )
 
-        .replace(/>/g, "&gt;")
+        .replace(
+            />/g,
+            "&gt;"
+        )
 
-        .replace(/"/g, "&quot;")
+        .replace(
+            /"/g,
+            "&quot;"
+        )
 
-        .replace(/'/g, "&#039;");
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
+
 
 
 /* =========================================================
@@ -958,7 +1136,11 @@ function formatDate(dateString){
         new Date(dateString);
 
 
-    if(isNaN(date.getTime())){
+    if(
+        isNaN(
+            date.getTime()
+        )
+    ){
 
         return dateString;
 
@@ -970,30 +1152,44 @@ function formatDate(dateString){
 }
 
 
+
 /* =========================================================
-   SUBMISSION TYPE BADGE
+   ACCOUNT BADGE
 ========================================================= */
 
 function accountBadge(accountType){
 
-    if(accountType === "business"){
+    if(
+        String(accountType || "")
+            .toLowerCase()
+        === "business"
+    ){
 
         return `
+
             <span class="submission-badge business-badge">
+
                 BUSINESS
+
             </span>
+
         `;
 
     }
 
 
     return `
+
         <span class="submission-badge individual-badge">
+
             INDIVIDUAL
+
         </span>
+
     `;
 
 }
+
 
 
 /* =========================================================
@@ -1002,65 +1198,334 @@ function accountBadge(accountType){
 
 function postTypeBadge(postType){
 
-    if(postType === "sponsored"){
+    const type =
+        String(
+            postType || "normal"
+        ).toLowerCase();
+
+
+    if(type === "sponsored"){
 
         return `
+
             <span class="submission-badge sponsored-badge">
+
                 SPONSORED
+
             </span>
+
         `;
 
     }
 
 
-    if(postType === "featured"){
+    if(type === "featured"){
 
         return `
+
             <span class="submission-badge featured-badge">
+
                 FEATURED
+
             </span>
+
+        `;
+
+    }
+
+
+    if(
+        type === "for_sale"
+    ){
+
+        return `
+
+            <span class="submission-badge normal-badge">
+
+                FOR SALE
+
+            </span>
+
         `;
 
     }
 
 
     return `
+
         <span class="submission-badge normal-badge">
+
             NORMAL
+
         </span>
+
     `;
 
 }
 
 
+
 /* =========================================================
-   RENDER SUBMISSIONS
+   SALE METHOD
 ========================================================= */
 
-function renderSubmissions(submissions){
+function saleMethodLabel(value){
 
-    submissionsContainer.innerHTML = "";
+    if(!value){
+
+        return "Not applicable";
+
+    }
 
 
-    if(!submissions.length){
+    const method =
+        String(value).toLowerCase();
 
-        submissionsContainer.innerHTML = `
-            <div class="empty-submissions">
 
-                <div style="font-size:40px;">
-                    📭
-                </div>
+    if(
+        method === "direct" ||
+        method === "direct_sale"
+    ){
 
-                <h4>
-                    No Pending Submissions
-                </h4>
+        return "Direct Sale";
 
-                <p>
-                    New posts submitted by users
-                    will appear here.
-                </p>
+    }
+
+
+    if(
+        method === "commission" ||
+        method === "sell_through_motteck" ||
+        method === "motteck_sale"
+    ){
+
+        return "MOTTECK Sale";
+
+    }
+
+
+    return value;
+
+}
+
+
+
+/* =========================================================
+   CONDITION LABEL
+========================================================= */
+
+function conditionLabel(value){
+
+    if(!value){
+
+        return "Not specified";
+
+    }
+
+
+    return String(value);
+
+}
+
+
+
+/* =========================================================
+   PROMOTION PRICE
+========================================================= */
+
+function promotionPriceLabel(value){
+
+    if(
+        value === null ||
+        value === undefined ||
+        value === ""
+    ){
+
+        return "—";
+
+    }
+
+
+    const number =
+        Number(value);
+
+
+    if(isNaN(number)){
+
+        return escapeHTML(value);
+
+    }
+
+
+    return (
+        "KSh " +
+        number.toLocaleString()
+    );
+
+}
+
+
+
+/* =========================================================
+   LEADS
+========================================================= */
+
+async function loadLeads(){
+
+    if(!leadsContainer){
+
+        return;
+
+    }
+
+
+    leadsContainer.innerHTML = `
+
+        <div class="loading-submissions">
+
+            Loading leads...
+
+        </div>
+
+    `;
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/admin/leads"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error ||
+                "Unable to load leads."
+            );
+
+        }
+
+
+        allLeads =
+            data.leads || [];
+
+
+        const summary =
+            data.summary || {};
+
+
+        leadCount.textContent =
+            summary.new || 0;
+
+
+        leadSummary.innerHTML = `
+
+            <div class="lead-chip">
+
+                TOTAL:
+
+                <strong>
+                    ${summary.total || 0}
+                </strong>
 
             </div>
+
+
+            <div class="lead-chip">
+
+                SELLER:
+
+                <strong>
+                    ${summary.contact_seller || 0}
+                </strong>
+
+            </div>
+
+
+            <div class="lead-chip">
+
+                BUSINESS:
+
+                <strong>
+                    ${summary.contact_business || 0}
+                </strong>
+
+            </div>
+
+
+            <div class="lead-chip">
+
+                MOTTECK:
+
+                <strong>
+                    ${summary.request_motteck || 0}
+                </strong>
+
+            </div>
+
+
+            <div class="lead-chip">
+
+                NEW:
+
+                <strong>
+                    ${summary.new || 0}
+                </strong>
+
+            </div>
+
+        `;
+
+
+        renderLeads();
+
+
+    }catch(error){
+
+        console.error(
+            "LOAD LEADS ERROR:",
+            error
+        );
+
+
+        leadsContainer.innerHTML = `
+
+            <div class="loading-submissions">
+
+                Unable to load leads.
+                Please try again.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   RENDER LEADS
+========================================================= */
+
+function renderLeads(){
+
+    if(!allLeads.length){
+
+        leadsContainer.innerHTML = `
+
+            <div class="loading-submissions">
+
+                No MOTTECK leads yet.
+
+            </div>
+
         `;
 
         return;
@@ -1068,324 +1533,1317 @@ function renderSubmissions(submissions){
     }
 
 
-    submissions.forEach(submission => {
+    leadsContainer.innerHTML =
+        allLeads.map(
+            lead => {
 
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "submission-card";
-
-
-        const images =
-            Array.isArray(
-                submission.image_urls
-            )
-            ? submission.image_urls
-            : [];
+                const leadType =
+                    lead.lead_type || "";
 
 
-        const firstImage =
-            images.length
-                ? images[0]
-                : "";
+                let leadTypeLabel =
+                    "Unknown";
 
 
-        const imageHTML =
-            firstImage
-                ? `
-                    <img
-                        src="${escapeHTML(firstImage)}"
-                        class="submission-image"
-                        alt="Submitted post image"
-                    >
-                  `
-                : `
+                if(
+                    leadType ===
+                    "contact_seller"
+                ){
+
+                    leadTypeLabel =
+                        "Contact Seller";
+
+                }
+
+                else if(
+                    leadType ===
+                    "contact_business"
+                ){
+
+                    leadTypeLabel =
+                        "Contact Business";
+
+                }
+
+                else if(
+                    leadType ===
+                    "request_motteck"
+                ){
+
+                    leadTypeLabel =
+                        "Request MOTTECK";
+
+                }
+
+
+                const status =
+                    lead.status || "new";
+
+
+                const date =
+                    lead.created_at
+                        ? new Date(
+                            lead.created_at
+                        ).toLocaleString()
+                        : "Unknown";
+
+
+                return `
+
                     <div
-                        class="submission-image"
-                        style="
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                        "
+                        class="submission-card"
+                        style="margin-bottom:15px;"
                     >
-                        No Image
+
+                        <div
+                            class="submission-header"
+                        >
+
+                            <div>
+
+                                <strong>
+
+                                    ${escapeHTML(
+                                        lead.post_title ||
+                                        "Untitled Post"
+                                    )}
+
+                                </strong>
+
+                            </div>
+
+
+                            <span
+                                class="status-badge"
+                            >
+
+                                ${escapeHTML(
+                                    status.toUpperCase()
+                                )}
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div
+                            class="submission-details"
+                        >
+
+                            <div class="detail-row">
+
+                                <strong>
+                                    Date:
+                                </strong>
+
+                                <span>
+                                    ${escapeHTML(date)}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <strong>
+                                    Seller / Business:
+                                </strong>
+
+                                <span>
+                                    ${escapeHTML(
+                                        lead.seller_name ||
+                                        "Unknown"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <strong>
+                                    Interested User:
+                                </strong>
+
+                                <span>
+                                    ${escapeHTML(
+                                        lead.interested_user_name ||
+                                        "Unknown"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <strong>
+                                    Lead Type:
+                                </strong>
+
+                                <span>
+                                    ${escapeHTML(
+                                        leadTypeLabel
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <strong>
+                                    Seller Email:
+                                </strong>
+
+                                <span>
+                                    ${escapeHTML(
+                                        lead.seller_email ||
+                                        "Not available"
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <strong>
+                                    Interested User Email:
+                                </strong>
+
+                                <span>
+                                    ${escapeHTML(
+                                        lead.interested_user_email ||
+                                        "Not available"
+                                    )}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div
+                            style="
+                                margin-top:15px;
+                                display:flex;
+                                gap:8px;
+                                flex-wrap:wrap;
+                            "
+                        >
+
+                            <button
+                                type="button"
+                                onclick="updateLeadStatus(
+                                    ${lead.id},
+                                    'contacted'
+                                )"
+                            >
+
+                                Mark Contacted
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                onclick="updateLeadStatus(
+                                    ${lead.id},
+                                    'converted'
+                                )"
+                            >
+
+                                Mark Converted
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                onclick="updateLeadStatus(
+                                    ${lead.id},
+                                    'closed'
+                                )"
+                            >
+
+                                Close
+
+                            </button>
+
+                        </div>
+
                     </div>
-                  `;
+
+                `;
+
+            }
+        ).join("");
+
+}
 
 
-        const saleMethod = submission.sale_method === "direct_sale"
-            ? "Direct Sale"
-            : submission.sale_method === "sell_through_motteck"
-                ? "Sell Through MOTTECK"
-                : "Not applicable";
 
-        const listingDuration = submission.listing_duration
-            ? submission.listing_duration.replaceAll("_", " ")
-            : "Not applicable";
+/* =========================================================
+   UPDATE LEAD STATUS
+========================================================= */
 
-        const commissionAgreed =
-            submission.commission_agreed === true ||
-            submission.commission_agreed === "true"
-                ? "Yes"
-                : "No";          
+async function updateLeadStatus(
+    leadId,
+    status
+){
 
+    try{
 
-        const description =
-            escapeHTML(
-                submission.description || ""
+        const response =
+            await fetch(
+                `/admin/leads/${leadId}`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        status:status
+                    })
+
+                }
             );
 
 
-        const shortDescription =
-            description.length > 180
-                ? description.substring(0,180) + "..."
-                : description;
+        const data =
+            await response.json();
 
 
-        const promotionPrice =
-            submission.promotion_price
-                ? `KSh ${Number(
-                    submission.promotion_price
-                  ).toLocaleString()}`
-                : "—";
+        if(
+            !response.ok ||
+            !data.success
+        ){
 
-
-        let extraDetails = "";
-
-
-        if(images.length){
-
-            extraDetails += `
-                <div>
-                    <strong>
-                        Uploaded Images:
-                    </strong>
-
-                    <div class="submission-detail-images">
-
-                        ${images.map(image => `
-
-                            <img
-                                src="${escapeHTML(image)}"
-                                alt="Submitted image"
-                            >
-
-                        `).join("")}
-
-                    </div>
-
-                </div>
-            `;
+            throw new Error(
+                data.error ||
+                "Unable to update lead."
+            );
 
         }
 
 
-        extraDetails += `
-
-            <p>
-                <strong>
-                    User ID:
-                </strong>
-
-                ${escapeHTML(
-                    submission.user_id || "Unknown"
-                )}
-            </p>
-
-            <p>
-                <strong>
-                    Promotion Duration:
-                </strong>
-
-                ${escapeHTML(
-                    submission.promotion_duration || "None"
-                )}
-            </p>
-
-            <p>
-                <strong>
-                    Promotion Price:
-                </strong>
-
-                ${promotionPrice}
-            </p>
-
-            <p>
-                <strong>
-                    Full Description:
-                </strong>
-            </p>
-
-            <p>
-                ${description || "No description"}
-            </p>
-
-        `;
+        await loadLeads();
 
 
-        card.innerHTML = `
+    }catch(error){
 
-            <div class="submission-main">
-
-                ${imageHTML}
-
-
-                <div class="submission-content">
-
-                    <h4>
-                        ${escapeHTML(
-                            submission.title
-                        )}
-                    </h4>
+        console.error(
+            "UPDATE LEAD ERROR:",
+            error
+        );
 
 
-                    <div class="submission-meta">
+        alert(
+            error.message ||
+            "Unable to update lead."
+        );
 
-                        Category:
-                        <strong>
-                            ${escapeHTML(
-                                submission.category
-                            )}
-                        </strong>
+    }
 
-                    </div>
+}
 
 
-                    <div class="submission-meta">
 
-                        Submitted:
-                        ${formatDate(
-                            submission.created_at
-                        )}
+/* =========================================================
+   LOAD POSTS
+========================================================= */
 
-                    </div>
+function loadPosts(){
 
+    fetch(
+        "/get_posts"
+    )
 
-                    <div class="submission-meta">
+    .then(
+        res => res.json()
+    )
 
-                        Submitter:
-                        <strong>
-                            ${escapeHTML(
-                                submission.submitter_name ||
-                                "Unknown user"
-                            )}
-                        </strong>
+    .then(
+        data => {
 
-                    </div>
+            if(data.error){
 
+                console.error(
+                    data.error
+                );
 
-                    <div class="submission-meta">
+                return;
 
-                        Email:
-                        ${escapeHTML(
-                            submission.submitter_email ||
-                            "Not available"
-                        )}
-
-                    </div>
+            }
 
 
-                    <div class="submission-badges">
-
-                        ${accountBadge(
-                            submission.account_type
-                        )}
-
-                        ${postTypeBadge(
-                            submission.post_type
-                        )}
-
-                        <span class="submission-badge pending-badge">
-                            PENDING
-                        </span>
-
-                    </div>
+            allPosts =
+                Array.isArray(data)
+                    ? data
+                    : [];
 
 
-                    <div class="submission-description">
-
-                        ${shortDescription}
-
-                    </div>
+            render(
+                allPosts
+            );
 
 
-                    <div class="submission-actions">
+            loadSponsors(
+                allPosts
+            );
 
-                        <button
-                            type="button"
-                            class="view-submission-btn"
-                            onclick="toggleSubmissionDetails(${submission.id})"
-                        >
-                            👁 View
-                        </button>
+        }
+    )
 
+    .catch(
+        error => {
 
-                        <button
-                            type="button"
-                            class="approve-btn"
-                            onclick="confirmSubmissionAction(${submission.id}, 'approve')"
-                        >
-                            ✅ Approve & Publish
-                        </button>
+            console.error(
+                "LOAD POSTS ERROR:",
+                error
+            );
 
+        }
+    );
 
-                        <button
-                            type="button"
-                            class="reject-btn"
-                            onclick="confirmSubmissionAction(${submission.id}, 'reject')"
-                        >
-                            ❌ Reject
-                        </button>
-
-                    </div>
+}
 
 
-                    <div
-                        id="submission-details-${submission.id}"
-                        class="submission-details"
-                    >
 
-                        ${extraDetails}
+/* =========================================================
+   LOAD SUBMISSIONS
+========================================================= */
 
-                    </div>
+function loadSubmissions(){
+
+    submissionsContainer.innerHTML = `
+
+        <div class="loading-submissions">
+
+            Loading submitted posts...
+
+        </div>
+
+    `;
 
 
-                    <div class="detail-row">
+    fetch(
+        "/admin/submissions"
+    )
 
-                        <strong>Sale Method:</strong>
+    .then(
+        res => {
 
-                        <span>${escapeHTML(saleMethod)}</span>
+            if(!res.ok){
 
-                    </div>
-                    
-                    <div class="detail-row">
-                        
-                        <strong>Listing Duration:</strong>
-                        
-                        <span>${escapeHTML(listingDuration)}</span>
-                        
-                    </div>
-                    
-                    <div class="detail-row">
-                        
-                        <strong>MOTTECK Commission:</strong>
-                        
-                        <span>${commissionAgreed}</span>
-                        
-                    </div>
+                throw new Error(
+                    "Unable to load submissions."
+                );
+
+            }
+
+
+            return res.json();
+
+        }
+    )
+
+    .then(
+        data => {
+
+            if(data.error){
+
+                throw new Error(
+                    data.error
+                );
+
+            }
+
+
+            allSubmissions =
+                data.submissions || [];
+
+
+            pendingCount.textContent =
+                allSubmissions.length;
+
+
+            renderSubmissions(
+                allSubmissions
+            );
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(
+                "SUBMISSIONS ERROR:",
+                error
+            );
+
+
+            submissionsContainer.innerHTML = `
+
+                <div class="submission-error">
+
+                    ❌ Unable to load submitted posts.
+
+                    Please refresh and try again.
+
                 </div>
+
+            `;
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   RENDER SUBMISSIONS
+========================================================= */
+
+function renderSubmissions(
+    submissions
+){
+
+    submissionsContainer.innerHTML =
+        "";
+
+
+    if(!submissions.length){
+
+        submissionsContainer.innerHTML = `
+
+            <div class="empty-submissions">
+
+                <div style="font-size:40px;">
+                    📭
+                </div>
+
+
+                <h4>
+                    No Pending Submissions
+                </h4>
+
+
+                <p>
+                    New posts submitted by users
+                    will appear here.
+                </p>
 
             </div>
 
         `;
 
+        return;
 
-        submissionsContainer.appendChild(card);
+    }
 
-    });
+
+
+    submissions.forEach(
+        submission => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "submission-card";
+
+
+            const images =
+                Array.isArray(
+                    submission.image_urls
+                )
+                ? submission.image_urls
+                : [];
+
+
+            const firstImage =
+                images.length
+                    ? images[0]
+                    : "";
+
+
+            const imageHTML =
+                firstImage
+                    ? `
+
+                        <img
+                            src="${escapeHTML(firstImage)}"
+                            class="submission-image"
+                            alt="Submitted post image"
+                        >
+
+                    `
+                    : `
+
+                        <div
+                            class="submission-image"
+                            style="
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                            "
+                        >
+
+                            No Image
+
+                        </div>
+
+                    `;
+
+
+
+            /* =============================================
+               NEW VEHICLE DATA
+            ============================================== */
+
+            const vehicleType =
+                submission.vehicle_type ||
+                submission.car_type ||
+                submission.type ||
+                "";
+
+
+            const year =
+                submission.year ||
+                submission.vehicle_year ||
+                "";
+
+
+            const mileage =
+                submission.mileage ||
+                "";
+
+
+            const condition =
+                submission.condition ||
+                "";
+
+
+
+            const hasVehicleInfo =
+                isVehicleCategory(
+                    submission.category
+                ) ||
+                vehicleType ||
+                year ||
+                mileage ||
+                condition;
+
+
+
+            /* =============================================
+               SALE INFORMATION
+            ============================================== */
+
+            const saleMethod =
+                saleMethodLabel(
+                    submission.sale_method
+                );
+
+
+            const listingDuration =
+                submission.listing_duration
+                    ? String(
+                        submission.listing_duration
+                    ).replaceAll(
+                        "_",
+                        " "
+                    )
+                    : "Not applicable";
+
+
+            const commissionAgreed =
+                submission.commission_agreed === true ||
+                submission.commission_agreed === "true" ||
+                submission.commission_agreed === "yes"
+                    ? "Yes"
+                    : "No";
+
+
+
+            /* =============================================
+               PROMOTION
+            ============================================== */
+
+            const promotionPrice =
+                promotionPriceLabel(
+                    submission.promotion_price
+                );
+
+
+            const promotionDuration =
+                submission.promotion_duration
+                    ? String(
+                        submission.promotion_duration
+                    ).replaceAll(
+                        "_",
+                        " "
+                    )
+                    : "None";
+
+
+
+            /* =============================================
+               DESCRIPTION
+            ============================================== */
+
+            const description =
+                escapeHTML(
+                    submission.description || ""
+                );
+
+
+            const shortDescription =
+                description.length > 180
+                    ? description.substring(
+                        0,
+                        180
+                    ) + "..."
+                    : description;
+
+
+
+            /* =============================================
+               EXTRA DETAILS
+            ============================================== */
+
+            let extraDetails = "";
+
+
+
+            /* VEHICLE DETAILS */
+
+            if(hasVehicleInfo){
+
+                extraDetails += `
+
+                    <div
+                        style="
+                            margin-bottom:18px;
+                            padding:14px;
+                            border-radius:10px;
+                            background:#f5f5f5;
+                        "
+                    >
+
+                        <h4>
+                            🚗 Vehicle Information
+                        </h4>
+
+
+                        <div class="detail-row">
+
+                            <strong>
+                                Category:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    categoryLabel(
+                                        submission.category
+                                    )
+                                )}
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <strong>
+                                Vehicle Type:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    vehicleType ||
+                                    "Not specified"
+                                )}
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <strong>
+                                Year:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    year ||
+                                    "Not specified"
+                                )}
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <strong>
+                                Mileage:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    mileage ||
+                                    "Not specified"
+                                )}
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <strong>
+                                Condition:
+                            </strong>
+
+                            <span>
+                                ${escapeHTML(
+                                    conditionLabel(
+                                        condition
+                                    )
+                                )}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+
+            /* SALE DETAILS */
+
+            extraDetails += `
+
+                <div
+                    style="
+                        margin-bottom:18px;
+                        padding:14px;
+                        border-radius:10px;
+                        background:#f5f5f5;
+                    "
+                >
+
+                    <h4>
+                        💰 Sale / Listing Information
+                    </h4>
+
+
+                    <div class="detail-row">
+
+                        <strong>
+                            Account:
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(
+                                String(
+                                    submission.account_type ||
+                                    "individual"
+                                ).toUpperCase()
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <strong>
+                            Post Type:
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(
+                                submission.post_type ||
+                                "normal"
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <strong>
+                            Sale Method:
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(
+                                saleMethod
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <strong>
+                            Listing Duration:
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(
+                                listingDuration
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <strong>
+                            MOTTECK Commission:
+                        </strong>
+
+                        <span>
+                            ${commissionAgreed}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <strong>
+                            Promotion Duration:
+                        </strong>
+
+                        <span>
+                            ${escapeHTML(
+                                promotionDuration
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <strong>
+                            Promotion Price:
+                        </strong>
+
+                        <span>
+                            ${promotionPrice}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+
+            /* IMAGES */
+
+            if(images.length){
+
+                extraDetails += `
+
+                    <div>
+
+                        <strong>
+                            Uploaded Images:
+                        </strong>
+
+
+                        <div
+                            class="submission-detail-images"
+                        >
+
+                            ${images.map(
+                                image => `
+
+                                    <img
+                                        src="${escapeHTML(image)}"
+                                        alt="Submitted image"
+                                    >
+
+                                `
+                            ).join("")}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+
+            /* USER INFORMATION */
+
+            extraDetails += `
+
+                <div
+                    style="
+                        margin-top:18px;
+                    "
+                >
+
+                    <p>
+
+                        <strong>
+                            User ID:
+                        </strong>
+
+                        ${escapeHTML(
+                            submission.user_id ||
+                            "Unknown"
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Submitter:
+                        </strong>
+
+                        ${escapeHTML(
+                            submission.submitter_name ||
+                            "Unknown user"
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Email:
+                        </strong>
+
+                        ${escapeHTML(
+                            submission.submitter_email ||
+                            "Not available"
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Full Description:
+                        </strong>
+
+                    </p>
+
+
+                    <p>
+
+                        ${description ||
+                        "No description"}
+
+                    </p>
+
+                </div>
+
+            `;
+
+
+
+            /* =============================================
+               CARD
+            ============================================== */
+
+            card.innerHTML = `
+
+                <div class="submission-main">
+
+
+                    ${imageHTML}
+
+
+
+                    <div
+                        class="submission-content"
+                    >
+
+
+                        <h4>
+
+                            ${escapeHTML(
+                                submission.title ||
+                                "Untitled Post"
+                            )}
+
+                        </h4>
+
+
+
+                        <div
+                            class="submission-meta"
+                        >
+
+                            Category:
+
+                            <strong>
+
+                                ${escapeHTML(
+                                    categoryLabel(
+                                        submission.category
+                                    )
+                                )}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        ${
+                            vehicleType ||
+                            year ||
+                            mileage ||
+                            condition
+                            ?
+
+                            `
+
+                            <div
+                                class="submission-meta"
+                            >
+
+                                🚗
+
+                                ${
+                                    vehicleType
+                                        ? escapeHTML(
+                                            vehicleType
+                                          )
+                                        : ""
+                                }
+
+                                ${
+                                    year
+                                        ? " | " +
+                                          escapeHTML(year)
+                                        : ""
+                                }
+
+                                ${
+                                    mileage
+                                        ? " | " +
+                                          escapeHTML(mileage)
+                                        : ""
+                                }
+
+                                ${
+                                    condition
+                                        ? " | " +
+                                          escapeHTML(condition)
+                                        : ""
+                                }
+
+                            </div>
+
+                            `
+
+                            :
+
+                            ""
+
+                        }
+
+
+
+                        <div
+                            class="submission-meta"
+                        >
+
+                            Submitted:
+
+                            ${formatDate(
+                                submission.created_at
+                            )}
+
+                        </div>
+
+
+
+                        <div
+                            class="submission-meta"
+                        >
+
+                            Submitter:
+
+                            <strong>
+
+                                ${escapeHTML(
+                                    submission.submitter_name ||
+                                    "Unknown user"
+                                )}
+
+                            </strong>
+
+                        </div>
+
+
+
+                        <div
+                            class="submission-meta"
+                        >
+
+                            Email:
+
+                            ${escapeHTML(
+                                submission.submitter_email ||
+                                "Not available"
+                            )}
+
+                        </div>
+
+
+
+                        <div
+                            class="submission-badges"
+                        >
+
+                            ${accountBadge(
+                                submission.account_type
+                            )}
+
+
+                            ${postTypeBadge(
+                                submission.post_type
+                            )}
+
+
+                            <span
+                                class="submission-badge pending-badge"
+                            >
+
+                                PENDING
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div
+                            class="submission-description"
+                        >
+
+                            ${shortDescription}
+
+                        </div>
+
+
+
+                        <div
+                            class="submission-actions"
+                        >
+
+
+                            <button
+                                type="button"
+                                class="view-submission-btn"
+                                onclick="toggleSubmissionDetails(
+                                    ${submission.id}
+                                )"
+                            >
+
+                                👁 View Details
+
+                            </button>
+
+
+
+                            <button
+                                type="button"
+                                class="approve-btn"
+                                onclick="confirmSubmissionAction(
+                                    ${submission.id},
+                                    'approve'
+                                )"
+                            >
+
+                                ✅ Approve & Publish
+
+                            </button>
+
+
+
+                            <button
+                                type="button"
+                                class="reject-btn"
+                                onclick="confirmSubmissionAction(
+                                    ${submission.id},
+                                    'reject'
+                                )"
+                            >
+
+                                ❌ Reject
+
+                            </button>
+
+
+                        </div>
+
+
+
+                        <div
+                            id="submission-details-${submission.id}"
+                            class="submission-details"
+                        >
+
+                            ${extraDetails}
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            submissionsContainer.appendChild(
+                card
+            );
+
+        }
+    );
 
 }
+
 
 
 /* =========================================================
@@ -1412,6 +2870,7 @@ function toggleSubmissionDetails(id){
     );
 
 }
+
 
 
 /* =========================================================
@@ -1450,68 +2909,97 @@ function confirmSubmissionAction(
         action;
 
 
+
     if(action === "approve"){
 
         actionTitle.textContent =
             "Approve & Publish Post";
 
 
-        if(
-            submission.post_type ===
-            "sponsored"
-            ||
-            submission.post_type ===
-            "featured"
-        ){
+        actionMessage.innerHTML = `
 
-            actionMessage.innerHTML = `
+            You are about to publish:
 
-                You are about to publish:
+            <strong>
 
-                <strong>
-                    ${escapeHTML(
-                        submission.title
-                    )}
-                </strong>
+                ${escapeHTML(
+                    submission.title
+                )}
 
-                <br><br>
+            </strong>
 
-                This is a
-                <strong>
-                    ${escapeHTML(
-                        submission.post_type
-                    )}
-                </strong>
-                submission.
 
-                <br><br>
+            <br><br>
 
-                Make sure any required payment
-                has been confirmed before publishing.
 
-            `;
+            Category:
 
-        }else{
+            <strong>
 
-            actionMessage.innerHTML = `
+                ${escapeHTML(
+                    categoryLabel(
+                        submission.category
+                    )
+                )}
 
-                Publish
-                <strong>
-                    ${escapeHTML(
-                        submission.title
-                    )}
-                </strong>
-                to MOTTECK?
+            </strong>
 
-                <br><br>
 
-                Once approved, the post will be
-                moved into the published posts
-                section.
+            <br><br>
 
-            `;
 
-        }
+            Account:
+
+            <strong>
+
+                ${escapeHTML(
+                    String(
+                        submission.account_type ||
+                        "individual"
+                    ).toUpperCase()
+                )}
+
+            </strong>
+
+
+            <br><br>
+
+
+            Post Type:
+
+            <strong>
+
+                ${escapeHTML(
+                    submission.post_type ||
+                    "normal"
+                )}
+
+            </strong>
+
+
+            <br><br>
+
+
+            Sale Method:
+
+            <strong>
+
+                ${escapeHTML(
+                    saleMethodLabel(
+                        submission.sale_method
+                    )
+                )}
+
+            </strong>
+
+
+            <br><br>
+
+            Make sure the submitted information
+            and any required payment have been
+            confirmed before publishing.
+
+        `;
 
 
         confirmActionBtn.textContent =
@@ -1535,14 +3023,18 @@ function confirmSubmissionAction(
             Reject:
 
             <strong>
+
                 ${escapeHTML(
                     submission.title
                 )}
+
             </strong>
 
             ?
 
+
             <br><br>
+
 
             This post will not be published.
 
@@ -1565,6 +3057,7 @@ function confirmSubmissionAction(
 }
 
 
+
 /* =========================================================
    CLOSE ACTION MODAL
 ========================================================= */
@@ -1575,11 +3068,15 @@ function closeActionModal(){
         "none";
 
 
-    pendingAction = null;
+    pendingAction =
+        null;
 
-    pendingSubmissionId = null;
+
+    pendingSubmissionId =
+        null;
 
 }
+
 
 
 /* =========================================================
@@ -1622,7 +3119,7 @@ confirmActionBtn.addEventListener(
                 await fetch(
                     `/admin/submissions/${submissionId}/${action}`,
                     {
-                        method: "POST"
+                        method:"POST"
                     }
                 );
 
@@ -1631,8 +3128,10 @@ confirmActionBtn.addEventListener(
                 await response.json();
 
 
-            if(!response.ok ||
-               !data.success){
+            if(
+                !response.ok ||
+                !data.success
+            ){
 
                 throw new Error(
                     data.error ||
@@ -1686,22 +3185,43 @@ confirmActionBtn.addEventListener(
 );
 
 
+
 /* =========================================================
-   CLOSE MODAL WHEN CLICKING OUTSIDE
+   CLOSE MODALS OUTSIDE
 ========================================================= */
 
 window.addEventListener(
     "click",
     function(event){
 
-        if(event.target === actionModal){
+        if(
+            event.target ===
+            actionModal
+        ){
 
             closeActionModal();
 
         }
 
+
+        const editModal =
+            document.getElementById(
+                "editModal"
+            );
+
+
+        if(
+            event.target ===
+            editModal
+        ){
+
+            closeModal();
+
+        }
+
     }
 );
+
 
 
 /* =========================================================
@@ -1738,8 +3258,10 @@ function getPreview(text){
     if(clean.length > 120){
 
         return (
-            clean.substring(0,120)
-            + "..."
+            clean.substring(
+                0,
+                120
+            ) + "..."
         );
 
     }
@@ -1750,41 +3272,6 @@ function getPreview(text){
 }
 
 
-/* =========================================================
-   RENDER DESCRIPTION
-========================================================= */
-
-function renderDescription(text){
-
-    if(!text){
-
-        return "";
-
-    }
-
-
-    const imagePattern =
-        /(https?:\/\/\S+\.(jpg|jpeg|png|gif|webp))/g;
-
-
-    let formatted =
-        text.replace(
-            imagePattern,
-            '<img src="$1" style="max-width:100%;height:auto;margin:10px 0;border-radius:8px;">'
-        );
-
-
-    formatted =
-        formatted.replace(
-            /\n/g,
-            "<br>"
-        );
-
-
-    return formatted;
-
-}
-
 
 /* =========================================================
    ANALYTICS
@@ -1792,53 +3279,73 @@ function renderDescription(text){
 
 function loadAnalytics(){
 
-    fetch("/analytics")
+    fetch(
+        "/analytics"
+    )
 
-    .then(res => res.json())
+    .then(
+        res => res.json()
+    )
 
-    .then(data => {
+    .then(
+        data => {
 
-        if(data.error){
+            if(data.error){
 
-            analyticsBox.innerHTML =
-                "Unable to load analytics.";
+                analyticsBox.innerHTML =
+                    "Unable to load analytics.";
 
-            return;
+                return;
+
+            }
+
+
+            analyticsBox.innerHTML = `
+
+                <p>
+
+                    📦 Total Posts:
+
+                    ${data.total_posts || 0}
+
+                </p>
+
+
+                <p>
+
+                    👁 Total Views:
+
+                    ${data.total_views || 0}
+
+                </p>
+
+
+                <p>
+
+                    ❤️ Total Likes:
+
+                    ${data.total_likes || 0}
+
+                </p>
+
+            `;
 
         }
+    )
 
+    .catch(
+        error => {
 
-        analyticsBox.innerHTML = `
+            console.error(
+                "ANALYTICS ERROR:",
+                error
+            );
 
-            <p>
-                📦 Total Posts:
-                ${data.total_posts}
-            </p>
-
-            <p>
-                👁 Total Views:
-                ${data.total_views}
-            </p>
-
-            <p>
-                ❤️ Total Likes:
-                ${data.total_likes}
-            </p>
-
-        `;
-
-    })
-
-    .catch(error => {
-
-        console.error(
-            "ANALYTICS ERROR:",
-            error
-        );
-
-    });
+        }
+    );
 
 }
+
 
 
 /* =========================================================
@@ -1890,128 +3397,168 @@ function loadSponsors(posts){
     `;
 
 
-    sponsored.forEach(post => {
 
-        let expiry =
-            post.sponsored_until;
+    sponsored.forEach(
+        post => {
+
+            let expiry =
+                post.sponsored_until;
 
 
-        if(!expiry){
+            if(!expiry){
+
+                html += `
+
+                    <tr>
+
+                        <td>
+
+                            ${escapeHTML(
+                                post.title
+                            )}
+
+                        </td>
+
+
+                        <td class="live">
+
+                            Live
+
+                        </td>
+
+
+                        <td>
+
+                            Unlimited
+
+                        </td>
+
+
+                        <td>
+
+                            --
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            let end =
+                new Date(expiry);
+
+
+            let now =
+                new Date();
+
+
+            let diff =
+                end - now;
+
+
+            let days =
+                Math.ceil(
+                    diff /
+                    (
+                        1000 *
+                        60 *
+                        60 *
+                        24
+                    )
+                );
+
+
+            let status =
+                "";
+
+
+            let cls =
+                "";
+
+
+            if(days < 0){
+
+                status =
+                    "Expired";
+
+
+                cls =
+                    "expired";
+
+
+                days =
+                    0;
+
+            }
+
+            else if(days <= 3){
+
+                status =
+                    "Expiring Soon";
+
+
+                cls =
+                    "soon";
+
+            }
+
+            else{
+
+                status =
+                    "Live";
+
+
+                cls =
+                    "live";
+
+            }
+
+
 
             html += `
 
                 <tr>
 
                     <td>
+
                         ${escapeHTML(
                             post.title
                         )}
+
                     </td>
 
-                    <td class="live">
-                        Live
+
+                    <td class="${cls}">
+
+                        ${status}
+
                     </td>
+
 
                     <td>
-                        Unlimited
+
+                        ${end.toLocaleDateString()}
+
                     </td>
 
+
                     <td>
-                        --
+
+                        ${days}
+
                     </td>
 
                 </tr>
 
             `;
 
-            return;
-
         }
-
-
-        let end =
-            new Date(expiry);
-
-        let now =
-            new Date();
-
-
-        let diff =
-            end - now;
-
-
-        let days =
-            Math.ceil(
-                diff /
-                (1000 * 60 * 60 * 24)
-            );
-
-
-        let status = "";
-
-        let cls = "";
-
-
-        if(days < 0){
-
-            status =
-                "Expired";
-
-            cls =
-                "expired";
-
-            days = 0;
-
-        }
-
-        else if(days <= 3){
-
-            status =
-                "Expiring Soon";
-
-            cls =
-                "soon";
-
-        }
-
-        else{
-
-            status =
-                "Live";
-
-            cls =
-                "live";
-
-        }
-
-
-        html += `
-
-            <tr>
-
-                <td>
-                    ${escapeHTML(
-                        post.title
-                    )}
-                </td>
-
-                <td class="${cls}">
-                    ${status}
-                </td>
-
-                <td>
-                    ${end.toLocaleDateString()}
-                </td>
-
-                <td>
-                    ${days}
-                </td>
-
-            </tr>
-
-        `;
-
-    });
+    );
 
 
     html += `
@@ -2025,6 +3572,7 @@ function loadSponsors(posts){
 }
 
 
+
 /* =========================================================
    RENDER PUBLISHED POSTS
 ========================================================= */
@@ -2035,116 +3583,107 @@ function render(posts){
         "";
 
 
-    posts.forEach(post => {
+    if(!posts.length){
 
-        let badges = "";
+        postsContainer.innerHTML = `
 
+            <div class="loading-submissions">
 
-        if(post.is_featured){
+                No published posts yet.
 
-            badges += `
-                <span class="badge featured">
-                    Featured
-                </span>
-            `;
+            </div>
 
-        }
+        `;
 
+        return;
 
-        if(post.is_sponsored){
-
-            badges += `
-                <span class="badge sponsored">
-                    Sponsored
-                </span>
-            `;
-
-        }
+    }
 
 
-        const div =
-            document.createElement("div");
+
+    posts.forEach(
+        post => {
+
+            let badges =
+                "";
 
 
-        div.className =
-            "post-card";
+            if(post.is_featured){
+
+                badges += `
+
+                    <span class="badge featured">
+
+                        Featured
+
+                    </span>
+
+                `;
+
+            }
 
 
-        div.innerHTML = `
+            if(post.is_sponsored){
 
-            ${badges}
+                badges += `
 
+                    <span class="badge sponsored">
 
-            <div
-                style="
-                    display:flex;
-                    gap:12px;
-                    align-items:flex-start;
-                "
-            >
+                        Sponsored
 
-                <div
-                    style="
-                        flex-shrink:0;
-                    "
-                >
+                    </span>
 
-                    <img
-                        src="${escapeHTML(
-                            post.image_url || ""
-                        )}"
-                        style="
-                            width:130px;
-                            height:90px;
-                            object-fit:cover;
-                            border-radius:8px;
-                        "
-                    >
+                `;
 
-                </div>
+            }
 
 
-                <div
-                    style="
-                        flex:1;
-                    "
-                >
 
-                    <h4 style="margin:0;">
-
-                        ${escapeHTML(
-                            post.title
-                        )}
-
-                    </h4>
+            const div =
+                document.createElement(
+                    "div"
+                );
 
 
-                    <small>
-
-                        ${escapeHTML(
-                            post.category
-                        )}
-
-                    </small>
+            div.className =
+                "post-card";
 
 
-                    <div
-                        class="post-preview"
-                        style="
-                            margin-top:6px;
-                            font-size:14px;
-                            color:#444;
-                        "
-                    >
 
-                        ${escapeHTML(
-                            getPreview(
-                                post.description
-                            )
-                        )}
+            const vehicleType =
+                post.vehicle_type ||
+                post.car_type ||
+                post.type ||
+                "";
 
-                    </div>
 
+            const year =
+                post.year ||
+                post.vehicle_year ||
+                "";
+
+
+            const mileage =
+                post.mileage ||
+                "";
+
+
+            const condition =
+                post.condition ||
+                "";
+
+
+
+            const vehicleInfo =
+                (
+                    vehicleType ||
+                    year ||
+                    mileage ||
+                    condition
+                )
+                ?
+
+                `
 
                     <div
                         style="
@@ -2153,56 +3692,235 @@ function render(posts){
                         "
                     >
 
-                        👁
-                        ${post.views || 0}
+                        ${
+                            vehicleType
+                                ? `
+                                    <strong>
+                                        ${escapeHTML(
+                                            vehicleType
+                                        )}
+                                    </strong>
+                                  `
+                                : ""
+                        }
 
-                        &nbsp;
 
-                        ❤️
-                        ${post.likes || 0}
+                        ${
+                            year
+                                ? `
+                                    | Year:
+                                    ${escapeHTML(
+                                        year
+                                    )}
+                                  `
+                                : ""
+                        }
+
+
+                        ${
+                            mileage
+                                ? `
+                                    | Mileage:
+                                    ${escapeHTML(
+                                        mileage
+                                    )}
+                                  `
+                                : ""
+                        }
+
+
+                        ${
+                            condition
+                                ? `
+                                    | Condition:
+                                    ${escapeHTML(
+                                        condition
+                                    )}
+                                  `
+                                : ""
+                        }
 
                     </div>
+
+                `
+
+                :
+
+                "";
+
+
+
+            div.innerHTML = `
+
+                ${badges}
+
+
+                <div
+                    style="
+                        display:flex;
+                        gap:12px;
+                        align-items:flex-start;
+                    "
+                >
 
 
                     <div
                         style="
-                            margin-top:8px;
+                            flex-shrink:0;
                         "
                     >
 
-                        <button
-                            onclick="openEdit(${post.id})"
+                        <img
+                            src="${escapeHTML(
+                                post.image_url || ""
+                            )}"
+                            style="
+                                width:130px;
+                                height:90px;
+                                object-fit:cover;
+                                border-radius:8px;
+                            "
+                            alt="Post image"
                         >
-                            Edit
-                        </button>
+
+                    </div>
 
 
-                        <button
-                            onclick="deletePost(${post.id})"
+
+                    <div
+                        style="
+                            flex:1;
+                        "
+                    >
+
+
+                        <h4
+                            style="
+                                margin:0;
+                            "
                         >
-                            Delete
-                        </button>
+
+                            ${escapeHTML(
+                                post.title
+                            )}
+
+                        </h4>
+
+
+
+                        <small>
+
+                            ${escapeHTML(
+                                categoryLabel(
+                                    post.category
+                                )
+                            )}
+
+                        </small>
+
+
+
+                        ${vehicleInfo}
+
+
+
+                        <div
+                            class="post-preview"
+                            style="
+                                margin-top:6px;
+                                font-size:14px;
+                                color:#444;
+                            "
+                        >
+
+                            ${escapeHTML(
+                                getPreview(
+                                    post.description
+                                )
+                            )}
+
+                        </div>
+
+
+
+                        <div
+                            style="
+                                margin-top:8px;
+                                font-size:13px;
+                            "
+                        >
+
+                            👁
+                            ${post.views || 0}
+
+
+                            &nbsp;
+
+
+                            ❤️
+                            ${post.likes || 0}
+
+
+                            &nbsp;
+
+
+                            🖱
+                            ${post.ad_clicks || 0}
+
+                        </div>
+
+
+
+                        <div
+                            style="
+                                margin-top:8px;
+                            "
+                        >
+
+                            <button
+                                onclick="openEdit(
+                                    ${post.id}
+                                )"
+                            >
+
+                                Edit
+
+                            </button>
+
+
+                            <button
+                                onclick="deletePost(
+                                    ${post.id}
+                                )"
+                            >
+
+                                Delete
+
+                            </button>
+
+                        </div>
+
 
                     </div>
 
                 </div>
 
-            </div>
-
-        `;
+            `;
 
 
-        postsContainer.appendChild(
-            div
-        );
+            postsContainer.appendChild(
+                div
+            );
 
-    });
+        }
+    );
 
 }
 
 
+
 /* =========================================================
-   DELETE PUBLISHED POST
+   DELETE POST
 ========================================================= */
 
 function deletePost(id){
@@ -2225,36 +3943,44 @@ function deletePost(id){
         }
     )
 
-    .then(res => res.json())
+    .then(
+        res => res.json()
+    )
 
-    .then(data => {
+    .then(
+        data => {
 
-        if(data.success){
+            if(data.success){
 
-            loadPosts();
+                loadPosts();
 
-            loadAnalytics();
+                loadAnalytics();
 
-        }else{
+            }else{
 
-            alert(
-                "Unable to delete post."
+                alert(
+                    data.error ||
+                    "Unable to delete post."
+                );
+
+            }
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(
+                "DELETE ERROR:",
+                error
             );
 
         }
-
-    })
-
-    .catch(error => {
-
-        console.error(
-            "DELETE ERROR:",
-            error
-        );
-
-    });
+    );
 
 }
+
 
 
 /* =========================================================
@@ -2267,69 +3993,155 @@ function openEdit(id){
         `/get_post/${id}`
     )
 
-    .then(res => res.json())
+    .then(
+        res => res.json()
+    )
 
-    .then(post => {
+    .then(
+        post => {
 
-        if(post.error){
+            if(post.error){
 
-            alert(
-                post.error
-            );
+                alert(
+                    post.error
+                );
 
-            return;
+                return;
+
+            }
+
+
+            document.getElementById(
+                "edit_id"
+            ).value =
+                post.id;
+
+
+            document.getElementById(
+                "edit_title"
+            ).value =
+                post.title || "";
+
+
+            document.getElementById(
+                "edit_category"
+            ).value =
+                post.category || "car";
+
+
+            document.getElementById(
+                "edit_description"
+            ).value =
+                post.description || "";
+
+
+
+            /* VEHICLE DATA */
+
+            document.getElementById(
+                "edit_vehicle_type"
+            ).value =
+                post.vehicle_type ||
+                post.car_type ||
+                post.type ||
+                "";
+
+
+            document.getElementById(
+                "edit_year"
+            ).value =
+                post.year ||
+                post.vehicle_year ||
+                "";
+
+
+            document.getElementById(
+                "edit_mileage"
+            ).value =
+                post.mileage ||
+                "";
+
+
+            document.getElementById(
+                "edit_condition"
+            ).value =
+                post.condition ||
+                "";
+
+
+
+            /* POST TYPE */
+
+            document.getElementById(
+                "edit_post_type"
+            ).value =
+                post.post_type ||
+                (
+                    post.is_sponsored
+                        ? "sponsored"
+                        : post.is_featured
+                            ? "featured"
+                            : "normal"
+                );
+
+
+
+            /* PROMOTION */
+
+            document.getElementById(
+                "edit_promotion_duration"
+            ).value =
+                post.promotion_duration ||
+                "";
+
+
+
+            document.getElementById(
+                "edit_featured"
+            ).checked =
+                Boolean(
+                    post.is_featured
+                );
+
+
+            document.getElementById(
+                "edit_sponsored"
+            ).checked =
+                Boolean(
+                    post.is_sponsored
+                );
+
+
+
+            updateEditFields();
+
+
+
+            document.getElementById(
+                "editModal"
+            ).style.display =
+                "block";
 
         }
+    )
 
+    .catch(
+        error => {
 
-        document.getElementById(
-            "edit_id"
-        ).value =
-            post.id;
-
-
-        document.getElementById(
-            "edit_title"
-        ).value =
-            post.title || "";
-
-
-        document.getElementById(
-            "edit_category"
-        ).value =
-            post.category || "";
-
-
-        document.getElementById(
-            "edit_description"
-        ).value =
-            post.description || "";
-
-
-        document.getElementById(
-            "edit_featured"
-        ).checked =
-            Boolean(
-                post.is_featured
+            console.error(
+                "OPEN EDIT ERROR:",
+                error
             );
 
-
-        document.getElementById(
-            "edit_sponsored"
-        ).checked =
-            Boolean(
-                post.is_sponsored
+            alert(
+                "Unable to load post."
             );
 
-
-        document.getElementById(
-            "editModal"
-        ).style.display =
-            "block";
-
-    });
+        }
+    );
 
 }
+
 
 
 /* =========================================================
@@ -2344,6 +4156,7 @@ function closeModal(){
         "none";
 
 }
+
 
 
 /* =========================================================
@@ -2393,6 +4206,11 @@ editForm.addEventListener(
 
                 loadAnalytics();
 
+
+                alert(
+                    "✅ Post updated successfully."
+                );
+
             }else{
 
                 alert(
@@ -2409,6 +4227,7 @@ editForm.addEventListener(
                 error
             );
 
+
             alert(
                 "Something went wrong."
             );
@@ -2417,6 +4236,7 @@ editForm.addEventListener(
 
     }
 );
+
 
 
 /* =========================================================
@@ -2431,18 +4251,62 @@ form.addEventListener(
 
 
         const formData =
-            new FormData(form);
+            new FormData(
+                form
+            );
+
+
+        /*
+         * Keep Featured / Sponsored checkboxes
+         * synchronized with Post Type.
+         */
+
+        const postType =
+            document.getElementById(
+                "create_post_type"
+            ).value;
+
+
+        if(postType === "featured"){
+
+            formData.set(
+                "is_featured",
+                "on"
+            );
+
+            formData.delete(
+                "is_sponsored"
+            );
+
+        }
+
+        else if(postType === "sponsored"){
+
+            formData.set(
+                "is_sponsored",
+                "on"
+            );
+
+            formData.delete(
+                "is_featured"
+            );
+
+        }
+
 
 
         publishBtn.disabled =
             true;
 
 
-        publishBtn.innerHTML =
-            `
+        publishBtn.innerHTML = `
+
             <span class="spinner"></span>
+
             Publishing...
-            `;
+
+        `;
+
 
 
         try{
@@ -2474,9 +4338,16 @@ form.addEventListener(
                 form.reset();
 
 
+                document.getElementById(
+                    "createVehicleFields"
+                ).style.display =
+                    "none";
+
+
                 loadPosts();
 
                 loadAnalytics();
+
 
 
                 setTimeout(
@@ -2485,8 +4356,10 @@ form.addEventListener(
                         publishBtn.innerHTML =
                             "Publish";
 
+
                         publishBtn.disabled =
                             false;
+
 
                         publishBtn.style.background =
                             "";
@@ -2500,8 +4373,15 @@ form.addEventListener(
                 publishBtn.innerHTML =
                     "❌ Failed";
 
+
                 publishBtn.disabled =
                     false;
+
+
+                alert(
+                    data.error ||
+                    "Unable to publish post."
+                );
 
             }
 
@@ -2516,7 +4396,74 @@ form.addEventListener(
             publishBtn.innerHTML =
                 "❌ Error";
 
+
             publishBtn.disabled =
+                false;
+
+
+            alert(
+                "Something went wrong while publishing."
+            );
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
+   POST TYPE CHECKBOX SYNCHRONIZATION
+========================================================= */
+
+document.getElementById(
+    "create_post_type"
+).addEventListener(
+    "change",
+    function(){
+
+        const type =
+            this.value;
+
+
+        const featured =
+            document.querySelector(
+                '#postForm input[name="is_featured"]'
+            );
+
+
+        const sponsored =
+            document.querySelector(
+                '#postForm input[name="is_sponsored"]'
+            );
+
+
+        if(type === "featured"){
+
+            featured.checked =
+                true;
+
+            sponsored.checked =
+                false;
+
+        }
+
+        else if(type === "sponsored"){
+
+            sponsored.checked =
+                true;
+
+            featured.checked =
+                false;
+
+        }
+
+        else{
+
+            featured.checked =
+                false;
+
+            sponsored.checked =
                 false;
 
         }
@@ -2525,15 +4472,22 @@ form.addEventListener(
 );
 
 
+
 /* =========================================================
    INITIAL LOAD
 ========================================================= */
 
 loadPosts();
+
 loadAnalytics();
+
 loadSubmissions();
+
 loadLeads();
+
 </script>
 
+
 </body>
+
 </html>

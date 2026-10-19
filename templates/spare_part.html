@@ -535,7 +535,9 @@
             <p>
                 Call: +254742022263
             </p>
-
+            <p>
+                Location: Nairobi, Kenya
+            </p>
 
             <div class="social-box">
 
@@ -1090,238 +1092,522 @@ async function toggleFollow(userId, button) {
 }
 
 
+
 /* =========================================================
-   CREATE POST CARD
+   CREATE SPARE PART POST CARD
 ========================================================= */
 
 function createPostCard(post) {
 
+    const postId = String(post.id || "");
+    const title = escapeHTML(post.title || "Spare Part");
+    const description = String(post.description || "");
 
-    const postId =
-        String(post.id || "");
+    /* -----------------------------------------------------
+       IMAGE COLLECTION
+    ----------------------------------------------------- */
 
+    function parseImageList(value) {
 
-    let image =
-        post.image ||
-        post.image_url ||
-        "/static/images/default.jpg";
+        if (Array.isArray(value)) {
+            return value;
+        }
 
+        if (typeof value === "string" && value.trim()) {
 
-    if (
-        !image.startsWith("http") &&
-        !image.startsWith("/")
-    ) {
+            try {
+                const parsed = JSON.parse(value);
 
-        image =
-            "/static/" + image;
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                }
 
+            } catch (error) {
+                // Treat it as a single image URL.
+            }
+
+            return [value];
+        }
+
+        return [];
     }
 
+    function normalizeImage(value) {
 
+        if (!value || typeof value !== "string") {
+            return "";
+        }
 
-    const title =
-        escapeHTML(
-            post.title || ""
-        );
+        let url = value.trim();
 
+        if (!url) {
+            return "";
+        }
 
-    const description =
-        post.description || "";
+        if (
+            !url.startsWith("https://") &&
+            !url.startsWith("http://") &&
+            !url.startsWith("/")
+        ) {
+            url = "/static/" + url.replace(/^static\//, "");
+        }
 
+        return url;
+    }
 
+    const imageCandidates = [
+        post.image,
+        post.image_url,
+        post.cover_image,
+        ...parseImageList(post.images),
+        ...parseImageList(post.image_urls),
+        ...parseImageList(post.photos),
+        ...parseImageList(post.gallery),
+        ...parseImageList(post.additional_images)
+    ];
 
-    let badge = "";
+    const images = [...new Set(
+        imageCandidates
+            .map(normalizeImage)
+            .filter(Boolean)
+    )];
 
+    const fallbackImage = "/static/images/default.jpg";
+    const mainImage = images[0] || fallbackImage;
 
-    if (post.is_sponsored) {
+    /* -----------------------------------------------------
+       POST TYPE AND BADGES
+    ----------------------------------------------------- */
 
-        badge = `
+    const postTypes = [
+        post.post_type,
+        post.type,
+        post.listing_type,
+        post.content_type,
+        post.intent,
+        post.sale_type
+    ]
+    .filter(Boolean)
+    .map(value => String(value).toLowerCase().trim());
 
-            <span class="badge sponsored">
+    const isSponsored =
+        post.is_sponsored === true ||
+        post.is_sponsored === 1 ||
+        postTypes.includes("sponsored");
 
-                Sponsored
+    const isFeatured =
+        post.is_featured === true ||
+        post.is_featured === 1 ||
+        postTypes.includes("featured");
 
+    let badges = "";
+
+    if (isFeatured) {
+        badges += `
+            <span class="mc-part-badge mc-part-featured">
+                <i class="fa-solid fa-star"></i> Featured
             </span>
-
         `;
-
     }
 
+    if (isSponsored) {
+        badges += `
+            <span class="mc-part-badge mc-part-sponsored">
+                <i class="fa-solid fa-bullhorn"></i> Sponsored
+            </span>
+        `;
+    }
 
+    /* -----------------------------------------------------
+       PRODUCT DETAILS
+    ----------------------------------------------------- */
 
-    const typeValues = [
-        post.post_type, post.type, post.listing_type,
-        post.content_type, post.intent, post.sale_type
-    ].filter(Boolean).map(value => String(value).toLowerCase().trim());
+    const details = [];
 
-    const salePost =
-        typeValues.some(value =>
-            ["sale", "for_sale", "forsale", "listing", "marketplace"].includes(value)
-        ) || post.is_for_sale === true || post.for_sale === true || post.is_listing === true;
+    const partNumber =
+        post.part_number ||
+        post.oem_number ||
+        post.serial_number;
 
-    const sellerLabel =
-        String(post.account_type || "").toLowerCase() === "business"
-            ? "Contact Business"
-            : "Contact Seller";
+    const compatibleMake =
+        post.compatible_make ||
+        post.vehicle_make ||
+        post.make;
 
-    const saleActions = salePost ? `
-        <div class="sale-contact-actions">
-            <a href="/post/${encodeURIComponent(postId)}?contact=seller" class="post-contact-btn">
-                <i class="fa-solid fa-phone"></i> ${sellerLabel}
-            </a>
-            <a href="/post/${encodeURIComponent(postId)}?request=motteck" class="post-contact-btn request-motteck-btn">
-                <i class="fa-solid fa-handshake"></i> Request MOTTECK
-            </a>
+    const compatibleModel =
+        post.compatible_model ||
+        post.vehicle_model ||
+        post.model;
+
+    const compatibleYear =
+        post.compatible_year ||
+        post.vehicle_year ||
+        post.year;
+
+    const condition = post.condition;
+
+    const brand =
+        post.brand ||
+        post.part_brand ||
+        post.manufacturer;
+
+    const location =
+        post.location ||
+        post.town;
+
+    const partType =
+        post.part_type ||
+        post.product_type;
+
+    if (partType) {
+        details.push(["Part Type", partType]);
+    }
+
+    if (brand) {
+        details.push(["Brand", brand]);
+    }
+
+    if (partNumber) {
+        details.push(["Part Number", partNumber]);
+    }
+
+    if (compatibleMake) {
+        details.push(["Vehicle Make", compatibleMake]);
+    }
+
+    if (compatibleModel) {
+        details.push(["Vehicle Model", compatibleModel]);
+    }
+
+    if (compatibleYear) {
+        details.push(["Compatible Year", compatibleYear]);
+    }
+
+    if (condition) {
+        details.push(["Condition", condition]);
+    }
+
+    if (location) {
+        details.push(["Location", location]);
+    }
+
+    const detailsHTML = details.length ? `
+        <div class="mc-part-details">
+            ${details.map(([label, value]) => `
+                <div class="mc-part-detail">
+                    <span>${escapeHTML(label)}</span>
+                    <strong>${escapeHTML(value)}</strong>
+                </div>
+            `).join("")}
         </div>
     ` : "";
 
-    return `
+    /* -----------------------------------------------------
+       PRICE
+    ----------------------------------------------------- */
 
-        <article
-            class="post-card ${salePost ? "sale-post" : "normal-post"}"
-            id="post-${escapeHTML(postId)}"
-            data-post-type="${salePost ? "sale" : "normal"}"
+    const rawPrice =
+        post.price ??
+        post.selling_price ??
+        post.amount;
+
+    let priceHTML = "";
+
+    if (
+        rawPrice !== undefined &&
+        rawPrice !== null &&
+        rawPrice !== ""
+    ) {
+
+        let formattedPrice = String(rawPrice).trim();
+
+        if (
+            typeof rawPrice === "number" ||
+            (
+                typeof rawPrice === "string" &&
+                /^[\d,]+(?:\.\d+)?$/.test(formattedPrice)
+            )
+        ) {
+
+            const numericPrice =
+                Number(formattedPrice.replace(/,/g, ""));
+
+            if (Number.isFinite(numericPrice)) {
+
+                formattedPrice =
+                    "KSh " +
+                    numericPrice.toLocaleString("en-KE", {
+                        maximumFractionDigits: 2
+                    });
+            }
+        }
+
+        priceHTML = `
+            <div class="mc-part-price">
+                ${escapeHTML(formattedPrice)}
+            </div>
+        `;
+    }
+
+    /* -----------------------------------------------------
+       DESCRIPTION PREVIEW
+    ----------------------------------------------------- */
+
+    const descriptionId =
+        "part-description-" +
+        postId.replace(/[^a-zA-Z0-9_-]/g, "");
+
+    const safeDescription =
+        escapeHTML(description).replace(/\n/g, "<br>");
+
+    const needsToggle = description.trim().length > 160;
+
+    const descriptionHTML = description.trim() ? `
+        <div
+            id="${escapeHTML(descriptionId)}"
+            class="mc-part-description-wrap ${needsToggle ? "mc-part-description-collapsed" : ""}"
         >
+            <div class="mc-part-description-text">
+                ${safeDescription}
+            </div>
+        </div>
 
+        ${needsToggle ? `
+            <button
+                type="button"
+                class="mc-part-see-more"
+                aria-expanded="false"
+                onclick="togglePartDescription('${escapeHTML(descriptionId)}', this)"
+            >See more</button>
+        ` : ""}
+    ` : "";
 
-            ${badge}
+    /* -----------------------------------------------------
+       PHOTO GALLERY
+       Up to 3 photos, with +N for additional photos.
+    ----------------------------------------------------- */
 
+    const visibleImages = images.slice(0, 3);
+    const remainingImages = Math.max(0, images.length - 3);
 
-            <!-- AUTHOR -->
+    let galleryHTML = "";
 
-            ${createAuthorHeader(post)}
+    if (visibleImages.length <= 1) {
 
-
-
-            <!-- IMAGE -->
-
-            <a href="/post/${encodeURIComponent(postId)}">
-
+        galleryHTML = `
+            <a
+                href="/post/${encodeURIComponent(postId)}"
+                class="mc-part-single-image"
+            >
                 <img
-                    src="${escapeHTML(image)}"
-                    class="post-image"
+                    src="${escapeHTML(mainImage)}"
                     alt="${title}"
                     loading="lazy"
                     decoding="async"
-                    width="400"
-                    height="250"
-                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
+                    onerror="this.onerror=null;this.src='${fallbackImage}';"
                 >
-
             </a>
+        `;
 
+    } else {
 
-
-            <!-- CONTENT -->
-
-            <div class="post-content">
-
+        galleryHTML = `
+            <div class="mc-part-gallery">
 
                 <a
                     href="/post/${encodeURIComponent(postId)}"
-                    style="text-decoration:none;"
+                    class="mc-part-gallery-main"
                 >
-
-                    <h3 class="post-title">
-
-                        ${title}
-
-                    </h3>
-
+                    <img
+                        src="${escapeHTML(visibleImages[0])}"
+                        alt="${title}"
+                        loading="lazy"
+                        decoding="async"
+                        onerror="this.onerror=null;this.src='${fallbackImage}';"
+                    >
                 </a>
 
+                <div class="mc-part-gallery-side">
 
+                    ${visibleImages.slice(1).map((image, index, array) => {
 
-                <div class="post-text preview-lines">
+                        const isLast = index === array.length - 1;
 
-                    ${formatText(description)}
+                        return `
+                            <a
+                                href="/post/${encodeURIComponent(postId)}"
+                                class="mc-part-gallery-thumb"
+                            >
+                                <img
+                                    src="${escapeHTML(image)}"
+                                    alt="${title} photo ${index + 2}"
+                                    loading="lazy"
+                                    decoding="async"
+                                    onerror="this.onerror=null;this.src='${fallbackImage}';"
+                                >
+
+                                ${isLast && remainingImages > 0 ? `
+                                    <span class="mc-part-more-photos">
+                                        +${remainingImages}
+                                    </span>
+                                ` : ""}
+                            </a>
+                        `;
+
+                    }).join("")}
 
                 </div>
 
+            </div>
+        `;
+    }
 
+    /* -----------------------------------------------------
+       BUY NOW + REQUEST MOTTECK
+       Spare parts use the purchase flow, not vehicle
+       seller-contact buttons.
+    ----------------------------------------------------- */
 
-                <!-- ACTIONS -->
+    const buyActions = postId ? `
+        <div class="mc-part-buy-actions">
 
-                <div class="post-actions">
+            <a
+                href="/post/${encodeURIComponent(postId)}?buy=1"
+                class="mc-part-action mc-part-buy-now"
+            >
+                <i class="fa-solid fa-cart-shopping"></i>
+                Buy Now
+            </a>
 
+            <a
+                href="/post/${encodeURIComponent(postId)}?request=motteck"
+                class="mc-part-action mc-part-request"
+            >
+                <i class="fa-solid fa-handshake"></i>
+                Request MOTTECK
+            </a>
 
-                    <!-- LIKE -->
+        </div>
+    ` : "";
+
+    /* -----------------------------------------------------
+       COMPLETE CARD
+    ----------------------------------------------------- */
+
+    return `
+        <article
+            class="post-card mc-part-card"
+            id="post-${escapeHTML(postId)}"
+        >
+
+            ${badges ? `
+                <div class="mc-part-badges">
+                    ${badges}
+                </div>
+            ` : ""}
+
+            ${createAuthorHeader(post)}
+
+            ${galleryHTML}
+
+            <div class="post-content mc-part-content">
+
+                <a
+                    href="/post/${encodeURIComponent(postId)}"
+                    class="mc-part-title-link"
+                >
+                    <h3 class="post-title mc-part-title">
+                        ${title}
+                    </h3>
+                </a>
+
+                ${detailsHTML}
+
+                ${priceHTML}
+
+                ${descriptionHTML}
+
+                <div class="post-actions mc-part-post-actions">
 
                     <button
                         type="button"
                         id="like-btn-${escapeHTML(postId)}"
                         class="post-action-btn like-action"
                         onclick="likePost('${escapeHTML(postId)}')"
-                        aria-label="Like post"
+                        aria-label="Like product"
                     >
-
                         <i class="fa-regular fa-heart"></i>
-
-                        <span
-                            id="like-count-${escapeHTML(postId)}"
-                        >
+                        <span id="like-count-${escapeHTML(postId)}">
                             ${Number(post.likes || 0)}
                         </span>
-
                     </button>
-
-                    <!-- SHARE -->
 
                     <button
                         type="button"
                         class="post-action-btn share-action"
-                        onclick="sharePost('${post.id}', '${escapeHTML(post.title || "MOTTECK Post")}')"
-                        aria-label="Share post"
+                        onclick="sharePost('${escapeHTML(postId)}', '${escapeHTML(post.title || "MOTTECK Spare Part").replace(/'/g, "&#039;")}')"
+                        aria-label="Share product"
                     >
-
                         <i class="fa-solid fa-share-nodes"></i>
-
-                        <span>
-                            Share
-                        </span>
-
+                        <span>Share</span>
                     </button>
 
-
-
-                    <!-- VIEWS -->
-
                     <span class="views post-action-btn">
-
                         <i class="fa-regular fa-eye"></i>
-
-                        <span
-                            id="view-count-${escapeHTML(postId)}"
-                        >
+                        <span id="view-count-${escapeHTML(postId)}">
                             ${Number(post.views || 0)}
                         </span>
-
                     </span>
-
 
                 </div>
 
-                <!-- READ MORE -->
-
                 <a
                     href="/post/${encodeURIComponent(postId)}"
-                    class="see-more-btn"
+                    class="mc-part-view-details"
                 >
-
-                    Read More
-
+                    View Product Details
                 </a>
 
-                ${saleActions}
+                ${buyActions}
 
             </div>
 
-
         </article>
-
     `;
-
 }
+
+
+/* =========================================================
+   DESCRIPTION SEE MORE / SEE LESS
+========================================================= */
+
+function togglePartDescription(descriptionId, button) {
+
+    const description =
+        document.getElementById(descriptionId);
+
+    if (!description || !button) {
+        return;
+    }
+
+    const isCurrentlyCollapsed =
+        description.classList.contains(
+            "mc-part-description-collapsed"
+        );
+
+    description.classList.toggle(
+        "mc-part-description-collapsed"
+    );
+
+    button.textContent =
+        isCurrentlyCollapsed ? "See less" : "See more";
+
+    button.setAttribute(
+        "aria-expanded",
+        String(isCurrentlyCollapsed)
+    );
+}
+
 
 
 
@@ -1841,11 +2127,21 @@ async function loadCategoryPosts() {
         const categoryPosts =
             posts.filter(
                 post => {
+                    
+                    const categoryPosts = posts.filter(post => {
+                        const postCategory = String(post.category || "")
+                        .trim()
+                        .toLowerCase()
+                        .replace(/[\s-]+/g, "_");
+                        
+                        return [
+                            "spare_part",
+                            "spare_parts",
+                            "sparepart",
+                            "spareparts"
+                        ].includes(postCategory);
+                    });
 
-                    return String(
-                        post.category || ""
-                    ).toLowerCase()
-                    === category;
 
                 }
             );

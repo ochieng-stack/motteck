@@ -536,6 +536,9 @@
                 Call: +254742022263
             </p>
 
+            <p>
+                Location: Niarobi,Kenya
+            </p>
 
             <div class="social-box">
 
@@ -1089,162 +1092,425 @@ async function toggleFollow(userId, button) {
 }
 
 
+
 /* =========================================================
-   CREATE POST CARD
+   CREATE MOTOBIKE POST CARD
 ========================================================= */
 
 function createPostCard(post) {
 
+    const postId = String(post.id || "");
 
-    const postId =
-        String(post.id || "");
+    const title = escapeHTML(post.title || "Untitled Bike");
 
+    const description = String(post.description || "");
 
-    let image =
-        post.image ||
-        post.image_url ||
-        "/static/images/default.jpg";
+    const safeDescription = escapeHTML(description).replace(/\n/g, "<br>");
 
+    /* -----------------------------------------------------
+       COLLECT ALL UPLOADED IMAGES
+       Supports common image field names.
+    ----------------------------------------------------- */
 
-    if (
-        !image.startsWith("http") &&
-        !image.startsWith("/")
-    ) {
+    function parseImageList(value) {
+        if (Array.isArray(value)) return value;
 
-        image =
-            "/static/" + image;
+        if (typeof value === "string" && value.trim()) {
+            try {
+                const parsed = JSON.parse(value);
+                if (Array.isArray(parsed)) return parsed;
+            } catch (error) {
+                // A normal image URL is handled below.
+            }
 
+            return [value];
+        }
+
+        return [];
     }
 
+    const imageCandidates = [
+        post.image,
+        post.image_url,
+        post.cover_image,
+        ...parseImageList(post.images),
+        ...parseImageList(post.image_urls),
+        ...parseImageList(post.photos),
+        ...parseImageList(post.gallery),
+        ...parseImageList(post.additional_images)
+    ];
 
+    function normalizeImage(value) {
+        if (!value || typeof value !== "string") return "";
 
-    const title =
-        escapeHTML(
-            post.title || ""
-        );
+        let url = value.trim();
 
+        if (!url) return "";
 
-    const description =
-        post.description || "";
+        if (!url.startsWith("http://") &&
+            !url.startsWith("https://") &&
+            !url.startsWith("/")) {
+            url = "/static/" + url.replace(/^static\//, "");
+        }
 
+        return url;
+    }
 
+    const images = [...new Set(
+        imageCandidates
+            .map(normalizeImage)
+            .filter(Boolean)
+    )];
 
-    let badge = "";
+    const fallbackImage = "/static/images/default.jpg";
+    const mainImage = images[0] || fallbackImage;
 
+    /* -----------------------------------------------------
+       SPONSORED / FEATURED BADGES
+    ----------------------------------------------------- */
 
-    if (post.is_sponsored) {
+    const postTypes = [
+        post.post_type,
+        post.type,
+        post.listing_type,
+        post.content_type,
+        post.intent,
+        post.sale_type
+    ]
+    .filter(Boolean)
+    .map(value => String(value).toLowerCase().trim());
 
-        badge = `
+    const isSponsored =
+        post.is_sponsored === true ||
+        post.is_sponsored === 1 ||
+        postTypes.includes("sponsored");
 
-            <span class="badge sponsored">
+    const isFeatured =
+        post.is_featured === true ||
+        post.is_featured === 1 ||
+        postTypes.includes("featured");
 
-                Sponsored
+    let badges = "";
 
+    if (isFeatured) {
+        badges += `
+            <span class="mc-bike-badge mc-bike-featured">
+                <i class="fa-solid fa-star"></i> Featured
             </span>
-
         `;
-
     }
 
+    if (isSponsored) {
+        badges += `
+            <span class="mc-bike-badge mc-bike-sponsored">
+                <i class="fa-solid fa-bullhorn"></i> Sponsored
+            </span>
+        `;
+    }
 
+    /* -----------------------------------------------------
+       BIKE DETAILS
+    ----------------------------------------------------- */
 
-    const typeValues = [
-        post.post_type, post.type, post.listing_type,
-        post.content_type, post.intent, post.sale_type
-    ].filter(Boolean).map(value => String(value).toLowerCase().trim());
+    const details = [];
+
+    const bikeType =
+        post.vehicle_type ||
+        post.bike_type ||
+        post.motorbike_type ||
+        post.body_type;
+
+    const year = post.year;
+
+    const mileage =
+        post.mileage ??
+        post.mileage_km ??
+        post.kilometers ??
+        post.kms;
+
+    const condition = post.condition;
+
+    const fuel =
+        post.fuel_type ||
+        post.fuel;
+
+    const transmission =
+        post.transmission ||
+        post.gearbox;
+
+    const engineCapacity =
+        post.engine_capacity ||
+        post.engine_cc ||
+        post.cc;
+
+    if (bikeType) {
+        details.push(["Bike Type", bikeType]);
+    }
+
+    if (year) {
+        details.push(["Year", year]);
+    }
+
+    if (mileage !== undefined && mileage !== null && mileage !== "") {
+        details.push([
+            "Mileage",
+            Number.isFinite(Number(mileage))
+                ? Number(mileage).toLocaleString("en-KE") + " km"
+                : mileage
+        ]);
+    }
+
+    if (condition) {
+        details.push(["Condition", condition]);
+    }
+
+    if (engineCapacity) {
+        const ccText = String(engineCapacity).toLowerCase().includes("cc")
+            ? engineCapacity
+            : engineCapacity + " cc";
+
+        details.push(["Engine", ccText]);
+    }
+
+    if (fuel) {
+        details.push(["Fuel", fuel]);
+    }
+
+    if (transmission) {
+        details.push(["Transmission", transmission]);
+    }
+
+    const detailsHTML = details.length
+        ? `
+            <div class="mc-bike-details">
+                ${details.map(([label, value]) => `
+                    <div class="mc-bike-detail">
+                        <span class="mc-bike-detail-label">${escapeHTML(label)}</span>
+                        <strong>${escapeHTML(value)}</strong>
+                    </div>
+                `).join("")}
+            </div>
+        `
+        : "";
+
+    /* -----------------------------------------------------
+       PRICE
+    ----------------------------------------------------- */
+
+    const rawPrice =
+        post.price ??
+        post.selling_price ??
+        post.amount;
+
+    let priceHTML = "";
+
+    if (rawPrice !== undefined && rawPrice !== null && rawPrice !== "") {
+        let formattedPrice = String(rawPrice).trim();
+
+        if (typeof rawPrice === "number" ||
+            (typeof rawPrice === "string" &&
+             /^[\d,]+(?:\.\d+)?$/.test(formattedPrice))) {
+
+            const numericPrice = Number(formattedPrice.replace(/,/g, ""));
+
+            if (Number.isFinite(numericPrice)) {
+                formattedPrice = "KSh " +
+                    numericPrice.toLocaleString("en-KE", {
+                        maximumFractionDigits: 2
+                    });
+            }
+        }
+
+        priceHTML = `
+            <div class="mc-bike-price">
+                ${escapeHTML(formattedPrice)}
+            </div>
+        `;
+    }
+
+    /* -----------------------------------------------------
+       SALE ACTIONS
+    ----------------------------------------------------- */
 
     const salePost =
-        typeValues.some(value =>
-            ["sale", "for_sale", "forsale", "listing", "marketplace"].includes(value)
-        ) || post.is_for_sale === true || post.for_sale === true || post.is_listing === true;
+        postTypes.some(value =>
+            [
+                "sale",
+                "for_sale",
+                "forsale",
+                "listing",
+                "marketplace"
+            ].includes(value)
+        ) ||
+        post.is_for_sale === true ||
+        post.for_sale === true ||
+        post.is_listing === true;
 
     const sellerLabel =
         String(post.account_type || "").toLowerCase() === "business"
             ? "Contact Business"
             : "Contact Seller";
 
-    const saleActions = salePost ? `
-        <div class="sale-contact-actions">
-            <a href="/post/${encodeURIComponent(postId)}?contact=seller" class="post-contact-btn">
-                <i class="fa-solid fa-phone"></i> ${sellerLabel}
+    const saleActions = salePost && postId ? `
+        <div class="mc-bike-sale-actions">
+
+            <a
+                href="/post/${encodeURIComponent(postId)}?contact=seller"
+                class="mc-bike-action mc-bike-contact"
+            >
+                <i class="fa-solid fa-phone"></i>
+                ${sellerLabel}
             </a>
-            <a href="/post/${encodeURIComponent(postId)}?request=motteck" class="post-contact-btn request-motteck-btn">
-                <i class="fa-solid fa-handshake"></i> Request MOTTECK
+
+            <a
+                href="/post/${encodeURIComponent(postId)}?request=motteck"
+                class="mc-bike-action mc-bike-request"
+            >
+                <i class="fa-solid fa-handshake"></i>
+                Request MOTTECK
             </a>
+
         </div>
     ` : "";
 
-    return `
+    /* -----------------------------------------------------
+       DESCRIPTION PREVIEW
+    ----------------------------------------------------- */
 
+    const descriptionId = "bike-description-" +
+        postId.replace(/[^a-zA-Z0-9_-]/g, "");
+
+    const needsToggle = description.trim().length > 160;
+
+    const descriptionHTML = description.trim()
+        ? `
+            <div class="mc-bike-description-wrap ${needsToggle ? "mc-bike-description-collapsed" : ""}"
+                 id="${escapeHTML(descriptionId)}">
+                <div class="mc-bike-description-text">${safeDescription}</div>
+            </div>
+
+            ${needsToggle ? `
+                <button
+                    type="button"
+                    class="mc-bike-see-more"
+                    aria-expanded="false"
+                    onclick="toggleBikeDescription('${escapeHTML(descriptionId)}', this)"
+                >See more</button>
+            ` : ""}
+        `
+        : "";
+
+    /* -----------------------------------------------------
+       IMAGE GALLERY
+       Show up to 3 photos. The overlay shows how many
+       additional photos are available beyond those shown.
+    ----------------------------------------------------- */
+
+    const visibleImages = images.slice(0, 3);
+    const remainingImages = Math.max(0, images.length - 3);
+
+    let galleryHTML = "";
+
+    if (visibleImages.length <= 1) {
+
+        galleryHTML = `
+            <a href="/post/${encodeURIComponent(postId)}" class="mc-bike-main-image-link">
+                <img
+                    src="${escapeHTML(mainImage)}"
+                    class="post-image mc-bike-main-image"
+                    alt="${title}"
+                    loading="lazy"
+                    decoding="async"
+                    onerror="this.onerror=null;this.src='${fallbackImage}';"
+                >
+            </a>
+        `;
+
+    } else {
+
+        galleryHTML = `
+            <div class="mc-bike-gallery">
+
+                <a
+                    href="/post/${encodeURIComponent(postId)}"
+                    class="mc-bike-gallery-main"
+                >
+                    <img
+                        src="${escapeHTML(visibleImages[0])}"
+                        alt="${title}"
+                        loading="lazy"
+                        decoding="async"
+                        onerror="this.onerror=null;this.src='${fallbackImage}';"
+                    >
+                </a>
+
+                <div class="mc-bike-gallery-side">
+
+                    ${visibleImages.slice(1).map((image, index) => {
+                        const isLastVisible =
+                            index === visibleImages.slice(1).length - 1;
+
+                        return `
+                            <a
+                                href="/post/${encodeURIComponent(postId)}"
+                                class="mc-bike-gallery-thumb"
+                            >
+                                <img
+                                    src="${escapeHTML(image)}"
+                                    alt="${title} photo ${index + 2}"
+                                    loading="lazy"
+                                    decoding="async"
+                                    onerror="this.onerror=null;this.src='${fallbackImage}';"
+                                >
+
+                                ${isLastVisible && remainingImages > 0 ? `
+                                    <span class="mc-bike-more-photos">
+                                        +${remainingImages}
+                                    </span>
+                                ` : ""}
+                            </a>
+                        `;
+                    }).join("")}
+
+                </div>
+
+            </div>
+        `;
+    }
+
+    /* -----------------------------------------------------
+       COMPLETE CARD
+    ----------------------------------------------------- */
+
+    return `
         <article
-            class="post-card ${salePost ? "sale-post" : "normal-post"}"
+            class="post-card mc-bike-card ${salePost ? "sale-post" : "normal-post"}"
             id="post-${escapeHTML(postId)}"
             data-post-type="${salePost ? "sale" : "normal"}"
         >
 
-
-            ${badge}
-
-
-            <!-- AUTHOR -->
+            ${badges ? `<div class="mc-bike-badges">${badges}</div>` : ""}
 
             ${createAuthorHeader(post)}
 
+            ${galleryHTML}
 
-
-            <!-- IMAGE -->
-
-            <a href="/post/${encodeURIComponent(postId)}">
-
-                <img
-                    src="${escapeHTML(image)}"
-                    class="post-image"
-                    alt="${title}"
-                    loading="lazy"
-                    decoding="async"
-                    width="400"
-                    height="250"
-                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
-                >
-
-            </a>
-
-
-
-            <!-- CONTENT -->
-
-            <div class="post-content">
-
+            <div class="post-content mc-bike-content">
 
                 <a
                     href="/post/${encodeURIComponent(postId)}"
-                    style="text-decoration:none;"
+                    class="mc-bike-title-link"
                 >
-
-                    <h3 class="post-title">
-
-                        ${title}
-
-                    </h3>
-
+                    <h3 class="post-title mc-bike-title">${title}</h3>
                 </a>
 
+                ${detailsHTML}
 
+                ${priceHTML}
 
-                <div class="post-text preview-lines">
+                ${descriptionHTML}
 
-                    ${formatText(description)}
-
-                </div>
-
-
-
-                <!-- ACTIONS -->
-
-                <div class="post-actions">
-
-
-                    <!-- LIKE -->
+                <div class="post-actions mc-bike-post-actions">
 
                     <button
                         type="button"
@@ -1253,73 +1519,68 @@ function createPostCard(post) {
                         onclick="likePost('${escapeHTML(postId)}')"
                         aria-label="Like post"
                     >
-
                         <i class="fa-regular fa-heart"></i>
-
-                        <span
-                            id="like-count-${escapeHTML(postId)}"
-                        >
+                        <span id="like-count-${escapeHTML(postId)}">
                             ${Number(post.likes || 0)}
                         </span>
-
                     </button>
-
-                    <!-- SHARE -->
 
                     <button
                         type="button"
                         class="post-action-btn share-action"
-                        onclick="sharePost('${post.id}', '${escapeHTML(post.title || "MOTTECK Post")}')"
+                        onclick="sharePost('${escapeHTML(postId)}', '${escapeHTML(post.title || "MOTTECK Bike").replace(/'/g, "&#039;")}')"
                         aria-label="Share post"
                     >
-
                         <i class="fa-solid fa-share-nodes"></i>
-
-                        <span>
-                            Share
-                        </span>
-
+                        <span>Share</span>
                     </button>
 
-
-
-                    <!-- VIEWS -->
-
                     <span class="views post-action-btn">
-
                         <i class="fa-regular fa-eye"></i>
-
-                        <span
-                            id="view-count-${escapeHTML(postId)}"
-                        >
+                        <span id="view-count-${escapeHTML(postId)}">
                             ${Number(post.views || 0)}
                         </span>
-
                     </span>
-
 
                 </div>
 
-                <!-- READ MORE -->
-
                 <a
                     href="/post/${encodeURIComponent(postId)}"
-                    class="see-more-btn"
+                    class="see-more-btn mc-bike-read-more"
                 >
-
-                    Read More
-
+                    View Bike
                 </a>
 
                 ${saleActions}
 
             </div>
 
-
         </article>
-
     `;
+}
 
+
+/* =========================================================
+   DESCRIPTION SEE MORE / SEE LESS
+========================================================= */
+
+function toggleBikeDescription(descriptionId, button) {
+
+    const description = document.getElementById(descriptionId);
+
+    if (!description || !button) return;
+
+    const expanded = description.classList.toggle(
+        "mc-bike-description-collapsed"
+    );
+
+    /*
+       The collapsed class is removed when expanded.
+       Update the button to match the current state.
+    */
+
+    button.textContent = expanded ? "See more" : "See less";
+    button.setAttribute("aria-expanded", String(!expanded));
 }
 
 
@@ -1840,11 +2101,22 @@ async function loadCategoryPosts() {
         const categoryPosts =
             posts.filter(
                 post => {
-
-                    return String(
-                        post.category || ""
-                    ).toLowerCase()
-                    === category;
+                    
+                    const categoryPosts = posts.filter(post => {
+                        const postCategory = String(post.category || "")
+                        .trim()
+                        .toLowerCase()
+                        .replace(/[\s-]+/g, "_");
+                        
+                        return [
+                            "bike",
+                            "bikes",
+                            "motobike",
+                            "motobikes",
+                            "motorbike",
+                            "motorbikes"
+                        ].includes(postCategory);
+                    });
 
                 }
             );

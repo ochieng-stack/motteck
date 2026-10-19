@@ -536,6 +536,9 @@
                 Call: +254742022263
             </p>
 
+            <p>
+                Location: Nairobi,Kenya
+            </p>
 
             <div class="social-box">
 
@@ -1089,116 +1092,251 @@ async function toggleFollow(userId, button) {
 }
 
 
+
 /* =========================================================
-   CREATE POST CARD
+   CREATE ACCESSORY POST CARD
+   Buy Now + Request MOTTECK
 ========================================================= */
 
 function createPostCard(post) {
 
+    const postId = String(post.id || "");
 
-    const postId =
-        String(post.id || "");
+    const safePostId = escapeHTML(postId);
 
+    const title = escapeHTML(
+        post.title || "Accessory"
+    );
+
+    const description = post.description || "";
+
+    /* -----------------------------------------
+       MAIN IMAGE
+    ----------------------------------------- */
 
     let image =
-        post.image ||
         post.image_url ||
+        post.image ||
+        post.cover_image ||
         "/static/images/default.jpg";
-
 
     if (
         !image.startsWith("http") &&
         !image.startsWith("/")
     ) {
-
-        image =
-            "/static/" + image;
-
+        image = "/static/" + image;
     }
 
+    /* -----------------------------------------
+       PRICE
+    ----------------------------------------- */
 
+    const rawPrice =
+        post.price ??
+        post.selling_price ??
+        post.product_price ??
+        post.amount ??
+        "";
 
-    const title =
-        escapeHTML(
-            post.title || ""
-        );
+    let priceHTML = "";
 
+    if (
+        rawPrice !== "" &&
+        rawPrice !== null &&
+        rawPrice !== undefined
+    ) {
 
-    const description =
-        post.description || "";
+        const priceText = String(rawPrice).trim();
 
+        const hasCurrency =
+            /ksh|kes|shilling/i.test(priceText);
 
+        const numericPrice =
+            Number(priceText.replace(/,/g, ""));
 
-    let badge = "";
+        let formattedPrice = priceText;
 
+        if (
+            !hasCurrency &&
+            priceText !== "" &&
+            Number.isFinite(numericPrice)
+        ) {
+            formattedPrice =
+                "KSh " +
+                new Intl.NumberFormat("en-KE", {
+                    maximumFractionDigits: 2
+                }).format(numericPrice);
+        }
 
-    if (post.is_sponsored) {
-
-        badge = `
-
-            <span class="badge sponsored">
-
-                Sponsored
-
-            </span>
-
+        priceHTML = `
+            <div class="accessory-price">
+                ${escapeHTML(formattedPrice)}
+            </div>
         `;
-
     }
 
+    /* -----------------------------------------
+       SPONSORED / FEATURED BADGES
+    ----------------------------------------- */
 
+    let badgesHTML = "";
 
-    const typeValues = [
-        post.post_type, post.type, post.listing_type,
-        post.content_type, post.intent, post.sale_type
-    ].filter(Boolean).map(value => String(value).toLowerCase().trim());
+    if (
+        post.is_sponsored === true ||
+        String(post.post_type || "").toLowerCase() === "sponsored"
+    ) {
+        badgesHTML += `
+            <span class="badge sponsored">
+                <i class="fa-solid fa-bullhorn"></i>
+                Sponsored
+            </span>
+        `;
+    }
 
-    const salePost =
-        typeValues.some(value =>
-            ["sale", "for_sale", "forsale", "listing", "marketplace"].includes(value)
-        ) || post.is_for_sale === true || post.for_sale === true || post.is_listing === true;
+    if (
+        post.is_featured === true ||
+        String(post.post_type || "").toLowerCase() === "featured"
+    ) {
+        badgesHTML += `
+            <span class="badge featured">
+                <i class="fa-solid fa-star"></i>
+                Featured
+            </span>
+        `;
+    }
 
-    const sellerLabel =
-        String(post.account_type || "").toLowerCase() === "business"
-            ? "Contact Business"
-            : "Contact Seller";
+    /* -----------------------------------------
+       ACCESSORY DETAILS
+       Display only fields that actually exist.
+    ----------------------------------------- */
 
-    const saleActions = salePost ? `
-        <div class="sale-contact-actions">
-            <a href="/post/${encodeURIComponent(postId)}?contact=seller" class="post-contact-btn">
-                <i class="fa-solid fa-phone"></i> ${sellerLabel}
+    const details = [
+        {
+            label: "Brand",
+            value: post.brand || post.make
+        },
+        {
+            label: "Condition",
+            value: post.condition
+        },
+        {
+            label: "Compatible with",
+            value:
+                post.compatibility ||
+                post.compatible_vehicle ||
+                post.vehicle_model
+        },
+        {
+            label: "Part number",
+            value:
+                post.part_number ||
+                post.product_code ||
+                post.sku
+        },
+        {
+            label: "Location",
+            value: post.location || post.town
+        }
+    ].filter(item =>
+        item.value !== null &&
+        item.value !== undefined &&
+        String(item.value).trim() !== ""
+    );
+
+    const detailsHTML = details.length
+        ? `
+            <div class="accessory-details">
+                ${details.map(item => `
+                    <div class="accessory-detail">
+                        <span class="accessory-detail-label">
+                            ${escapeHTML(item.label)}
+                        </span>
+                        <span class="accessory-detail-value">
+                            ${escapeHTML(item.value)}
+                        </span>
+                    </div>
+                `).join("")}
+            </div>
+        `
+        : "";
+
+    /* -----------------------------------------
+       DESCRIPTION PREVIEW
+    ----------------------------------------- */
+
+    const descriptionHTML = description
+        ? `
+            <div
+                id="accessory-description-${safePostId}"
+                class="accessory-description collapsed"
+            >
+                ${formatText(description)}
+            </div>
+
+            <button
+                type="button"
+                class="accessory-see-more"
+                onclick="toggleAccessoryDescription('${safePostId}', this)"
+            >
+                See more
+            </button>
+        `
+        : "";
+
+    /* -----------------------------------------
+       BUY / REQUEST ACTIONS
+
+       No Contact Seller button on this page.
+       The post page should handle the actual
+       checkout and payment validation.
+    ----------------------------------------- */
+
+    const saleActions = `
+        <div class="accessory-purchase-actions">
+
+            <a
+                href="/post/${encodeURIComponent(postId)}?buy=now"
+                class="accessory-buy-btn"
+            >
+                <i class="fa-solid fa-cart-shopping"></i>
+                Buy Now
             </a>
-            <a href="/post/${encodeURIComponent(postId)}?request=motteck" class="post-contact-btn request-motteck-btn">
-                <i class="fa-solid fa-handshake"></i> Request MOTTECK
+
+            <a
+                href="/post/${encodeURIComponent(postId)}?request=motteck"
+                class="accessory-request-btn"
+            >
+                <i class="fa-solid fa-handshake"></i>
+                Request MOTTECK
             </a>
+
         </div>
-    ` : "";
+    `;
+
+    /* -----------------------------------------
+       CARD
+    ----------------------------------------- */
 
     return `
-
         <article
-            class="post-card ${salePost ? "sale-post" : "normal-post"}"
-            id="post-${escapeHTML(postId)}"
-            data-post-type="${salePost ? "sale" : "normal"}"
+            class="post-card accessory-card"
+            id="post-${safePostId}"
+            data-post-type="accessory"
         >
 
-
-            ${badge}
-
-
-            <!-- AUTHOR -->
+            <div class="accessory-badges">
+                ${badgesHTML}
+            </div>
 
             ${createAuthorHeader(post)}
 
-
-
-            <!-- IMAGE -->
-
-            <a href="/post/${encodeURIComponent(postId)}">
-
+            <a
+                href="/post/${encodeURIComponent(postId)}"
+                class="accessory-image-link"
+            >
                 <img
                     src="${escapeHTML(image)}"
-                    class="post-image"
+                    class="post-image accessory-main-image"
                     alt="${title}"
                     loading="lazy"
                     decoding="async"
@@ -1206,121 +1344,101 @@ function createPostCard(post) {
                     height="250"
                     onerror="this.onerror=null;this.src='/static/images/default.jpg';"
                 >
-
             </a>
 
-
-
-            <!-- CONTENT -->
-
-            <div class="post-content">
-
+            <div class="post-content accessory-content">
 
                 <a
                     href="/post/${encodeURIComponent(postId)}"
-                    style="text-decoration:none;"
+                    class="accessory-title-link"
                 >
-
-                    <h3 class="post-title">
-
+                    <h3 class="post-title accessory-title">
                         ${title}
-
                     </h3>
-
                 </a>
 
+                ${priceHTML}
 
+                ${detailsHTML}
 
-                <div class="post-text preview-lines">
+                ${descriptionHTML}
 
-                    ${formatText(description)}
-
-                </div>
-
-
-
-                <!-- ACTIONS -->
-
-                <div class="post-actions">
-
-
-                    <!-- LIKE -->
+                <div class="post-actions accessory-post-actions">
 
                     <button
                         type="button"
-                        id="like-btn-${escapeHTML(postId)}"
+                        id="like-btn-${safePostId}"
                         class="post-action-btn like-action"
-                        onclick="likePost('${escapeHTML(postId)}')"
-                        aria-label="Like post"
+                        onclick="likePost('${safePostId}')"
+                        aria-label="Like accessory"
                     >
-
                         <i class="fa-regular fa-heart"></i>
 
-                        <span
-                            id="like-count-${escapeHTML(postId)}"
-                        >
+                        <span id="like-count-${safePostId}">
                             ${Number(post.likes || 0)}
                         </span>
-
                     </button>
-
-                    <!-- SHARE -->
 
                     <button
                         type="button"
                         class="post-action-btn share-action"
-                        onclick="sharePost('${post.id}', '${escapeHTML(post.title || "MOTTECK Post")}')"
-                        aria-label="Share post"
+                        onclick="sharePost('${safePostId}', ${JSON.stringify(post.title || "MOTTECK Accessory")})"
+                        aria-label="Share accessory"
                     >
-
                         <i class="fa-solid fa-share-nodes"></i>
-
-                        <span>
-                            Share
-                        </span>
-
+                        <span>Share</span>
                     </button>
 
-
-
-                    <!-- VIEWS -->
-
                     <span class="views post-action-btn">
-
                         <i class="fa-regular fa-eye"></i>
 
-                        <span
-                            id="view-count-${escapeHTML(postId)}"
-                        >
+                        <span id="view-count-${safePostId}">
                             ${Number(post.views || 0)}
                         </span>
-
                     </span>
-
 
                 </div>
 
-                <!-- READ MORE -->
-
                 <a
                     href="/post/${encodeURIComponent(postId)}"
-                    class="see-more-btn"
+                    class="see-more-btn accessory-read-more"
                 >
-
-                    Read More
-
+                    View Details
                 </a>
 
                 ${saleActions}
 
             </div>
 
-
         </article>
-
     `;
-
 }
+
+
+/* =========================================================
+   EXPAND / COLLAPSE ACCESSORY DESCRIPTION
+========================================================= */
+
+function toggleAccessoryDescription(postId, button) {
+
+    const description = document.getElementById(
+        `accessory-description-${postId}`
+    );
+
+    if (!description || !button) {
+        return;
+    }
+
+    const isCollapsed =
+        description.classList.contains("collapsed");
+
+    description.classList.toggle("collapsed");
+
+    button.textContent = isCollapsed
+        ? "See less"
+        : "See more";
+}
+
 
 
 
@@ -1840,11 +1958,22 @@ async function loadCategoryPosts() {
         const categoryPosts =
             posts.filter(
                 post => {
+                    
+                    const categoryPosts = posts.filter(post => {
+                        const postCategory = String(
+                            post.category || ""
+                        )
+                        .toLowerCase()
+                        .trim()
+                        .replace(/[\s-]+/g, "_");
+                        
+                        return [
+                            "accessorie",
+                            "accessories",
+                            "accessory"
+                        ].includes(postCategory);
+                    });
 
-                    return String(
-                        post.category || ""
-                    ).toLowerCase()
-                    === category;
 
                 }
             );
