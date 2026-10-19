@@ -924,9 +924,7 @@ def update_lead_status(lead_id):
             "error": str(e)
         }), 500
     
-# =========================================================
-# ADMIN - APPROVE & PUBLISH SUBMISSION
-# =========================================================
+# ================= ADMIN: APPROVE SUBMISSION =================
 
 @app.route(
     "/admin/submissions/<int:submission_id>/approve",
@@ -935,186 +933,125 @@ def update_lead_status(lead_id):
 def approve_submission(submission_id):
 
     if not session.get("logged_in"):
-        return jsonify({
-            "error": "Unauthorized"
-        }), 403
+        return jsonify({"success": False, "error": "Unauthorized"}), 403
 
     try:
-
-        # Get the submission
-        response = (
-            supabase
-            .table("post_submissions")
+        result = (
+            supabase.table("post_submissions")
             .select("*")
             .eq("id", submission_id)
             .single()
             .execute()
         )
 
-        submission = response.data
+        submission = result.data
 
         if not submission:
             return jsonify({
+                "success": False,
                 "error": "Submission not found."
             }), 404
 
-        # Only pending submissions can be approved
         if submission.get("status") != "pending":
             return jsonify({
+                "success": False,
                 "error": "This submission has already been processed."
             }), 400
 
-        post_type = submission.get("post_type", "normal")
-
-        # Determine sponsored / featured status
+        post_type = submission.get("post_type") or "normal"
         is_sponsored = post_type == "sponsored"
         is_featured = post_type == "featured"
 
-        # Get submitted images
         images = submission.get("image_urls") or []
-
         if not isinstance(images, list):
             images = []
 
-        # posts table currently uses image_url
-        image_url = images[0] if images else None
-
-        # -------------------------------------------------
-        # Calculate sponsored expiry
-        # -------------------------------------------------
-
+        # Calculate promotion expiry correctly.
         sponsored_until = None
 
         if is_sponsored:
+            duration = submission.get("promotion_duration")
 
-            promotion_duration = submission.get(
-                "promotion_duration"
-            )
+            duration_days = {
+                "24_hours": 1,
+                "3_days": 3,
+                "7_days": 7,
+                "1_month": 30
+            }.get(duration)
 
-            if promotion_duration:
-
-                from datetime import datetime, timedelta
-
-                duration_text = str(
-                    promotion_duration
-                ).lower()
-
-                if "7" in duration_text:
-                    sponsored_until = (
-                        datetime.utcnow()
-                        + timedelta(days=7)
-                    ).isoformat()
-
-                elif "14" in duration_text:
-                    sponsored_until = (
-                        datetime.utcnow()
-                        + timedelta(days=14)
-                    ).isoformat()
-
-                elif "30" in duration_text:
-                    sponsored_until = (
-                        datetime.utcnow()
-                        + timedelta(days=30)
-                    ).isoformat()
-
-        # -------------------------------------------------
-        # Insert into published posts
-        # -------------------------------------------------
+            if duration_days:
+                sponsored_until = (
+                    datetime.utcnow() + timedelta(days=duration_days)
+                ).isoformat()
 
         post_data = {
             "user_id": submission.get("user_id"),
             "title": submission.get("title"),
             "category": submission.get("category"),
-            "image_url": image_url,
             "description": submission.get("description"),
-
-            # ==============================
-            # post type
-            # ==============================
-            "post_type" : submission.get(
-                "post_type",
-                "normal"
-            ),
-
-            # ==========================================
-            # INDIVIDUAL SALE INFORMATION
-            # ==========================================
-
-            "sale_method": submission.get(
-                "sale_method"
-            ),
-
-            "listing_duration":submission.get(
-                "listingg_duration"
-            ),
-
-            "commission_agreed": submission.get(
-                "commission_agreed",
-                False
-            ),
-
-            # =====================================
-            # ENGAMENT
-            # =====================================
-
+            "image_url": images[0] if images else None,
+            "post_type": post_type,
+            "sale_method": submission.get("sale_method"),
+            "listing_duration": submission.get("listing_duration"),
+            "commission_agreed": submission.get("commission_agreed") or False,
             "likes": 0,
             "views": 0,
-
-            # =====================================
-            # BUSINESS PROMOTION
-            # ====================================
-
             "is_featured": is_featured,
             "is_sponsored": is_sponsored,
             "sponsored_until": sponsored_until,
             "ad_clicks": 0,
             "ad_views": 0,
-            "ad_earnings":0,
-
+            "ad_earnings": 0
         }
 
-        post_response = (
-            supabase
-            .table("posts")
+        # Transfer extra fields added by the submission form.
+        extra_fields = (
+            "price",
+            "vehicle_type",
+            "year",
+            "mileage",
+            "condition",
+            "product_name",
+            "brand",
+            "part_number",
+            "compatibility",
+            "location"
+        )
+
+        for field in extra_fields:
+            if field in submission:
+                post_data[field] = submission[field]
+
+        # Publish the post first.
+        published = (
+            supabase.table("posts")
             .insert(post_data)
             .execute()
         )
 
-        if not post_response.data:
+        if not published.data:
             return jsonify({
-                "error": "Unable to publish post."
+                "success": False,
+                "error": "Unable to publish the post."
             }), 500
 
-        # -------------------------------------------------
-        # Mark submission as approved
-        # -------------------------------------------------
-
-        (
-            supabase
-            .table("post_submissions")
-            .update({
-                "status": "approved"
-            })
-            .eq("id", submission_id)
-            .execute()
-        )
+        # Mark the submission approved only after publishing succeeds.
+        supabase.table("post_submissions").update({
+            "status": "approved"
+        }).eq("id", submission_id).execute()
 
         return jsonify({
             "success": True,
-            "message": "Post approved and published."
+            "message": "Post approved and published.",
+            "post": published.data[0]
         })
 
     except Exception as e:
-
-        print(
-            "APPROVE SUBMISSION ERROR:",
-            e
-        )
-
+        print("APPROVE SUBMISSION ERROR:", repr(e))
         return jsonify({
-            "error": str(e)
+            "success": False,
+            "error": "Unable to approve this submission. Check the server logs."
         }), 500
-
 
 # =========================================================
 # ADMIN - REJECT SUBMISSION
@@ -2060,7 +1997,7 @@ def google_callback():
 
         if not profile:
             supabase.auth.sign_out()
-            return redirect(url_for("login", error="Please register first."))
+            return redirect(url_for("login_user"))
 
         profile = profile[0]
 
@@ -2132,25 +2069,20 @@ def choose_account_type():
     return render_template("choose_account_type.html")
 
 # ================= SUBMIT POST =================
+
 @app.route("/submit-post", methods=["GET", "POST"])
 def submit_post():
 
-    # User must be logged in
-    if not session.get("user_logged_in"):
+    if not session.get("user_logged_in") or not session.get("user_id"):
         flash("Please log in first.", "error")
         return redirect(url_for("login_user"))
 
-    user_id = session.get("user_id")
-    account_type = session.get("account_type")
+    user_id = session["user_id"]
+    account_type = session.get("account_type", "").strip().lower()
 
-    # Make sure account type is valid
-    if account_type not in ["individual", "business"]:
+    if account_type not in ("individual", "business"):
         flash("Unable to determine your account type.", "error")
         return redirect(url_for("profile"))
-
-    # ================= PROMOTION PRICES =================
-    # These are controlled by the backend.
-    # Do NOT trust prices sent by the browser.
 
     PROMOTION_PRICES = {
         "sponsored": {
@@ -2159,7 +2091,6 @@ def submit_post():
             "7_days": 1000,
             "1_month": 3000
         },
-
         "featured": {
             "24_hours": 400,
             "3_days": 700,
@@ -2168,445 +2099,296 @@ def submit_post():
         }
     }
 
-    # ================= GET =================
     if request.method == "GET":
-
         return render_template(
             "submit_post.html",
             account_type=account_type
         )
 
-    # ================= POST =================
+    # ---------------- COMMON FIELDS ----------------
 
     title = request.form.get("title", "").strip()
     category = request.form.get("category", "").strip()
     description = request.form.get("description", "").strip()
 
-    # Only businesses can choose sponsored/featured
-    post_type = request.form.get(
-        "post_type",
-        "normal"
-    ).strip().lower()
-
-    promotion_duration = request.form.get(
-        "promotion_duration",
-        ""
-    ).strip().lower()
-
-    # ================= VALIDATION =================
-
-    if not title:
-        flash("Please enter a post title.", "error")
+    if not title or not category or not description:
+        flash("Please complete the title, category and description.", "error")
         return redirect(url_for("submit_post"))
 
-    if not category:
-        flash("Please choose a category.", "error")
-        return redirect(url_for("submit_post"))
+    # Read optional fields using common name variations.
+    # Empty values are stored as None where appropriate.
+    price_raw = (
+        request.form.get("price")
+        or request.form.get("product_price")
+        or ""
+    ).strip().replace(",", "").replace("KSh", "").strip()
 
-    if not description:
-        flash("Please enter a description.", "error")
-        return redirect(url_for("submit_post"))
+    price = None
 
-# ================= POST TYPE SECURITY =================
+    if price_raw:
+        try:
+            price = float(price_raw)
+            if price < 0:
+                raise ValueError("Negative price")
+        except (ValueError, TypeError):
+            flash("Please enter a valid price.", "error")
+            return redirect(url_for("submit_post"))
 
-# ---------------------------------------------------------
-# INDIVIDUAL ACCOUNTS
-# ---------------------------------------------------------
+    vehicle_type = (
+        request.form.get("vehicle_type")
+        or request.form.get("car_type")
+        or request.form.get("bike_type")
+        or request.form.get("truck_type")
+        or ""
+    ).strip()
 
-    if account_type == "individual":
+    year_raw = request.form.get("year", "").strip()
+    mileage_raw = request.form.get("mileage", "").strip()
 
-    # Individuals can submit:
-    # normal
-    # for_sale
+    condition = (
+        request.form.get("condition")
+        or request.form.get("vehicle_condition")
+        or ""
+    ).strip()
 
-      if post_type not in [
-          "normal",
-        "for_sale"
-        ]:
-        post_type = "normal"
+    year = None
+    mileage = None
 
-    # Defaults for individual submissions
-    promotion_duration = ""
-    promotion_price = None
+    if year_raw:
+        try:
+            year = int(year_raw)
+            if year < 1886 or year > datetime.utcnow().year + 2:
+                raise ValueError("Invalid year")
+        except (ValueError, TypeError):
+            flash("Please enter a valid vehicle year.", "error")
+            return redirect(url_for("submit_post"))
 
-    # ---------------------------------------------
-    # INDIVIDUAL SALE SETTINGS
-    # ---------------------------------------------
-
-    sale_method = request.form.get(
-        "sale_method",
-        ""
-    ).strip().lower()
-
-    listing_duration = request.form.get(
-        "listing_duration",
-        ""
-    ).strip().lower()
-
-    commission_agreed_raw = request.form.get(
-        "commission_agreed"
-    )
-
-    commission_agreed = (
-        commission_agreed_raw
-        in ["true", "1", "yes", "on"]
-    )
-
-    # Normal individual post
-    if post_type == "normal":
-
-        sale_method = ""
-        listing_duration = ""
-        commission_agreed = False
-
-    # Individual item for sale
-    elif post_type == "for_sale":
-
-        # Valid sale methods
-        if sale_method not in [
-            "direct_sale",
-            "sell_through_motteck"
-        ]:
-
-            flash(
-                "Please choose how you want to sell your item.",
-                "error"
+    if mileage_raw:
+        try:
+            mileage = int(
+                mileage_raw.lower()
+                .replace("km", "")
+                .replace(",", "")
+                .strip()
             )
+            if mileage < 0:
+                raise ValueError("Negative mileage")
+        except (ValueError, TypeError):
+            flash("Please enter a valid mileage.", "error")
+            return redirect(url_for("submit_post"))
 
-            return redirect(
-                url_for("submit_post")
-            )
+    # Spare-part/accessory details.
+    product_name = (
+        request.form.get("product_name")
+        or request.form.get("part_name")
+        or ""
+    ).strip()
 
-        # -----------------------------------------
-        # DIRECT SALE
-        # -----------------------------------------
+    brand = request.form.get("brand", "").strip()
+    part_number = request.form.get("part_number", "").strip()
+    compatibility = (
+        request.form.get("compatibility")
+        or request.form.get("fits")
+        or ""
+    ).strip()
 
-        if sale_method == "direct_sale":
+    location = (
+        request.form.get("location")
+        or request.form.get("town")
+        or ""
+    ).strip()
 
-            if listing_duration not in [
-                "1_day",
-                "1_week",
-                "1_month"
-            ]:
+    # ---------------- ACCOUNT / POST RULES ----------------
 
-                flash(
-                    "Please choose a listing duration.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("submit_post")
-                )
-
-            # Direct sale does not require MOTTECK
-            # commission agreement.
-            commission_agreed = False
-
-        # -----------------------------------------
-        # SELL THROUGH MOTTECK
-        # -----------------------------------------
-
-        elif sale_method == "sell_through_motteck":
-
-            # MOTTECK commission agreement is required.
-            if not commission_agreed:
-
-                flash(
-                    "Please agree to the MOTTECK commission terms.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("submit_post")
-                )
-
-            # No direct seller listing duration
-            listing_duration = ""
-
-
-# ---------------------------------------------------------
-# BUSINESS ACCOUNTS
-# ---------------------------------------------------------
-
-        elif account_type == "business":
-
-             # Businesses use:
-            # normal
-            # sponsored
-            # featured
-
-             if post_type not in [
-                 "normal",
-                 "sponsored",
-                 "featured"
-                 ]:
-
-                 post_type = "normal"
-
-    # Businesses do not use individual
-    # sale settings here.
+    requested_type = request.form.get(
+        "post_type", ""
+    ).strip().lower()
 
     sale_method = ""
     listing_duration = ""
     commission_agreed = False
+    promotion_duration = ""
+    promotion_price = None
 
-    # ================= PROMOTION VALIDATION =================
+    if account_type == "individual":
 
-    if post_type == "normal":
+        # Individuals can submit only For Sale posts.
+        post_type = "for_sale"
 
-        promotion_duration = ""
-        promotion_price = None
+        sale_method = request.form.get(
+            "sale_method", ""
+        ).strip().lower()
+
+        listing_duration = request.form.get(
+            "listing_duration", ""
+        ).strip().lower()
+
+        commission_agreed = (
+            request.form.get("commission_agreed", "").lower()
+            in ("true", "1", "yes", "on")
+        )
+
+        if sale_method not in (
+            "direct_sale",
+            "sell_through_motteck"
+        ):
+            flash("Please choose how you want to sell your item.", "error")
+            return redirect(url_for("submit_post"))
+
+        if sale_method == "direct_sale":
+            if listing_duration not in (
+                "1_day", "1_week", "1_month"
+            ):
+                flash("Please choose a listing duration.", "error")
+                return redirect(url_for("submit_post"))
+
+            commission_agreed = False
+
+        elif sale_method == "sell_through_motteck":
+            if not commission_agreed:
+                flash(
+                    "Please agree to the MOTTECK sale terms.",
+                    "error"
+                )
+                return redirect(url_for("submit_post"))
+
+            # No direct listing duration for MOTTECK Sale.
+            listing_duration = ""
 
     else:
+        # Businesses can choose Listing, Sponsored or Featured.
+        post_type = requested_type or "normal"
 
-        if not promotion_duration:
+        if post_type not in ("normal", "sponsored", "featured"):
+            flash("Invalid business post type.", "error")
+            return redirect(url_for("submit_post"))
 
-            flash(
-                "Please choose a promotion duration.",
-                "error"
-            )
+        # Business vehicle listings are normal listings;
+        # sponsored/featured promotions remain available.
+        sale_method = ""
+        listing_duration = ""
+        commission_agreed = False
 
-            return redirect(
-                url_for("submit_post")
-            )
+        # Spare parts/accessories do not pay an upfront
+        # normal listing-duration fee.
+        if category in ("spare_part", "Accessorie", "accessorie"):
+            if post_type == "normal":
+                promotion_duration = ""
+                promotion_price = None
 
-        if promotion_duration not in PROMOTION_PRICES[post_type]:
+        if post_type in ("sponsored", "featured"):
+            promotion_duration = request.form.get(
+                "promotion_duration", ""
+            ).strip().lower()
 
-            flash(
-                "Invalid promotion duration selected.",
-                "error"
-            )
+            valid_durations = PROMOTION_PRICES[post_type]
 
-            return redirect(
-                url_for("submit_post")
-            )
+            if promotion_duration not in valid_durations:
+                flash("Please choose a valid promotion duration.", "error")
+                return redirect(url_for("submit_post"))
 
-        promotion_price = PROMOTION_PRICES[
-            post_type
-        ][promotion_duration]
+            promotion_price = valid_durations[promotion_duration]
 
-    # ================= IMAGES =================
+    # ---------------- IMAGE UPLOAD ----------------
 
-    image_files = request.files.getlist("images")
-
-    # Remove empty file selections
     image_files = [
-        image
-        for image in image_files
+        image for image in request.files.getlist("images")
         if image and image.filename
     ]
 
-    # Individual = maximum 5
-    # Business = maximum 10
-    max_images = (
-        5
-        if account_type == "individual"
-        else 10
-    )
+    max_images = 5 if account_type == "individual" else 10
 
     if len(image_files) > max_images:
-
-        flash(
-            f"You can upload a maximum of "
-            f"{max_images} photos.",
-            "error"
-        )
-
-        return redirect(
-            url_for("submit_post")
-        )
+        flash(f"You can upload a maximum of {max_images} photos.", "error")
+        return redirect(url_for("submit_post"))
 
     image_urls = []
 
-    # ================= CLOUDINARY UPLOAD =================
-
     try:
-
         for image_file in image_files:
-
             upload_result = cloudinary.uploader.upload(
                 image_file,
-                folder="motteck/submissions"
+                folder="motteck/submissions",
+                resource_type="image"
             )
 
-            image_url = upload_result.get(
-                "secure_url"
-            )
-
+            image_url = upload_result.get("secure_url")
             if image_url:
                 image_urls.append(image_url)
 
     except Exception as e:
+        print("SUBMISSION IMAGE UPLOAD ERROR:", repr(e))
+        flash("We couldn't upload your images. Please try again.", "error")
+        return redirect(url_for("submit_post"))
 
-        print(
-            "SUBMISSION IMAGE UPLOAD ERROR:",
-            repr(e)
-        )
-
-        flash(
-            "We couldn't upload your images. "
-            "Please try again.",
-            "error"
-        )
-
-        return redirect(
-            url_for("submit_post")
-        )
-
-    # ================= SAVE SUBMISSION =================
+    # ---------------- SUBMISSION DATA ----------------
 
     submission_data = {
-
         "user_id": user_id,
-
         "account_type": account_type,
-
         "title": title,
-
         "category": category,
-
         "description": description,
-
         "image_urls": image_urls,
-
-        # =========================================
-        # POST TYPE
-        # =========================================
-
         "post_type": post_type,
-
-        # =========================================
-        # INDIVIDUAL SALE INFORMATION
-        # =========================================
-
-        "sale_method": (
-            sale_method
-            if post_type == "for_sale"
-            else None
-        ),
-
-        "listing_duration": (
-            listing_duration
-            if (
-                post_type == "for_sale"
-                and sale_method == "direct_sale"
-                )
-                else None
-        ),
-
-        "commission_agreed": (
-            commission_agreed
-            if (
-                post_type == "for_sale"
-                and sale_method == "sell_through_motteck"
-            )
-            else False
-        ),
-
-        # =========================================
-        # BUSINESS PROMOTION
-        # =========================================
-
-        "promotion_duration": (
-            promotion_duration
-            if post_type in [
-                "sponsored",
-                "featured"
-            ]
-            else None
-        ),
-
+        "sale_method": sale_method or None,
+        "listing_duration": listing_duration or None,
+        "commission_agreed": commission_agreed,
+        "promotion_duration": promotion_duration or None,
         "promotion_price": promotion_price,
-
         "status": "pending"
+    }
 
-        }
+    # Additional fields are saved when the matching database
+    # columns exist. See the database note below.
+    optional_fields = {
+        "price": price,
+        "vehicle_type": vehicle_type or None,
+        "year": year,
+        "mileage": mileage,
+        "condition": condition or None,
+        "product_name": product_name or None,
+        "brand": brand or None,
+        "part_number": part_number or None,
+        "compatibility": compatibility or None,
+        "location": location or None
+    }
+
+    submission_data.update(optional_fields)
 
     try:
-
         response = (
-            supabase
-            .table("post_submissions")
+            supabase.table("post_submissions")
             .insert(submission_data)
             .execute()
         )
 
         if not response.data:
+            flash("Your submission could not be saved. Please try again.", "error")
+            return redirect(url_for("submit_post"))
 
+        if account_type == "business" and post_type in ("sponsored", "featured"):
             flash(
-                "Your post could not be submitted. "
-                "Please try again.",
-                "error"
+                f"Your {post_type} submission is awaiting review. "
+                f"Promotion price: KSh {promotion_price:,}.",
+                "success"
             )
-
-            return redirect(
-                url_for("submit_post")
-            )
-
-        # ================= SUCCESS =================
-
-        if account_type == "business":
-
-            if post_type == "sponsored":
-
-                flash(
-                    f"Your sponsored post has been "
-                    f"submitted and is pending review "
-                    f"and payment. "
-                    f"Selected price: KSh "
-                    f"{promotion_price:,}.",
-                    "success"
-                )
-
-            elif post_type == "featured":
-
-                flash(
-                    f"Your featured post has been "
-                    f"submitted and is pending review "
-                    f"and payment. "
-                    f"Selected price: KSh "
-                    f"{promotion_price:,}.",
-                    "success"
-                )
-
-            else:
-
-                flash(
-                    "Your post has been submitted "
-                    "successfully and is waiting "
-                    "for approval.",
-                    "success"
-                )
-
         else:
-
             flash(
-                "Your post has been submitted "
-                "successfully and is waiting "
-                "for approval.",
+                "Your submission has been sent for admin approval.",
                 "success"
             )
 
-        return redirect(
-            url_for("profile")
-        )
+        return redirect(url_for("my_submissions"))
 
     except Exception as e:
-
-        print(
-            "POST SUBMISSION ERROR:",
-            repr(e)
-        )
-
+        print("POST SUBMISSION ERROR:", repr(e))
         flash(
-            "We couldn't submit your post right now. "
-            "Please try again.",
+            "Your submission could not be saved. Check the server logs "
+            "for the database error.",
             "error"
         )
-
-        return redirect(
-            url_for("submit_post")
-        )
+        return redirect(url_for("submit_post"))
     
 # ================= MY SUBMISSIONS =================
 @app.route("/my-submissions")
