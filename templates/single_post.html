@@ -41,11 +41,23 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
 
-    {% if post.image_url %}
+    <!-- PRELOAD FIRST IMAGE -->
 
-    <link rel="preload"
-          as="image"
-          href="{{ post.image_url }}">
+    {% if post.image_urls %}
+
+        {% if post.image_urls[0] %}
+
+        <link rel="preload"
+              as="image"
+              href="{{ post.image_urls[0] }}">
+
+        {% endif %}
+
+    {% elif post.image_url %}
+
+        <link rel="preload"
+              as="image"
+              href="{{ post.image_url }}">
 
     {% endif %}
 
@@ -448,47 +460,57 @@
 
 
             <div class="post-user-left">
-                
-                
-                <a href="/profile/{{ post.user_id }}" class="post-profile-link"aria-label="View {{ post.full_name or post.business_name or 'MOTTECK User' }}'s profile">
-                    
+
+
+                <a
+                    href="/profile/{{ post.user_id }}"
+                    class="post-profile-link"
+                    aria-label="View {{ post.full_name or post.business_name or 'MOTTECK User' }}'s profile">
+
+
                     {% if post.profile_image %}
+
                     <img
-                    src="{{ post.profile_image }}"
-                    alt="Profile"
-                    class="post-profile-image"
-                    loading="eager"
-                    decoding="async"
-                    onerror="this.onerror=null;this.src='/static/images/default-avatar.png';">
-                    
+                        src="{{ post.profile_image }}"
+                        alt="Profile"
+                        class="post-profile-image"
+                        loading="eager"
+                        decoding="async"
+                        onerror="this.onerror=null;this.src='/static/images/default-avatar.png';">
+
                     {% else %}
 
                     <img
-                    src="{{ url_for('static', filename='images/default-avatar.png') }}"
-                    alt="Profile"
-                    class="post-profile-image"
-                    loading="eager"
-                    decoding="async"
-                    >
+                        src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                        alt="Profile"
+                        class="post-profile-image"
+                        loading="eager"
+                        decoding="async">
 
-                   {% endif %}
-                
+                    {% endif %}
+
                 </a>
+
 
 
                 <!-- USER INFORMATION -->
 
                 <div class="post-user-info">
-                    
+
+
                     <div class="post-user-name">
-                        <a href="/profile/{{ post.user_id }}" class="post-user-name-link">
+
+                        <a
+                            href="/profile/{{ post.user_id }}"
+                            class="post-user-name-link">
+
                             {{ post.full_name
                                 or post.business_name
                                 or post.user_name
                                 or 'MOTTECK User' }}
-                            
+
                         </a>
-                    
+
                     </div>
 
 
@@ -511,6 +533,7 @@
                 </div>
 
             </div>
+
 
 
             <!-- =================================================
@@ -556,6 +579,342 @@
 
 
         <!-- =================================================
+             CATEGORY-SPECIFIC DETAILS
+        ================================================== -->
+
+        {% set current_category = (post.category or '')|lower %}
+
+
+        {% set vehicle_categories = [
+            'car',
+            'truck',
+            'motobike',
+            'motorbike',
+            'bike'
+        ] %}
+
+
+        {% set product_categories = [
+            'accessorie',
+            'accessory',
+            'accessories',
+            'spare_part',
+            'sparepart'
+        ] %}
+
+
+
+        <!-- =================================================
+             VEHICLE DETAILS
+        ================================================== -->
+
+        {% if current_category in vehicle_categories %}
+
+        <div class="post-details">
+
+
+            <div class="post-details-grid">
+
+
+                {% if post.vehicle_type %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-car-side"></i>
+
+                    <span>
+                        Type:
+                        <strong>
+                            {{ post.vehicle_type }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if post.year is defined and post.year is not none and post.year != '' %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-calendar"></i>
+
+                    <span>
+                        Year:
+                        <strong>
+                            {{ post.year }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if post.mileage is defined and post.mileage is not none and post.mileage != '' %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-road"></i>
+
+                    <span>
+                        Mileage:
+                        <strong>
+                            {{ "{:,}".format(post.mileage|int) }} km
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if post.condition %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+                        Condition:
+                        <strong>
+                            {{ post.condition }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            {% if post.price is defined and post.price is not none and post.price != '' %}
+
+            <div class="post-price">
+
+                <span class="post-price-label">
+                    Price
+                </span>
+
+                KSh {{ "{:,.0f}".format(post.price|float) }}
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- VEHICLE ACTIONS -->
+
+        <div class="post-contact-actions">
+
+
+            <a
+                href="{{ url_for('single_post', post_id=post.id, contact='seller') }}"
+                class="post-contact-btn contact-seller">
+
+                <i class="fa-solid fa-phone"></i>
+
+                Contact Seller
+
+            </a>
+
+
+            <a
+                href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+                class="post-contact-btn request-motteck">
+
+                <i class="fa-solid fa-handshake"></i>
+
+                Request MOTTECK
+
+            </a>
+
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             PRODUCT DETAILS
+             ACCESSORIES / SPARE PARTS
+        ================================================== -->
+
+        {% if current_category in product_categories %}
+
+        <div class="post-details">
+
+
+            <div class="post-details-grid">
+
+
+                {% if post.product_name %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-box"></i>
+
+                    <span>
+                        Product:
+                        <strong>
+                            {{ post.product_name }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if post.brand %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-tag"></i>
+
+                    <span>
+                        Brand:
+                        <strong>
+                            {{ post.brand }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if post.part_number %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-barcode"></i>
+
+                    <span>
+                        Part No:
+                        <strong>
+                            {{ post.part_number }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if post.compatibility %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-car"></i>
+
+                    <span>
+                        Fits:
+                        <strong>
+                            {{ post.compatibility }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+
+                {% if post.location %}
+
+                <div class="post-detail-item">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <span>
+                        Location:
+                        <strong>
+                            {{ post.location }}
+                        </strong>
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            {% if post.price is defined and post.price is not none and post.price != '' %}
+
+            <div class="post-price">
+
+                <span class="post-price-label">
+                    Price
+                </span>
+
+                KSh {{ "{:,.0f}".format(post.price|float) }}
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- PRODUCT ACTIONS -->
+
+        <div class="post-contact-actions">
+
+
+            <!-- BUY NOW -->
+
+            <a
+                href="{{ url_for('single_post', post_id=post.id) }}?buy=now"
+                class="post-contact-btn buy-now">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                Buy Now
+
+            </a>
+
+
+            <!-- REQUEST MOTTECK -->
+
+            <a
+                href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+                class="post-contact-btn request-motteck">
+
+                <i class="fa-solid fa-handshake"></i>
+
+                Request MOTTECK
+
+            </a>
+
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
              POST DESCRIPTION
         ================================================== -->
 
@@ -563,9 +922,11 @@
 
         <div class="single-post-description">
 
+
             {% for paragraph in post.description.split('\n') %}
 
                 {% set line = paragraph.strip() %}
+
 
                 {% if line %}
 
@@ -587,6 +948,7 @@
 
             {% endfor %}
 
+
         </div>
 
         {% endif %}
@@ -595,22 +957,55 @@
 
         <!-- =================================================
              PHOTO GALLERY
+             ALL UPLOADED IMAGES
+             SHOWN IN UPLOAD ORDER
         ================================================== -->
 
         <div class="post-photo-gallery">
 
 
             <!-- =================================================
-                 MAIN POST IMAGE
+                 NEW IMAGE ARRAY
             ================================================== -->
 
-            {% if post.image_url %}
+            {% if post.image_urls %}
+
+                {% for image in post.image_urls %}
+
+                    {% if image %}
+
+                    <div class="post-photo">
+
+                        <img
+                            src="{{ image }}"
+                            alt="{{ post.title or 'MOTTECK Post Image' }}"
+                            {% if loop.first %}
+                            loading="eager"
+                            fetchpriority="high"
+                            {% else %}
+                            loading="lazy"
+                            {% endif %}
+                            decoding="async">
+
+                    </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+            <!-- =================================================
+                 OLD POSTS FALLBACK
+                 SINGLE IMAGE_URL
+            ================================================== -->
+
+            {% elif post.image_url %}
 
             <div class="post-photo">
 
                 <img
                     src="{{ post.image_url }}"
-                    alt="{{ post.title }}"
+                    alt="{{ post.title or 'MOTTECK Post Image' }}"
                     loading="eager"
                     fetchpriority="high"
                     decoding="async">
@@ -622,15 +1017,16 @@
 
 
             <!-- =================================================
-                 ADDITIONAL IMAGES
+                 OLD ADDITIONAL IMAGES
                  STORED INSIDE DESCRIPTION
             ================================================== -->
 
-            {% if post.description %}
+            {% if not post.image_urls and post.description %}
 
                 {% for paragraph in post.description.split('\n') %}
 
                     {% set line = paragraph.strip() %}
+
 
                     {% if line %}
 
@@ -646,7 +1042,7 @@
 
                             <img
                                 src="{{ line }}"
-                                alt="{{ post.title }}"
+                                alt="{{ post.title or 'MOTTECK Post Image' }}"
                                 loading="lazy"
                                 decoding="async">
 
@@ -676,6 +1072,7 @@
 
             <div class="engagement-counts">
 
+
                 <span>
 
                     <i class="fa-solid fa-eye"></i>
@@ -701,6 +1098,7 @@
 
                 </span>
 
+
             </div>
 
 
@@ -725,6 +1123,7 @@
 
                 </button>
 
+
                 <!-- SHARE -->
 
                 <button
@@ -743,9 +1142,8 @@
 
             </div>
 
-        </div>
 
-        </section>
+        </div>
 
 
 
@@ -756,7 +1154,7 @@
         <div class="actions">
 
 
-            {% if post.category == 'car' %}
+            {% if current_category == 'car' %}
 
             <a
                 href="{{ url_for('car') }}"
@@ -769,7 +1167,7 @@
             </a>
 
 
-            {% elif post.category == 'truck' %}
+            {% elif current_category == 'truck' %}
 
             <a
                 href="{{ url_for('truck') }}"
@@ -782,7 +1180,7 @@
             </a>
 
 
-            {% elif post.category == 'motobike' %}
+            {% elif current_category in ['motobike', 'motorbike', 'bike'] %}
 
             <a
                 href="{{ url_for('motobike') }}"
@@ -795,7 +1193,7 @@
             </a>
 
 
-            {% elif post.category == 'accessorie' %}
+            {% elif current_category in ['accessorie', 'accessory', 'accessories'] %}
 
             <a
                 href="{{ url_for('accessorie') }}"
@@ -808,7 +1206,7 @@
             </a>
 
 
-            {% elif post.category == 'spare_part' %}
+            {% elif current_category in ['spare_part', 'sparepart'] %}
 
             <a
                 href="{{ url_for('spare_part') }}"
@@ -964,9 +1362,12 @@
             <p>
                 Call: +254742022263
             </p>
+
+
             <p>
                 Location: Nairobi, Kenya
             </p>
+
 
 
             <div class="social-box">
@@ -1025,9 +1426,11 @@
 
                 </a>
 
+
             </div>
 
         </div>
+
 
     </div>
 
@@ -1190,6 +1593,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
     }
 
+
+
     /* =====================================================
        SHARE
     ===================================================== */
@@ -1277,7 +1682,6 @@ document.addEventListener("DOMContentLoaded", function(){
                             "/like/{{ post.id }}",
                             {
                                 method: "POST",
-
                                 headers: {
                                     "Content-Type":
                                         "application/json"
