@@ -1154,3 +1154,323 @@ body{
 
 }
 
+/* =========================================================
+   MOTTECK SPARE PART PRODUCT CARDS
+========================================================= */
+
+.mc-part-card {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.mc-part-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 12px 14px 0;
+}
+
+.mc-part-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mc-part-sponsored {
+    background: #171717;
+    color: #fff;
+}
+
+.mc-part-featured {
+    background: #f3c969;
+    color: #171717;
+}
+
+/* Product photos */
+
+.mc-part-single-image {
+    display: block;
+    height: 250px;
+    overflow: hidden;
+    background: #f1f1f1;
+}
+
+.mc-part-single-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mc-part-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 5px;
+    height: 250px;
+    overflow: hidden;
+    background: #eee;
+}
+
+.mc-part-gallery-main,
+.mc-part-gallery-thumb {
+    position: relative;
+    display: block;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.mc-part-gallery-main img,
+.mc-part-gallery-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+}
+
+.mc-part-gallery-main:hover img,
+.mc-part-gallery-thumb:hover img {
+    transform: scale(1.035);
+}
+
+.mc-part-gallery-side {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    min-height: 0;
+}
+
+.mc-part-more-photos {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.63);
+    color: #fff;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+/* Product details */
+
+.mc-part-content {
+    padding: 15px;
+}
+
+.mc-part-title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.mc-part-title {
+    margin: 0 0 12px;
+    color: #151515;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.mc-part-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.mc-part-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.mc-part-detail span {
+    color: #777;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mc-part-detail strong {
+    color: #292929;
+    font-size: 13px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* Price */
+
+.mc-part-price {
+    margin: 14px 0;
+    color: #080808;
+    font-size: 23px;
+    font-weight: 900;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+/* Description */
+
+.mc-part-description-wrap {
+    margin: 10px 0 4px;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.mc-part-description-wrap.mc-part-description-collapsed
+.mc-part-description-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mc-part-see-more {
+    display: inline-block;
+    margin: 3px 0 12px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #111;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Engagement */
+
+.mc-part-post-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+}
+
+.mc-part-post-actions .post-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+    color: #555;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.mc-part-post-actions .like-action.liked {
+    color: #d7193f;
+}
+
+/* View details */
+
+.mc-part-view-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 8px 0 12px;
+    padding: 11px;
+    border: 1px solid #222;
+    border-radius: 7px;
+    background: #fff;
+    color: #171717;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.mc-part-view-details:hover {
+    background: #eee;
+}
+
+/* Buy Now and Request MOTTECK */
+
+.mc-part-buy-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-top: 10px;
+}
+
+.mc-part-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 11px 12px;
+    border: 1px solid #171717;
+    border-radius: 7px;
+    background: #171717;
+    color: #fff;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.mc-part-action:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.mc-part-buy-now {
+    background: #171717;
+    color: #fff;
+}
+
+.mc-part-request {
+    border-color: #d6a82f;
+    background: #f3c969;
+    color: #171717;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .mc-part-single-image,
+    .mc-part-gallery {
+        height: 215px;
+    }
+
+    .mc-part-content {
+        padding: 12px;
+    }
+
+    .mc-part-title {
+        font-size: 17px;
+    }
+
+    .mc-part-price {
+        font-size: 21px;
+    }
+
+    .mc-part-gallery {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    }
+}
+

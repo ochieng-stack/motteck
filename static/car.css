@@ -1240,3 +1240,354 @@ body{
 .share-option i {
     font-size: 20px;
 }
+
+/* =========================================================
+   MOTTECK CAR POST CARDS
+========================================================= */
+
+.mc-car-card {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    color: #111827;
+}
+
+.mc-car-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 12px 12px 0;
+}
+
+.mc-car-badges:empty {
+    display: none;
+}
+
+.mc-car-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.mc-featured-badge {
+    background: #fff3cd;
+    color: #795600;
+}
+
+.mc-sponsored-badge {
+    background: #e8efff;
+    color: #1746a2;
+}
+
+.mc-car-gallery {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(75px, 0.8fr);
+    gap: 5px;
+    height: 260px;
+    margin: 12px 12px 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f3f4f6;
+}
+
+.mc-car-main-image,
+.mc-car-side-image {
+    position: relative;
+    display: block;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.mc-car-main-image img,
+.mc-car-side-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+}
+
+.mc-car-main-image:hover img,
+.mc-car-side-image:hover img {
+    transform: scale(1.035);
+}
+
+.mc-car-side-images {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.mc-car-side-images:has(.mc-photo-count-only) {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.mc-photo-count-only {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #202124;
+}
+
+.mc-photo-count {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.62);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.mc-photo-total {
+    position: absolute;
+    left: 9px;
+    bottom: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 9px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.mc-car-content {
+    padding: 15px;
+}
+
+.mc-car-title-link {
+    display: block;
+    color: #111;
+    text-decoration: none;
+}
+
+.mc-car-title {
+    margin: 0 0 12px;
+    color: #111;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.mc-car-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px 12px;
+    margin-bottom: 14px;
+}
+
+.mc-car-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.mc-detail-label {
+    color: #737373;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.mc-detail-value {
+    color: #252525;
+    font-size: 13px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.mc-car-price {
+    margin: 12px 0;
+    color: #080808;
+    font-size: 23px;
+    font-weight: 900;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.mc-car-description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #525252;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.mc-car-description.mc-expanded {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+}
+
+.mc-car-see-more {
+    display: inline-block;
+    margin: 7px 0 13px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #1746a2;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.mc-car-engagement {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 17px;
+    padding: 12px 0;
+    border-top: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.mc-car-engagement-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #555;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.mc-car-engagement-btn:hover {
+    color: #111;
+}
+
+.mc-car-engagement-btn.liked {
+    color: #d62839;
+}
+
+.mc-car-view-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 13px;
+    padding: 11px 12px;
+    border: 1px solid #d8d8d8;
+    border-radius: 7px;
+    color: #222;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.mc-car-view-details:hover {
+    background: #f5f5f5;
+}
+
+.mc-car-sale-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 10px;
+}
+
+.mc-car-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 0;
+    padding: 12px 9px;
+    border: 0;
+    border-radius: 7px;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.mc-car-button:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.mc-request-button {
+    background: #1746a2;
+    color: #fff;
+}
+
+/* Responsive card gallery */
+@media (max-width: 600px) {
+    .mc-car-gallery {
+        height: 220px;
+        grid-template-columns: minmax(0, 1.7fr) minmax(65px, 0.8fr);
+        margin: 10px 10px 0;
+    }
+
+    .mc-car-content {
+        padding: 12px;
+    }
+
+    .mc-car-title {
+        font-size: 18px;
+    }
+
+    .mc-car-price {
+        font-size: 21px;
+    }
+
+    .mc-car-details {
+        gap: 10px;
+    }
+
+    .mc-car-sale-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-car-button {
+        font-size: 13px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .mc-car-gallery {
+        height: 185px;
+    }
+
+    .mc-car-details {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mc-car-engagement {
+        gap: 11px;
+    }
+}

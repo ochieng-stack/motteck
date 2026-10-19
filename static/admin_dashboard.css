@@ -489,7 +489,226 @@ th,td{
         .cancel-action {
             background: #777;
         }
+/* =========================================================
+   MOTTECK SUBMISSION PHOTO GALLERY
+   ========================================================= */
 
+.submission-photo-gallery {
+    width: 150px;
+    flex-shrink: 0;
+}
+
+.submission-photo-main {
+    position: relative;
+    width: 150px;
+    height: 105px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #eee;
+    cursor: pointer;
+}
+
+.submission-photo-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.submission-photo-thumbnails {
+    display: flex;
+    gap: 5px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.submission-photo-thumb {
+    position: relative;
+    width: 34px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #eee;
+}
+
+.submission-photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.submission-photo-more {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* =========================================================
+   ALL PHOTOS VIEWER
+   ========================================================= */
+
+.submission-photo-viewer {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.submission-photo-viewer.active {
+    display: flex;
+}
+
+.submission-photo-viewer-content {
+    position: relative;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 90vh;
+    text-align: center;
+}
+
+.submission-photo-viewer-main {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.submission-photo-viewer-thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.submission-photo-viewer-thumb {
+    width: 70px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.submission-photo-viewer-thumb:hover,
+.submission-photo-viewer-thumb.active {
+    opacity: 1;
+}
+
+.submission-photo-viewer-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    color: #111;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* =========================================================
+   CATEGORY-SPECIFIC SUBMISSION DETAILS
+   ========================================================= */
+
+.submission-field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.submission-field {
+    background: #f5f5f5;
+    border-radius: 6px;
+    padding: 8px 10px;
+}
+
+.submission-field-label {
+    display: block;
+    color: #777;
+    font-size: 11px;
+    margin-bottom: 2px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.submission-field-value {
+    color: #222;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.submission-price {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* =========================================================
+   MOBILE PHOTO GALLERY
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+
+    .submission-photo-gallery {
+        width: 100%;
+    }
+
+    .submission-photo-main {
+        width: 100%;
+        height: 200px;
+    }
+
+    .submission-photo-thumbnails {
+        justify-content: flex-start;
+    }
+
+    .submission-photo-thumb {
+        width: 48px;
+        height: 38px;
+    }
+
+    .submission-field-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .submission-photo-viewer {
+        padding: 10px;
+    }
+
+    .submission-photo-viewer-content {
+        width: 100%;
+    }
+
+    .submission-photo-viewer-main {
+        max-height: 65vh;
+    }
+
+    .submission-photo-viewer-close {
+        top: -5px;
+        right: -5px;
+    }
+}
         /* =========================================================
            MOBILE
         ========================================================= */

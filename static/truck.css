@@ -1152,3 +1152,330 @@ body{
     }
 
 }
+
+/* =========================================================
+   MOTTECK TRUCK / BUS CARDS
+========================================================= */
+
+.mc-truck-card {
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+    color: #111;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+}
+
+.mc-truck-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 12px 12px 0;
+}
+
+.mc-truck-badges:empty {
+    display: none;
+}
+
+.mc-truck-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.mc-truck-featured {
+    color: #795600;
+    background: #fff3cd;
+}
+
+.mc-truck-sponsored {
+    color: #1746a2;
+    background: #e8efff;
+}
+
+.mc-truck-gallery {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0,2fr) minmax(75px,.8fr);
+    gap: 5px;
+    height: 260px;
+    margin: 12px 12px 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f3f4f6;
+}
+
+.mc-truck-main-image,
+.mc-truck-side-image {
+    position: relative;
+    display: block;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.mc-truck-main-image img,
+.mc-truck-side-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .25s ease;
+}
+
+.mc-truck-main-image:hover img,
+.mc-truck-side-image:hover img {
+    transform: scale(1.035);
+}
+
+.mc-truck-side-images {
+    display: grid;
+    grid-template-rows: repeat(2,minmax(0,1fr));
+    gap: 5px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.mc-truck-count-only {
+    background: #202124;
+}
+
+.mc-truck-photo-count {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: rgba(0,0,0,.65);
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.mc-truck-photo-total {
+    position: absolute;
+    left: 9px;
+    bottom: 9px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 9px;
+    border-radius: 6px;
+    color: #fff;
+    background: rgba(0,0,0,.72);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.mc-truck-content {
+    padding: 15px;
+}
+
+.mc-truck-title-link {
+    color: #111;
+    text-decoration: none;
+}
+
+.mc-truck-title {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.mc-truck-details {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px 12px;
+    margin-bottom: 14px;
+}
+
+.mc-truck-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.mc-truck-label {
+    color: #737373;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.mc-truck-value {
+    color: #252525;
+    font-size: 13px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.mc-truck-price {
+    margin: 12px 0;
+    color: #080808;
+    font-size: 23px;
+    font-weight: 900;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.mc-truck-description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #525252;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.mc-truck-description.mc-truck-expanded {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+}
+
+.mc-truck-see-more {
+    display: inline-block;
+    margin: 7px 0 13px;
+    padding: 0;
+    border: 0;
+    color: #1746a2;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.mc-truck-engagement {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 17px;
+    padding: 12px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.mc-truck-engagement-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    color: #555;
+    background: transparent;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.mc-truck-engagement-btn:hover {
+    color: #111;
+}
+
+.mc-truck-engagement-btn.liked {
+    color: #d62839;
+}
+
+.mc-truck-view-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 13px;
+    padding: 11px 12px;
+    border: 1px solid #d8d8d8;
+    border-radius: 7px;
+    color: #222;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.mc-truck-view-details:hover {
+    background: #f5f5f5;
+}
+
+.mc-truck-sale-actions {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 9px;
+    margin-top: 10px;
+}
+
+.mc-truck-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 0;
+    padding: 12px 9px;
+    border: 0;
+    border-radius: 7px;
+    color: #fff;
+    background: #111;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+
+.mc-truck-button:hover {
+    opacity: .88;
+}
+
+.mc-truck-request {
+    background: #1746a2;
+}
+
+@media (max-width: 600px) {
+    .mc-truck-gallery {
+        height: 220px;
+        grid-template-columns: minmax(0,1.7fr) minmax(65px,.8fr);
+        margin: 10px 10px 0;
+    }
+
+    .mc-truck-content {
+        padding: 12px;
+    }
+
+    .mc-truck-title {
+        font-size: 18px;
+    }
+
+    .mc-truck-price {
+        font-size: 21px;
+    }
+
+    .mc-truck-sale-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-truck-button {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .mc-truck-gallery {
+        height: 185px;
+    }
+
+    .mc-truck-engagement {
+        gap: 11px;
+    }
+}
