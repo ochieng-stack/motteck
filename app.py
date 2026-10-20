@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from email.message import EmailMessage
 from flask import flash
 from supabase import AuthApiError
+import uuid
+from urllib.parse import quote
 
 import cloudinary
 import cloudinary.uploader
@@ -18,6 +20,7 @@ import requests
 
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+
 
 
 # ================= INIT =================
@@ -1656,6 +1659,7 @@ def advertise():
 def cookies():
     return render_template('cookies.html')
 
+@app.route("/payment-success")
 # ================= ADMIN LOGIN =================
 @app.route('/login-goodwill254@', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
@@ -3155,8 +3159,11 @@ def edit_post(post_id):
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
-# ================= SINGLE POST =================
-@app.route('/post/<int:post_id>')
+# =========================================================
+# SINGLE POST
+# =========================================================
+
+@app.route("/post/<int:post_id>")
 def single_post(post_id):
 
     try:
@@ -3178,8 +3185,9 @@ def single_post(post_id):
 
         post = response.data[0]
 
+
         # =========================================
-        # GET AUTHOR PROFILE
+        # GET AUTHOR / BUSINESS PROFILE
         # =========================================
 
         author_id = post.get("user_id")
@@ -3191,7 +3199,9 @@ def single_post(post_id):
                 .table("profiles")
                 .select(
                     "id,full_name,account_type,"
-                    "profile_image,business_name,bio,is_verified"
+                    "profile_image,business_name,bio,"
+                    "is_verified,business_phone,"
+                    "business_location,business_town"
                 )
                 .eq("id", author_id)
                 .limit(1)
@@ -3209,9 +3219,18 @@ def single_post(post_id):
             post["account_type"] = profile.get("account_type")
             post["profile_image"] = profile.get("profile_image")
             post["bio"] = profile.get("bio")
-            post["is_verified"] = profile.get(
-                "is_verified",
-                False
+            post["is_verified"] = profile.get("is_verified", False)
+
+            post["business_phone"] = profile.get(
+                "business_phone"
+            )
+
+            post["business_location"] = profile.get(
+                "business_location"
+            )
+
+            post["business_town"] = profile.get(
+                "business_town"
             )
 
         else:
@@ -3222,75 +3241,42 @@ def single_post(post_id):
             post["profile_image"] = None
             post["bio"] = None
             post["is_verified"] = False
+            post["business_phone"] = None
+            post["business_location"] = None
+            post["business_town"] = None
+
+
+        # =========================================
+        # TIME AGO
+        # =========================================
 
         post["time_ago"] = time_ago(
             post.get("created_at", "")
         )
 
-        # =========================================
-        # CHECK FOR LEAD ACTION
-        # =========================================
-
-        contact_action = request.args.get("contact")
-        request_action = request.args.get("request")
-
-        lead_type = None
-
-        # Contact Seller
-        if contact_action == "seller":
-            lead_type = "contact_seller"
-
-        # Contact Business
-        elif contact_action == "business":
-            lead_type = "contact_business"
-
-        # Request MOTTECK
-        elif request_action == "motteck":
-            lead_type = "request_motteck"
 
         # =========================================
-        # RECORD LEAD
+        # BUY NOW
+        #
+        # Only spare_part and Accessorie
         # =========================================
 
-        if lead_type:
+        buy_action = request.args.get("buy")
 
-            # User must be logged in
-            if not session.get("user_logged_in"):
+        if buy_action == "now":
 
-                flash(
-                    "Please log in to continue.",
-                    "error"
-                )
+            category = (
+                post.get("category")
+                or ""
+            ).strip()
 
-                return redirect(
-                    url_for(
-                        "login_user",
-                        next=request.full_path
-                    )
-                )
-
-            interested_user_id = session.get(
-                "user_id"
-            )
-
-            seller_id = post.get(
-                "user_id"
-            )
-
-            # =====================================
-            # PREVENT SELLER FROM CREATING
-            # LEADS ON THEIR OWN POST
-            # =====================================
-
-            if (
-                interested_user_id
-                and seller_id
-                and str(interested_user_id)
-                == str(seller_id)
+            if category not in (
+                "spare_part",
+                "Accessorie"
             ):
 
                 flash(
-                    "You cannot contact yourself through your own listing.",
+                    "Buy Now is only available for spare parts and accessories.",
                     "error"
                 )
 
@@ -3301,48 +3287,73 @@ def single_post(post_id):
                     )
                 )
 
-            # =====================================
-            # SAVE LEAD
-            # =====================================
 
-            lead_data = {
-                "post_id": post_id,
-                "seller_id": seller_id,
-                "interested_user_id": interested_user_id,
-                "lead_type": lead_type,
-                "status": "new"
-            }
+            if not session.get("user_logged_in"):
 
-            try:
-
-                supabase \
-                    .table("leads") \
-                    .insert(lead_data) \
-                    .execute()
-
-                print(
-                    "MOTTECK LEAD CREATED:",
-                    lead_data
+                flash(
+                    "Please log in to continue with your purchase.",
+                    "error"
                 )
 
-            except Exception as lead_error:
-
-                print(
-                    "LEAD CREATION ERROR:",
-                    repr(lead_error)
+                return redirect(
+                    url_for(
+                        "login_user",
+                        next=request.full_path
+                    )
                 )
 
-                # Do not stop the user from viewing
-                # the post if lead recording fails.
+
+            return redirect(
+                url_for(
+                    "checkout",
+                    post_id=post_id
+                )
+            )
+
 
         # =========================================
-        # RENDER POST
+        # REQUEST MOTTECK
+        #
+        # Do NOT create a lead here.
+        # Just open the request form.
+        # =========================================
+
+        request_action = request.args.get("request")
+
+        if request_action == "motteck":
+
+            if not session.get("user_logged_in"):
+
+                flash(
+                    "Please log in to send a MOTTECK request.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "login_user",
+                        next=request.full_path
+                    )
+                )
+
+
+            return redirect(
+                url_for(
+                    "request_motteck",
+                    post_id=post_id
+                )
+            )
+
+
+        # =========================================
+        # NORMAL SINGLE POST PAGE
         # =========================================
 
         return render_template(
             "single_post.html",
             post=post
         )
+
 
     except Exception as e:
 
@@ -3625,7 +3636,1467 @@ def toggle_follow(user_id):
             "success": False,
             "error": str(e)
         }), 500
-    
+ # =========================================================
+# CHECKOUT
+# =========================================================
+
+@app.route(
+    "/checkout/<int:post_id>",
+    methods=["GET", "POST"]
+)
+def checkout(post_id):
+
+    # =========================================
+    # LOGIN REQUIRED
+    # =========================================
+
+    if not session.get("user_logged_in"):
+
+        flash(
+            "Please log in before checking out.",
+            "error"
+        )
+
+        return redirect(
+            url_for(
+                "login_user",
+                next=request.full_path
+            )
+        )
+
+
+    # =========================================
+    # GET POST
+    # =========================================
+
+    try:
+
+        post_response = (
+            supabase
+            .table("posts")
+            .select("*")
+            .eq("id", post_id)
+            .execute()
+        )
+
+        if not post_response.data:
+
+            return "Product not found.", 404
+
+        post = post_response.data[0]
+
+
+        # =========================================
+        # ONLY SPARE PART / ACCESSORY
+        # =========================================
+
+        category = (
+            post.get("category")
+            or ""
+        ).strip()
+
+        if category not in (
+            "spare_part",
+            "Accessorie"
+        ):
+
+            flash(
+                "This product is not available through Buy Now.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "single_post",
+                    post_id=post_id
+                )
+            )
+
+
+        # =========================================
+        # GET SELLER PROFILE
+        # =========================================
+
+        seller_id = post.get("user_id")
+
+        seller = {}
+
+        if seller_id:
+
+            seller_response = (
+                supabase
+                .table("profiles")
+                .select(
+                    "id,full_name,email,"
+                    "account_type,business_name,"
+                    "business_phone,business_location,"
+                    "business_town"
+                )
+                .eq("id", seller_id)
+                .limit(1)
+                .execute()
+            )
+
+            if seller_response.data:
+
+                seller = seller_response.data[0]
+
+
+        post["business_name"] = (
+            seller.get("business_name")
+            or seller.get("full_name")
+            or "MOTTECK Seller"
+        )
+
+        post["business_phone"] = seller.get(
+            "business_phone"
+        )
+
+        post["business_location"] = seller.get(
+            "business_location"
+        )
+
+        post["business_town"] = seller.get(
+            "business_town"
+        )
+
+
+        # =========================================
+        # DISPLAY CHECKOUT
+        # =========================================
+
+        if request.method == "GET":
+
+            return render_template(
+                "checkout.html",
+                post=post
+            )
+
+
+        # =========================================
+        # CREATE ORDER
+        # =========================================
+
+        customer_id = session.get("user_id")
+
+        customer_name = (
+            request.form.get("customer_name")
+            or session.get("full_name")
+            or ""
+        ).strip()
+
+        customer_email = (
+            request.form.get("customer_email")
+            or session.get("email")
+            or ""
+        ).strip()
+
+        customer_phone = (
+            request.form.get("customer_phone")
+            or ""
+        ).strip()
+
+        quantity_raw = (
+            request.form.get("quantity")
+            or "1"
+        ).strip()
+
+
+        # =========================================
+        # VALIDATE QUANTITY
+        # =========================================
+
+        try:
+
+            quantity = int(quantity_raw)
+
+            if quantity < 1:
+                raise ValueError
+
+        except (ValueError, TypeError):
+
+            flash(
+                "Please enter a valid quantity.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "checkout",
+                    post_id=post_id
+                )
+            )
+
+
+        # =========================================
+        # PRICE
+        # =========================================
+
+        try:
+
+            unit_price = float(
+                post.get("price") or 0
+            )
+
+        except (ValueError, TypeError):
+
+            unit_price = 0
+
+
+        if unit_price <= 0:
+
+            flash(
+                "This product does not have a valid price.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "single_post",
+                    post_id=post_id
+                )
+            )
+
+
+        total_amount = unit_price * quantity
+
+
+        # =========================================
+        # COMMON CUSTOMER / DELIVERY DETAILS
+        # =========================================
+
+        delivery_town = (
+            request.form.get("delivery_town")
+            or ""
+        ).strip()
+
+        delivery_area = (
+            request.form.get("delivery_area")
+            or ""
+        ).strip()
+
+        delivery_address = (
+            request.form.get("delivery_address")
+            or ""
+        ).strip()
+
+
+        # =========================================
+        # PRODUCT-SPECIFIC INFORMATION
+        # =========================================
+
+        product_name = post.get(
+            "product_name"
+        ) or post.get(
+            "title"
+        )
+
+
+        # -----------------------------------------
+        # SPARE PART
+        # -----------------------------------------
+
+        if category == "spare_part":
+
+            product_type = "spare_part"
+
+            part_name = (
+                request.form.get("part_name")
+                or product_name
+                or ""
+            ).strip()
+
+            part_number = (
+                request.form.get("part_number")
+                or post.get("part_number")
+                or ""
+            ).strip()
+
+            vehicle_make = (
+                request.form.get("vehicle_make")
+                or ""
+            ).strip()
+
+            vehicle_model = (
+                request.form.get("vehicle_model")
+                or ""
+            ).strip()
+
+            vehicle_year = (
+                request.form.get("vehicle_year")
+                or ""
+            ).strip()
+
+            engine = (
+                request.form.get("engine")
+                or ""
+            ).strip()
+
+            specifications = (
+                request.form.get("specifications")
+                or ""
+            ).strip()
+
+            variant = None
+
+            brand = (
+                post.get("brand")
+                or ""
+            )
+
+
+        # -----------------------------------------
+        # ACCESSORY
+        # -----------------------------------------
+
+        else:
+
+            product_type = "accessory"
+
+            part_name = (
+                request.form.get("accessory_name")
+                or product_name
+                or ""
+            ).strip()
+
+            part_number = None
+
+            vehicle_make = (
+                request.form.get("vehicle_make")
+                or ""
+            ).strip()
+
+            vehicle_model = (
+                request.form.get("vehicle_model")
+                or ""
+            ).strip()
+
+            vehicle_year = (
+                request.form.get("vehicle_year")
+                or ""
+            ).strip()
+
+            engine = None
+
+            variant = (
+                request.form.get("variant")
+                or ""
+            ).strip()
+
+            brand = (
+                request.form.get("accessory_brand")
+                or post.get("brand")
+                or ""
+            ).strip()
+
+            specifications = (
+                request.form.get("specifications")
+                or ""
+            ).strip()
+
+
+        # =========================================
+        # ORDER NUMBER
+        # =========================================
+
+        order_number = (
+            "MTK-"
+            + datetime.utcnow().strftime("%Y%m%d")
+            + "-"
+            + uuid.uuid4().hex[:8].upper()
+        )
+
+
+        # =========================================
+        # ORDER DATA
+        #
+        # PAYMENT REMAINS PENDING.
+        # =========================================
+
+        order_data = {
+
+            "order_number": order_number,
+
+            "post_id": post_id,
+
+            "customer_id": customer_id,
+
+            "seller_id": seller_id,
+
+            "product_type": product_type,
+
+            "product_name": part_name,
+
+            "quantity": quantity,
+
+            "unit_price": unit_price,
+
+            "total_amount": total_amount,
+
+            "part_number": part_number,
+
+            "brand": brand,
+
+            "vehicle_make": vehicle_make,
+
+            "vehicle_model": vehicle_model,
+
+            "vehicle_year": vehicle_year,
+
+            "engine": engine,
+
+            "variant": variant,
+
+            "specifications": specifications,
+
+            "customer_name": customer_name,
+
+            "customer_email": customer_email,
+
+            "customer_phone": customer_phone,
+
+            "delivery_town": delivery_town,
+
+            "delivery_area": delivery_area,
+
+            "delivery_address": delivery_address,
+
+            "payment_status": "pending",
+
+            "order_status": "awaiting_payment"
+
+        }
+
+
+        # =========================================
+        # SAVE ORDER
+        # =========================================
+
+        order_response = (
+            supabase
+            .table("orders")
+            .insert(order_data)
+            .execute()
+        )
+
+
+        if not order_response.data:
+
+            flash(
+                "Unable to create your order. Please try again.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "checkout",
+                    post_id=post_id
+                )
+            )
+
+
+        order = order_response.data[0]
+
+
+        # =========================================
+        # PAYMENT RECORD
+        #
+        # NOT PAID YET
+        # =========================================
+
+        payment_data = {
+
+            "order_id": order.get("id"),
+
+            "amount": total_amount,
+
+            "payment_method": (
+                request.form.get("payment_method")
+                or "mpesa"
+            ),
+
+            "payment_status": "pending",
+
+            "payment_reference": None
+
+        }
+
+
+        try:
+
+            supabase.table(
+                "payments"
+            ).insert(
+                payment_data
+            ).execute()
+
+        except Exception as payment_error:
+
+            print(
+                "PAYMENT RECORD ERROR:",
+                repr(payment_error)
+            )
+
+
+        # =========================================
+        # REDIRECT TO PAYMENT
+        #
+        # We DO NOT mark the order as paid here.
+        # =========================================
+
+        return redirect(
+            url_for(
+                "order_payment",
+                order_number=order_number
+            )
+        )
+
+
+    except Exception as e:
+
+        print(
+            "CHECKOUT ERROR:",
+            repr(e)
+        )
+
+        flash(
+            "Unable to process checkout. Please try again.",
+            "error"
+        )
+
+        return redirect(
+            url_for(
+                "single_post",
+                post_id=post_id
+            )
+        )
+
+# =========================================================
+# ORDER PAYMENT
+# =========================================================
+
+@app.route(
+    "/order/<order_number>/payment"
+)
+def order_payment(order_number):
+
+    if not session.get("user_logged_in"):
+
+        flash(
+            "Please log in to continue.",
+            "error"
+        )
+
+        return redirect(
+            url_for("login_user")
+        )
+
+
+    try:
+
+        response = (
+            supabase
+            .table("orders")
+            .select("*")
+            .eq(
+                "order_number",
+                order_number
+            )
+            .limit(1)
+            .execute()
+        )
+
+
+        if not response.data:
+
+            return "Order not found.", 404
+
+
+        order = response.data[0]
+
+
+        # =========================================
+        # SECURITY
+        # =========================================
+
+        if str(
+            order.get("customer_id")
+        ) != str(
+            session.get("user_id")
+        ):
+
+            return "Unauthorized.", 403
+
+
+        # =========================================
+        # ALREADY PAID
+        # =========================================
+
+        if order.get("payment_status") == "paid":
+
+            if order.get("invoice_number"):
+
+                return redirect(
+                    url_for(
+                        "invoice",
+                        invoice_number=order.get(
+                            "invoice_number"
+                        )
+                    )
+                )
+
+
+        return render_template(
+            "checkout.html",
+            post={
+                "id": order.get("post_id"),
+                "title": order.get("product_name"),
+                "price": order.get("unit_price"),
+                "category": (
+                    "spare_part"
+                    if order.get("product_type") == "spare_part"
+                    else "Accessorie"
+                ),
+                "product_name": order.get(
+                    "product_name"
+                ),
+                "part_number": order.get(
+                    "part_number"
+                ),
+                "brand": order.get(
+                    "brand"
+                )
+            },
+            order=order,
+            payment_stage=True
+        )
+
+
+    except Exception as e:
+
+        print(
+            "ORDER PAYMENT ERROR:",
+            repr(e)
+        )
+
+        return "Unable to load payment.", 500
+# =========================================================
+# REQUEST MOTTECK
+# =========================================================
+
+@app.route(
+    "/request-motteck/<int:post_id>",
+    methods=["GET", "POST"]
+)
+def request_motteck(post_id):
+
+    # =========================================
+    # LOGIN
+    # =========================================
+
+    if not session.get("user_logged_in"):
+
+        flash(
+            "Please log in to send a MOTTECK request.",
+            "error"
+        )
+
+        return redirect(
+            url_for(
+                "login_user",
+                next=request.full_path
+            )
+        )
+
+
+    try:
+
+        # =========================================
+        # GET POST
+        # =========================================
+
+        post_response = (
+            supabase
+            .table("posts")
+            .select("*")
+            .eq("id", post_id)
+            .limit(1)
+            .execute()
+        )
+
+
+        if not post_response.data:
+
+            return "Post not found.", 404
+
+
+        post = post_response.data[0]
+
+        seller_id = post.get(
+            "user_id"
+        )
+
+        customer_id = session.get(
+            "user_id"
+        )
+
+
+        # =========================================
+        # PREVENT SELF REQUEST
+        # =========================================
+
+        if (
+            seller_id
+            and customer_id
+            and str(seller_id)
+            == str(customer_id)
+        ):
+
+            flash(
+                "You cannot request MOTTECK through your own listing.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "single_post",
+                    post_id=post_id
+                )
+            )
+
+
+        # =========================================
+        # DISPLAY FORM
+        # =========================================
+
+        if request.method == "GET":
+
+            return render_template(
+                "request_motteck.html",
+                post=post
+            )
+
+
+        # =========================================
+        # FORM DATA
+        # =========================================
+
+        customer_name = (
+            request.form.get("customer_name")
+            or session.get("full_name")
+            or ""
+        ).strip()
+
+        customer_email = (
+            request.form.get("customer_email")
+            or session.get("email")
+            or ""
+        ).strip()
+
+        customer_phone = (
+            request.form.get("customer_phone")
+            or ""
+        ).strip()
+
+        town = (
+            request.form.get("town")
+            or ""
+        ).strip()
+
+        request_details = (
+            request.form.get("request_details")
+            or ""
+        ).strip()
+
+        preferred_location = (
+            request.form.get("preferred_location")
+            or ""
+        ).strip()
+
+
+        if not customer_name:
+
+            flash(
+                "Please enter your name.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "request_motteck",
+                    post_id=post_id
+                )
+            )
+
+
+        if not customer_phone:
+
+            flash(
+                "Please enter your phone number.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "request_motteck",
+                    post_id=post_id
+                )
+            )
+
+
+        if not request_details:
+
+            flash(
+                "Please describe what you need.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "request_motteck",
+                    post_id=post_id
+                )
+            )
+
+
+        # =========================================
+        # CREATE REQUEST
+        # =========================================
+
+        request_number = (
+            "REQ-"
+            + datetime.utcnow().strftime("%Y%m%d")
+            + "-"
+            + uuid.uuid4().hex[:8].upper()
+        )
+
+
+        request_data = {
+
+            "request_number": request_number,
+
+            "post_id": post_id,
+
+            "customer_id": customer_id,
+
+            "seller_id": seller_id,
+
+            "customer_name": customer_name,
+
+            "customer_email": customer_email,
+
+            "customer_phone": customer_phone,
+
+            "town": town,
+
+            "request_details": request_details,
+
+            "preferred_location": preferred_location,
+
+            "status": "new"
+
+        }
+
+
+        response = (
+            supabase
+            .table("motteck_requests")
+            .insert(request_data)
+            .execute()
+        )
+
+
+        if not response.data:
+
+            flash(
+                "Unable to send your request. Please try again.",
+                "error"
+            )
+
+            return redirect(
+                url_for(
+                    "request_motteck",
+                    post_id=post_id
+                )
+            )
+
+
+        # =========================================
+        # ALSO CREATE LEAD
+        #
+        # This keeps it visible in existing
+        # admin/leads.
+        # =========================================
+
+        lead_data = {
+
+            "post_id": post_id,
+
+            "seller_id": seller_id,
+
+            "interested_user_id": customer_id,
+
+            "lead_type": "request_motteck",
+
+            "status": "new"
+
+        }
+
+
+        try:
+
+            supabase.table(
+                "leads"
+            ).insert(
+                lead_data
+            ).execute()
+
+        except Exception as lead_error:
+
+            print(
+                "REQUEST LEAD ERROR:",
+                repr(lead_error)
+            )
+
+
+        # =========================================
+        # SUCCESS
+        # =========================================
+
+        flash(
+            "Your request has been sent to MOTTECK successfully.",
+            "success"
+        )
+
+        return redirect(
+            url_for(
+                "single_post",
+                post_id=post_id
+            )
+        )
+
+
+    except Exception as e:
+
+        print(
+            "REQUEST MOTTECK ERROR:",
+            repr(e)
+        )
+
+        flash(
+            "Unable to send your request. Please try again.",
+            "error"
+        )
+
+        return redirect(
+            url_for(
+                "single_post",
+                post_id=post_id
+            )
+        )   
+# =========================================================
+# CUSTOMER INVOICE
+# =========================================================
+
+@app.route(
+    "/invoice/<invoice_number>"
+)
+def invoice(invoice_number):
+
+    if not session.get("user_logged_in"):
+
+        flash(
+            "Please log in to view your invoice.",
+            "error"
+        )
+
+        return redirect(
+            url_for("login_user")
+        )
+
+
+    try:
+
+        # =========================================
+        # GET INVOICE
+        # =========================================
+
+        invoice_response = (
+            supabase
+            .table("invoices")
+            .select("*")
+            .eq(
+                "invoice_number",
+                invoice_number
+            )
+            .limit(1)
+            .execute()
+        )
+
+
+        if not invoice_response.data:
+
+            return "Invoice not found.", 404
+
+
+        invoice_data = invoice_response.data[0]
+
+
+        # =========================================
+        # ONLY PAID INVOICES
+        # =========================================
+
+        if invoice_data.get(
+            "payment_status"
+        ) != "paid":
+
+            return (
+                "This invoice has not been paid.",
+                403
+            )
+
+
+        customer_id = invoice_data.get(
+            "customer_id"
+        )
+
+        seller_id = invoice_data.get(
+            "seller_id"
+        )
+
+        logged_user = session.get(
+            "user_id"
+        )
+
+        is_admin = session.get(
+            "logged_in"
+        )
+
+
+        # =========================================
+        # SECURITY
+        #
+        # Customer, seller or admin only.
+        # =========================================
+
+        if not is_admin:
+
+            if (
+                str(logged_user)
+                != str(customer_id)
+                and
+                str(logged_user)
+                != str(seller_id)
+            ):
+
+                return "Unauthorized.", 403
+
+
+        # =========================================
+        # GET ORDER
+        # =========================================
+
+        order_id = invoice_data.get(
+            "order_id"
+        )
+
+
+        order_response = (
+            supabase
+            .table("orders")
+            .select("*")
+            .eq(
+                "id",
+                order_id
+            )
+            .limit(1)
+            .execute()
+        )
+
+
+        if not order_response.data:
+
+            return "Order not found.", 404
+
+
+        order = order_response.data[0]
+
+
+        # =========================================
+        # GET PAYMENT
+        # =========================================
+
+        payment_response = (
+            supabase
+            .table("payments")
+            .select("*")
+            .eq(
+                "order_id",
+                order_id
+            )
+            .eq(
+                "payment_status",
+                "paid"
+            )
+            .order(
+                "created_at",
+                desc=True
+            )
+            .limit(1)
+            .execute()
+        )
+
+
+        payment = (
+            payment_response.data[0]
+            if payment_response.data
+            else {}
+        )
+
+
+        # =========================================
+        # GET BUSINESS
+        # =========================================
+
+        seller_id = order.get(
+            "seller_id"
+        )
+
+        business = {}
+
+
+        if seller_id:
+
+            business_response = (
+                supabase
+                .table("profiles")
+                .select(
+                    "id,full_name,email,"
+                    "business_name,business_phone,"
+                    "business_location,business_town"
+                )
+                .eq(
+                    "id",
+                    seller_id
+                )
+                .limit(1)
+                .execute()
+            )
+
+
+            if business_response.data:
+
+                business = (
+                    business_response.data[0]
+                )
+
+
+        invoice_data["business_name"] = (
+            business.get("business_name")
+            or business.get("full_name")
+            or "Seller"
+        )
+
+        invoice_data["business_phone"] = (
+            business.get("business_phone")
+        )
+
+        invoice_data["business_location"] = (
+            business.get("business_location")
+        )
+
+
+        return render_template(
+            "invoice.html",
+            invoice=invoice_data,
+            order=order,
+            payment=payment
+        )
+
+
+    except Exception as e:
+
+        print(
+            "INVOICE ERROR:",
+            repr(e)
+        )
+
+        return "Unable to load invoice.", 500
+# =========================================================
+# ADMIN - ORDERS
+# =========================================================
+
+@app.route("/admin/orders")
+def admin_orders():
+
+    if not session.get("logged_in"):
+
+        return jsonify({
+            "error": "Unauthorized"
+        }), 403
+
+
+    try:
+
+        response = (
+            supabase
+            .table("orders")
+            .select("*")
+            .order(
+                "created_at",
+                desc=True
+            )
+            .execute()
+        )
+
+
+        orders = response.data or []
+
+
+        # =========================================
+        # ENRICH ORDERS
+        # =========================================
+
+        for order in orders:
+
+            # -------------------------------------
+            # POST
+            # -------------------------------------
+
+            post_id = order.get(
+                "post_id"
+            )
+
+            if post_id:
+
+                try:
+
+                    post_response = (
+                        supabase
+                        .table("posts")
+                        .select(
+                            "id,title,category"
+                        )
+                        .eq(
+                            "id",
+                            post_id
+                        )
+                        .limit(1)
+                        .execute()
+                    )
+
+                    post = (
+                        post_response.data[0]
+                        if post_response.data
+                        else {}
+                    )
+
+                    order["post_title"] = (
+                        post.get("title")
+                        or order.get("product_name")
+                        or "Unknown"
+                    )
+
+                    order["category"] = (
+                        post.get("category")
+                        or order.get("product_type")
+                    )
+
+                except Exception:
+
+                    order["post_title"] = (
+                        order.get("product_name")
+                        or "Unknown"
+                    )
+
+            else:
+
+                order["post_title"] = (
+                    order.get("product_name")
+                    or "Unknown"
+                )
+
+
+            # -------------------------------------
+            # CUSTOMER
+            # -------------------------------------
+
+            customer_id = order.get(
+                "customer_id"
+            )
+
+            if customer_id:
+
+                try:
+
+                    customer_response = (
+                        supabase
+                        .table("profiles")
+                        .select(
+                            "id,full_name,email"
+                        )
+                        .eq(
+                            "id",
+                            customer_id
+                        )
+                        .limit(1)
+                        .execute()
+                    )
+
+                    customer = (
+                        customer_response.data[0]
+                        if customer_response.data
+                        else {}
+                    )
+
+                    order["customer_profile_name"] = (
+                        customer.get("full_name")
+                        or order.get("customer_name")
+                    )
+
+                    order["customer_profile_email"] = (
+                        customer.get("email")
+                        or order.get("customer_email")
+                    )
+
+                except Exception:
+
+                    order["customer_profile_name"] = (
+                        order.get("customer_name")
+                    )
+
+                    order["customer_profile_email"] = (
+                        order.get("customer_email")
+                    )
+
+
+            # -------------------------------------
+            # SELLER
+            # -------------------------------------
+
+            seller_id = order.get(
+                "seller_id"
+            )
+
+            if seller_id:
+
+                try:
+
+                    seller_response = (
+                        supabase
+                        .table("profiles")
+                        .select(
+                            "id,full_name,email,"
+                            "business_name"
+                        )
+                        .eq(
+                            "id",
+                            seller_id
+                        )
+                        .limit(1)
+                        .execute()
+                    )
+
+                    seller = (
+                        seller_response.data[0]
+                        if seller_response.data
+                        else {}
+                    )
+
+                    order["seller_name"] = (
+                        seller.get("business_name")
+                        or seller.get("full_name")
+                        or "Unknown seller"
+                    )
+
+                    order["seller_email"] = (
+                        seller.get("email")
+                        or ""
+                    )
+
+                except Exception:
+
+                    order["seller_name"] = (
+                        "Unknown seller"
+                    )
+
+                    order["seller_email"] = ""
+
+            else:
+
+                order["seller_name"] = (
+                    "Unknown seller"
+                )
+
+                order["seller_email"] = ""
+
+
+        return jsonify({
+            "success": True,
+            "orders": orders
+        })
+
+
+    except Exception as e:
+
+        print(
+            "ADMIN ORDERS ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+# =========================================================
+# ADMIN - INVOICES
+# =========================================================
+
+@app.route("/admin/invoices")
+def admin_invoices():
+
+    if not session.get("logged_in"):
+
+        return jsonify({
+            "error": "Unauthorized"
+        }), 403
+
+
+    try:
+
+        response = (
+            supabase
+            .table("invoices")
+            .select("*")
+            .order(
+                "created_at",
+                desc=True
+            )
+            .execute()
+        )
+
+
+        invoices = response.data or []
+
+
+        return jsonify({
+            "success": True,
+            "invoices": invoices
+        })
+
+
+    except Exception as e:
+
+        print(
+            "ADMIN INVOICES ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+                        
 # ================= CONTACT =================
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
