@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Invoice {{ invoice.invoice_number }} | MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='invoice.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="invoice-page">
+
+    <!-- ACTION BAR -->
+
+    <div class="invoice-actions">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="action-button secondary">
+
+            <i class="fa-solid fa-house"></i>
+            Home
+
+        </a>
+
+        <button
+            onclick="window.print()"
+            class="action-button secondary">
+
+            <i class="fa-solid fa-print"></i>
+            Print Invoice
+
+        </button>
+
+        <button
+            onclick="downloadInvoice()"
+            class="action-button primary">
+
+            <i class="fa-solid fa-download"></i>
+            Download Invoice
+
+        </button>
+
+    </div>
+
+
+    <!-- INVOICE -->
+
+    <main class="invoice-container">
+
+        <header class="invoice-header">
+
+            <div class="company">
+
+                <h1>MOTTECK</h1>
+
+                <span>MOTTECK NETWORK</span>
+
+                <p>
+                    Automotive & Business Network
+                </p>
+
+            </div>
+
+
+            <div class="invoice-heading">
+
+                <h2>PAID INVOICE</h2>
+
+                <div class="paid-status">
+                    <i class="fa-solid fa-circle-check"></i>
+                    PAID
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="invoice-meta">
+
+            <div>
+                <span>Invoice Number</span>
+                <strong>{{ invoice.invoice_number }}</strong>
+            </div>
+
+            <div>
+                <span>Order Number</span>
+                <strong>{{ order.order_number }}</strong>
+            </div>
+
+            <div>
+                <span>Date</span>
+                <strong>
+                    {{ invoice.created_at[:10] if invoice.created_at else '' }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- CUSTOMER / BUSINESS -->
+
+        <section class="invoice-parties">
+
+            <div>
+
+                <h3>Bill To</h3>
+
+                <strong>
+                    {{ invoice.customer_name }}
+                </strong>
+
+                <p>
+                    {{ invoice.customer_email }}
+                </p>
+
+                <p>
+                    {{ invoice.customer_phone }}
+                </p>
+
+                <p>
+                    {{ invoice.delivery_town }}
+                </p>
+
+                <p>
+                    {{ invoice.delivery_address }}
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h3>Seller / Business</h3>
+
+                <strong>
+                    {{ invoice.business_name }}
+                </strong>
+
+                {% if invoice.business_phone %}
+                    <p>
+                        {{ invoice.business_phone }}
+                    </p>
+                {% endif %}
+
+                {% if invoice.business_location %}
+                    <p>
+                        {{ invoice.business_location }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- PRODUCT -->
+
+        <section class="invoice-products">
+
+            <div class="invoice-product-header">
+                <span>PRODUCT</span>
+                <span>QTY</span>
+                <span>UNIT PRICE</span>
+                <span>TOTAL</span>
+            </div>
+
+
+            <div class="invoice-product">
+
+                <div>
+
+                    <strong>
+                        {{ order.product_name }}
+                    </strong>
+
+                    <small>
+                        {% if order.product_type == 'spare_part' %}
+                            Spare Part
+                        {% elif order.product_type == 'accessory' %}
+                            Accessory
+                        {% else %}
+                            Product
+                        {% endif %}
+                    </small>
+
+                </div>
+
+                <span>
+                    {{ order.quantity }}
+                </span>
+
+                <span>
+                    KSh {{ "{:,.2f}".format(order.unit_price or 0) }}
+                </span>
+
+                <strong>
+                    KSh {{ "{:,.2f}".format(order.total_amount or 0) }}
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- PRODUCT DETAILS -->
+
+        <section class="invoice-details">
+
+            <h3>Order Details</h3>
+
+
+            {% if order.product_type == 'spare_part' %}
+
+                <div class="detail-grid">
+
+                    <div>
+                        <span>Part Number</span>
+                        <strong>{{ order.part_number or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Vehicle Make</span>
+                        <strong>{{ order.vehicle_make or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Vehicle Model</span>
+                        <strong>{{ order.vehicle_model or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Vehicle Year</span>
+                        <strong>{{ order.vehicle_year or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Engine</span>
+                        <strong>{{ order.engine or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Specifications</span>
+                        <strong>{{ order.specifications or 'N/A' }}</strong>
+                    </div>
+
+                </div>
+
+            {% elif order.product_type == 'accessory' %}
+
+                <div class="detail-grid">
+
+                    <div>
+                        <span>Brand</span>
+                        <strong>{{ order.brand or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Vehicle Make</span>
+                        <strong>{{ order.vehicle_make or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Vehicle Model</span>
+                        <strong>{{ order.vehicle_model or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Vehicle Year</span>
+                        <strong>{{ order.vehicle_year or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Variant / Size</span>
+                        <strong>{{ order.variant or 'N/A' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Specifications</span>
+                        <strong>{{ order.specifications or 'N/A' }}</strong>
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- PAYMENT -->
+
+        <section class="payment-information">
+
+            <h3>Payment Information</h3>
+
+            <div class="payment-row">
+
+                <span>Payment Method</span>
+
+                <strong>
+                    {{ payment.payment_method or 'M-Pesa' }}
+                </strong>
+
+            </div>
+
+            <div class="payment-row">
+
+                <span>Payment Reference</span>
+
+                <strong>
+                    {{ payment.payment_reference or 'Confirmed' }}
+                </strong>
+
+            </div>
+
+            <div class="payment-row">
+
+                <span>Payment Status</span>
+
+                <strong class="paid-text">
+                    PAID
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- TOTAL -->
+
+        <section class="invoice-total">
+
+            <div>
+                <span>Total Paid</span>
+
+                <strong>
+                    KSh {{ "{:,.2f}".format(invoice.amount or 0) }}
+                </strong>
+            </div>
+
+        </section>
+
+
+        <!-- BUSINESS STATUS -->
+
+        <section class="fulfillment-box">
+
+            <div>
+
+                <i class="fa-solid fa-money-check-dollar"></i>
+
+                <div>
+
+                    <strong>PAID TO MOTTECK</strong>
+
+                    <p>
+                        Your payment has been confirmed by MOTTECK.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <i class="fa-solid fa-box"></i>
+
+                <div>
+
+                    <strong>AWAITING FULFILLMENT</strong>
+
+                    <p>
+                        The seller/business has received the order
+                        information and will proceed with fulfillment.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer class="invoice-footer">
+
+            <strong>MOTTECK NETWORK</strong>
+
+            <p>
+                Thank you for using MOTTECK.
+            </p>
+
+            <small>
+                This invoice confirms payment received by MOTTECK
+                for the order shown above.
+            </small>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script>
+
+function downloadInvoice() {
+
+    const invoice = document.querySelector(".invoice-container");
+
+    const originalTitle = document.title;
+
+    document.title = "{{ invoice.invoice_number }}";
+
+    window.print();
+
+    setTimeout(() => {
+        document.title = originalTitle;
+    }, 1000);
+}
+
+</script>
+
+</body>
+</html>

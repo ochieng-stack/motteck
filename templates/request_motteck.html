@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Request MOTTECK | MOTTECK Network</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='request_motteck.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<header class="request-header">
+
+    <div class="brand">
+        <strong>MOTTECK</strong>
+        <span>Network</span>
+    </div>
+
+    <a
+        href="{{ url_for('single_post', post_id=post.id) }}"
+        class="back-button">
+
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Listing
+
+    </a>
+
+</header>
+
+
+<main class="request-container">
+
+    <div class="page-heading">
+
+        <div class="heading-icon">
+            <i class="fa-solid fa-handshake"></i>
+        </div>
+
+        <h1>Request MOTTECK</h1>
+
+        <p>
+            Can't find exactly what you need? Tell MOTTECK what you are
+            looking for and we'll help connect you with the right option.
+        </p>
+
+    </div>
+
+
+    <!-- LISTING INFORMATION -->
+
+    <section class="request-card listing-card">
+
+        <div class="card-heading">
+
+            <i class="fa-solid fa-list"></i>
+
+            <div>
+                <h2>Request From This Listing</h2>
+                <span>Listing #{{ post.id }}</span>
+            </div>
+
+        </div>
+
+
+        <div class="listing-details">
+
+            {% if post.images %}
+
+                <img
+                    src="{{ post.images[0] }}"
+                    alt="{{ post.title }}">
+
+            {% endif %}
+
+            <div>
+
+                <span class="listing-label">
+                    LISTING
+                </span>
+
+                <h3>{{ post.title }}</h3>
+
+                {% if post.business_name %}
+                    <p>
+                        <i class="fa-solid fa-store"></i>
+                        {{ post.business_name }}
+                    </p>
+                {% elif post.full_name %}
+                    <p>
+                        <i class="fa-solid fa-user"></i>
+                        {{ post.full_name }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <form
+        method="POST"
+        action="{{ url_for('request_motteck', post_id=post.id) }}">
+
+
+        <!-- CUSTOMER -->
+
+        <section class="request-card">
+
+            <div class="card-heading">
+
+                <i class="fa-solid fa-user"></i>
+
+                <div>
+                    <h2>Your Information</h2>
+                    <span>How MOTTECK can reach you</span>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        name="customer_name"
+                        value="{{ session.get('full_name', '') }}"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Phone Number</label>
+
+                    <input
+                        type="tel"
+                        name="customer_phone"
+                        placeholder="07XXXXXXXX"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Email Address</label>
+
+                    <input
+                        type="email"
+                        name="customer_email"
+                        value="{{ session.get('email', '') }}"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Town / City</label>
+
+                    <input
+                        type="text"
+                        name="town"
+                        placeholder="e.g. Nairobi"
+                        required>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REQUEST -->
+
+        <section class="request-card">
+
+            <div class="card-heading">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <div>
+                    <h2>What Do You Need?</h2>
+                    <span>Give us enough information to find the right option</span>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Your Request</label>
+
+                <textarea
+                    name="request_details"
+                    rows="7"
+                    placeholder="Describe exactly what you are looking for. Include make, model, year, specifications, quantity, preferred condition, budget or any other important details."
+                    required></textarea>
+
+            </div>
+
+
+            <div class="help-box">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <p>
+                    The more information you provide, the easier it is for
+                    MOTTECK to find a suitable option for you.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- DELIVERY -->
+
+        <section class="request-card">
+
+            <div class="card-heading">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <div>
+                    <h2>Preferred Location</h2>
+                    <span>Where should we look?</span>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Preferred Location / Delivery Area</label>
+
+                <input
+                    type="text"
+                    name="preferred_location"
+                    placeholder="e.g. Nairobi, Mombasa, Kisumu">
+
+            </div>
+
+        </section>
+
+
+        <!-- SUBMIT -->
+
+        <div class="request-actions">
+
+            <a
+                href="{{ url_for('single_post', post_id=post.id) }}"
+                class="cancel-button">
+
+                Cancel
+
+            </a>
+
+            <button
+                type="submit"
+                class="submit-request">
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+                Send Request to MOTTECK
+
+            </button>
+
+        </div>
+
+    </form>
+
+</main>
+
+</body>
+</html>

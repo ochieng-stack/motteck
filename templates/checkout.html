@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout | MOTTECK</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='checkout.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+
+<body>
+
+<header class="checkout-header">
+
+    <div class="header-left">
+        <a href="{{ url_for('single_post', post_id=post.id) }}"
+           class="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <div>
+            <h1>MOTTECK</h1>
+            <span>Secure Checkout</span>
+        </div>
+    </div>
+
+    <div class="secure-label">
+        <i class="fa-solid fa-shield-halved"></i>
+        Secure Checkout
+    </div>
+
+</header>
+
+
+<main class="checkout-container">
+
+    <!-- PRODUCT SUMMARY -->
+    <section class="checkout-card product-summary">
+
+        <div class="section-title">
+            <i class="fa-solid fa-box"></i>
+            <h2>Your Order</h2>
+        </div>
+
+        <div class="product-box">
+
+            {% if post.images %}
+                <img src="{{ post.images[0] }}"
+                     alt="{{ post.title }}">
+            {% endif %}
+
+            <div class="product-information">
+
+                <span class="product-type">
+                    {% if post.category == 'spare_part' %}
+                        SPARE PART
+                    {% elif post.category == 'Accessorie' %}
+                        ACCESSORY
+                    {% else %}
+                        PRODUCT
+                    {% endif %}
+                </span>
+
+                <h3>{{ post.title }}</h3>
+
+                {% if post.description %}
+                    <p>{{ post.description[:150] }}{% if post.description|length > 150 %}...{% endif %}</p>
+                {% endif %}
+
+                <strong>
+                    KSh {{ "{:,.2f}".format(post.price or 0) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <form method="POST"
+          action="{{ url_for('checkout', post_id=post.id) }}"
+          id="checkoutForm">
+
+
+        <!-- QUANTITY -->
+        <section class="checkout-card">
+
+            <div class="section-title">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <h2>Order Quantity</h2>
+            </div>
+
+            <div class="quantity-area">
+
+                <label for="quantity">
+                    Quantity
+                </label>
+
+                <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    value="1"
+                    required>
+
+            </div>
+
+        </section>
+
+
+        <!-- SPARE PART INFORMATION -->
+        {% if post.category == 'spare_part' %}
+
+        <section class="checkout-card">
+
+            <div class="section-title">
+                <i class="fa-solid fa-gears"></i>
+                <h2>Spare Part Information</h2>
+            </div>
+
+            <p class="section-description">
+                Provide the vehicle and part details so the business can
+                confirm that the spare part is correct for your vehicle.
+            </p>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Part Name</label>
+                    <input
+                        type="text"
+                        name="part_name"
+                        value="{{ post.product_name or post.title }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Part Number</label>
+                    <input
+                        type="text"
+                        name="part_number"
+                        value="{{ post.part_number or '' }}"
+                        placeholder="Enter part number">
+                </div>
+
+                <div class="form-group">
+                    <label>Vehicle Make</label>
+                    <input
+                        type="text"
+                        name="vehicle_make"
+                        placeholder="e.g. Toyota"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Vehicle Model</label>
+                    <input
+                        type="text"
+                        name="vehicle_model"
+                        placeholder="e.g. Corolla"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Vehicle Year</label>
+                    <input
+                        type="number"
+                        name="vehicle_year"
+                        placeholder="e.g. 2018">
+                </div>
+
+                <div class="form-group">
+                    <label>Engine / Engine Size</label>
+                    <input
+                        type="text"
+                        name="engine"
+                        placeholder="e.g. 1.8L Petrol">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Compatibility / Specifications</label>
+
+                    <textarea
+                        name="specifications"
+                        rows="4"
+                        placeholder="Tell the seller anything important about compatibility, model, trim, specifications, etc."></textarea>
+                </div>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- ACCESSORY INFORMATION -->
+        {% if post.category == 'Accessorie' %}
+
+        <section class="checkout-card">
+
+            <div class="section-title">
+                <i class="fa-solid fa-car-side"></i>
+                <h2>Accessory Information</h2>
+            </div>
+
+            <p class="section-description">
+                Provide the relevant vehicle or accessory specifications
+                so the business can prepare the correct product.
+            </p>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Accessory Name</label>
+                    <input
+                        type="text"
+                        name="accessory_name"
+                        value="{{ post.product_name or post.title }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Brand</label>
+                    <input
+                        type="text"
+                        name="accessory_brand"
+                        value="{{ post.brand or '' }}"
+                        placeholder="Accessory brand">
+                </div>
+
+                <div class="form-group">
+                    <label>Vehicle Make</label>
+                    <input
+                        type="text"
+                        name="vehicle_make"
+                        placeholder="e.g. Toyota">
+                </div>
+
+                <div class="form-group">
+                    <label>Vehicle Model</label>
+                    <input
+                        type="text"
+                        name="vehicle_model"
+                        placeholder="e.g. RAV4">
+                </div>
+
+                <div class="form-group">
+                    <label>Vehicle Year</label>
+                    <input
+                        type="number"
+                        name="vehicle_year"
+                        placeholder="e.g. 2021">
+                </div>
+
+                <div class="form-group">
+                    <label>Size / Variant</label>
+                    <input
+                        type="text"
+                        name="variant"
+                        placeholder="e.g. Medium / Black / 18 inch">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Additional Specifications</label>
+
+                    <textarea
+                        name="specifications"
+                        rows="4"
+                        placeholder="Enter any size, colour, model, fitment or other specifications."></textarea>
+                </div>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- CUSTOMER INFORMATION -->
+        <section class="checkout-card">
+
+            <div class="section-title">
+                <i class="fa-solid fa-user"></i>
+                <h2>Customer Information</h2>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        name="customer_name"
+                        value="{{ session.get('full_name', '') }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+
+                    <input
+                        type="tel"
+                        name="customer_phone"
+                        placeholder="07XXXXXXXX"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+
+                    <input
+                        type="email"
+                        name="customer_email"
+                        value="{{ session.get('email', '') }}"
+                        required>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DELIVERY -->
+        <section class="checkout-card">
+
+            <div class="section-title">
+                <i class="fa-solid fa-truck"></i>
+                <h2>Delivery Information</h2>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Town / City</label>
+
+                    <input
+                        type="text"
+                        name="delivery_town"
+                        placeholder="e.g. Nairobi"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Delivery Area</label>
+
+                    <input
+                        type="text"
+                        name="delivery_area"
+                        placeholder="Area / Estate / Location"
+                        required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Delivery Address / Instructions</label>
+
+                    <textarea
+                        name="delivery_address"
+                        rows="3"
+                        placeholder="Give any additional delivery instructions"></textarea>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PAYMENT -->
+        <section class="checkout-card payment-section">
+
+            <div class="section-title">
+                <i class="fa-solid fa-credit-card"></i>
+                <h2>Payment</h2>
+            </div>
+
+            <div class="payment-notice">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <div>
+                    <strong>Payment Protection</strong>
+
+                    <p>
+                        Your payment is made to MOTTECK. Payment is held
+                        pending fulfillment of your order under MOTTECK's
+                        payment terms. The seller will receive the order
+                        details and fulfill the purchase after payment
+                        confirmation.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="payment-method">
+
+                <label>
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="mpesa"
+                        checked>
+
+                    <span>
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        M-Pesa
+                    </span>
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDER TOTAL -->
+        <section class="checkout-card order-total">
+
+            <div class="total-row">
+                <span>Unit Price</span>
+
+                <strong>
+                    KSh {{ "{:,.2f}".format(post.price or 0) }}
+                </strong>
+            </div>
+
+            <div class="total-row">
+                <span>Quantity</span>
+
+                <strong id="quantityDisplay">
+                    1
+                </strong>
+            </div>
+
+            <div class="total-divider"></div>
+
+            <div class="grand-total">
+
+                <span>Total</span>
+
+                <strong>
+                    KSh
+                    <span id="totalAmount">
+                        {{ "{:,.2f}".format(post.price or 0) }}
+                    </span>
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- ACTIONS -->
+        <div class="checkout-actions">
+
+            <a
+                href="{{ url_for('single_post', post_id=post.id) }}"
+                class="back-shopping">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Shopping
+
+            </a>
+
+            <button
+                type="submit"
+                class="pay-button">
+
+                <i class="fa-solid fa-lock"></i>
+                Continue to Payment
+
+            </button>
+
+        </div>
+
+    </form>
+
+</main>
+
+
+<script>
+const quantityInput = document.getElementById("quantity");
+const quantityDisplay = document.getElementById("quantityDisplay");
+const totalAmount = document.getElementById("totalAmount");
+
+const priceText = "{{ post.price|default(0, true) }}";
+const unitPrice = parseFloat(
+    priceText.replace(/[^0-9.]/g, "")
+) || 0;
+
+function updateTotal() {
+
+    let quantity = parseInt(quantityInput.value) || 1;
+
+    if (quantity < 1) {
+        quantity = 1;
+        quantityInput.value = 1;
+    }
+
+    quantityDisplay.textContent = quantity;
+
+    const total = unitPrice * quantity;
+
+    totalAmount.textContent = total.toLocaleString(
+        "en-KE",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+}
+
+quantityInput.addEventListener("input", updateTotal);
+
+updateTotal();
+</script>
+
+</body>
+</html>
