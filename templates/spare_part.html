@@ -848,12 +848,15 @@ function getCategoryLabel(value) {
         categoryValue === "accessorie" ||
         categoryValue === "accessorie"
     ) {
-        return "accessorie";
+        return "Accessorie";
     }
 
     if (
         categoryValue === "spare_part" ||
-        categoryValue === "spare_part"
+        categoryValue === "spare_parts" ||
+        categoryValue === "sparepart" ||
+        categoryValue === "spareparts"
+
     ) {
         return "spare_part";
     }
@@ -1472,7 +1475,7 @@ function createPostCard(post) {
         <div class="mc-part-buy-actions">
 
             <a
-                href="/post/${encodeURIComponent(postId)}?buy=1"
+                href="/post/${encodeURIComponent(postId)}?buy=now"
                 class="mc-part-action mc-part-buy-now"
             >
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -2122,29 +2125,25 @@ async function loadCategoryPosts() {
                     data.data ||
                     []
                 );
+                
 
+                const categoryPosts =
+                    posts.filter(post => {
 
-        const categoryPosts =
-            posts.filter(
-                post => {
-                    
-                    const categoryPosts = posts.filter(post => {
-                        const postCategory = String(post.category || "")
-                        .trim()
-                        .toLowerCase()
-                        .replace(/[\s-]+/g, "_");
-                        
+                        const postCategory =
+                            String(post.category || "")
+                                 .trim()
+                                 .toLowerCase()
+                                 .replace(/[\s-]+/g, "_");
+
                         return [
                             "spare_part",
                             "spare_parts",
                             "sparepart",
                             "spareparts"
                         ].includes(postCategory);
-                    });
 
-
-                }
-            );
+                 });
 
 
         motteckCategoryPosts = categoryPosts;

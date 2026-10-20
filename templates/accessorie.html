@@ -819,7 +819,9 @@ function getCategoryLabel(value) {
 
     const categoryValue =
         String(value || "")
-            .toLowerCase();
+            .trim()
+            .toLowerCase()
+            .replace(/[\s-]+/g, "_");
 
     if (
         categoryValue === "car" ||
@@ -830,6 +832,7 @@ function getCategoryLabel(value) {
 
     if (
         categoryValue === "bike" ||
+        categoryValue === "bikes" ||
         categoryValue === "motobike" ||
         categoryValue === "motorbike" ||
         categoryValue === "motorbikes"
@@ -839,28 +842,33 @@ function getCategoryLabel(value) {
 
     if (
         categoryValue === "truck" ||
-        categoryValue === "trucks"
+        categoryValue === "trucks" ||
+        categoryValue === "bus"
     ) {
         return "Trucks";
     }
 
     if (
         categoryValue === "accessorie" ||
-        categoryValue === "accessorie"
+        categoryValue === "accessories" ||
+        categoryValue === "accessory"
     ) {
-        return "accessorie";
+        return "Accessorie";
     }
 
     if (
         categoryValue === "spare_part" ||
-        categoryValue === "spare_part"
+        categoryValue === "spare_parts" ||
+        categoryValue === "sparepart" ||
+        categoryValue === "spareparts"
     ) {
-        return "spare_part";
+        return "Spare Part";
     }
 
     return value || "";
 
 }
+
 /* =========================================================
    CREATE AUTHORHEADER
 ========================================================= */
@@ -1953,30 +1961,24 @@ async function loadCategoryPosts() {
                     data.data ||
                     []
                 );
-
-
+               
+                
         const categoryPosts =
-            posts.filter(
-                post => {
-                    
-                    const categoryPosts = posts.filter(post => {
-                        const postCategory = String(
-                            post.category || ""
-                        )
-                        .toLowerCase()
+            posts.filter(post => {
+
+                const postCategory =
+                    String(post.category || "")
                         .trim()
+                        .toLowerCase()
                         .replace(/[\s-]+/g, "_");
-                        
-                        return [
-                            "accessorie",
-                            "accessories",
-                            "accessory"
-                        ].includes(postCategory);
-                    });
 
+                return [
+                    "accessorie",
+                    "accessories",
+                    "accessory"
+                ].includes(postCategory);
 
-                }
-            );
+            });
 
 
         motteckCategoryPosts = categoryPosts;

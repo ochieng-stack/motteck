@@ -1448,7 +1448,7 @@ function createPostCard(post) {
         </div>
     `;
 
-    const saleActions = salePost && postId ? `
+    const saleActions = postId ? `
         <div class="mc-truck-sale-actions">
             <a
                 href="/post/${encodeURIComponent(postId)}?contact=seller"

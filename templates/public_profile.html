@@ -464,39 +464,63 @@
                             <h3>
                                 {{ post.title }}
                             </h3>
-
-
-
-                            <!-- ================= ACTIONS ================= -->
-
+                            
+                            <!-- ================= CATEGORY-BASED ACTIONS ================= -->
+                             
                             <div class="public-profile-card-actions">
+                                
+                                {% set post_category = (post.category or '')|lower|trim|replace('-', '_')|replace(' ', '_') %}
+                                
+                                <!-- CARS / BIKES / TRUCKS: CONTACT SELLER + REQUEST MOTTECK -->
+                                 
+                                {% if post_category in ['car', 'cars', 'bike', 'bikes', 'motobike', 'motorbike', 'motorbikes', 'truck', 'trucks', 'bus', 'buses'] %}
 
+                                     <a
+                                        href="{{ url_for('single_post', post_id=post.id, contact='seller') }}"
+                                        class="public-profile-view-btn"
+                                     >
+                                        <i class="fa-solid fa-envelope"></i>
+                                        {% if post.account_type == 'business' %}
+                                        
+                                        Contact Business
+                                        
+                                        {% else %}
 
-                                <!-- VIEW POST -->
+                                        Contact Seller
+                                        {% endif %}
+                                     </a>
 
-                                <a
-                                    href="{{ url_for('single_post', post_id=post.id) }}"
-                                    class="public-profile-view-btn"
-                                >
-                                    View Post
-                                </a>
+                                     <a
+                                        href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+                                        class="public-profile-request-btn"
+                                     >
+                                        <i class="fa-solid fa-handshake"></i>
+                                        Request MOTTECK
+                                     </a>
 
+                                  <!-- ACCESSORIES / SPARE PARTS: BUY NOW + REQUEST MOTTECK -->
 
+                                 {% elif post_category in ['accessorie', 'accessories', 'accessory', 'spare_part', 'spare_parts', 'sparepart', 'spareparts'] %}
 
-                                <!-- REQUEST MOTTECK -->
+                                    <a
+                                       href="{{ url_for('single_post', post_id=post.id, buy='now') }}"
+                                       class="public-profile-view-btn"
+                                    >
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                        Buy Now
+                                    </a>
 
-                                <a
-                                    href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
-                                    class="public-profile-request-btn"
-                                >
-                                    Request MOTTECK
-                                </a>
+                                    <a
+                                       href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+                                       class="public-profile-request-btn"
+                                    >
+                                      <i class="fa-solid fa-handshake"></i>
+                                      Request MOTTECK
+                                    </a>
 
+                                {% endif %}
 
-                            </div>
-
-
-                        </div>
+                    </div>
 
 
                     </article>

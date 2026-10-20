@@ -1391,7 +1391,7 @@ function createPostCard(post) {
 
     let actionButtons = "";
 
-    if (isVehicle && isSale && safeId) {
+    if (isVehicle && safeId) {
 
         actionButtons = `
             <div class="mc-contact-actions">
@@ -1415,7 +1415,13 @@ function createPostCard(post) {
             </div>
         `;
 
-    } else if (isProduct && isSale && safeId) {
+    } 
+
+    /* -------------------------------------------------------
+    SPARE PART / ACCESSORY ACTIONS
+    ----------------------------------------------------------*/
+
+    else if (isProduct && safeId) {
 
         actionButtons = `
             <div class="mc-contact-actions">
