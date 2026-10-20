@@ -1,0 +1,273 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #090909;
+    color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
+
+.request-header {
+    height: 70px;
+    background: #111;
+    border-bottom: 1px solid #292929;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand strong {
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.brand span {
+    color: #888;
+    font-size: 11px;
+}
+
+.back-button {
+    text-decoration: none;
+    color: #bbb;
+    border: 1px solid #333;
+    background: #181818;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.back-button:hover {
+    color: white;
+    background: #222;
+}
+
+.request-container {
+    width: min(900px, 92%);
+    margin: 45px auto 70px;
+}
+
+.page-heading {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.heading-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #181818;
+    border: 1px solid #333;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading-icon i {
+    font-size: 25px;
+}
+
+.page-heading h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.page-heading p {
+    max-width: 620px;
+    margin: auto;
+    color: #999;
+    font-size: 14px;
+}
+
+.request-card {
+    background: #121212;
+    border: 1px solid #292929;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.card-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 24px;
+}
+
+.card-heading > i {
+    font-size: 19px;
+    color: #aaa;
+}
+
+.card-heading h2 {
+    font-size: 18px;
+}
+
+.card-heading span {
+    display: block;
+    color: #777;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.listing-details {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.listing-details img {
+    width: 125px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 9px;
+}
+
+.listing-label {
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.listing-details h3 {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+.listing-details p {
+    color: #999;
+    font-size: 13px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #bbb;
+    font-size: 13px;
+}
+
+.form-group input,
+.form-group textarea {
+    background: #0b0b0b;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 8px;
+    padding: 13px;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #666;
+}
+
+.help-box {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 15px;
+    border-radius: 9px;
+    background: #181818;
+    border: 1px solid #2d2d2d;
+}
+
+.help-box i {
+    color: #aaa;
+}
+
+.help-box p {
+    color: #999;
+    font-size: 13px;
+}
+
+.request-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancel-button,
+.submit-request {
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cancel-button {
+    color: #aaa;
+    background: #151515;
+    border: 1px solid #333;
+}
+
+.submit-request {
+    border: none;
+    background: #f2f2f2;
+    color: #080808;
+    font-weight: bold;
+}
+
+.submit-request:hover {
+    background: #d5d5d5;
+}
+
+@media (max-width: 650px) {
+
+    .request-header {
+        padding: 0 4%;
+    }
+
+    .request-container {
+        width: 94%;
+        margin-top: 30px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .listing-details {
+        align-items: flex-start;
+    }
+
+    .listing-details img {
+        width: 95px;
+        height: 75px;
+    }
+
+    .request-actions {
+        flex-direction: column;
+    }
+
+    .cancel-button,
+    .submit-request {
+        text-align: center;
+        width: 100%;
+    }
+}
