@@ -1851,7 +1851,7 @@ body {
 
 .pagethree .brows {
     justify-content: flex-end;
-    text-align: right;
+    text-align: left;
     padding: 0 16px;
     margin: 18px 0 4px;
     font-size: 15px;
