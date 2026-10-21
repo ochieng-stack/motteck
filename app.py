@@ -3,16 +3,16 @@ import os
 import time
 import resend
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from email.message import EmailMessage
 from flask import flash
 from supabase import AuthApiError
 import uuid
 from urllib.parse import quote
+import boto3
 
-import cloudinary
-import cloudinary.uploader
+
 from supabase import create_client
 
 import bcrypt
@@ -30,13 +30,22 @@ app.secret_key = 'motteck_super_secret_key'
 load_dotenv()
 
 
-# ================= CLOUDINARY =================
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET")
-)
 
+
+# ================= CLOUDFLARE R2 =================
+R2_ACCOUNT_ID = os.environ.get("R2_ACCOUNT_ID")
+R2_ACCESS_KEY_ID = os.environ.get("R2_ACCESS_KEY_ID")
+R2_SECRET_ACCESS_KEY = os.environ.get("R2_SECRET_ACCESS_KEY")
+R2_BUCKET_NAME = os.environ.get("R2_BUCKET_NAME", "motteck-images")
+R2_ENDPOINT = os.environ.get("R2_ENDPOINT")
+
+r2_client = boto3.client(
+    "s3",
+    endpoint_url=R2_ENDPOINT,
+    aws_access_key_id=R2_ACCESS_KEY_ID,
+    aws_secret_access_key=R2_SECRET_ACCESS_KEY,
+    region_name="auto"
+)
 
 # ================= SUPABASE =================
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
@@ -1469,6 +1478,7 @@ def public_profile(user_id):
         return "Unable to load profile", 500
         
 # ================= PROFILE PHOTO UPLOAD =================
+
 @app.route("/upload-profile-picture", methods=["POST"])
 def upload_profile_picture():
 
@@ -1478,7 +1488,6 @@ def upload_profile_picture():
         return redirect(url_for("login_user"))
 
     user_id = session.get("user_id")
-
     profile_photo = request.files.get("profile_photo")
 
     # Make sure a file was selected
@@ -1487,13 +1496,7 @@ def upload_profile_picture():
         return redirect(url_for("profile"))
 
     # Allowed image extensions
-    allowed_extensions = {
-        "jpg",
-        "jpeg",
-        "png",
-        "webp"
-    }
-
+    allowed_extensions = {"jpg", "jpeg", "png", "webp"}
     filename = profile_photo.filename.lower()
 
     if "." not in filename:
@@ -1510,23 +1513,43 @@ def upload_profile_picture():
         return redirect(url_for("profile"))
 
     try:
+        # ================= CLOUDFLARE R2 UPLOAD =================
 
-        # ================= CLOUDINARY =================
+        profile_photo.seek(0)
 
-        upload_result = cloudinary.uploader.upload(
-            profile_photo,
-            folder="motteck/profiles",
-            resource_type="image"
+        profile_image_key = (
+            f"motteck/profiles/{uuid.uuid4().hex}.{extension}"
         )
 
-        profile_image_url = upload_result.get("secure_url")
+        content_type = (
+            profile_photo.mimetype or "image/jpeg"
+        )
 
-        if not profile_image_url:
+        r2_client.upload_fileobj(
+            profile_photo,
+            R2_BUCKET_NAME,
+            profile_image_key,
+            ExtraArgs={"ContentType": content_type}
+        )
+
+        # Build the publicly accessible image URL
+        public_base_url = os.environ.get(
+            "R2_PUBLIC_BASE_URL", ""
+        ).rstrip("/")
+
+        if not public_base_url:
+            app.logger.error(
+                "R2_PUBLIC_BASE_URL is missing from environment variables."
+            )
             flash(
-                "We couldn't upload your profile photo.",
+                "Photo storage is not fully configured. Please contact support.",
                 "error"
             )
             return redirect(url_for("profile"))
+
+        profile_image_url = (
+            f"{public_base_url}/{profile_image_key}"
+        )
 
         # ================= SAVE TO PROFILE =================
 
@@ -1541,17 +1564,15 @@ def upload_profile_picture():
         )
 
         if not update_response.data:
-
-            print(
-                "PROFILE PHOTO DATABASE UPDATE FAILED:",
-                update_response
+            app.logger.error(
+                "Profile photo database update returned no rows for user %s",
+                user_id
             )
 
             flash(
                 "Your photo uploaded but could not be saved to your profile.",
                 "error"
             )
-
             return redirect(url_for("profile"))
 
         flash(
@@ -1561,12 +1582,8 @@ def upload_profile_picture():
 
         return redirect(url_for("profile"))
 
-    except Exception as e:
-
-        print(
-            "PROFILE PHOTO UPLOAD ERROR:",
-            repr(e)
-        )
+    except Exception:
+        app.logger.exception("Cloudflare R2 profile photo upload failed")
 
         flash(
             "We couldn't update your profile photo. Please try again.",
@@ -1574,6 +1591,7 @@ def upload_profile_picture():
         )
 
         return redirect(url_for("profile"))
+
     
 # ================= USER SETTINGS =================
 @app.route("/settings")
@@ -2074,6 +2092,7 @@ def choose_account_type():
 
 # ================= SUBMIT POST =================
 
+
 @app.route("/submit-post", methods=["GET", "POST"])
 def submit_post():
 
@@ -2116,11 +2135,12 @@ def submit_post():
     description = request.form.get("description", "").strip()
 
     if not title or not category or not description:
-        flash("Please complete the title, category and description.", "error")
+        flash(
+            "Please complete the title, category and description.",
+            "error"
+        )
         return redirect(url_for("submit_post"))
 
-    # Read optional fields using common name variations.
-    # Empty values are stored as None where appropriate.
     price_raw = (
         request.form.get("price")
         or request.form.get("product_price")
@@ -2132,8 +2152,10 @@ def submit_post():
     if price_raw:
         try:
             price = float(price_raw)
+
             if price < 0:
                 raise ValueError("Negative price")
+
         except (ValueError, TypeError):
             flash("Please enter a valid price.", "error")
             return redirect(url_for("submit_post"))
@@ -2161,8 +2183,10 @@ def submit_post():
     if year_raw:
         try:
             year = int(year_raw)
+
             if year < 1886 or year > datetime.utcnow().year + 2:
                 raise ValueError("Invalid year")
+
         except (ValueError, TypeError):
             flash("Please enter a valid vehicle year.", "error")
             return redirect(url_for("submit_post"))
@@ -2175,13 +2199,16 @@ def submit_post():
                 .replace(",", "")
                 .strip()
             )
+
             if mileage < 0:
                 raise ValueError("Negative mileage")
+
         except (ValueError, TypeError):
             flash("Please enter a valid mileage.", "error")
             return redirect(url_for("submit_post"))
 
-    # Spare-part/accessory details.
+    # ---------------- PRODUCT DETAILS ----------------
+
     product_name = (
         request.form.get("product_name")
         or request.form.get("part_name")
@@ -2190,6 +2217,7 @@ def submit_post():
 
     brand = request.form.get("brand", "").strip()
     part_number = request.form.get("part_number", "").strip()
+
     compatibility = (
         request.form.get("compatibility")
         or request.form.get("fits")
@@ -2216,7 +2244,7 @@ def submit_post():
 
     if account_type == "individual":
 
-        # Individuals can submit only For Sale posts.
+        # Individuals can submit For Sale posts.
         post_type = "for_sale"
 
         sale_method = request.form.get(
@@ -2236,10 +2264,14 @@ def submit_post():
             "direct_sale",
             "sell_through_motteck"
         ):
-            flash("Please choose how you want to sell your item.", "error")
+            flash(
+                "Please choose how you want to sell your item.",
+                "error"
+            )
             return redirect(url_for("submit_post"))
 
         if sale_method == "direct_sale":
+
             if listing_duration not in (
                 "1_day", "1_week", "1_month"
             ):
@@ -2249,6 +2281,7 @@ def submit_post():
             commission_agreed = False
 
         elif sale_method == "sell_through_motteck":
+
             if not commission_agreed:
                 flash(
                     "Please agree to the MOTTECK sale terms.",
@@ -2267,20 +2300,28 @@ def submit_post():
             flash("Invalid business post type.", "error")
             return redirect(url_for("submit_post"))
 
-        # Business vehicle listings are normal listings;
-        # sponsored/featured promotions remain available.
         sale_method = ""
         listing_duration = ""
         commission_agreed = False
 
-        # Spare parts/accessories do not pay an upfront
-        # normal listing-duration fee.
-        if category in ("spare_part", "Accessorie", "accessorie"):
+        # Accessories and spare parts have no normal listing fee.
+        normalized_category = (
+            category.lower().strip().replace("-", "_").replace(" ", "_")
+        )
+
+        if normalized_category in (
+            "spare_part",
+            "spare_parts",
+            "accessorie",
+            "accessory",
+            "accessories"
+        ):
             if post_type == "normal":
                 promotion_duration = ""
                 promotion_price = None
 
         if post_type in ("sponsored", "featured"):
+
             promotion_duration = request.form.get(
                 "promotion_duration", ""
             ).strip().lower()
@@ -2288,12 +2329,15 @@ def submit_post():
             valid_durations = PROMOTION_PRICES[post_type]
 
             if promotion_duration not in valid_durations:
-                flash("Please choose a valid promotion duration.", "error")
+                flash(
+                    "Please choose a valid promotion duration.",
+                    "error"
+                )
                 return redirect(url_for("submit_post"))
 
             promotion_price = valid_durations[promotion_duration]
 
-    # ---------------- IMAGE UPLOAD ----------------
+    # ---------------- COLLECT IMAGE FILES ----------------
 
     image_files = [
         image for image in request.files.getlist("images")
@@ -2303,26 +2347,79 @@ def submit_post():
     max_images = 5 if account_type == "individual" else 10
 
     if len(image_files) > max_images:
-        flash(f"You can upload a maximum of {max_images} photos.", "error")
+        flash(
+            f"You can upload a maximum of {max_images} photos.",
+            "error"
+        )
         return redirect(url_for("submit_post"))
+
+    # ---------------- CLOUDFLARE R2 IMAGE UPLOAD ----------------
 
     image_urls = []
 
+    r2_public_base_url = os.environ.get(
+        "R2_PUBLIC_BASE_URL", ""
+    ).rstrip("/")
+
+    if image_files and not r2_public_base_url:
+        app.logger.error(
+            "R2_PUBLIC_BASE_URL is missing from Render environment variables."
+        )
+        flash(
+            "Image storage is not configured. Please try again later.",
+            "error"
+        )
+        return redirect(url_for("submit_post"))
+
     try:
+        allowed_extensions = {
+            ".jpg", ".jpeg", ".png", ".webp"
+        }
+
         for image_file in image_files:
-            upload_result = cloudinary.uploader.upload(
-                image_file,
-                folder="motteck/submissions",
-                resource_type="image"
+
+            filename = image_file.filename or ""
+            extension = os.path.splitext(filename)[1].lower()
+
+            if extension not in allowed_extensions:
+                raise ValueError(
+                    f"Unsupported image extension: {extension}"
+                )
+
+            image_key = (
+                f"motteck/submissions/{uuid.uuid4().hex}{extension}"
             )
 
-            image_url = upload_result.get("secure_url")
-            if image_url:
-                image_urls.append(image_url)
+            content_type = (
+                image_file.mimetype or "image/jpeg"
+            )
 
-    except Exception as e:
-        print("SUBMISSION IMAGE UPLOAD ERROR:", repr(e))
-        flash("We couldn't upload your images. Please try again.", "error")
+            image_file.seek(0)
+
+            r2_client.upload_fileobj(
+                image_file,
+                R2_BUCKET_NAME,
+                image_key,
+                ExtraArgs={
+                    "ContentType": content_type
+                }
+            )
+
+            image_url = (
+                f"{r2_public_base_url}/{image_key}"
+            )
+
+            image_urls.append(image_url)
+
+    except Exception:
+        app.logger.exception(
+            "CLOUDFLARE R2 SUBMISSION IMAGE UPLOAD ERROR"
+        )
+
+        flash(
+            "We couldn't upload your images. Please try again.",
+            "error"
+        )
         return redirect(url_for("submit_post"))
 
     # ---------------- SUBMISSION DATA ----------------
@@ -2343,8 +2440,6 @@ def submit_post():
         "status": "pending"
     }
 
-    # Additional fields are saved when the matching database
-    # columns exist. See the database note below.
     optional_fields = {
         "price": price,
         "vehicle_type": vehicle_type or None,
@@ -2360,6 +2455,8 @@ def submit_post():
 
     submission_data.update(optional_fields)
 
+    # ---------------- SAVE TO SUPABASE ----------------
+
     try:
         response = (
             supabase.table("post_submissions")
@@ -2368,10 +2465,16 @@ def submit_post():
         )
 
         if not response.data:
-            flash("Your submission could not be saved. Please try again.", "error")
+            flash(
+                "Your submission could not be saved. Please try again.",
+                "error"
+            )
             return redirect(url_for("submit_post"))
 
-        if account_type == "business" and post_type in ("sponsored", "featured"):
+        if (
+            account_type == "business"
+            and post_type in ("sponsored", "featured")
+        ):
             flash(
                 f"Your {post_type} submission is awaiting review. "
                 f"Promotion price: KSh {promotion_price:,}.",
@@ -2385,14 +2488,16 @@ def submit_post():
 
         return redirect(url_for("my_submissions"))
 
-    except Exception as e:
-        print("POST SUBMISSION ERROR:", repr(e))
+    except Exception:
+        app.logger.exception("POST SUBMISSION DATABASE ERROR")
+
         flash(
             "Your submission could not be saved. Check the server logs "
             "for the database error.",
             "error"
         )
         return redirect(url_for("submit_post"))
+
     
 # ================= MY SUBMISSIONS =================
 @app.route("/my-submissions")
@@ -2859,6 +2964,7 @@ def get_post(post_id):
         return jsonify({"error": str(e)}), 500
 
 # ================= HOME POSTS =================
+
 @app.route("/get_home_posts")
 def get_home_posts():
     try:
@@ -2873,32 +2979,26 @@ def get_home_posts():
 
         viewer_id = None
 
-        if (
-            session.get("user_logged_in")
-            and session.get("user_id")
-        ):
+        if session.get("user_logged_in") and session.get("user_id"):
             viewer_id = str(session["user_id"])
 
-        all_posts = enrich_posts_with_profiles(
-            all_posts,
-            viewer_id
-        )
+        all_posts = enrich_posts_with_profiles(all_posts, viewer_id)
 
         # ==========================================
-        # FEATURED (manual picks only, max 4)
+        # FEATURED POSTS - MANUAL PICKS, MAX 8
         # ==========================================
         featured = sorted(
             [p for p in all_posts if p.get("is_featured")],
-            key=lambda x: x.get("created_at", ""),
+            key=lambda p: p.get("created_at") or "",
             reverse=True
-        )[:4]
+        )[:8]
 
-        featured_ids = {p["id"] for p in featured}
+        featured_ids = {str(p["id"]) for p in featured}
 
         # ==========================================
-        # ACTIVE SPONSORED POSTS ONLY
+        # ACTIVE SPONSORED POSTS
         # ==========================================
-        sponsored = []
+        active_sponsored = []
 
         for post in all_posts:
             if not post.get("is_sponsored"):
@@ -2907,179 +3007,238 @@ def get_home_posts():
             expiry = post.get("sponsored_until")
 
             if not expiry:
-                sponsored.append(post)
+                active_sponsored.append(post)
                 continue
 
             try:
                 expiry_date = datetime.fromisoformat(
-                    expiry.replace("Z", "")
+                    expiry.replace("Z", "+00:00")
                 )
 
-                if expiry_date > datetime.utcnow():
-                    sponsored.append(post)
+                # Compare timezone-aware dates safely.
+                if expiry_date.tzinfo is None:
+                    expiry_date = expiry_date.replace(
+                        tzinfo=timezone.utc
+                    )
 
-            except Exception:
-                sponsored.append(post)
+                if expiry_date > datetime.now(timezone.utc):
+                    active_sponsored.append(post)
 
-        sponsored = sorted(
-            sponsored,
+            except (ValueError, TypeError, AttributeError):
+                # Preserve the existing behavior for invalid expiry data.
+                active_sponsored.append(post)
+
+        active_sponsored.sort(
             key=sponsored_score,
             reverse=True
         )
 
-        sponsored_ids = {p["id"] for p in sponsored}
-
-        # ==========================================
-        # ORGANIC POSTS ONLY
-        # (not featured, not sponsored)
-        # ==========================================
-        organic_posts = [
-            p for p in all_posts
-            if p["id"] not in featured_ids
-            and p["id"] not in sponsored_ids
+        # Don't show a featured post a second time in the feed.
+        sponsored = [
+            p for p in active_sponsored
+            if str(p["id"]) not in featured_ids
         ]
 
-        # ==========================================
-        # STRICT TRENDING SCORE
-        # only real engagement wins
-        # ==========================================
-        def trending_score(post):
-            views = post.get("views", 0) or 0
-            likes = post.get("likes", 0) or 0
-            clicks = post.get("clicks", 0) or 0
-
-            score = (
-                (views * 0.20) +
-                (likes * 5) +
-                (clicks * 3)
-            )
-
-            return score
-
-        # Only posts with enough activity can trend
-        trending_candidates = []
-
-        for post in organic_posts:
-            views = post.get("views", 0) or 0
-            likes = post.get("likes", 0) or 0
-            clicks = post.get("clicks", 0) or 0
-
-            score = trending_score(post)
-
-            if (
-                views >= 30
-                and (likes >= 2 or clicks >= 3)
-                and score >= 25
-            ):
-                trending_candidates.append(post)
-
-        trending = sorted(
-            trending_candidates,
-            key=trending_score,
-            reverse=True
-        )[:5]
-
-        trending_ids = {p["id"] for p in trending}
+        sponsored_ids = {
+            str(p["id"]) for p in active_sponsored
+        }
 
         # ==========================================
-        # RECENT POSTS
-        # remaining organic posts only
+        # ORGANIC POSTS - NEWEST FIRST
+        # No trending filter; every eligible organic
+        # post remains in the normal feed.
         # ==========================================
         recent = [
-            p for p in organic_posts
-            if p["id"] not in trending_ids
+            p for p in all_posts
+            if str(p["id"]) not in featured_ids
+            and str(p["id"]) not in sponsored_ids
         ]
 
         recent.sort(
-            key=lambda x: x.get("created_at", ""),
+            key=lambda p: p.get("created_at") or "",
             reverse=True
         )
 
         # ==========================================
-        # INSERT SPONSORED INTO RECENT FEED
-        # after every 3 posts
+        # MIX SPONSORED POSTS INTO THE MAIN FEED
+        # One sponsored post after every 3 organic
+        # posts, then append any remaining sponsors.
         # ==========================================
         mixed_recent = []
         sponsor_index = 0
 
-        for i, post in enumerate(recent):
+        for index, post in enumerate(recent):
             mixed_recent.append(post)
 
-            if (i + 1) % 3 == 0:
+            if (index + 1) % 3 == 0:
                 if sponsor_index < len(sponsored):
-                    mixed_recent.append(
-                        sponsored[sponsor_index]
-                    )
+                    mixed_recent.append(sponsored[sponsor_index])
                     sponsor_index += 1
 
-        # Add any remaining sponsored posts
         while sponsor_index < len(sponsored):
-            mixed_recent.append(
-                sponsored[sponsor_index]
-            )
+            mixed_recent.append(sponsored[sponsor_index])
             sponsor_index += 1
 
         return jsonify({
             "featured": featured,
-            "trending": trending,
             "recent": mixed_recent,
-            "sponsored": sponsored
+            "sponsored": sponsored,
+
+            # Temporary compatibility with existing homepage JS.
+            # We'll remove the old Trending section from the HTML/JS next.
+            "trending": []
         })
 
     except Exception as e:
         print("HOME POSTS ERROR:", repr(e))
 
         return jsonify({
-            "error": str(e)
+            "error": "Unable to load homepage posts",
+            "featured": [],
+            "recent": [],
+            "sponsored": [],
+            "trending": []
         }), 500
+
+# ================= ADD POST =================
 
 # ================= ADD POST =================
 @app.route('/add_post', methods=['POST'])
 def add_post():
 
-    category = request.form.get("category")
-    title = request.form.get("title")
-    image_file = request.files.get("image")
-    description = request.form.get("description")
+    import os
+    import requests
 
-    image_url = None
+    if not session.get("logged_in"):
+        return jsonify({
+            "success": False,
+            "error": "unauthorized"
+        }), 403
 
-    if image_file and image_file.filename:
-        upload_result = cloudinary.uploader.upload(image_file)
-        image_url = upload_result.get("secure_url")
+    try:
+        category = request.form.get("category")
+        title = request.form.get("title")
+        description = request.form.get("description")
 
-    is_sponsored = True if request.form.get("is_sponsored") else False
+        image_file = request.files.get("image")
+        image_url = None
 
-    sponsored_until = None
+        # ================= CLOUDFLARE IMAGES UPLOAD =================
+        if image_file and image_file.filename:
 
-    # default 30 days ad
-    if is_sponsored:
-        sponsored_until = (
-            datetime.utcnow() + timedelta(days=30)
-        ).isoformat()
+            cloudflare_account_id = os.getenv(
+                "CLOUDFLARE_ACCOUNT_ID"
+            )
+            cloudflare_api_token = os.getenv(
+                "CLOUDFLARE_IMAGES_API_TOKEN"
+            )
+            delivery_url = os.getenv(
+                "CLOUDFLARE_IMAGES_DELIVERY_URL"
+            )
 
-    new_post = {
-        "user_id": session.get("user_id"),
-        "category": category,
-        "title": title,
-        "image_url": image_url,
-        "description": description,
-        "likes": 0,
-        "views": 0,
-        "created_at": datetime.utcnow().isoformat(),
-        "is_featured": True if request.form.get("is_featured") else False,
-        "is_sponsored": is_sponsored,
-        "sponsored_until": sponsored_until,
-        "ad_clicks": 0,
-        "ad_views": 0,
-        "ad_earnings": 0
-    }
+            if not all([
+                cloudflare_account_id,
+                cloudflare_api_token,
+                delivery_url
+            ]):
+                return jsonify({
+                    "success": False,
+                    "error": "Cloudflare Images is not configured."
+                }), 500
 
-    response = supabase.table("posts").insert(new_post).execute()
+            upload_url = (
+                "https://api.cloudflare.com/client/v4/accounts/"
+                f"{cloudflare_account_id}/images/v1"
+            )
 
-    return jsonify({
-        "success": bool(response.data)
-    })
+            headers = {
+                "Authorization": f"Bearer {cloudflare_api_token}"
+            }
+
+            upload_response = requests.post(
+                upload_url,
+                headers=headers,
+                files={
+                    "file": (
+                        image_file.filename,
+                        image_file.stream,
+                        image_file.mimetype
+                    )
+                },
+                timeout=60
+            )
+
+            upload_response.raise_for_status()
+            upload_result = upload_response.json()
+
+            if not upload_result.get("success"):
+                app.logger.error(
+                    "Cloudflare upload failed: %s",
+                    upload_result.get("errors")
+                )
+
+                return jsonify({
+                    "success": False,
+                    "error": "Image upload failed."
+                }), 500
+
+            image_id = upload_result["result"]["id"]
+
+            image_url = (
+                f"{delivery_url.rstrip('/')}/{image_id}"
+            )
+
+        # ================= SPONSORED POST SETTINGS =================
+        is_sponsored = bool(
+            request.form.get("is_sponsored")
+        )
+
+        sponsored_until = None
+
+        # Default sponsored duration: 30 days
+        if is_sponsored:
+            sponsored_until = (
+                datetime.utcnow() + timedelta(days=30)
+            ).isoformat()
+
+        # ================= CREATE POST =================
+        new_post = {
+            "user_id": session.get("user_id"),
+            "category": category,
+            "title": title,
+            "image_url": image_url,
+            "description": description,
+            "likes": 0,
+            "views": 0,
+            "created_at": datetime.utcnow().isoformat(),
+            "is_featured": bool(
+                request.form.get("is_featured")
+            ),
+            "is_sponsored": is_sponsored,
+            "sponsored_until": sponsored_until,
+            "ad_clicks": 0,
+            "ad_views": 0,
+            "ad_earnings": 0
+        }
+
+        response = (
+            supabase.table("posts")
+            .insert(new_post)
+            .execute()
+        )
+
+        return jsonify({
+            "success": bool(response.data)
+        })
+
+    except Exception:
+        app.logger.exception("Error adding post")
+
+        return jsonify({
+            "success": False,
+            "error": "Unable to add post. Please try again."
+        }), 500
+
 
     
 # ================= ANALYTICS DASHBOARD DATA =================
@@ -3120,19 +3279,24 @@ def analytics():
         return jsonify({"error": str(e)}), 500
 
 # ================= EDIT POST =================
+
+# ================= EDIT POST =================
 @app.route('/edit_post/<int:post_id>', methods=['POST'])
 def edit_post(post_id):
 
     if not session.get("logged_in"):
-        return jsonify({"success": False, "error": "unauthorized"}), 403
+        return jsonify({
+            "success": False,
+            "error": "unauthorized"
+        }), 403
 
     try:
         title = request.form.get("title")
         description = request.form.get("description")
         category = request.form.get("category")
 
-        is_featured = True if request.form.get("is_featured") else False
-        is_sponsored = True if request.form.get("is_sponsored") else False
+        is_featured = bool(request.form.get("is_featured"))
+        is_sponsored = bool(request.form.get("is_sponsored"))
 
         image_file = request.files.get("image")
 
@@ -3144,20 +3308,94 @@ def edit_post(post_id):
             "is_sponsored": is_sponsored
         }
 
-        # optional image update
+        # Optional image update using Cloudflare Images
         if image_file and image_file.filename:
-            upload_result = cloudinary.uploader.upload(image_file)
-            update_data["image_url"] = upload_result.get("secure_url")
+
+            import os
+            import requests
+
+            cloudflare_account_id = os.getenv(
+                "CLOUDFLARE_ACCOUNT_ID"
+            )
+            cloudflare_api_token = os.getenv(
+                "CLOUDFLARE_IMAGES_API_TOKEN"
+            )
+
+            if not cloudflare_account_id or not cloudflare_api_token:
+                return jsonify({
+                    "success": False,
+                    "error": "Cloudflare Images is not configured."
+                }), 500
+
+            upload_url = (
+                f"https://api.cloudflare.com/client/v4/accounts/"
+                f"{cloudflare_account_id}/images/v1"
+            )
+
+            headers = {
+                "Authorization": f"Bearer {cloudflare_api_token}"
+            }
+
+            upload_response = requests.post(
+                upload_url,
+                headers=headers,
+                files={
+                    "file": (
+                        image_file.filename,
+                        image_file.stream,
+                        image_file.mimetype
+                    )
+                },
+                timeout=60
+            )
+
+            upload_response.raise_for_status()
+            upload_result = upload_response.json()
+
+            if not upload_result.get("success"):
+                return jsonify({
+                    "success": False,
+                    "error": "Cloudflare image upload failed."
+                }), 500
+
+            image_id = upload_result["result"]["id"]
+
+            # Configure this delivery URL using your Cloudflare
+            # Images delivery variant.
+            delivery_url = os.getenv(
+                "CLOUDFLARE_IMAGES_DELIVERY_URL"
+            )
+
+            if not delivery_url:
+                return jsonify({
+                    "success": False,
+                    "error": (
+                        "Set CLOUDFLARE_IMAGES_DELIVERY_URL "
+                        "in your environment variables."
+                    )
+                }), 500
+
+            update_data["image_url"] = (
+                f"{delivery_url.rstrip('/')}/{image_id}"
+            )
 
         supabase.table("posts") \
             .update(update_data) \
             .eq("id", post_id) \
             .execute()
 
-        return jsonify({"success": True})
+        return jsonify({
+            "success": True
+        })
 
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)})
+        app.logger.exception("Error editing post")
+
+        return jsonify({
+            "success": False,
+            "error": "Unable to update post. Please try again."
+        }), 500
+
 
 # =========================================================
 # SINGLE POST
