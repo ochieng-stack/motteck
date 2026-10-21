@@ -1108,6 +1108,9 @@ body {
     border-radius: 14px;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
     min-width: 0;
+    width: 100%;
+    height: fit-content;
+    align-self: start;
 }
 
 .mc-badges {
@@ -1149,7 +1152,7 @@ body {
     grid-template-columns: minmax(0, 1.65fr) minmax(75px, 0.75fr);
     gap: 5px;
     padding: 0 12px;
-    height: 230px;
+    height: 210px;
 }
 
 .mc-main-image,
@@ -1227,7 +1230,7 @@ body {
 /* Post information */
 
 .mc-post-content {
-    padding: 13px 14px 15px;
+    padding: 11px 12px 12px;
 }
 
 .mc-title-link {
