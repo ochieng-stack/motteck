@@ -1293,7 +1293,7 @@ body{
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(75px, 0.8fr);
     gap: 5px;
-    height: 260px;
+    height: 210px;
     margin: 12px 12px 0;
     overflow: hidden;
     border-radius: 10px;
@@ -1389,32 +1389,43 @@ body{
     overflow-wrap: anywhere;
 }
 
+
+/* VEHICLE DETAILS — COMPACT HOMEPAGE-STYLE PILLS */
+
 .mc-car-details {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 9px 12px;
-    margin-bottom: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 12px;
 }
 
 .mc-car-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
     min-width: 0;
+    max-width: 100%;
+    padding: 6px 9px;
+    background: #f1f3f5;
+    border: 1px solid #e7e9ec;
+    border-radius: 7px;
 }
 
 .mc-detail-label {
-    color: #737373;
+    color: #666;
     font-size: 11px;
     font-weight: 600;
 }
 
 .mc-detail-value {
     color: #252525;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     overflow-wrap: anywhere;
 }
+
 
 .mc-car-price {
     margin: 12px 0;
@@ -1507,26 +1518,28 @@ body{
 }
 
 .mc-car-sale-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 9px;
+    display:flex;
+    align-items: stretch;
+    gap: 8px;
     margin-top: 10px;
+    flex-wrap: nowrap;
 }
 
 .mc-car-button {
-    display: flex;
+    display: inline-flex;
+    flex: 1 1 0;
     align-items: center;
     justify-content: center;
-    gap: 7px;
+    gap: 6px;
     min-width: 0;
-    padding: 12px 9px;
-    border: 0;
-    border-radius: 7px;
-    background: #111;
-    color: #fff;
+    padding: 10px 8px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #222;
     font-size: 12px;
-    font-weight: 800;
-    line-height: 1.35;
+    font-weight: 700;
+    line-height: 1.3;
     text-align: center;
     text-decoration: none;
     overflow-wrap: anywhere;
@@ -1540,14 +1553,14 @@ body{
 }
 
 .mc-request-button {
-    background: #1746a2;
-    color: #fff;
+    background: #f1f3f5;
+    color: #222;
 }
 
 /* Responsive card gallery */
 @media (max-width: 600px) {
     .mc-car-gallery {
-        height: 220px;
+        height: 190px;
         grid-template-columns: minmax(0, 1.7fr) minmax(65px, 0.8fr);
         margin: 10px 10px 0;
     }
