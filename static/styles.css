@@ -1843,3 +1843,247 @@ body {
         font-size: 11px;
     }
 }
+
+
+/* =========================================================
+   MOTTECK HOMEPAGE LAYOUT - FINAL OVERRIDES
+========================================================= */
+
+.pagethree .brows {
+    justify-content: flex-end;
+    text-align: right;
+    padding: 0 16px;
+    margin: 18px 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #303030;
+}
+
+/* Recent feed: four columns on desktop */
+#recent-posts.post-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+    padding: 12px 16px 22px;
+}
+
+#recent-posts .mc-post-card {
+    width: 100%;
+    min-width: 0;
+    height: fit-content;
+    align-self: start;
+}
+
+/* Compact main feed cards */
+#recent-posts .mc-gallery {
+    height: 155px;
+    grid-template-columns: minmax(0, 1.65fr) minmax(52px, .75fr);
+    gap: 4px;
+    padding: 0 9px;
+}
+
+#recent-posts .mc-post-card .post-author-header {
+    padding: 9px 10px 8px;
+    gap: 6px;
+}
+
+#recent-posts .post-author-avatar-link,
+#recent-posts .post-author-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    min-height: 34px;
+    max-width: 34px;
+    max-height: 34px;
+}
+
+#recent-posts .post-author-name {
+    font-size: 12px;
+}
+
+#recent-posts .follow-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+}
+
+#recent-posts .mc-badges {
+    padding: 7px 9px 0;
+}
+
+#recent-posts .mc-badge {
+    padding: 4px 6px;
+    font-size: 9px;
+}
+
+#recent-posts .mc-post-content {
+    padding: 9px 10px 10px;
+}
+
+#recent-posts .mc-post-card .mc-title {
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+}
+
+#recent-posts .mc-details {
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+#recent-posts .mc-detail {
+    padding: 5px 6px;
+}
+
+#recent-posts .mc-detail-label {
+    font-size: 9px;
+}
+
+#recent-posts .mc-detail strong {
+    font-size: 10px;
+}
+
+#recent-posts .mc-price {
+    font-size: 18px;
+    margin: 3px 0 8px;
+}
+
+#recent-posts .mc-description {
+    margin-bottom: 8px;
+}
+
+#recent-posts .mc-description-text {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#recent-posts .mc-post-actions {
+    gap: 5px;
+    padding: 7px 0;
+    margin-bottom: 8px;
+}
+
+#recent-posts .mc-post-actions .post-action-btn {
+    font-size: 11px;
+}
+
+#recent-posts .mc-contact-actions {
+    gap: 5px;
+}
+
+#recent-posts .mc-button {
+    min-height: 36px;
+    padding: 7px 5px;
+    font-size: 10px;
+    gap: 4px;
+}
+
+/* Featured carousel: three cards visible on desktop */
+#featured-posts.post-container {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 12px 16px 18px;
+    scrollbar-width: none;
+}
+
+#featured-posts.post-container::-webkit-scrollbar {
+    display: none;
+}
+
+#featured-posts .mc-post-card {
+    flex: 0 0 calc((100% - 28px) / 3);
+    min-width: 0;
+    scroll-snap-align: start;
+}
+
+/* Medium desktop/tablet */
+@media (max-width: 1100px) and (min-width: 769px) {
+    #recent-posts.post-container {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+
+    #featured-posts .mc-post-card {
+        flex-basis: calc((100% - 24px) / 3);
+    }
+}
+
+/* Mobile: one full-width listing per row */
+@media (max-width: 768px) {
+    #recent-posts.post-container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        padding: 10px 12px 20px;
+    }
+
+    #recent-posts .mc-gallery {
+        height: 180px;
+        grid-template-columns: minmax(0, 1.65fr) minmax(65px, .75fr);
+        padding: 0 10px;
+    }
+
+    #recent-posts .mc-post-card .post-author-header {
+        padding: 10px 12px 8px;
+    }
+
+    #recent-posts .post-author-avatar-link,
+    #recent-posts .post-author-avatar {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px;
+        min-height: 38px;
+        max-width: 38px;
+        max-height: 38px;
+    }
+
+    #recent-posts .post-author-name {
+        font-size: 13px;
+    }
+
+    #recent-posts .mc-post-content {
+        padding: 10px 12px 12px;
+    }
+
+    #recent-posts .mc-post-card .mc-title {
+        font-size: 16px;
+    }
+
+    #recent-posts .mc-detail strong {
+        font-size: 11px;
+    }
+
+    #recent-posts .mc-price {
+        font-size: 20px;
+    }
+
+    #recent-posts .mc-description-text {
+        font-size: 13px;
+    }
+
+    #recent-posts .mc-button {
+        min-height: 40px;
+        font-size: 11px;
+        padding: 8px 6px;
+    }
+
+    /* One featured card visible at a time on mobile */
+    #featured-posts.post-container {
+        gap: 12px;
+        padding: 10px 12px 16px;
+    }
+
+    #featured-posts .mc-post-card {
+        flex: 0 0 100%;
+    }
+
+    .pagethree .brows {
+        padding: 0 12px;
+        margin: 16px 0 4px;
+    }
+}
