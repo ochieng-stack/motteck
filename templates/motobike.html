@@ -2001,62 +2001,31 @@ async function copyPostLink(url) {
 
 async function loadCategoryPosts() {
 
-
-    const saved =
-        localStorage.getItem(
-            CACHE_KEY
-        );
-
-
-    const savedTime =
-        localStorage.getItem(
-            CACHE_TIME_KEY
-        );
-
+    const saved = localStorage.getItem(CACHE_KEY);
+    const savedTime = localStorage.getItem(CACHE_TIME_KEY);
 
     /*
        Show cached posts first.
     */
 
-    if (
-        saved &&
-        savedTime
-    ) {
+    if (saved && savedTime) {
 
+        const age = Date.now() - parseInt(savedTime, 10);
 
-        const age =
-            Date.now() -
-            parseInt(savedTime);
-
-
-        if (
-            age <
-            CACHE_MINUTES *
-            60 *
-            1000
-        ) {
-
+        if (age < CACHE_MINUTES * 60 * 1000) {
 
             try {
-
                 const cachedPosts = JSON.parse(saved);
+
                 motteckCategoryPosts = cachedPosts;
                 renderPosts(cachedPosts);
 
             } catch (error) {
-
-                console.error(
-                    "Cache error:",
-                    error
-                );
-
+                console.error("Cache error:", error);
             }
 
         }
-
     }
-
-
 
     /*
        Get latest posts from database.
@@ -2064,109 +2033,80 @@ async function loadCategoryPosts() {
 
     try {
 
-
-        const response =
-            await fetch(
-                "/get_posts",
-                {
-                    credentials:
-                        "same-origin"
-                }
-            );
-
+        const response = await fetch("/get_posts", {
+            credentials: "same-origin"
+        });
 
         if (!response.ok) {
-
-            throw new Error(
-                "Failed to load posts"
-            );
-
+            throw new Error("Failed to load posts");
         }
 
+        const data = await response.json();
 
-        const data =
-            await response.json();
+        const posts = Array.isArray(data)
+            ? data
+            : (data.posts || data.data || []);
 
+        /*
+           Filter bike and motorbike posts.
+        */
 
-        const posts =
-            Array.isArray(data)
-                ? data
-                : (
-                    data.posts ||
-                    data.data ||
-                    []
-                );
+        const categoryPosts = posts.filter(post => {
 
+            const postCategory = String(post.category || "")
+                .trim()
+                .toLowerCase()
+                .replace(/[\s-]+/g, "_");
 
-        const categoryPosts =
-            posts.filter(
-                post => {
-                    
-                    const categoryPosts = posts.filter(post => {
-                        const postCategory = String(post.category || "")
-                        .trim()
-                        .toLowerCase()
-                        .replace(/[\s-]+/g, "_");
-                        
-                        return [
-                            "bike",
-                            "bikes",
-                            "motobike",
-                            "motobikes",
-                            "motorbike",
-                            "motorbikes",
-                            "motobike_bike"
-                        ].includes(postCategory);
-                    });
+            return [
+                "bike",
+                "bikes",
+                "motobike",
+                "motobikes",
+                "motorbike",
+                "motorbikes",
+                "motorbike_bike"
+            ].includes(postCategory);
 
-                }
-            );
+        });
 
+        /*
+           Update posts and display them.
+        */
 
         motteckCategoryPosts = categoryPosts;
+
         renderPosts(categoryPosts);
 
+        /*
+           Save the filtered posts to cache.
+        */
 
         localStorage.setItem(
             CACHE_KEY,
-            JSON.stringify(
-                categoryPosts
-            )
+            JSON.stringify(categoryPosts)
         );
-
 
         localStorage.setItem(
             CACHE_TIME_KEY,
-            Date.now()
+            Date.now().toString()
         );
-
 
     } catch (error) {
 
+        console.error("Category load error:", error);
 
-        console.error(
-            "Category load error:",
-            error
-        );
-
-
-        if (
-            !postContainer.innerHTML.trim()
-        ) {
+        if (!postContainer.innerHTML.trim()) {
 
             postContainer.innerHTML = `
-
                 <p style="
-                    grid-column:1/-1;
-                    text-align:center;
-                    padding:40px;
-                    color:#777;
+                    grid-column: 1 / -1;
+                    text-align: center;
+                    padding: 40px;
+                    color: #777;
                 ">
-
                     Unable to load posts right now.
-
                 </p>
-
             `;
 
         }
@@ -2174,6 +2114,7 @@ async function loadCategoryPosts() {
     }
 
 }
+
 
 
 
