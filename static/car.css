@@ -1604,3 +1604,226 @@ body{
         gap: 11px;
     }
 }
+
+/* =========================================================
+   MOTTECK CARS CATEGORY — CARD LAYOUT OVERRIDE
+   Desktop: 4 columns
+   Tablet: 3 columns
+   Mobile: 1 column
+   Scoped to the Cars category only
+========================================================= */
+
+/* DESKTOP: FOUR CARDS PER ROW */
+#carPost.post-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+    padding: 12px 16px 22px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#carPost .mc-car-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    align-self: start;
+    box-sizing: border-box;
+}
+
+/* Compact gallery to reduce card height */
+#carPost .mc-car-gallery {
+    height: 155px;
+    min-height: 0;
+}
+
+/* Keep images correctly cropped */
+#carPost .mc-car-main-image img,
+#carPost .mc-car-side-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Compact author header */
+#carPost .post-author-header {
+    padding: 9px 10px 8px;
+    gap: 6px;
+}
+
+#carPost .post-author-avatar-link,
+#carPost .post-author-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    min-height: 34px;
+}
+
+#carPost .post-author-name {
+    font-size: 12px;
+}
+
+#carPost .post-author-category {
+    font-size: 10px;
+}
+
+#carPost .post-author-time {
+    font-size: 10px;
+}
+
+#carPost .follow-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+}
+
+/* Badges */
+#carPost .mc-car-badges {
+    padding: 7px 9px 0;
+}
+
+#carPost .mc-car-badge {
+    padding: 4px 6px;
+    font-size: 9px;
+}
+
+/* Reduce content spacing */
+#carPost .mc-car-content {
+    padding: 9px 10px 10px;
+    min-width: 0;
+}
+
+#carPost .mc-car-title {
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+}
+
+#carPost .mc-car-details {
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+#carPost .mc-car-detail {
+    padding: 5px 6px;
+    gap: 4px;
+}
+
+#carPost .mc-detail-label {
+    font-size: 9px;
+}
+
+#carPost .mc-detail-value {
+    font-size: 10px;
+}
+
+#carPost .mc-car-price {
+    font-size: 18px;
+    margin: 3px 0 8px;
+}
+
+#carPost .mc-car-description {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#carPost .mc-car-see-more {
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+/* Engagement buttons */
+#carPost .mc-car-engagement {
+    gap: 8px;
+    padding: 7px 0;
+}
+
+#carPost .mc-car-engagement-btn {
+    font-size: 11px;
+}
+
+#carPost .mc-car-view-details {
+    font-size: 11px;
+    padding: 9px 6px;
+    margin-top: 8px;
+}
+
+/* Keep sale buttons compact and inside the card */
+#carPost .mc-car-sale-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+#carPost .mc-car-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    padding: 7px 5px;
+    font-size: 11px;
+    box-sizing: border-box;
+}
+
+/* TABLET: THREE COLUMNS */
+@media (max-width: 1100px) and (min-width: 769px) {
+    #carPost.post-container {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+
+    #carPost .mc-car-gallery {
+        height: 145px;
+    }
+}
+
+/* MOBILE: ONE CARD PER ROW */
+@media (max-width: 768px) {
+    #carPost.post-container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        padding: 10px 12px 20px;
+    }
+
+    #carPost .mc-car-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #carPost .mc-car-gallery {
+        height: 190px;
+    }
+
+    #carPost .post-author-header {
+        padding: 10px 12px;
+    }
+
+    #carPost .post-author-avatar-link,
+    #carPost .post-author-avatar {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    #carPost .mc-car-content {
+        padding: 12px;
+    }
+
+    #carPost .mc-car-title {
+        font-size: 18px;
+    }
+
+    #carPost .mc-car-price {
+        font-size: 21px;
+    }
+
+    #carPost .mc-car-button {
+        min-height: 40px;
+        padding: 9px 8px;
+        font-size: 12px;
+    }
+}
