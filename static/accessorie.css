@@ -1389,4 +1389,215 @@ body{
     }
 }
 
+/* =========================================================
+   MOTTECK ACCESSORIES — COMPACT CARD LAYOUT
+   Four desktop columns, one mobile column
+   ========================================================= */
+
+/* DESKTOP: FOUR CARDS PER ROW */
+#accessoriePost.post-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    padding: 16px;
+    align-items: stretch;
+}
+
+/* CARD */
+#accessoriePost .accessory-card {
+    min-width: 0;
+    height: 100%;
+    border-radius: 10px;
+}
+
+/* AUTHOR HEADER: LESS WASTED SPACE */
+#accessoriePost .post-author-header {
+    padding: 9px 10px;
+    gap: 6px;
+}
+
+#accessoriePost .post-author-avatar-link,
+#accessoriePost .post-author-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    min-height: 34px;
+}
+
+#accessoriePost .post-author-name {
+    font-size: 12px;
+}
+
+#accessoriePost .post-author-category {
+    font-size: 10px;
+}
+
+#accessoriePost .post-author-time {
+    font-size: 10px;
+}
+
+#accessoriePost .follow-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+}
+
+/* BADGES */
+#accessoriePost .accessory-badges {
+    gap: 5px;
+    padding: 7px 9px 0;
+}
+
+#accessoriePost .accessory-badges .badge {
+    padding: 4px 7px;
+    font-size: 10px;
+}
+
+/* IMAGE: REDUCE EXCESS HEIGHT */
+#accessoriePost .accessory-main-image {
+    height: 175px;
+    object-fit: contain;
+}
+
+/* CARD CONTENT */
+#accessoriePost .accessory-content {
+    padding: 10px;
+    gap: 7px;
+}
+
+/* TITLE */
+#accessoriePost .accessory-title {
+    font-size: 15px;
+    line-height: 1.35;
+    margin-bottom: 5px;
+}
+
+/* PRICE */
+#accessoriePost .accessory-price {
+    font-size: 18px;
+    line-height: 1.3;
+    margin: 5px 0 8px;
+}
+
+/* PRODUCT DETAILS */
+#accessoriePost .accessory-details {
+    gap: 5px;
+    margin: 7px 0;
+    padding: 8px;
+}
+
+#accessoriePost .accessory-detail {
+    gap: 7px;
+    font-size: 11px;
+}
+
+/* DESCRIPTION */
+#accessoriePost .accessory-description {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* LIKE, SHARE AND VIEWS */
+#accessoriePost .accessory-post-actions {
+    gap: 9px;
+    margin: 9px 0 6px;
+}
+
+#accessoriePost .accessory-post-actions .post-action-btn {
+    gap: 4px;
+    font-size: 11px;
+}
+
+/* VIEW DETAILS */
+#accessoriePost .accessory-read-more {
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+/* BUY NOW + REQUEST MOTTECK: SIDE BY SIDE */
+#accessoriePost .accessory-purchase-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+}
+
+#accessoriePost .accessory-purchase-actions a {
+    min-width: 0;
+    min-height: 40px;
+    padding: 8px 4px;
+    gap: 4px;
+    font-size: 10px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+/* TABLET: TWO COLUMNS */
+@media (min-width: 601px) and (max-width: 1000px) {
+    #accessoriePost.post-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+
+    #accessoriePost .accessory-main-image {
+        height: 190px;
+    }
+
+    #accessoriePost .accessory-content {
+        padding: 12px;
+    }
+
+    #accessoriePost .accessory-title {
+        font-size: 16px;
+    }
+
+    #accessoriePost .accessory-purchase-actions a {
+        font-size: 12px;
+        padding: 9px 6px;
+    }
+}
+
+/* MOBILE: ONE CARD PER ROW */
+@media (max-width: 600px) {
+    #accessoriePost.post-container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        padding: 10px;
+    }
+
+    #accessoriePost .accessory-card {
+        width: 100%;
+    }
+
+    #accessoriePost .accessory-main-image {
+        height: 190px;
+    }
+
+    #accessoriePost .accessory-content {
+        padding: 11px;
+    }
+
+    #accessoriePost .accessory-title {
+        font-size: 16px;
+    }
+
+    #accessoriePost .accessory-price {
+        font-size: 19px;
+    }
+
+    /* Keep both purchase buttons side by side */
+    #accessoriePost .accessory-purchase-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    #accessoriePost .accessory-purchase-actions a {
+        min-height: 42px;
+        padding: 8px 5px;
+        font-size: 11px;
+    }
+}
+
 

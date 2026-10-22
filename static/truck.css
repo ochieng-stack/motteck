@@ -352,11 +352,12 @@ body{
 }
 
 /* POSTS DESKTOP ONLY */
-.post-container{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:22px;
-    padding:20px;
+.post-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+    padding: 12px 16px 22px;
 }
 
 /* CARD */
@@ -1477,5 +1478,190 @@ body{
 
     .mc-truck-engagement {
         gap: 11px;
+    }
+}
+
+/* =========================================================
+   MOTTECK TRUCK / BUS — MATCH CARS CATEGORY
+========================================================= */
+
+/* DESKTOP: FOUR COLUMNS */
+.post-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+    padding: 12px 16px 22px;
+}
+
+.mc-truck-card {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    align-self: start;
+    box-sizing: border-box;
+}
+
+/* Compact gallery */
+.mc-truck-gallery {
+    height: 155px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 0.8fr);
+    gap: 5px;
+    margin: 12px 12px 0;
+}
+
+/* Compact card content */
+.mc-truck-content {
+    padding: 9px 10px 10px;
+}
+
+.mc-truck-title {
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+}
+
+.mc-truck-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.mc-truck-detail {
+    min-width: 0;
+    padding: 5px 6px;
+    background: #f1f3f5;
+    border: 1px solid #e7e9ec;
+    border-radius: 7px;
+    gap: 4px;
+}
+
+.mc-truck-label {
+    font-size: 9px;
+}
+
+.mc-truck-value {
+    font-size: 10px;
+}
+
+.mc-truck-price {
+    font-size: 18px;
+    margin: 3px 0 8px;
+}
+
+.mc-truck-description {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.mc-truck-see-more {
+    font-size: 11px;
+    margin: 7px 0 8px;
+}
+
+/* Engagement */
+.mc-truck-engagement {
+    gap: 8px;
+    padding: 7px 0;
+}
+
+.mc-truck-engagement-btn {
+    font-size: 11px;
+}
+
+.mc-truck-view-details {
+    margin-top: 8px;
+    padding: 9px 6px;
+    font-size: 11px;
+}
+
+/* Both action buttons side by side */
+.mc-truck-sale-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.mc-truck-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    padding: 7px 4px;
+    font-size: 10px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+}
+
+/* TABLET: THREE COLUMNS */
+@media (max-width: 1100px) and (min-width: 769px) {
+    .post-container {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .mc-truck-gallery {
+        height: 145px;
+    }
+}
+
+/* MOBILE: ONE CARD PER ROW, BUTTONS SIDE BY SIDE */
+@media (max-width: 768px) {
+    .post-container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        padding: 10px 12px 20px;
+    }
+
+    .mc-truck-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .mc-truck-gallery {
+        height: 190px;
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.8fr);
+        margin: 10px 10px 0;
+    }
+
+    .mc-truck-content {
+        padding: 12px;
+    }
+
+    .mc-truck-title {
+        font-size: 18px;
+    }
+
+    .mc-truck-price {
+        font-size: 21px;
+    }
+
+    .mc-truck-sale-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .mc-truck-button {
+        min-height: 40px;
+        padding: 8px 4px;
+        font-size: 11px;
+    }
+}
+
+/* VERY SMALL MOBILE SCREENS */
+@media (max-width: 360px) {
+    .mc-truck-gallery {
+        height: 175px;
+    }
+
+    .mc-truck-engagement {
+        gap: 8px;
+    }
+
+    .mc-truck-button {
+        font-size: 10px;
+        padding: 7px 2px;
     }
 }

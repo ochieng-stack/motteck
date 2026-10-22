@@ -1474,3 +1474,295 @@ body{
     }
 }
 
+/* =========================================================
+   MOTTECK BIKE CATEGORY
+   Match Cars card proportions on desktop and mobile
+   Keep Contact Seller + Request MOTTECK side by side
+   ========================================================= */
+
+/* DESKTOP: FOUR CARDS PER ROW */
+@media (min-width: 1101px) {
+    .post-container {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: start;
+        gap: 14px;
+        padding: 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* TABLET / SMALL DESKTOP: THREE CARDS PER ROW */
+@media (min-width: 769px) and (max-width: 1100px) {
+    .post-container {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: start;
+        gap: 12px;
+        padding: 12px;
+    }
+}
+
+/* COMPACT BIKE CARD */
+.mc-bike-card {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    height: fit-content;
+    align-self: start;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+/* COMPACT IMAGE GALLERY */
+.mc-bike-gallery {
+    height: 155px;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 4px;
+}
+
+.mc-bike-main-image {
+    height: 155px;
+}
+
+.mc-bike-gallery-side {
+    gap: 4px;
+}
+
+.mc-bike-badges {
+    gap: 5px;
+    padding: 8px 10px 0;
+}
+
+.mc-bike-badge {
+    padding: 4px 6px;
+    font-size: 9px;
+}
+
+/* AUTHOR HEADER */
+.mc-bike-card .post-author-header {
+    padding: 9px 10px 8px;
+    gap: 6px;
+}
+
+.mc-bike-card .post-author-avatar-link,
+.mc-bike-card .post-author-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    min-height: 34px;
+}
+
+.mc-bike-card .post-author-name {
+    font-size: 12px;
+}
+
+.mc-bike-card .post-author-category {
+    font-size: 10px;
+}
+
+.mc-bike-card .post-author-time {
+    font-size: 9px;
+}
+
+.mc-bike-card .follow-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+}
+
+/* CARD CONTENT */
+.mc-bike-content {
+    padding: 9px 10px 10px;
+}
+
+.mc-bike-title {
+    margin-bottom: 7px;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.mc-bike-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding: 8px 0;
+    margin-bottom: 7px;
+}
+
+.mc-bike-detail-label {
+    font-size: 9px;
+}
+
+.mc-bike-detail strong {
+    font-size: 10px;
+}
+
+.mc-bike-price {
+    margin: 8px 0;
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.mc-bike-description-wrap {
+    margin: 7px 0 3px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.mc-bike-see-more {
+    margin: 3px 0 7px;
+    font-size: 11px;
+}
+
+/* LIKE / VIEW / SHARE */
+.mc-bike-post-actions {
+    gap: 8px;
+    margin-top: 7px;
+    padding: 7px 0;
+}
+
+.mc-bike-post-actions .post-action-btn {
+    gap: 4px;
+    font-size: 11px;
+}
+
+.mc-bike-read-more {
+    margin: 7px 0 8px;
+    padding: 8px 6px;
+    font-size: 11px;
+}
+
+/* CONTACT + REQUEST: SIDE BY SIDE */
+.mc-bike-sale-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.mc-bike-action {
+    min-width: 0;
+    min-height: 36px;
+    padding: 7px 4px;
+    gap: 4px;
+    border-radius: 6px;
+    font-size: 10px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+/* TABLET SIZING */
+@media (min-width: 769px) and (max-width: 1100px) {
+    .mc-bike-gallery,
+    .mc-bike-main-image {
+        height: 145px;
+    }
+
+    .mc-bike-content {
+        padding: 8px;
+    }
+
+    .mc-bike-title {
+        font-size: 13px;
+    }
+
+    .mc-bike-price {
+        font-size: 17px;
+    }
+
+    .mc-bike-action {
+        font-size: 10px;
+        padding: 7px 3px;
+    }
+}
+
+/* MOBILE: ONE CARD PER ROW, SAME COMPACT STYLE */
+@media (max-width: 768px) {
+    .post-container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        padding: 10px 12px 20px;
+    }
+
+    .mc-bike-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .mc-bike-gallery,
+    .mc-bike-main-image {
+        height: 180px;
+    }
+
+    .mc-bike-gallery {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    }
+
+    .mc-bike-content {
+        padding: 10px 12px 12px;
+    }
+
+    .mc-bike-title {
+        font-size: 16px;
+    }
+
+    .mc-bike-details {
+        gap: 6px 8px;
+    }
+
+    .mc-bike-detail-label {
+        font-size: 10px;
+    }
+
+    .mc-bike-detail strong {
+        font-size: 11px;
+    }
+
+    .mc-bike-price {
+        font-size: 20px;
+    }
+
+    .mc-bike-description-wrap {
+        font-size: 13px;
+    }
+
+    .mc-bike-post-actions {
+        gap: 8px;
+    }
+
+    .mc-bike-read-more {
+        font-size: 12px;
+    }
+
+    /* Keep both buttons on the same row on mobile too */
+    .mc-bike-sale-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .mc-bike-action {
+        min-height: 40px;
+        padding: 8px 5px;
+        font-size: 11px;
+    }
+}
+
+/* VERY NARROW PHONES */
+@media (max-width: 360px) {
+    .mc-bike-gallery,
+    .mc-bike-main-image {
+        height: 155px;
+    }
+
+    .mc-bike-sale-actions {
+        gap: 5px;
+    }
+
+    .mc-bike-action {
+        padding: 7px 3px;
+        font-size: 10px;
+    }
+}
+

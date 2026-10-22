@@ -1474,3 +1474,243 @@ body{
     }
 }
 
+/* =========================================================
+   MOTTECK SPARE PARTS — COMPACT CARD LAYOUT
+   Add this block at the VERY BOTTOM of spare_part.css
+========================================================= */
+
+/* DESKTOP: FOUR CARDS ACROSS */
+@media screen and (min-width: 1001px) {
+    #spare_partPost.post-container {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        padding: 16px;
+        align-items: start;
+    }
+}
+
+/* TABLET: TWO CARDS ACROSS */
+@media screen and (min-width: 601px) and (max-width: 1000px) {
+    #spare_partPost.post-container {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        padding: 12px;
+        align-items: start;
+    }
+}
+
+/* CARD: PREVENT UNNECESSARY STRETCHING */
+#spare_partPost .mc-part-card {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    align-self: start;
+    border-radius: 10px;
+}
+
+/* COMPACT BADGES */
+#spare_partPost .mc-part-badges {
+    gap: 5px;
+    padding: 8px 10px 0;
+}
+
+#spare_partPost .mc-part-badge {
+    padding: 4px 7px;
+    font-size: 10px;
+}
+
+/* AUTHOR HEADER */
+#spare_partPost .post-author-header {
+    gap: 8px;
+    padding: 8px 10px;
+}
+
+#spare_partPost .post-author-avatar-link,
+#spare_partPost .post-author-avatar,
+#spare_partPost .post-author-avatar-placeholder {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    min-height: 34px;
+}
+
+#spare_partPost .post-author-name {
+    font-size: 12px;
+}
+
+#spare_partPost .post-author-category {
+    font-size: 10px;
+}
+
+#spare_partPost .post-author-time {
+    font-size: 9px;
+}
+
+#spare_partPost .follow-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+}
+
+/* PRODUCT PHOTOS */
+#spare_partPost .mc-part-single-image,
+#spare_partPost .mc-part-gallery {
+    height: 165px;
+}
+
+#spare_partPost .mc-part-gallery {
+    gap: 4px;
+}
+
+#spare_partPost .mc-part-gallery-side {
+    gap: 4px;
+}
+
+#spare_partPost .mc-part-more-photos {
+    font-size: 20px;
+}
+
+/* PRODUCT CONTENT */
+#spare_partPost .mc-part-content {
+    padding: 10px;
+    gap: 7px;
+}
+
+#spare_partPost .mc-part-title {
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: 1.3;
+}
+
+#spare_partPost .mc-part-details {
+    gap: 7px;
+    padding: 8px 0;
+}
+
+#spare_partPost .mc-part-detail {
+    gap: 2px;
+}
+
+#spare_partPost .mc-part-detail span {
+    font-size: 9px;
+}
+
+#spare_partPost .mc-part-detail strong {
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+#spare_partPost .mc-part-price {
+    margin: 7px 0;
+    font-size: 18px;
+}
+
+#spare_partPost .mc-part-description-wrap {
+    margin: 5px 0 2px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#spare_partPost .mc-part-see-more {
+    margin: 2px 0 6px;
+    font-size: 11px;
+}
+
+/* LIKE, SHARE AND VIEWS */
+#spare_partPost .mc-part-post-actions {
+    gap: 8px;
+    margin-top: 5px;
+    padding: 7px 0;
+}
+
+#spare_partPost .mc-part-post-actions .post-action-btn {
+    gap: 4px;
+    font-size: 11px;
+}
+
+/* VIEW PRODUCT DETAILS */
+#spare_partPost .mc-part-view-details {
+    margin: 5px 0 7px;
+    padding: 8px 6px;
+    font-size: 11px;
+}
+
+/* BUY NOW + REQUEST MOTTECK: SIDE BY SIDE */
+#spare_partPost .mc-part-buy-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 6px;
+}
+
+#spare_partPost .mc-part-action {
+    min-width: 0;
+    min-height: 38px;
+    padding: 8px 4px;
+    gap: 4px;
+    font-size: 10px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+#spare_partPost .mc-part-action i {
+    font-size: 11px;
+}
+
+/* MOBILE: ONE CARD PER ROW, COMPACT HEIGHT */
+@media screen and (max-width: 600px) {
+    #spare_partPost.post-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 10px;
+        align-items: stretch;
+    }
+
+    #spare_partPost .mc-part-card {
+        width: 100%;
+        height: auto;
+    }
+
+    #spare_partPost .mc-part-single-image,
+    #spare_partPost .mc-part-gallery {
+        height: 185px;
+    }
+
+    #spare_partPost .mc-part-content {
+        padding: 10px;
+    }
+
+    #spare_partPost .mc-part-title {
+        font-size: 16px;
+    }
+
+    #spare_partPost .mc-part-price {
+        font-size: 19px;
+    }
+
+    #spare_partPost .mc-part-detail span {
+        font-size: 10px;
+    }
+
+    #spare_partPost .mc-part-detail strong {
+        font-size: 12px;
+    }
+
+    #spare_partPost .mc-part-description-wrap {
+        font-size: 13px;
+    }
+
+    #spare_partPost .mc-part-buy-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    #spare_partPost .mc-part-action {
+        min-height: 40px;
+        padding: 8px 5px;
+        font-size: 11px;
+    }
+}
+
