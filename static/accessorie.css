@@ -1365,9 +1365,9 @@ body{
 }
 
 .accessory-request-btn {
-    background: #fff;
-    color: #111;
-    border: 1px solid #111;
+    background: #1746a2;
+    color: #fff;
+    border: 1px solid #1746a2;
 }
 
 @media (max-width: 480px) {
