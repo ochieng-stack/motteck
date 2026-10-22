@@ -1533,10 +1533,10 @@ body{
     gap: 6px;
     min-width: 0;
     padding: 10px 8px;
-    border: 1px solid #e1e1e1;
+    border: 1px solid #111;
     border-radius: 8px;
-    background: #fff;
-    color: #222;
+    background: #111;
+    color: #fff;
     font-size: 12px;
     font-weight: 700;
     line-height: 1.3;
