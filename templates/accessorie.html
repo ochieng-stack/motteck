@@ -1118,22 +1118,161 @@ function createPostCard(post) {
 
     const description = post.description || "";
 
+
     /* -----------------------------------------
-       MAIN IMAGE
+       ACCESSORY IMAGE GALLERY
     ----------------------------------------- */
 
-    let image =
-        post.image_url ||
-        post.image ||
-        post.cover_image ||
-        "/static/images/default.jpg";
+    const imageCandidates = [
+        post.image_url,
+        post.image,
+        post.cover_image
+    ];
 
-    if (
-        !image.startsWith("http") &&
-        !image.startsWith("/")
-    ) {
-        image = "/static/" + image;
+    function addImageCandidate(value) {
+        if (!value) return;
+
+        if (Array.isArray(value)) {
+            value.forEach(addImageCandidate);
+            return;
+        }
+
+        if (typeof value === "string") {
+            const trimmed = value.trim();
+
+            if (!trimmed) return;
+
+            try {
+                const parsed = JSON.parse(trimmed);
+
+                if (Array.isArray(parsed)) {
+                    parsed.forEach(addImageCandidate);
+                    return;
+                }
+            } catch (error) {
+                // This is a normal image URL/path.
+            }
+
+            imageCandidates.push(trimmed);
+        }
     }
+
+    addImageCandidate(post.images);
+    addImageCandidate(post.image_urls);
+    addImageCandidate(post.photos);
+    addImageCandidate(post.gallery);
+    addImageCandidate(post.additional_images);
+
+    const images = [
+        ...new Set(
+            imageCandidates
+                .filter(value => typeof value === "string")
+                .map(value => value.trim())
+                .filter(Boolean)
+                .map(value => {
+                    if (
+                        !value.startsWith("http://") &&
+                        !value.startsWith("https://") &&
+                        !value.startsWith("/")
+                    ) {
+                        return "/static/" + value;
+                    }
+
+                    return value;
+                })
+        )
+    ];
+
+    if (!images.length) {
+        images.push("/static/images/default.jpg");
+    }
+
+    const visibleImages = images.slice(0, 3);
+    const remainingImages = Math.max(0, images.length - 3);
+
+    const photoCountHTML = images.length
+        ? `
+            <span class="accessory-photo-total">
+                <i class="fa-regular fa-images"></i>
+                ${images.length} photo${images.length === 1 ? "" : "s"}
+            </span>
+        `
+        : "";
+
+    const galleryHTML = visibleImages.length === 1
+        ? `
+            <a
+                href="/post/${encodeURIComponent(postId)}"
+                class="accessory-image-link accessory-gallery-single"
+            >
+                <img
+                    src="${escapeHTML(visibleImages[0])}"
+                    class="post-image accessory-main-image"
+                    alt="${title}"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="250"
+                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
+                >
+
+                ${photoCountHTML}
+            </a>
+        `
+        : `
+            <div class="accessory-gallery">
+
+                <a
+                    href="/post/${encodeURIComponent(postId)}"
+                    class="accessory-image-link accessory-gallery-main"
+                >
+                    <img
+                        src="${escapeHTML(visibleImages[0])}"
+                        class="post-image accessory-main-image"
+                        alt="${title}"
+                        loading="lazy"
+                        decoding="async"
+                        width="400"
+                        height="250"
+                        onerror="this.onerror=null;this.src='/static/images/default.jpg';"
+                    >
+                </a>
+
+                <div class="accessory-gallery-side">
+
+                    ${visibleImages.slice(1).map((src, index) => {
+                        const isLast =
+                            index === visibleImages.slice(1).length - 1;
+
+                        return `
+                            <a
+                                href="/post/${encodeURIComponent(postId)}"
+                                class="accessory-gallery-thumb"
+                            >
+                                <img
+                                    src="${escapeHTML(src)}"
+                                    alt="${title} photo ${index + 2}"
+                                    loading="lazy"
+                                    decoding="async"
+                                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
+                                >
+
+                                ${
+                                    isLast && remainingImages > 0
+                                        ? `<span class="accessory-more-photos">+${remainingImages}</span>`
+                                        : ""
+                                }
+                            </a>
+                        `;
+                    }).join("")}
+
+                </div>
+
+                ${photoCountHTML}
+
+            </div>
+        `;
+
 
     /* -----------------------------------------
        PRICE
