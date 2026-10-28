@@ -1,2127 +1,1339 @@
-*{
-    margin: 0;
-    padding: 0;
+
+/* =========================================================
+   MOTTECK BIKES PAGE
+   Clean, consolidated stylesheet
+========================================================= */
+
+/* =========================
+   1. RESET AND BASE
+========================= */
+
+* {
     box-sizing: border-box;
-    font-family: sans-serif;
 }
 
-html,
-body{
-    height: 100%;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    overflow-x: hidden;
-    background: #f8f8f8;
+body {
+    margin: 0;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f8;
+    color: #171717;
 }
 
-/* HEADER */
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgb(16, 17, 19);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    margin: 0;
-    padding: 10px 20px;
-    z-index: 1000;
+body,
+button,
+input {
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.title{
-    font-size: 36px;
-    font-weight: bold;
-    color: white;
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
 }
 
-.title a{
-    color: white;
-    text-decoration: none;
-}
-
-.top-actions{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.menu-btn{
-    background: none;
-    border: none;
-    color: white;
-    font-size: 26px;
+button {
     cursor: pointer;
 }
 
-/* CATEGORY NAV */
-.category-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    background-color: rgb(16, 17, 19);
-    padding: 12px 10px;
-    position: fixed;
-    top: 58px;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
-
-.category-nav::-webkit-scrollbar{
-    display: none;
-}
-
-.category-nav a {
+a {
+    color: inherit;
     text-decoration: none;
-    padding: 8px 14px;
-    background-color: #444;
-    color: white;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: 0.3s ease;
-    font-size: 14px;
+}
+
+img {
+    max-width: 100%;
+}
+
+#motobikePost {
+    width: 100%;
+}
+
+/* =========================
+   2. HEADER
+========================= */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    min-height: 58px;
+    padding: 9px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: #101010;
+    color: #fff;
+    border-bottom: 1px solid #292929;
+}
+
+.title {
+    margin: 0;
+    color: #fff;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: 1px;
     white-space: nowrap;
 }
 
-.category-nav a:hover {
-    background-color:#2196f3;
-}
-
-.category-nav a.active{
-    background:#2196f3;
-    color:white;
-}
-
-/* MOBILE MENU */
-.mobile-menu {
-    display: none;
-    flex-direction: column;
-    position: fixed;
-    top: 65px;
-    right: 10px;
-    background: #111111;
-    width: 200px;
-    border-radius: 8px;
-    z-index: 2000;
-}
-
-.mobile-menu a {
-    color: white;
-    padding: 12px;
-    text-decoration: none;
-    border-bottom: 1px solid #222;
-}
-
-/* SEARCH BAR */
-.category-search{
-    margin-top: 140px;
+.top-actions {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
 }
 
-.search-input {
-    width: 90%;
-    max-width: 500px;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 999px;
-    outline: none;
-    font-size: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.search-input:focus {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-}
-
-/* AUTH BUTTONS */
-.auth-buttons{
-    display:flex;
-    align-items:center;
-    gap:10px;
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 9px;
 }
 
 .login-btn,
-.signup-btn{
-    text-decoration:none;
-    padding:9px 18px;
-    border-radius:30px;
-    font-size:14px;
-    font-weight:600;
-    transition:.3s ease;
+.signup-btn {
+    min-height: 34px;
+    padding: 8px 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-.login-btn{
-    color:white;
-    border:2px solid white;
-    background:transparent;
+.login-btn {
+    color: #fff;
+    background: transparent;
+    border: 1px solid #555;
 }
 
-.login-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(255,255,255,.18);
+.login-btn:hover {
+    background: #292929;
 }
 
-.signup-btn{
-    background:#2196f3;
-    color:white;
+.signup-btn {
+    color: #fff;
+    background: #1877f2;
+    border: 1px solid #1877f2;
 }
 
-.signup-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(33,150,243,.35);
+.signup-btn:hover {
+    background: #0866d6;
 }
 
-/* PROFILE */
-.profile-btn{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    color:white;
-    text-decoration:none;
-    padding:9px 18px;
-    border-radius:30px;
-    border:2px solid white;
-    transition:.3s;
+.menu-btn {
+    width: 38px;
+    height: 36px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background: #191919;
+    color: #fff;
+    font-size: 19px;
 }
 
-.profile-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 4px 12px rgba(255,255,255,.2);
-}
+/* =========================
+   3. PROFILE DROPDOWN
+========================= */
 
-.profile-btn i{
-    font-size:15px;
-}
-
-/* PROFILE DROPDOWN */
 .profile-dropdown {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .profile-btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: white;
-    background: transparent;
-    text-decoration: none;
-    padding: 9px 14px;
-    border-radius: 30px;
-    border: 2px solid white;
-    transition: .3s;
-    cursor: pointer;
-    font-size: 14px;
+    padding: 5px 9px;
+    border: 1px solid #393939;
+    border-radius: 7px;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 13px;
 }
 
 .profile-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255,255,255,.2);
-}
-
-.profile-btn i {
-    font-size: 15px;
+    background: #262626;
 }
 
 .profile-arrow {
-    font-size: 11px !important;
-    transition: transform .25s ease;
+    font-size: 11px;
+    transition: transform 0.2s ease;
 }
 
-.profile-dropdown.active .profile-arrow {
+.profile-dropdown:hover .profile-arrow {
     transform: rotate(180deg);
 }
 
 .profile-menu {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 9px);
     right: 0;
-    width: 245px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.20);
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition:
-        opacity .2s ease,
-        transform .2s ease,
-        visibility .2s ease;
-    z-index: 3000;
+    z-index: 1200;
+    width: 235px;
+    padding: 8px;
+    display: none;
+    background: #fff;
+    color: #202020;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
 
-.profile-dropdown.active .profile-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+.profile-dropdown:hover .profile-menu,
+.profile-dropdown:focus-within .profile-menu {
+    display: block;
 }
 
 .profile-menu-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 15px;
-    background: #f7f7f7;
-}
-
-.profile-menu-header > i {
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #2196f3;
-    color: white;
-    border-radius: 50%;
-    font-size: 16px;
-}
-
-.profile-menu-header div {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.profile-menu-header strong {
-    color: #222;
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.profile-menu-header small {
-    color: #777;
-    font-size: 12px;
-    margin-top: 3px;
+    padding: 12px 10px;
+    overflow-wrap: anywhere;
 }
 
 .profile-menu-divider {
     height: 1px;
-    background: #eeeeee;
+    margin: 5px 0;
+    background: #e8e8e8;
 }
 
 .profile-menu-item {
+    width: 100%;
+    padding: 11px 10px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    width: 100%;
-    padding: 12px 15px;
-    color: #222;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background .2s ease;
-}
-
-.profile-menu-item i {
-    width: 20px;
-    text-align: center;
-    color: #555;
-    font-size: 15px;
+    gap: 10px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #242424;
+    text-align: left;
+    font-size: 13px;
 }
 
 .profile-menu-item:hover {
-    background: #f1f7ff;
+    background: #f0f4f9;
+    color: #1268cf;
 }
 
-.profile-menu-item:hover i {
-    color: #2196f3;
+.logout-item {
+    color: #c62828;
 }
 
-.profile-menu-item.logout-item {
-    color: #d32f2f;
+.logout-item:hover {
+    background: #fff0f0;
+    color: #b71c1c;
 }
 
-.profile-menu-item.logout-item i {
-    color: #d32f2f;
-}
+/* =========================
+   4. MOBILE MENU
+========================= */
 
-.profile-menu-item.logout-item:hover {
-    background: #fff1f1;
-}
-
-/* POSTS DESKTOP ONLY */
-.post-container{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:22px;
-    padding:20px;
-}
-
-/* CARD */
-.post-card{
-    display:flex;
-    flex-direction:column;
-    background:#fff;
-    border-radius:12px;
-    box-shadow:0 3px 8px rgba(0,0,0,0.08);
-    overflow:hidden;
-    padding:0;
-}
-
-/* IMAGE TOP */
-.post-card img{
-    width:100%;
-    height:210px;
-    object-fit:cover;
-    border-radius:0;
-}
-
-/* CONTENT */
-.post-content{
-    padding:16px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    flex:1;
-}
-
-/* TITLE */
-.post-title{
-    font-size:19px;
-    font-weight:bold;
-    color:black;
-    line-height:1.4;
-}
-
-/* TEXT */
-.post-text{
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    font-size:15px;
-    color:#444;
-    line-height:1.6;
-}
-
-/* BUTTONS */
-.like-btn {
-    background: #2196f3;
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.like-btn:hover {
-    background: #1976d2;
-}
-
-.delete-btn,
-.see-more-btn {
-    margin-right: 8px;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.delete-btn{
-    background: red;
-    color: white;
-}
-
-.see-more-btn{
-    background: #eee;
-}
-
-.see-more-btn:hover {
-    background: #2196f3;
-    color: white;
-}
-
-/* FOOTER */
-.footer{
-    background:#0f0f0f;
-    color:#ffffff;
-    padding:55px 20px 20px;
-    margin-top:auto;
-    border-top:1px solid #222;
-}
-
-.footer-top{
-    max-width:1200px;
-    margin:0 auto 35px;
-    text-align:center;
-}
-
-.footer-logo{
-    font-size:28px;
-    font-weight:700;
-    margin-bottom:10px;
-    letter-spacing:1px;
-}
-
-.footer-text{
-    max-width:700px;
-    margin:0 auto;
-    color:#bdbdbd;
-    font-size:15px;
-    line-height:1.7;
-}
-
-.footer-links{
-    max-width:1200px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:35px;
-    padding:20px 0 30px;
-}
-
-.footer-column h3{
-    font-size:16px;
-    margin-bottom:14px;
-    color:#ffffff;
-}
-
-.footer-column a{
-    display:block;
-    color:#bdbdbd;
-    text-decoration:none;
-    margin-bottom:10px;
-    font-size:14px;
-    transition:0.25s ease;
-}
-
-.footer-column a:hover{
-    color:#ffffff;
-    transform:translateX(4px);
-}
-
-.footer-column p{
-    color:#bdbdbd;
-    font-size:14px;
-    line-height:1.7;
-    margin-bottom:8px;
-}
-
-.small-text{
-    font-size:13px;
-    line-height:1.8;
-}
-
-/* SOCIAL AREA */
-.social-box{
-    margin-top:12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-}
-
-.social-box p{
-    margin-bottom:8px;
-    color:#ffffff;
-    font-weight:600;
-}
-
-.social-box{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:10px;
-}
-
-.social-box p{
-    width:100%;
-}
-
-.social-box a{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#1a1a1a;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#ffffff;
-    text-decoration:none;
-    transition:0.25s ease;
-    margin-bottom:0;
-}
-
-.social-box a i{
-    font-size:18px;
-}
-
-.social-box a:hover{
-    background:#2b2b2b;
-    transform:translateY(-4px);
-}
-
-/* BOTTOM */
-.footer-bottom{
-    border-top:1px solid #222;
-    padding-top:18px;
-    text-align:center;
-}
-
-.footer-bottom p{
-    font-size:13px;
-    color:#9c9c9c;
-}
-
-/* TABLET */
-@media (max-width: 992px){
-    .footer-links{
-        grid-template-columns:repeat(2,1fr);
-        gap:28px;
-    }
-}
-
-/* MOBILE */
-@media (max-width: 768px){
-    .footer{
-        padding:45px 16px 18px;
-    }
-
-    .footer-top{
-        margin-bottom:25px;
-    }
-
-    .footer-logo{
-        font-size:24px;
-    }
-
-    .footer-text{
-        font-size:14px;
-    }
-
-    .footer-links{
-        grid-template-columns:1fr;
-        gap:24px;
-        text-align:left;
-    }
-
-    .footer-column h3{
-        margin-bottom:10px;
-    }
-
-    .social-box a{
-        width:40px;
-        height:40px;
-    }
-
-    .footer-bottom{
-        margin-top:10px;
-    }
-}
-
-/* MOBILE MENU */
-.mobile-menu{
+.mobile-menu {
     position: fixed;
-    top: 60px;
-    right: 10px;
-    background: #1a1a1a;
-    border-radius: 10px;
-    padding: 15px;
+    top: 58px;
+    left: 0;
+    right: 0;
+    z-index: 990;
     display: none;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 2000;
-    min-width: 180px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    padding: 10px 15px 14px;
+    background: #111;
+    border-top: 1px solid #292929;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
 }
 
-.mobile-menu a{
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 8px;
-    border-radius: 6px;
-    transition: 0.3s;
-}
-
-.mobile-menu a:hover{
-    background: #2196f3;
-}
-
-/* MOBILE FIX */
-@media screen and (max-width: 900px){
-
-    .header{
-        height:56px;
-        padding:10px 14px;
-        box-sizing:border-box;
-    }
-
-    .title{
-        font-size:22px;
-    }
-
-    .menu-btn{
-        font-size:22px;
-    }
-
-    .category-nav{
-        top:56px;
-        padding:10px 8px;
-        gap:8px;
-        justify-content:flex-start;
-        overflow-x:auto;
-    }
-
-    .category-nav::-webkit-scrollbar{
-        display:none;
-    }
-
-    .category-nav a{
-        font-size:12px;
-        padding:7px 12px;
-        white-space:nowrap;
-        flex-shrink:0;
-    }
-
-    .category-search{
-        margin-top:110px;
-        padding:10px;
-    }
-
-    .search-input{
-        width:100%;
-        max-width:100%;
-        padding:12px 16px;
-        font-size:14px;
-    }
-
-    .post-container{
-        display:flex;
-        flex-direction:column;
-        gap:16px;
-        padding:12px;
-    }
-
-    .post-card{
-        padding:0;
-        border-radius:12px;
-        overflow:hidden;
-    }
-
-    .post-card img{
-        width:100%;
-        height:220px;
-        object-fit:cover;
-    }
-
-    .post-content{
-        padding:12px;
-    }
-
-    .post-title{
-        font-size:17px;
-        line-height:1.4;
-    }
-
-    .post-text{
-        font-size:14px;
-        -webkit-line-clamp:2;
-    }
-}
-
-
-/* =========================================================
-   MOTTECK POST FEATURES
-   Added without changing the existing Cars design
-========================================================= */
-
-
-/* SPONSORED BADGE */
-
-.badge.sponsored{
-    display:inline-block;
-    align-self:flex-start;
-    margin:10px 12px 0;
-    padding:5px 10px;
-    border-radius:20px;
-    background:#2e7d32;
-    color:#ffffff;
-    font-size:12px;
-    font-weight:600;
-}
-
-
-/* AUTHOR HEADER */
-
-.post-author-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:12px 14px;
-    background:#ffffff;
-}
-
-
-.post-author-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    min-width:0;
-}
-
-
-.post-author-avatar-link{
-    display:block;
-    width:44px;
-    height:44px;
-    min-width:44px;
-    border-radius:50%;
-    overflow:hidden;
-    text-decoration:none;
-}
-
-
-.post-author-avatar{
-    width:44px !important;
-    height:44px !important;
-    min-width:44px;
-    object-fit:cover !important;
-    border-radius:50% !important;
-    display:block;
-}
-
-
-.post-author-info{
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-    line-height:1.2;
-}
-
-
-.post-author-name{
-    color:#111111;
-    font-size:14px;
-    font-weight:700;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-
-.post-author-category{
-    color:#777777;
-    font-size:12px;
-    margin-top:3px;
-}
-
-
-.post-author-time{
-    color:#999999;
-    font-size:11px;
-    margin-top:3px;
-}
-
-
-.post-author-right{
-    flex-shrink:0;
-}
-
-
-/* FOLLOW BUTTON */
-
-.follow-btn{
-    border:1px solid #2196f3;
-    background:#2196f3;
-    color:#ffffff;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.2s ease;
-}
-
-
-.follow-btn:hover{
-    background:#1976d2;
-    border-color:#1976d2;
-}
-
-
-.follow-btn.following{
-    background:#ffffff;
-    color:#2196f3;
-    border-color:#2196f3;
-}
-
-
-.follow-btn:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-}
-
-
-/* KEEP POST IMAGE LOOKING LIKE THE ORIGINAL */
-
-.post-card .post-image{
-    width:100% !important;
-    height:210px !important;
-    object-fit:cover !important;
-    border-radius:0 !important;
-    display:block;
-}
-
-
-/* POST ACTIONS */
-
-.post-actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex-wrap:wrap;
-    padding-top:4px;
-}
-
-
-.post-action-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    background:transparent;
-    border:none;
-    color:#555555;
-    font-size:13px;
-    cursor:pointer;
-    padding:6px 8px;
-    border-radius:6px;
-    text-decoration:none;
-    transition:.2s ease;
-}
-
-
-.post-action-btn:hover{
-    background:#f1f1f1;
-    color:#2196f3;
-}
-
-
-.like-action.liked{
-    color:#2196f3;
-}
-
-
-.like-action.liked i{
-    font-weight:900;
-}
-
-
-.views{
-    cursor:default;
-}
-
-
-.views:hover{
-    background:transparent;
-    color:#555555;
-}
-
-
-/* =========================================
-   CONTACT / REQUEST BUTTONS
-   ========================================= */
-
-.sale-contact-actions {
+.mobile-menu.active {
     display: flex;
-    gap: 10px;
-    margin-top: 12px;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: column;
 }
 
-.post-contact-btn,
-.request-motteck-btn {
+.mobile-menu a {
+    padding: 13px 10px;
+    color: #eee;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.mobile-menu a:hover,
+.mobile-menu a:focus {
+    background: #252525;
+    color: #66aaff;
+}
+
+/* =========================
+   5. CATEGORY NAVIGATION
+========================= */
+
+.category-nav {
+    position: fixed;
+    top: 58px;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    min-height: 43px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    overflow-x: auto;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    scrollbar-width: none;
+}
+
+.category-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.category-nav a {
+    min-height: 43px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    padding: 9px 14px;
-    border-radius: 7px;
+    flex-shrink: 0;
+    color: #454545;
     font-size: 13px;
     font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
     white-space: nowrap;
+    border-bottom: 3px solid transparent;
 }
 
-/* Contact Seller / Contact Business */
-.post-contact-btn {
-    background: #111;
-    color: #fff;
+.category-nav a:hover,
+.category-nav a.active {
+    color: #1268cf;
+    border-bottom-color: #1877f2;
 }
 
-.post-contact-btn:hover {
-    background: #333;
-    transform: translateY(-1px);
-}
+/* =========================
+   6. SEARCH
+========================= */
 
-/* Request MOTTECK */
-.request-motteck-btn {
-    background: #f1f1f1;
-    color: #111;
-    border: 1px solid #d6d6d6;
-}
-
-.request-motteck-btn:hover {
-    background: #e5e5e5;
-    transform: translateY(-1px);
-}
-
-/* Icons */
-.post-contact-btn i,
-.request-motteck-btn i {
-    font-size: 13px;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-
-    .sale-contact-actions {
-        gap: 8px;
-    }
-
-    .post-contact-btn,
-    .request-motteck-btn {
-        padding: 8px 11px;
-        font-size: 12px;
-    }
-}
-
-/* READ MORE */
-
-.post-content .see-more-btn{
-    display:inline-block;
-    align-self:flex-start;
-    text-decoration:none;
-    margin-top:2px;
-}
-
-
-/* DESKTOP AUTHOR IMAGE OVERRIDE */
-
-@media screen and (min-width:901px){
-
-    .post-card .post-author-avatar{
-        width:44px !important;
-        height:44px !important;
-    }
-
-}
-
-
-/* MOBILE FEATURE OVERRIDES
-   These come AFTER .post-card img so the avatars
-   are not accidentally enlarged to 220px.
-*/
-
-@media screen and (max-width:900px){
-
-    .post-author-header{
-        padding:10px 12px;
-    }
-
-    .post-author-avatar-link{
-        width:40px;
-        height:40px;
-        min-width:40px;
-    }
-
-    .post-author-avatar{
-        width:40px !important;
-        height:40px !important;
-        min-width:40px;
-    }
-
-    .post-author-name{
-        font-size:13px;
-    }
-
-    .post-author-category{
-        font-size:11px;
-    }
-
-    .post-author-time{
-        font-size:10px;
-    }
-
-    .follow-btn{
-        padding:6px 11px;
-        font-size:11px;
-    }
-
-    .post-card .post-image{
-        width:100% !important;
-        height:220px !important;
-        object-fit:cover !important;
-    }
-
-    .post-actions{
-        gap:4px;
-    }
-
-    .post-action-btn{
-        padding:6px 6px;
-        font-size:12px;
-    }
-
-    .home-comment-input{
-        font-size:13px;
-    }
-
-    .home-comment-submit{
-        font-size:12px;
-    }
-
-}
-/* =========================================================
-   ACTUAL USER PROFILE PICTURE
-========================================================= */
-
-.post-author-avatar-link{
-    width:44px;
-    height:44px;
-    min-width:44px;
-    display:block;
-    border-radius:50%;
-    overflow:hidden;
-    text-decoration:none;
-}
-
-.post-author-avatar{
-    width:44px !important;
-    height:44px !important;
-    min-width:44px;
-    min-height:44px;
-    display:block;
-    object-fit:cover !important;
-    border-radius:50% !important;
-}
-
-/* Only appears when the user has NO profile picture */
-
-.post-author-avatar-placeholder{
-    width:44px;
-    height:44px;
-    min-width:44px;
-    border-radius:50%;
-    background:#e9e9e9;
-    color:#777;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:18px;
-}
-
-@media screen and (max-width:900px){
-
-    .post-author-avatar-link{
-        width:40px;
-        height:40px;
-        min-width:40px;
-    }
-
-    .post-author-avatar{
-        width:40px !important;
-        height:40px !important;
-        min-width:40px;
-        min-height:40px;
-    }
-
-    .post-author-avatar-placeholder{
-        width:40px;
-        height:40px;
-        min-width:40px;
-        font-size:16px;
-    }
-
-}
-
-/* =========================================================
-   MOTTECK MOTORBIKE LISTING CARD UPGRADES
-========================================================= */
-
-.mc-bike-card {
+.category-search {
+    width: min(620px, calc(100% - 32px));
+    margin: 120px auto 22px;
     position: relative;
+}
+
+.search-input {
+    width: 100%;
+    min-height: 43px;
+    padding: 11px 15px;
+    border: 1px solid #d5d9df;
+    border-radius: 9px;
+    outline: none;
+    background: #fff;
+    color: #171717;
+    font-size: 14px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.035);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: #1877f2;
+    box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.12);
+}
+
+.search-input::placeholder {
+    color: #858585;
+}
+
+/* =========================
+   7. POST GRID
+========================= */
+
+.post-container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto 35px;
+    padding: 0 18px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: 18px;
+}
+
+/* =========================
+   8. BIKE POST CARD
+========================= */
+
+#motobikePost .post-card {
+    position: relative;
+    min-width: 0;
+    width: 100%;
+    align-self: start;
     overflow: hidden;
     background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e4e7eb;
+    border-radius: 11px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.045);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.mc-bike-badges {
+#motobikePost .post-card:hover {
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.09);
+}
+
+#motobikePost .post-card a {
+    text-decoration: none;
+}
+
+#motobikePost .post-card button {
+    font-family: inherit;
+}
+
+/* =========================
+   9. FEATURED / SPONSORED
+========================= */
+
+#motobikePost .mc-bike-badges {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    z-index: 10;
     display: flex;
     flex-wrap: wrap;
-    gap: 7px;
-    padding: 12px 14px 0;
+    gap: 5px;
+    pointer-events: none;
 }
 
-.mc-bike-badge {
+#motobikePost .mc-bike-badge {
+    padding: 5px 8px;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    border-radius: 5px;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.mc-bike-sponsored {
-    background: #171717;
+    border-radius: 4px;
     color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.35px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-.mc-bike-featured {
-    background: #f3c969;
-    color: #171717;
+#motobikePost .mc-bike-featured {
+    background: #d99b14;
 }
 
-/* Main photo */
-
-.mc-bike-main-image-link {
-    display: block;
-    overflow: hidden;
+#motobikePost .mc-bike-sponsored {
+    background: #1877f2;
 }
 
-.mc-bike-main-image {
-    display: block;
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-    background: #f2f2f2;
-}
+/* =========================
+   10. POST AUTHOR
+========================= */
 
-/* Multiple uploaded photos */
-
-.mc-bike-gallery {
-    display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: 5px;
-    height: 260px;
-    overflow: hidden;
-    background: #eee;
-}
-
-.mc-bike-gallery-main,
-.mc-bike-gallery-thumb {
-    position: relative;
-    display: block;
+#motobikePost .post-author-header {
     min-width: 0;
-    min-height: 0;
-    overflow: hidden;
+    padding: 10px 11px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid #f0f1f3;
 }
 
-.mc-bike-gallery-main img,
-.mc-bike-gallery-thumb img {
-    width: 100%;
-    height: 100%;
+#motobikePost .post-author-left {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#motobikePost .post-author-avatar-link {
+    flex-shrink: 0;
     display: block;
-    object-fit: cover;
-    transition: transform 0.25s ease;
 }
 
-.mc-bike-gallery-main:hover img,
-.mc-bike-gallery-thumb:hover img {
-    transform: scale(1.035);
-}
-
-.mc-bike-gallery-side {
-    display: grid;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: 5px;
-    min-height: 0;
-}
-
-.mc-bike-more-photos {
-    position: absolute;
-    inset: 0;
+#motobikePost .post-author-avatar,
+#motobikePost .post-author-avatar-placeholder {
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.62);
-    color: #fff;
-    font-size: 25px;
-    font-weight: 800;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    background: #f0f2f5;
 }
 
-/* Card content */
-
-.mc-bike-content {
-    padding: 15px;
+#motobikePost .post-author-avatar {
+    object-fit: cover;
 }
 
-.mc-bike-title-link {
-    color: inherit;
-    text-decoration: none;
+#motobikePost .post-author-avatar-placeholder {
+    color: #626262;
+    font-size: 15px;
 }
 
-.mc-bike-title {
-    margin: 0 0 12px;
-    color: #151515;
-    font-size: 19px;
-    font-weight: 800;
-    line-height: 1.35;
-    overflow-wrap: anywhere;
-}
-
-/* Vehicle information */
-
-.mc-bike-details {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 9px;
-    padding: 12px 0;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-}
-
-.mc-bike-detail {
+#motobikePost .post-author-info {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 3px;
-    min-width: 0;
 }
 
-.mc-bike-detail-label {
-    color: #777;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.35px;
-}
-
-.mc-bike-detail strong {
-    color: #292929;
-    font-size: 13px;
-    font-weight: 700;
-    overflow-wrap: anywhere;
-}
-
-/* Price */
-
-.mc-bike-price {
-    margin: 14px 0;
-    color: #080808;
-    font-size: 23px;
-    line-height: 1.25;
-    font-weight: 900;
-    overflow-wrap: anywhere;
-}
-
-/* Description toggle */
-
-.mc-bike-description-wrap {
-    margin: 10px 0 4px;
-    color: #555;
-    font-size: 14px;
-    line-height: 1.65;
-    overflow-wrap: anywhere;
-}
-
-.mc-bike-description-wrap.mc-bike-description-collapsed
-.mc-bike-description-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+#motobikePost .post-author-name {
+    display: block;
     overflow: hidden;
-}
-
-.mc-bike-see-more {
-    display: inline-block;
-    margin: 3px 0 12px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: #111;
-    font-size: 13px;
-    font-weight: 800;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-/* Likes, views and share */
-
-.mc-bike-post-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 13px;
-    padding: 10px 0;
-    border-top: 1px solid #eee;
-}
-
-.mc-bike-post-actions .post-action-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 0;
-    border: 0;
-    background: transparent;
-    color: #555;
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.mc-bike-post-actions .like-action.liked {
-    color: #d7193f;
-}
-
-.mc-bike-read-more {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 8px 0 12px;
-    padding: 11px 14px;
-    border: 1px solid #222;
-    border-radius: 7px;
-    color: #171717;
-    background: #fff;
-    font-weight: 800;
-    text-decoration: none;
-    transition: background 0.2s ease, color 0.2s ease;
-}
-
-.mc-bike-read-more:hover {
-    background: #171717;
-    color: #fff;
-}
-
-/* Contact Seller / Contact Business + Request MOTTECK */
-
-.mc-bike-sale-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 9px;
-    margin-top: 10px;
-}
-
-.mc-bike-action {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 43px;
-    padding: 10px 12px;
-    border: 1px solid #171717;
-    border-radius: 7px;
-    background: #171717;
-    color: #fff;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 800;
-    text-decoration: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.mc-bike-action:hover {
-    opacity: 0.88;
-    transform: translateY(-1px);
-}
-
-.mc-bike-request {
-    border-color: #1746a2;
-    background: #1746a2;
-    color: #fff;
-}
-
-/* Mobile */
-
-@media (max-width: 600px) {
-
-    .mc-bike-main-image,
-    .mc-bike-gallery {
-        height: 220px;
-    }
-
-    .mc-bike-content {
-        padding: 12px;
-    }
-
-    .mc-bike-title {
-        font-size: 17px;
-    }
-
-    .mc-bike-price {
-        font-size: 21px;
-    }
-
-    .mc-bike-details {
-        gap: 10px 8px;
-    }
-
-    .mc-bike-gallery {
-        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    }
-}
-
-/* =========================================================
-   MOTTECK BIKE CATEGORY
-   Match Cars card proportions on desktop and mobile
-   Keep Contact Seller + Request MOTTECK side by side
-   ========================================================= */
-
-/* DESKTOP: FOUR CARDS PER ROW */
-@media (min-width: 1101px) {
-    .post-container {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        align-items: start;
-        gap: 14px;
-        padding: 20px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-}
-
-/* TABLET / SMALL DESKTOP: THREE CARDS PER ROW */
-@media (min-width: 769px) and (max-width: 1100px) {
-    .post-container {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        align-items: start;
-        gap: 12px;
-        padding: 12px;
-    }
-}
-
-/* COMPACT BIKE CARD */
-.mc-bike-card {
-    min-width: 0;
-    width: 100%;
-    max-width: 100%;
-    height: fit-content;
-    align-self: start;
-    border-radius: 12px;
-    box-sizing: border-box;
-}
-
-/* COMPACT IMAGE GALLERY */
-.mc-bike-gallery {
-    height: 155px;
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: 4px;
-}
-
-.mc-bike-main-image {
-    height: 155px;
-}
-
-.mc-bike-gallery-side {
-    gap: 4px;
-}
-
-.mc-bike-badges {
-    gap: 5px;
-    padding: 8px 10px 0;
-}
-
-.mc-bike-badge {
-    padding: 4px 6px;
-    font-size: 9px;
-}
-
-/* AUTHOR HEADER */
-.mc-bike-card .post-author-header {
-    padding: 9px 10px 8px;
-    gap: 6px;
-}
-
-.mc-bike-card .post-author-avatar-link,
-.mc-bike-card .post-author-avatar {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px;
-    min-height: 34px;
-}
-
-.mc-bike-card .post-author-name {
+    color: #202020;
     font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.mc-bike-card .post-author-category {
+#motobikePost .post-author-category {
+    color: #777;
     font-size: 10px;
-}
-
-.mc-bike-card .post-author-time {
-    font-size: 9px;
-}
-
-.mc-bike-card .follow-btn {
-    padding: 5px 8px;
-    font-size: 10px;
-}
-
-/* CARD CONTENT */
-.mc-bike-content {
-    padding: 9px 10px 10px;
-}
-
-.mc-bike-title {
-    margin-bottom: 7px;
-    font-size: 14px;
-    line-height: 1.35;
-}
-
-.mc-bike-details {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 5px;
-    padding: 8px 0;
-    margin-bottom: 7px;
-}
-
-.mc-bike-detail-label {
-    font-size: 9px;
-}
-
-.mc-bike-detail strong {
-    font-size: 10px;
-}
-
-.mc-bike-price {
-    margin: 8px 0;
-    font-size: 18px;
     line-height: 1.3;
 }
 
-.mc-bike-description-wrap {
-    margin: 7px 0 3px;
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-.mc-bike-see-more {
-    margin: 3px 0 7px;
-    font-size: 11px;
-}
-
-/* LIKE / VIEW / SHARE */
-.mc-bike-post-actions {
-    gap: 8px;
-    margin-top: 7px;
-    padding: 7px 0;
-}
-
-.mc-bike-post-actions .post-action-btn {
-    gap: 4px;
-    font-size: 11px;
-}
-
-.mc-bike-read-more {
-    margin: 7px 0 8px;
-    padding: 8px 6px;
-    font-size: 11px;
-}
-
-/* CONTACT + REQUEST: SIDE BY SIDE */
-.mc-bike-sale-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    margin-top: 8px;
-}
-
-.mc-bike-action {
-    min-width: 0;
-    min-height: 36px;
-    padding: 7px 4px;
-    gap: 4px;
-    border-radius: 6px;
+#motobikePost .post-author-time {
+    color: #858585;
     font-size: 10px;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
-    white-space: normal;
+    line-height: 1.3;
 }
 
-/* TABLET SIZING */
-@media (min-width: 769px) and (max-width: 1100px) {
-    .mc-bike-gallery,
-    .mc-bike-main-image {
-        height: 145px;
-    }
-
-    .mc-bike-content {
-        padding: 8px;
-    }
-
-    .mc-bike-title {
-        font-size: 13px;
-    }
-
-    .mc-bike-price {
-        font-size: 17px;
-    }
-
-    .mc-bike-action {
-        font-size: 10px;
-        padding: 7px 3px;
-    }
+#motobikePost .post-author-right {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-/* MOBILE: ONE CARD PER ROW, SAME COMPACT STYLE */
-@media (max-width: 768px) {
-    .post-container {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-        padding: 10px 12px 20px;
-    }
-
-    .mc-bike-card {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .mc-bike-gallery,
-    .mc-bike-main-image {
-        height: 180px;
-    }
-
-    .mc-bike-gallery {
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    }
-
-    .mc-bike-content {
-        padding: 10px 12px 12px;
-    }
-
-    .mc-bike-title {
-        font-size: 16px;
-    }
-
-    .mc-bike-details {
-        gap: 6px 8px;
-    }
-
-    .mc-bike-detail-label {
-        font-size: 10px;
-    }
-
-    .mc-bike-detail strong {
-        font-size: 11px;
-    }
-
-    .mc-bike-price {
-        font-size: 20px;
-    }
-
-    .mc-bike-description-wrap {
-        font-size: 13px;
-    }
-
-    .mc-bike-post-actions {
-        gap: 8px;
-    }
-
-    .mc-bike-read-more {
-        font-size: 12px;
-    }
-
-    /* Keep both buttons on the same row on mobile too */
-    .mc-bike-sale-actions {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 7px;
-    }
-
-    .mc-bike-action {
-        min-height: 40px;
-        padding: 8px 5px;
-        font-size: 11px;
-    }
+#motobikePost .follow-btn {
+    padding: 6px 9px;
+    border: 1px solid #1877f2;
+    border-radius: 5px;
+    background: #1877f2;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
 }
 
-/* VERY NARROW PHONES */
-@media (max-width: 360px) {
-    .mc-bike-gallery,
-    .mc-bike-main-image {
-        height: 155px;
-    }
-
-    .mc-bike-sale-actions {
-        gap: 5px;
-    }
-
-    .mc-bike-action {
-        padding: 7px 3px;
-        font-size: 10px;
-    }
+#motobikePost .follow-btn:hover {
+    background: #0866d6;
 }
 
-/* =========================================================
-   MOTTECK BIKES — CARS-STYLE CARD FINISH
-   Append at the very bottom of motobike.css
-========================================================= */
-
-/* Four cards on desktop */
-@media (min-width: 1101px) {
-    #motobikePost.post-container {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        align-items: start;
-        gap: 14px;
-        padding: 12px 16px 22px;
-        width: 100%;
-    }
-}
-
-/* Three cards on tablet */
-@media (min-width: 769px) and (max-width: 1100px) {
-    #motobikePost.post-container {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        align-items: start;
-        gap: 12px;
-        padding: 12px;
-    }
-}
-
-/* One card per row on mobile */
-@media (max-width: 768px) {
-    #motobikePost.post-container {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-        padding: 10px 12px 20px;
-    }
-}
-
-/* Card */
-#motobikePost .mc-bike-card {
-    position: relative;
-    align-self: start;
-    min-width: 0;
-    width: 100%;
-    max-width: 100%;
-    height: fit-content;
-    overflow: hidden;
+#motobikePost .follow-btn.following {
     background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    color: #1877f2;
 }
 
-/* Gallery — compact Cars-style proportions */
+/* =========================
+   11. IMAGE GALLERY
+========================= */
+
 #motobikePost .mc-bike-gallery {
     position: relative;
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 0.8fr);
-    gap: 5px;
+    width: 100%;
     height: 155px;
-    margin: 12px 12px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    gap: 3px;
     overflow: hidden;
-    border-radius: 10px;
-    background: #f3f4f6;
+    background: #e9ebee;
 }
 
-#motobikePost .mc-bike-gallery-main,
-#motobikePost .mc-bike-gallery-thumb {
-    position: relative;
-    display: block;
+#motobikePost .mc-bike-gallery-single {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+#motobikePost .mc-bike-gallery-main {
     min-width: 0;
     min-height: 0;
+    height: 100%;
+    display: block;
     overflow: hidden;
+    background: #eceff2;
 }
 
-#motobikePost .mc-bike-gallery-main img,
-#motobikePost .mc-bike-gallery-thumb img {
-    display: block;
+#motobikePost .mc-bike-gallery-main img {
     width: 100%;
     height: 100%;
-    min-height: 0;
+    display: block;
     object-fit: cover;
-    border-radius: 0;
-    transition: transform 0.2s ease;
+    object-position: center;
+    transition: transform 0.3s ease;
 }
 
-#motobikePost .mc-bike-gallery-main:hover img,
-#motobikePost .mc-bike-gallery-thumb:hover img {
+#motobikePost .mc-bike-gallery-main:hover img {
     transform: scale(1.025);
 }
 
 #motobikePost .mc-bike-gallery-side {
+    min-width: 0;
+    min-height: 0;
     display: grid;
     grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: 5px;
+    gap: 3px;
+    overflow: hidden;
+}
+
+#motobikePost .mc-bike-gallery-thumb {
+    min-width: 0;
     min-height: 0;
-}
-
-/* Single-photo gallery */
-#motobikePost .mc-bike-gallery-single {
+    height: 100%;
     display: block;
+    overflow: hidden;
+    background: #e5e7eb;
 }
 
-#motobikePost .mc-bike-gallery-single .mc-bike-gallery-main {
+#motobikePost .mc-bike-gallery-thumb img {
     width: 100%;
     height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.2s ease;
 }
 
-/* Total photo count */
-#motobikePost .mc-bike-photo-total {
-    position: absolute;
-    z-index: 3;
-    left: 8px;
-    bottom: 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    max-width: calc(100% - 16px);
-    padding: 5px 8px;
-    border-radius: 6px;
-    background: rgba(0, 0, 0, 0.75);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.2;
+#motobikePost .mc-bike-gallery-thumb:hover img {
+    transform: scale(1.04);
 }
 
-/* Additional-photo overlay */
 #motobikePost .mc-bike-more-photos {
     position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.62);
+    right: 7px;
+    bottom: 7px;
+    z-index: 5;
+    padding: 5px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.75);
     color: #fff;
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 700;
 }
 
-/* Author header */
-#motobikePost .mc-bike-card .post-author-header {
-    padding: 9px 12px 8px;
-    gap: 8px;
+#motobikePost .mc-bike-photo-total {
+    position: absolute;
+    right: 7px;
+    bottom: 7px;
+    z-index: 6;
+    padding: 5px 8px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    pointer-events: none;
 }
 
-#motobikePost .mc-bike-card .post-author-avatar-link,
-#motobikePost .mc-bike-card .post-author-avatar,
-#motobikePost .mc-bike-card .post-author-avatar-placeholder {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px;
-    min-height: 36px;
-}
+/* =========================
+   12. POST CONTENT
+========================= */
 
-/* Content */
 #motobikePost .mc-bike-content {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 10px 12px 12px;
+    padding: 12px;
 }
 
-#motobikePost .mc-bike-title {
-    margin: 0 0 3px;
-    color: #151515;
+#motobikePost .mc-bike-title-link {
+    display: block;
+    margin: 0 0 9px;
+}
+
+#motobikePost .post-title.mc-bike-title {
+    margin: 0;
+    color: #171717;
     font-size: 15px;
     font-weight: 800;
-    line-height: 1.4;
+    line-height: 1.35;
     overflow-wrap: anywhere;
 }
 
-/* Pill-shaped bike features */
+#motobikePost .mc-bike-title-link:hover .mc-bike-title {
+    color: #1268cf;
+}
+
 #motobikePost .mc-bike-details {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 7px;
-    margin: 0 0 8px;
-    padding: 0;
-    border: 0;
+    margin: 0 0 10px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
 }
 
 #motobikePost .mc-bike-detail {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5px;
     min-width: 0;
-    max-width: 100%;
-    padding: 6px 9px;
-    background: #f1f3f5;
-    border: 1px solid #e7e9ec;
-    border-radius: 999px;
+    padding: 7px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid #edf0f3;
+    border-radius: 6px;
+    background: #f8f9fb;
 }
 
 #motobikePost .mc-bike-detail-label {
-    color: #666;
+    color: #777;
     font-size: 10px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
+    line-height: 1.2;
 }
 
-#motobikePost .mc-bike-detail-value,
-#motobikePost .mc-bike-detail strong {
-    color: #252525;
+#motobikePost .mc-bike-detail-value {
+    color: #242424;
     font-size: 11px;
     font-weight: 700;
+    line-height: 1.35;
     overflow-wrap: anywhere;
 }
 
-/* Price */
 #motobikePost .mc-bike-price {
-    margin: 4px 0 8px;
-    color: #080808;
-    font-size: 19px;
-    line-height: 1.3;
+    margin: 8px 0;
+    color: #111;
+    font-size: 20px;
     font-weight: 900;
+    line-height: 1.3;
     overflow-wrap: anywhere;
 }
 
-/* Description */
+/* =========================
+   13. DESCRIPTION / SEE MORE
+========================= */
+
 #motobikePost .mc-bike-description-wrap {
-    margin: 2px 0;
+    margin-top: 8px;
+}
+
+#motobikePost .mc-bike-description-text {
     color: #555;
     font-size: 12px;
     line-height: 1.55;
-}
-
-/* Engagement actions */
-#motobikePost .mc-bike-post-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
-    padding: 8px 0;
-    border-top: 1px solid #eee;
-}
-
-#motobikePost .mc-bike-post-actions .post-action-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 3px;
-    background: transparent;
-    border: 0;
-    color: #555;
-    font-size: 12px;
-}
-
-/* View Bike */
-#motobikePost .mc-bike-read-more {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    margin: 4px 0 6px;
-    padding: 9px 10px;
-    border: 1px solid #222;
-    border-radius: 7px;
-    background: #fff;
-    color: #171717;
-    font-size: 12px;
-    font-weight: 800;
-    text-decoration: none;
-}
-
-#motobikePost .mc-bike-read-more:hover {
-    background: #171717;
-    color: #fff;
-}
-
-/* Contact + Request buttons */
-#motobikePost .mc-bike-sale-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    margin-top: 4px;
-}
-
-#motobikePost .mc-bike-action {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    min-width: 0;
-    min-height: 38px;
-    padding: 7px 5px;
-    border: 1px solid #171717;
-    border-radius: 7px;
-    background: #171717;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.25;
-    text-align: center;
-    text-decoration: none;
     overflow-wrap: anywhere;
     white-space: normal;
 }
 
-#motobikePost .mc-bike-request {
-    border-color: #1746a2;
-    background: #1746a2;
-    color: #fff;
+#motobikePost .mc-bike-description-collapsed {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
 
-/* Mobile gallery and card spacing */
-@media (max-width: 768px) {
-    #motobikePost .mc-bike-gallery {
-        height: 190px;
-        grid-template-columns: minmax(0, 2fr) minmax(0, 0.8fr);
+#motobikePost .mc-bike-see-more {
+    margin-top: 5px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #1268cf;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+#motobikePost .mc-bike-see-more:hover {
+    color: #084f9f;
+    text-decoration: underline;
+}
+
+/* =========================
+   14. LIKE / SHARE / VIEWS
+========================= */
+
+#motobikePost .post-actions.mc-bike-post-actions {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-top: 1px solid #f0f1f3;
+}
+
+#motobikePost .post-action-btn {
+    min-height: 30px;
+    padding: 6px 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: 1px solid #e3e6ea;
+    border-radius: 6px;
+    background: #fff;
+    color: #505050;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+#motobikePost .post-action-btn:hover {
+    background: #f3f6fa;
+    color: #1268cf;
+}
+
+#motobikePost .like-action.liked,
+#motobikePost .like-action.liked i {
+    color: #e53935;
+}
+
+#motobikePost .share-action {
+    color: #444;
+}
+
+#motobikePost .views {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #777;
+    font-size: 11px;
+}
+
+/* =========================
+   15. POST ACTION BUTTONS
+========================= */
+
+#motobikePost .mc-bike-sale-actions {
+    padding: 0 12px 12px;
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+#motobikePost .mc-bike-action,
+#motobikePost .mc-bike-request,
+#motobikePost .mc-bike-read-more,
+#motobikePost .see-more-btn {
+    min-width: 0;
+    min-height: 36px;
+    padding: 9px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+#motobikePost .mc-bike-sale-actions .mc-bike-action,
+#motobikePost .mc-bike-sale-actions .mc-bike-request {
+    flex: 1 1 0;
+}
+
+#motobikePost .mc-bike-contact {
+    background: #1877f2;
+    color: #fff;
+    border-color: #1877f2;
+}
+
+#motobikePost .mc-bike-contact:hover {
+    background: #0866d6;
+    border-color: #0866d6;
+}
+
+#motobikePost .mc-bike-request {
+    background: #fff;
+    color: #1268cf;
+    border-color: #1877f2;
+}
+
+#motobikePost .mc-bike-request:hover {
+    background: #edf5ff;
+}
+
+#motobikePost .mc-bike-read-more,
+#motobikePost .see-more-btn {
+    width: calc(100% - 24px);
+    margin: 0 12px 12px;
+    background: #f3f5f7;
+    border-color: #e2e5e9;
+    color: #333;
+}
+
+#motobikePost .mc-bike-read-more:hover,
+#motobikePost .see-more-btn:hover {
+    background: #e8edf3;
+}
+
+/* =========================
+   16. NO POSTS MESSAGE
+========================= */
+
+#motobikePost .no-posts {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 35px 18px;
+    border: 1px dashed #cbd0d7;
+    border-radius: 10px;
+    background: #fff;
+    color: #666;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================
+   17. SHARE POPUP
+========================= */
+
+.motteck-share-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.motteck-share-box {
+    width: min(390px, 100%);
+    padding: 18px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background: #fff;
+    color: #202020;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.motteck-share-header {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.motteck-share-close {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: #f0f1f3;
+    color: #333;
+    font-size: 17px;
+}
+
+.motteck-share-close:hover {
+    background: #e2e5e9;
+}
+
+.motteck-share-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.share-option {
+    min-width: 0;
+    padding: 12px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #e6e8eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-size: 11px;
+    text-align: center;
+}
+
+.share-option:hover {
+    background: #f1f6ff;
+    border-color: #b9d4fa;
+    color: #1268cf;
+}
+
+.share-option i {
+    font-size: 21px;
+}
+
+/* =========================
+   18. FOOTER
+========================= */
+
+.footer {
+    width: 100%;
+    margin-top: auto;
+    padding: 30px 22px 0;
+    background: #101010;
+    color: #ddd;
+}
+
+.footer-top {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-bottom: 25px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 30px;
+}
+
+.footer-logo {
+    margin: 0 0 12px;
+    color: #fff;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.footer-text {
+    max-width: 430px;
+    margin: 0;
+    color: #bcbcbc;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 15px;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.footer-column h3 {
+    margin: 0 0 4px;
+    color: #fff;
+    font-size: 13px;
+}
+
+.footer-column a,
+.footer-links a {
+    color: #c4c4c4;
+    font-size: 12px;
+    transition: color 0.2s ease;
+}
+
+.footer-column a:hover,
+.footer-links a:hover {
+    color: #65aaff;
+}
+
+.small-text {
+    color: #aaa;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.social-box {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.social-box a {
+    width: 33px;
+    height: 33px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #393939;
+    border-radius: 50%;
+    background: #1b1b1b;
+    color: #fff;
+    font-size: 14px;
+}
+
+.social-box a:hover {
+    background: #1877f2;
+    border-color: #1877f2;
+}
+
+.footer-bottom {
+    padding: 14px 0;
+    border-top: 1px solid #303030;
+    color: #aaa;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+/* =========================
+   19. TABLET
+========================= */
+
+@media (max-width: 1100px) {
+    .post-container {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+        padding-right: 15px;
+        padding-left: 15px;
     }
 
-    #motobikePost .mc-bike-gallery-single {
+    #motobikePost .mc-bike-gallery {
+        height: 150px;
+    }
+
+    .footer-top {
+        gap: 22px;
+    }
+}
+
+/* =========================
+   20. MOBILE
+========================= */
+
+@media (max-width: 768px) {
+    .header {
+        min-height: 54px;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .top-actions {
+        gap: 7px;
+    }
+
+    .menu-btn {
+        display: inline-flex;
+        width: 35px;
+        height: 34px;
+    }
+
+    .auth-buttons {
+        gap: 5px;
+    }
+
+    .login-btn,
+    .signup-btn {
+        min-height: 32px;
+        padding: 7px 9px;
+        font-size: 11px;
+    }
+
+    .profile-btn {
+        padding: 5px 7px;
+        gap: 5px;
+        font-size: 11px;
+    }
+
+    .profile-menu {
+        right: 0;
+        width: min(235px, calc(100vw - 24px));
+    }
+
+    .mobile-menu {
+        top: 54px;
+    }
+
+    .category-nav {
+        top: 54px;
+        min-height: 40px;
+        justify-content: flex-start;
+        gap: 20px;
+        padding: 0 12px;
+    }
+
+    .category-nav a {
+        min-height: 40px;
+        font-size: 12px;
+    }
+
+    .category-search {
+        width: calc(100% - 24px);
+        margin: 108px auto 17px;
+    }
+
+    .search-input {
+        min-height: 41px;
+        font-size: 13px;
+    }
+
+    .post-container {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        padding: 0 12px;
+    }
+
+    #motobikePost .post-card {
+        width: 100%;
+        max-width: 520px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    #motobikePost .post-author-header {
+        padding: 10px;
+    }
+
+    #motobikePost .post-author-avatar,
+    #motobikePost .post-author-avatar-placeholder {
+        width: 34px;
+        height: 34px;
+    }
+
+    #motobikePost .post-author-name {
+        font-size: 12px;
+    }
+
+    #motobikePost .mc-bike-gallery {
         height: 190px;
     }
 
     #motobikePost .mc-bike-content {
-        padding: 10px 12px 12px;
+        padding: 12px;
     }
 
-    #motobikePost .mc-bike-title {
+    #motobikePost .post-title.mc-bike-title {
         font-size: 16px;
     }
 
-    #motobikePost .mc-bike-detail {
-        padding: 6px 8px;
-    }
-
     #motobikePost .mc-bike-price {
-        font-size: 20px;
+        font-size: 21px;
     }
 
-    #motobikePost .mc-bike-action {
-        min-height: 40px;
-        font-size: 11px;
+    #motobikePost .mc-bike-description-text {
+        font-size: 12px;
     }
-}
 
-/* Very narrow phones */
-@media (max-width: 360px) {
-    #motobikePost .mc-bike-gallery,
-    #motobikePost .mc-bike-gallery-single {
-        height: 165px;
+    #motobikePost .post-actions.mc-bike-post-actions {
+        padding: 10px 12px;
     }
 
     #motobikePost .mc-bike-sale-actions {
+        padding: 0 12px 12px;
+        gap: 8px;
+    }
+
+    #motobikePost .mc-bike-sale-actions .mc-bike-action,
+    #motobikePost .mc-bike-sale-actions .mc-bike-request {
+        flex: 1 1 0;
+    }
+
+    .footer {
+        padding: 25px 16px 0;
+    }
+
+    .footer-top {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 25px 18px;
+    }
+
+    .footer-top > :first-child {
+        grid-column: 1 / -1;
+    }
+}
+
+/* =========================
+   21. SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+    .header {
+        padding-right: 8px;
+        padding-left: 9px;
+    }
+
+    .title {
+        font-size: 18px;
+        letter-spacing: 0.5px;
+    }
+
+    .top-actions {
         gap: 5px;
     }
 
-    #motobikePost .mc-bike-action {
-        padding: 7px 3px;
+    .login-btn,
+    .signup-btn {
+        padding: 7px;
         font-size: 10px;
     }
+
+    .profile-btn {
+        gap: 4px;
+        padding: 5px;
+    }
+
+    .menu-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 17px;
+    }
+
+    .post-container {
+        padding-right: 9px;
+        padding-left: 9px;
+        gap: 13px;
+    }
+
+    #motobikePost .mc-bike-gallery {
+        height: 175px;
+    }
+
+    #motobikePost .mc-bike-details {
+        gap: 5px;
+    }
+
+    #motobikePost .mc-bike-detail {
+        padding: 7px;
+    }
+
+    #motobikePost .mc-bike-price {
+        font-size: 19px;
+    }
+
+    #motobikePost .post-action-btn {
+        padding: 6px 7px;
+        font-size: 10px;
+    }
+
+    #motobikePost .mc-bike-action,
+    #motobikePost .mc-bike-request {
+        padding: 9px 6px;
+        font-size: 10px;
+    }
+
+    .footer-top {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .footer-top > :first-child {
+        grid-column: auto;
+    }
 }
+
+/* =========================
+   22. REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
 
