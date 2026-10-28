@@ -1735,6 +1735,11 @@ def login():
         recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
     )
 
+@app.route("/logout")
+def logout():
+    session.pop("logged_in", None)
+    return redirect(url_for("login"))
+
 # ================= FORGOT PASSWORD =================
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
@@ -3100,7 +3105,7 @@ def get_home_posts():
             "trending": []
         }), 500
 
-# ================= ADD POST =================
+
 
 # ================= ADD POST =================
 @app.route('/add_post', methods=['POST'])
