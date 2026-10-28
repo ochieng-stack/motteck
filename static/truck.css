@@ -1,14 +1,4 @@
-
-/* =========================================================
-   MOTTECK TRUCK / BUS — CLEAN STYLESHEET
-   Desktop: 4 cards | Tablet: 3 cards | Mobile: 1 card
-========================================================= */
-
-/* =========================
-   GLOBAL
-========================= */
-
-* {
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -16,120 +6,204 @@
 }
 
 html,
-body {
-    min-height: 100%;
+body{
+    height: 100%;
 }
 
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+body{
     overflow-x: hidden;
     background: #f8f8f8;
-    color: #111;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-.main-section {
-    width: 100%;
-    flex: 1 0 auto;
-    min-width: 0;
-}
-
-/* =========================
-   HEADER
-========================= */
-
-.header {
+/* HEADER */
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(16, 17, 19);
     position: fixed;
+    width: 100%;
     top: 0;
     left: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: 58px;
+    margin: 0;
     padding: 10px 20px;
-    background: rgb(16, 17, 19);
+    z-index: 1000;
 }
 
-.title {
-    color: #fff;
+.title{
     font-size: 36px;
-    font-weight: 700;
+    font-weight: bold;
+    color: white;
 }
 
-.title a {
-    color: #fff;
+.title a{
+    color: white;
     text-decoration: none;
 }
 
-.top-actions {
+.top-actions{
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.menu-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
+.menu-btn{
+    background: none;
     border: none;
-    background: transparent;
-    color: #fff;
+    color: white;
     font-size: 26px;
     cursor: pointer;
 }
 
-/* =========================
-   LOGIN / SIGN UP
-========================= */
-
-.auth-buttons {
+/* CATEGORY NAV */
+.category-nav {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    background-color: rgb(16, 17, 19);
+    padding: 12px 10px;
+    position: fixed;
+    top: 58px;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.category-nav::-webkit-scrollbar{
+    display: none;
+}
+
+.category-nav a {
+    text-decoration: none;
+    padding: 8px 14px;
+    background-color: #444;
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: 0.3s ease;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.category-nav a:hover {
+    background-color:#2196f3;
+}
+
+.category-nav a.active{
+    background:#2196f3;
+    color:white;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 65px;
+    right: 10px;
+    background: #111111;
+    width: 200px;
+    border-radius: 8px;
+    z-index: 2000;
+}
+
+.mobile-menu a {
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    border-bottom: 1px solid #222;
+}
+
+/* SEARCH BAR */
+.category-search{
+    margin-top: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-input {
+    width: 90%;
+    max-width: 500px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 999px;
+    outline: none;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* AUTH BUTTONS */
+.auth-buttons{
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
 .login-btn,
-.signup-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 9px 18px;
-    border-radius: 30px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: .25s ease;
+.signup-btn{
+    text-decoration:none;
+    padding:9px 18px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s ease;
 }
 
-.login-btn {
-    border: 2px solid #fff;
-    background: transparent;
-    color: #fff;
+.login-btn{
+    color:white;
+    border:2px solid white;
+    background:transparent;
 }
 
-.login-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255,255,255,.18);
+.login-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(255,255,255,.18);
 }
 
-.signup-btn {
-    background: #2196f3;
-    color: #fff;
+.signup-btn{
+    background:#2196f3;
+    color:white;
 }
 
-.signup-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(33,150,243,.35);
+.signup-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(33,150,243,.35);
 }
 
-/* =========================
-   PROFILE DROPDOWN
-========================= */
+/* PROFILE */
+.profile-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:white;
+    text-decoration:none;
+    padding:9px 18px;
+    border-radius:30px;
+    border:2px solid white;
+    transition:.3s;
+}
 
+.profile-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(255,255,255,.2);
+}
+
+.profile-btn i{
+    font-size:15px;
+}
+
+/* PROFILE DROPDOWN */
 .profile-dropdown {
     position: relative;
 }
@@ -138,14 +212,15 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 9px 14px;
-    border: 2px solid #fff;
-    border-radius: 30px;
+    color: white;
     background: transparent;
-    color: #fff;
-    font-size: 14px;
+    text-decoration: none;
+    padding: 9px 14px;
+    border-radius: 30px;
+    border: 2px solid white;
+    transition: .3s;
     cursor: pointer;
-    transition: .25s ease;
+    font-size: 14px;
 }
 
 .profile-btn:hover {
@@ -170,12 +245,12 @@ body {
     position: absolute;
     top: calc(100% + 10px);
     right: 0;
-    z-index: 3000;
     width: 245px;
-    overflow: hidden;
+    background: #ffffff;
     border-radius: 12px;
-    background: #fff;
-    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.20);
+    overflow: hidden;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
@@ -183,6 +258,7 @@ body {
         opacity .2s ease,
         transform .2s ease,
         visibility .2s ease;
+    z-index: 3000;
 }
 
 .profile-dropdown.active .profile-menu {
@@ -200,15 +276,14 @@ body {
 }
 
 .profile-menu-header > i {
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    border-radius: 50%;
     background: #2196f3;
-    color: #fff;
+    color: white;
+    border-radius: 50%;
     font-size: 16px;
 }
 
@@ -219,22 +294,22 @@ body {
 }
 
 .profile-menu-header strong {
-    overflow: hidden;
     color: #222;
     font-size: 14px;
     white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .profile-menu-header small {
-    margin-top: 3px;
     color: #777;
     font-size: 12px;
+    margin-top: 3px;
 }
 
 .profile-menu-divider {
     height: 1px;
-    background: #eee;
+    background: #eeeeee;
 }
 
 .profile-menu-item {
@@ -244,16 +319,16 @@ body {
     width: 100%;
     padding: 12px 15px;
     color: #222;
-    font-size: 14px;
     text-decoration: none;
+    font-size: 14px;
     transition: background .2s ease;
 }
 
 .profile-menu-item i {
     width: 20px;
+    text-align: center;
     color: #555;
     font-size: 15px;
-    text-align: center;
 }
 
 .profile-menu-item:hover {
@@ -264,7 +339,10 @@ body {
     color: #2196f3;
 }
 
-.profile-menu-item.logout-item,
+.profile-menu-item.logout-item {
+    color: #d32f2f;
+}
+
 .profile-menu-item.logout-item i {
     color: #d32f2f;
 }
@@ -273,185 +351,829 @@ body {
     background: #fff1f1;
 }
 
-/* =========================
-   MOBILE MENU
-========================= */
-
-.mobile-menu {
-    position: fixed;
-    top: 60px;
-    right: 10px;
-    z-index: 2000;
-    display: none;
-    flex-direction: column;
-    gap: 6px;
-    width: 200px;
-    min-width: 180px;
-    padding: 12px;
-    border-radius: 10px;
-    background: #1a1a1a;
-    box-shadow: 0 5px 20px rgba(0,0,0,.3);
-}
-
-.mobile-menu a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 8px;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 14px;
-    text-decoration: none;
-    transition: background .2s ease;
-}
-
-.mobile-menu a:hover {
-    background: #2196f3;
-}
-
-/* =========================
-   CATEGORY NAVIGATION
-========================= */
-
-.category-nav {
-    position: fixed;
-    top: 58px;
-    left: 0;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    padding: 12px 10px;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    background: rgb(16,17,19);
-}
-
-.category-nav::-webkit-scrollbar {
-    display: none;
-}
-
-.category-nav {
-    scrollbar-width: none;
-}
-
-.category-nav a {
-    flex-shrink: 0;
-    padding: 8px 14px;
-    border-radius: 20px;
-    background: #444;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: background .25s ease;
-}
-
-.category-nav a:hover,
-.category-nav a.active {
-    background: #2196f3;
-    color: #fff;
-}
-
-/* =========================
-   SEARCH
-========================= */
-
-.category-search {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 140px;
-    padding: 0 12px;
-}
-
-.search-input {
-    width: 90%;
-    max-width: 500px;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 999px;
-    outline: none;
-    background: #fff;
-    font-size: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.1);
-}
-
-.search-input:focus {
-    box-shadow: 0 6px 18px rgba(0,0,0,.2);
-}
-
-/* =========================
-   POST GRID
-========================= */
-
-/* Desktop: four cards per row */
-
+/* POSTS DESKTOP ONLY */
 .post-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: start;
     gap: 14px;
-    width: 100%;
     padding: 12px 16px 22px;
 }
 
-.no-posts {
-    grid-column: 1 / -1;
-    padding: 40px 20px;
-    color: #777;
-    text-align: center;
+/* CARD */
+.post-card{
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.08);
+    overflow:hidden;
+    padding:0;
 }
 
-.no-posts h3 {
-    margin-bottom: 8px;
-    color: #222;
-    font-size: 20px;
+/* IMAGE TOP */
+.post-card img{
+    width:100%;
+    height:210px;
+    object-fit:cover;
+    border-radius:0;
 }
 
-.no-posts p {
-    font-size: 14px;
-    line-height: 1.6;
+/* CONTENT */
+.post-content{
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
 }
 
-/* =========================
-   TRUCK / BUS CARD
-========================= */
+/* TITLE */
+.post-title{
+    font-size:19px;
+    font-weight:bold;
+    color:black;
+    line-height:1.4;
+}
 
-.post-card.mc-truck-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-self: start;
-    width: 100%;
-    min-width: 0;
-    height: auto;
+/* TEXT */
+.post-text{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    background: #fff;
+    font-size:15px;
+    color:#444;
+    line-height:1.6;
+}
+
+/* BUTTONS */
+.like-btn {
+    background: #2196f3;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.like-btn:hover {
+    background: #1976d2;
+}
+
+.delete-btn,
+.see-more-btn {
+    margin-right: 8px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.delete-btn{
+    background: red;
+    color: white;
+}
+
+.see-more-btn{
+    background: #eee;
+}
+
+.see-more-btn:hover {
+    background: #2196f3;
+    color: white;
+}
+
+/* FOOTER */
+.footer{
+    background:#0f0f0f;
+    color:#ffffff;
+    padding:55px 20px 20px;
+    margin-top:auto;
+    border-top:1px solid #222;
+}
+
+.footer-top{
+    max-width:1200px;
+    margin:0 auto 35px;
+    text-align:center;
+}
+
+.footer-logo{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:10px;
+    letter-spacing:1px;
+}
+
+.footer-text{
+    max-width:700px;
+    margin:0 auto;
+    color:#bdbdbd;
+    font-size:15px;
+    line-height:1.7;
+}
+
+.footer-links{
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:35px;
+    padding:20px 0 30px;
+}
+
+.footer-column h3{
+    font-size:16px;
+    margin-bottom:14px;
+    color:#ffffff;
+}
+
+.footer-column a{
+    display:block;
+    color:#bdbdbd;
+    text-decoration:none;
+    margin-bottom:10px;
+    font-size:14px;
+    transition:0.25s ease;
+}
+
+.footer-column a:hover{
+    color:#ffffff;
+    transform:translateX(4px);
+}
+
+.footer-column p{
+    color:#bdbdbd;
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:8px;
+}
+
+.small-text{
+    font-size:13px;
+    line-height:1.8;
+}
+
+/* SOCIAL AREA */
+.social-box{
+    margin-top:12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-box p{
+    margin-bottom:8px;
+    color:#ffffff;
+    font-weight:600;
+}
+
+.social-box{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px;
+}
+
+.social-box p{
+    width:100%;
+}
+
+.social-box a{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#1a1a1a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#ffffff;
+    text-decoration:none;
+    transition:0.25s ease;
+    margin-bottom:0;
+}
+
+.social-box a i{
+    font-size:18px;
+}
+
+.social-box a:hover{
+    background:#2b2b2b;
+    transform:translateY(-4px);
+}
+
+/* BOTTOM */
+.footer-bottom{
+    border-top:1px solid #222;
+    padding-top:18px;
+    text-align:center;
+}
+
+.footer-bottom p{
+    font-size:13px;
+    color:#9c9c9c;
+}
+
+/* TABLET */
+@media (max-width: 992px){
+    .footer-links{
+        grid-template-columns:repeat(2,1fr);
+        gap:28px;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 768px){
+    .footer{
+        padding:45px 16px 18px;
+    }
+
+    .footer-top{
+        margin-bottom:25px;
+    }
+
+    .footer-logo{
+        font-size:24px;
+    }
+
+    .footer-text{
+        font-size:14px;
+    }
+
+    .footer-links{
+        grid-template-columns:1fr;
+        gap:24px;
+        text-align:left;
+    }
+
+    .footer-column h3{
+        margin-bottom:10px;
+    }
+
+    .social-box a{
+        width:40px;
+        height:40px;
+    }
+
+    .footer-bottom{
+        margin-top:10px;
+    }
+}
+
+/* MOBILE MENU */
+.mobile-menu{
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 15px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 2000;
+    min-width: 180px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.mobile-menu a{
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.mobile-menu a:hover{
+    background: #2196f3;
+}
+
+/* MOBILE FIX */
+@media screen and (max-width: 900px){
+
+    .header{
+        height:56px;
+        padding:10px 14px;
+        box-sizing:border-box;
+    }
+
+    .title{
+        font-size:22px;
+    }
+
+    .menu-btn{
+        font-size:22px;
+    }
+
+    .category-nav{
+        top:56px;
+        padding:10px 8px;
+        gap:8px;
+        justify-content:flex-start;
+        overflow-x:auto;
+    }
+
+    .category-nav::-webkit-scrollbar{
+        display:none;
+    }
+
+    .category-nav a{
+        font-size:12px;
+        padding:7px 12px;
+        white-space:nowrap;
+        flex-shrink:0;
+    }
+
+    .category-search{
+        margin-top:110px;
+        padding:10px;
+    }
+
+    .search-input{
+        width:100%;
+        max-width:100%;
+        padding:12px 16px;
+        font-size:14px;
+    }
+
+    .post-container{
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+        padding:12px;
+    }
+
+    .post-card{
+        padding:0;
+        border-radius:12px;
+        overflow:hidden;
+    }
+
+    .post-card img{
+        width:100%;
+        height:220px;
+        object-fit:cover;
+    }
+
+    .post-content{
+        padding:12px;
+    }
+
+    .post-title{
+        font-size:17px;
+        line-height:1.4;
+    }
+
+    .post-text{
+        font-size:14px;
+        -webkit-line-clamp:2;
+    }
+}
+
+
+/* =========================================================
+   MOTTECK POST FEATURES
+   Added without changing the existing Cars design
+========================================================= */
+
+
+/* SPONSORED BADGE */
+
+.badge.sponsored{
+    display:inline-block;
+    align-self:flex-start;
+    margin:10px 12px 0;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#2e7d32;
+    color:#ffffff;
+    font-size:12px;
+    font-weight:600;
+}
+
+
+/* AUTHOR HEADER */
+
+.post-author-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 14px;
+    background:#ffffff;
+}
+
+
+.post-author-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+}
+
+
+.post-author-avatar-link{
+    display:block;
+    width:44px;
+    height:44px;
+    min-width:44px;
+    border-radius:50%;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+
+.post-author-avatar{
+    width:44px !important;
+    height:44px !important;
+    min-width:44px;
+    object-fit:cover !important;
+    border-radius:50% !important;
+    display:block;
+}
+
+
+.post-author-info{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+}
+
+
+.post-author-name{
+    color:#111111;
+    font-size:14px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
+.post-author-category{
+    color:#777777;
+    font-size:12px;
+    margin-top:3px;
+}
+
+
+.post-author-time{
+    color:#999999;
+    font-size:11px;
+    margin-top:3px;
+}
+
+
+.post-author-right{
+    flex-shrink:0;
+}
+
+
+/* FOLLOW BUTTON */
+
+.follow-btn{
+    border:1px solid #2196f3;
+    background:#2196f3;
+    color:#ffffff;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+
+.follow-btn:hover{
+    background:#1976d2;
+    border-color:#1976d2;
+}
+
+
+.follow-btn.following{
+    background:#ffffff;
+    color:#2196f3;
+    border-color:#2196f3;
+}
+
+
+.follow-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+
+/* KEEP POST IMAGE LOOKING LIKE THE ORIGINAL */
+
+.post-card .post-image{
+    width:100% !important;
+    height:210px !important;
+    object-fit:cover !important;
+    border-radius:0 !important;
+    display:block;
+}
+
+
+/* POST ACTIONS */
+
+.post-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    padding-top:4px;
+}
+
+
+.post-action-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    background:transparent;
+    border:none;
+    color:#555555;
+    font-size:13px;
+    cursor:pointer;
+    padding:6px 8px;
+    border-radius:6px;
+    text-decoration:none;
+    transition:.2s ease;
+}
+
+
+.post-action-btn:hover{
+    background:#f1f1f1;
+    color:#2196f3;
+}
+
+
+.like-action.liked{
+    color:#2196f3;
+}
+
+
+.like-action.liked i{
+    font-weight:900;
+}
+
+
+.views{
+    cursor:default;
+}
+
+
+.views:hover{
+    background:transparent;
+    color:#555555;
+}
+/* =========================================
+   CONTACT / REQUEST BUTTONS
+   ========================================= */
+
+.sale-contact-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.post-contact-btn,
+.request-motteck-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    white-space: nowrap;
+}
+
+/* Contact Seller / Contact Business */
+.post-contact-btn {
+    background: #111;
+    color: #fff;
+}
+
+.post-contact-btn:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+/* Request MOTTECK */
+.request-motteck-btn {
+    background: #f1f1f1;
     color: #111;
-    box-shadow: 0 3px 10px rgba(0,0,0,.07);
+    border: 1px solid #d6d6d6;
 }
 
-.mc-truck-card *,
-.mc-truck-card *::before,
-.mc-truck-card *::after {
-    box-sizing: border-box;
+.request-motteck-btn:hover {
+    background: #e5e5e5;
+    transform: translateY(-1px);
 }
 
-/* =========================
-   FEATURED / SPONSORED BADGES
-========================= */
+/* Icons */
+.post-contact-btn i,
+.request-motteck-btn i {
+    font-size: 13px;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .sale-contact-actions {
+        gap: 8px;
+    }
+
+    .post-contact-btn,
+    .request-motteck-btn {
+        padding: 8px 11px;
+        font-size: 12px;
+    }
+}
+
+
+
+/* READ MORE */
+
+.post-content .see-more-btn{
+    display:inline-block;
+    align-self:flex-start;
+    text-decoration:none;
+    margin-top:2px;
+}
+
+
+/* DESKTOP AUTHOR IMAGE OVERRIDE */
+
+@media screen and (min-width:901px){
+
+    .post-card .post-author-avatar{
+        width:44px !important;
+        height:44px !important;
+    }
+
+}
+
+
+/* MOBILE FEATURE OVERRIDES
+   These come AFTER .post-card img so the avatars
+   are not accidentally enlarged to 220px.
+*/
+
+@media screen and (max-width:900px){
+
+    .post-author-header{
+        padding:10px 12px;
+    }
+
+    .post-author-avatar-link{
+        width:40px;
+        height:40px;
+        min-width:40px;
+    }
+
+    .post-author-avatar{
+        width:40px !important;
+        height:40px !important;
+        min-width:40px;
+    }
+
+    .post-author-name{
+        font-size:13px;
+    }
+
+    .post-author-category{
+        font-size:11px;
+    }
+
+    .post-author-time{
+        font-size:10px;
+    }
+
+    .follow-btn{
+        padding:6px 11px;
+        font-size:11px;
+    }
+
+    .post-card .post-image{
+        width:100% !important;
+        height:220px !important;
+        object-fit:cover !important;
+    }
+
+    .post-actions{
+        gap:4px;
+    }
+
+    .post-action-btn{
+        padding:6px 6px;
+        font-size:12px;
+    }
+
+    .home-comment-input{
+        font-size:13px;
+    }
+
+    .home-comment-submit{
+        font-size:12px;
+    }
+
+}
+/* =========================================================
+   ACTUAL USER PROFILE PICTURE
+========================================================= */
+
+.post-author-avatar-link{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    display:block;
+    border-radius:50%;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+.post-author-avatar{
+    width:44px !important;
+    height:44px !important;
+    min-width:44px;
+    min-height:44px;
+    display:block;
+    object-fit:cover !important;
+    border-radius:50% !important;
+}
+
+/* Only appears when the user has NO profile picture */
+
+.post-author-avatar-placeholder{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    border-radius:50%;
+    background:#e9e9e9;
+    color:#777;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+}
+
+@media screen and (max-width:900px){
+
+    .post-author-avatar-link{
+        width:40px;
+        height:40px;
+        min-width:40px;
+    }
+
+    .post-author-avatar{
+        width:40px !important;
+        height:40px !important;
+        min-width:40px;
+        min-height:40px;
+    }
+
+    .post-author-avatar-placeholder{
+        width:40px;
+        height:40px;
+        min-width:40px;
+        font-size:16px;
+    }
+
+}
+
+/* =========================================================
+   MOTTECK TRUCK / BUS CARDS
+========================================================= */
+
+.mc-truck-card {
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+    color: #111;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+}
 
 .mc-truck-badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    padding: 9px 10px 0;
+    gap: 7px;
+    padding: 12px 12px 0;
 }
 
 .mc-truck-badges:empty {
@@ -462,153 +1184,31 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 5px 8px;
+    padding: 6px 10px;
     border-radius: 5px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
 }
 
 .mc-truck-featured {
-    background: #fff3cd;
     color: #795600;
+    background: #fff3cd;
 }
 
 .mc-truck-sponsored {
-    background: #e8efff;
     color: #1746a2;
+    background: #e8efff;
 }
-
-/* =========================
-   AUTHOR HEADER
-========================= */
-
-.post-author-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    min-width: 0;
-    padding: 10px;
-    background: #fff;
-}
-
-.post-author-left {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    min-width: 0;
-}
-
-.post-author-avatar-link {
-    display: block;
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    overflow: hidden;
-    border-radius: 50%;
-    text-decoration: none;
-}
-
-.post-author-avatar {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-    min-width: 0;
-    min-height: 0;
-    border-radius: 50% !important;
-    object-fit: cover !important;
-}
-
-.post-author-avatar-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: #e9e9e9;
-    color: #777;
-    font-size: 16px;
-}
-
-.post-author-info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    line-height: 1.3;
-}
-
-.post-author-name {
-    overflow: hidden;
-    color: #111;
-    font-size: 12px;
-    font-weight: 700;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.post-author-category {
-    margin-top: 2px;
-    color: #777;
-    font-size: 10px;
-}
-
-.post-author-time {
-    margin-top: 2px;
-    color: #999;
-    font-size: 9px;
-}
-
-.post-author-right {
-    flex-shrink: 0;
-}
-
-/* =========================
-   FOLLOW BUTTON
-========================= */
-
-.follow-btn {
-    padding: 6px 9px;
-    border: 1px solid #2196f3;
-    border-radius: 20px;
-    background: #2196f3;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s ease;
-}
-
-.follow-btn:hover {
-    border-color: #1976d2;
-    background: #1976d2;
-}
-
-.follow-btn.following {
-    border-color: #2196f3;
-    background: #fff;
-    color: #2196f3;
-}
-
-.follow-btn:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
-/* =========================
-   TRUCK PHOTO GALLERY
-========================= */
 
 .mc-truck-gallery {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, .8fr);
+    grid-template-columns: minmax(0,2fr) minmax(75px,.8fr);
     gap: 5px;
-    height: 155px;
-    min-width: 0;
-    margin: 0 10px;
+    height: 260px;
+    margin: 12px 12px 0;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #f3f4f6;
 }
 
@@ -627,7 +1227,6 @@ body {
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 0;
     object-fit: cover;
     transition: transform .25s ease;
 }
@@ -639,9 +1238,8 @@ body {
 
 .mc-truck-side-images {
     display: grid;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2,minmax(0,1fr));
     gap: 5px;
-    min-width: 0;
     min-height: 0;
     overflow: hidden;
 }
@@ -656,36 +1254,29 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,.65);
     color: #fff;
-    font-size: 17px;
+    background: rgba(0,0,0,.65);
+    font-size: 22px;
     font-weight: 800;
 }
 
 .mc-truck-photo-total {
     position: absolute;
-    bottom: 7px;
-    left: 7px;
+    left: 9px;
+    bottom: 9px;
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 7px;
-    border-radius: 5px;
-    background: rgba(0,0,0,.72);
+    gap: 6px;
+    padding: 6px 9px;
+    border-radius: 6px;
     color: #fff;
-    font-size: 9px;
+    background: rgba(0,0,0,.72);
+    font-size: 11px;
     font-weight: 700;
 }
 
-/* =========================
-   TRUCK CARD CONTENT
-========================= */
-
 .mc-truck-content {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    padding: 10px;
+    padding: 15px;
 }
 
 .mc-truck-title-link {
@@ -694,27 +1285,18 @@ body {
 }
 
 .mc-truck-title {
-    margin: 0 0 8px;
-    color: #111;
-    font-size: 14px;
+    margin: 0 0 12px;
+    font-size: 20px;
     font-weight: 800;
-    line-height: 1.4;
+    line-height: 1.35;
     overflow-wrap: anywhere;
 }
 
-.mc-truck-title-link:hover {
-    color: #1746a2;
-}
-
-/* =========================
-   VEHICLE SPECIFICATIONS
-========================= */
-
 .mc-truck-details {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 5px;
-    margin-bottom: 8px;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px 12px;
+    margin-bottom: 14px;
 }
 
 .mc-truck-detail {
@@ -722,48 +1304,36 @@ body {
     flex-direction: column;
     gap: 3px;
     min-width: 0;
-    padding: 6px;
-    border: 1px solid #e7e9ec;
-    border-radius: 6px;
-    background: #f1f3f5;
 }
 
 .mc-truck-label {
     color: #737373;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 600;
 }
 
 .mc-truck-value {
     color: #252525;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 700;
     overflow-wrap: anywhere;
 }
 
-/* =========================
-   PRICE
-========================= */
-
 .mc-truck-price {
-    margin: 4px 0 8px;
+    margin: 12px 0;
     color: #080808;
-    font-size: 18px;
+    font-size: 23px;
     font-weight: 900;
     line-height: 1.3;
     overflow-wrap: anywhere;
 }
 
-/* =========================
-   DESCRIPTION / SEE MORE
-========================= */
-
 .mc-truck-description {
     display: -webkit-box;
     overflow: hidden;
     color: #525252;
-    font-size: 12px;
-    line-height: 1.55;
+    font-size: 13px;
+    line-height: 1.7;
     overflow-wrap: anywhere;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
@@ -776,31 +1346,23 @@ body {
 }
 
 .mc-truck-see-more {
-    align-self: flex-start;
-    margin: 7px 0 8px;
+    display: inline-block;
+    margin: 7px 0 13px;
     padding: 0;
-    border: none;
-    background: transparent;
+    border: 0;
     color: #1746a2;
-    font-size: 11px;
+    background: transparent;
+    font-size: 13px;
     font-weight: 800;
     cursor: pointer;
 }
-
-.mc-truck-see-more:hover {
-    text-decoration: underline;
-}
-
-/* =========================
-   LIKE / VIEWS / SHARE
-========================= */
 
 .mc-truck-engagement {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px 0;
+    gap: 17px;
+    padding: 12px 0;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
 }
@@ -809,67 +1371,210 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    min-width: 0;
-    padding: 4px 2px;
-    border: none;
-    background: transparent;
+    gap: 6px;
+    padding: 0;
+    border: 0;
     color: #555;
-    font-size: 11px;
+    background: transparent;
+    font-size: 13px;
     text-decoration: none;
     cursor: pointer;
 }
 
 .mc-truck-engagement-btn:hover {
-    color: #1746a2;
+    color: #111;
 }
 
-.mc-truck-engagement-btn.liked,
-.mc-truck-engagement-btn.liked i {
+.mc-truck-engagement-btn.liked {
     color: #d62839;
 }
-
-.mc-truck-engagement-btn span {
-    overflow-wrap: anywhere;
-}
-
-.mc-truck-engagement-btn:not(button) {
-    cursor: default;
-}
-
-/* =========================
-   VIEW DETAILS BUTTON
-========================= */
 
 .mc-truck-view-details {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    width: 100%;
-    min-width: 0;
-    margin-top: 8px;
-    padding: 9px 6px;
+    gap: 8px;
+    margin-top: 13px;
+    padding: 11px 12px;
     border: 1px solid #d8d8d8;
     border-radius: 7px;
-    background: #fff;
     color: #222;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 800;
-    text-align: center;
     text-decoration: none;
-    overflow-wrap: anywhere;
-    transition: background .2s ease;
 }
 
 .mc-truck-view-details:hover {
-    background: #f1f5f9;
+    background: #f5f5f5;
 }
 
-/* =========================
-   CONTACT / REQUEST BUTTONS
-========================= */
+.mc-truck-sale-actions {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 9px;
+    margin-top: 10px;
+}
 
+.mc-truck-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 0;
+    padding: 12px 9px;
+    border: 0;
+    border-radius: 7px;
+    color: #fff;
+    background: #111;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+
+.mc-truck-button:hover {
+    opacity: .88;
+}
+
+.mc-truck-request {
+    background: #1746a2;
+}
+
+@media (max-width: 600px) {
+    .mc-truck-gallery {
+        height: 220px;
+        grid-template-columns: minmax(0,1.7fr) minmax(65px,.8fr);
+        margin: 10px 10px 0;
+    }
+
+    .mc-truck-content {
+        padding: 12px;
+    }
+
+    .mc-truck-title {
+        font-size: 18px;
+    }
+
+    .mc-truck-price {
+        font-size: 21px;
+    }
+
+    .mc-truck-sale-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-truck-button {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .mc-truck-gallery {
+        height: 185px;
+    }
+
+    .mc-truck-engagement {
+        gap: 11px;
+    }
+}
+
+/* =========================================================
+   MOTTECK TRUCK / BUS — MATCH CARS CATEGORY
+========================================================= */
+
+/* DESKTOP: FOUR COLUMNS */
+.post-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+    padding: 12px 16px 22px;
+}
+
+.mc-truck-card {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    align-self: start;
+    box-sizing: border-box;
+}
+
+/* Compact gallery */
+.mc-truck-gallery {
+    height: 155px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 0.8fr);
+    gap: 5px;
+    margin: 12px 12px 0;
+}
+
+/* Compact card content */
+.mc-truck-content {
+    padding: 9px 10px 10px;
+}
+
+.mc-truck-title {
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+}
+
+.mc-truck-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.mc-truck-detail {
+    min-width: 0;
+    padding: 5px 6px;
+    background: #f1f3f5;
+    border: 1px solid #e7e9ec;
+    border-radius: 7px;
+    gap: 4px;
+}
+
+.mc-truck-label {
+    font-size: 9px;
+}
+
+.mc-truck-value {
+    font-size: 10px;
+}
+
+.mc-truck-price {
+    font-size: 18px;
+    margin: 3px 0 8px;
+}
+
+.mc-truck-description {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.mc-truck-see-more {
+    font-size: 11px;
+    margin: 7px 0 8px;
+}
+
+/* Engagement */
+.mc-truck-engagement {
+    gap: 8px;
+    padding: 7px 0;
+}
+
+.mc-truck-engagement-btn {
+    font-size: 11px;
+}
+
+.mc-truck-view-details {
+    margin-top: 8px;
+    padding: 9px 6px;
+    font-size: 11px;
+}
+
+/* Both action buttons side by side */
 .mc-truck-sale-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -878,256 +1583,17 @@ body {
 }
 
 .mc-truck-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
     width: 100%;
     min-width: 0;
     min-height: 36px;
     padding: 7px 4px;
-    border: none;
-    border-radius: 7px;
-    background: #111;
-    color: #fff;
     font-size: 10px;
-    font-weight: 800;
-    line-height: 1.3;
-    text-align: center;
-    text-decoration: none;
+    line-height: 1.25;
     overflow-wrap: anywhere;
-    cursor: pointer;
-    transition: opacity .2s ease;
+    box-sizing: border-box;
 }
 
-.mc-truck-button i {
-    flex-shrink: 0;
-}
-
-.mc-truck-button:hover {
-    opacity: .85;
-}
-
-.mc-truck-request {
-    background: #1746a2;
-}
-
-/* =========================
-   SHARE DIALOG
-   Used by the existing share JavaScript
-========================= */
-
-.motteck-share-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 5000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: rgba(0,0,0,.6);
-}
-
-.motteck-share-box {
-    width: 100%;
-    max-width: 380px;
-    padding: 18px;
-    border-radius: 12px;
-    background: #fff;
-    box-shadow: 0 12px 35px rgba(0,0,0,.25);
-}
-
-.motteck-share-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 18px;
-}
-
-.motteck-share-header h3 {
-    color: #111;
-    font-size: 18px;
-}
-
-.motteck-share-close {
-    border: none;
-    background: transparent;
-    color: #444;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-.motteck-share-options {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-}
-
-.share-option {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-width: 0;
-    padding: 12px 8px;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    background: #fff;
-    color: #222;
-    font-size: 13px;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.share-option:hover {
-    background: #f1f7ff;
-    color: #1746a2;
-}
-
-/* =========================
-   FOOTER
-========================= */
-
-.footer {
-    flex-shrink: 0;
-    margin-top: auto;
-    padding: 55px 20px 20px;
-    border-top: 1px solid #222;
-    background: #0f0f0f;
-    color: #fff;
-}
-
-.footer-top {
-    max-width: 1200px;
-    margin: 0 auto 35px;
-    text-align: center;
-}
-
-.footer-logo {
-    margin-bottom: 10px;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.footer-text {
-    max-width: 700px;
-    margin: 0 auto;
-    color: #bdbdbd;
-    font-size: 15px;
-    line-height: 1.7;
-}
-
-.footer-links {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 35px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px 0 30px;
-}
-
-.footer-column {
-    min-width: 0;
-}
-
-.footer-column h3 {
-    margin-bottom: 14px;
-    color: #fff;
-    font-size: 16px;
-}
-
-.footer-column a {
-    display: block;
-    margin-bottom: 10px;
-    color: #bdbdbd;
-    font-size: 14px;
-    text-decoration: none;
-    transition: .25s ease;
-    overflow-wrap: anywhere;
-}
-
-.footer-column a:hover {
-    color: #fff;
-    transform: translateX(4px);
-}
-
-.footer-column p {
-    margin-bottom: 8px;
-    color: #bdbdbd;
-    font-size: 14px;
-    line-height: 1.7;
-    overflow-wrap: anywhere;
-}
-
-.small-text {
-    font-size: 13px;
-    line-height: 1.8;
-}
-
-/* =========================
-   SOCIAL LINKS
-========================= */
-
-.social-box {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.social-box p {
-    width: 100%;
-    margin-bottom: 0;
-    color: #fff;
-    font-weight: 600;
-}
-
-.social-box a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    margin-bottom: 0;
-    border-radius: 50%;
-    background: #1a1a1a;
-    color: #fff;
-    text-decoration: none;
-    transition: .25s ease;
-}
-
-.social-box a i {
-    font-size: 18px;
-}
-
-.social-box a:hover {
-    transform: translateY(-4px);
-    background: #2b2b2b;
-}
-
-/* =========================
-   FOOTER BOTTOM
-========================= */
-
-.footer-bottom {
-    padding-top: 18px;
-    border-top: 1px solid #222;
-    text-align: center;
-}
-
-.footer-bottom p {
-    color: #9c9c9c;
-    font-size: 13px;
-}
-
-/* =========================================================
-   TABLET
-   Three cards per row
-========================================================= */
-
+/* TABLET: THREE COLUMNS */
 @media (max-width: 1100px) and (min-width: 769px) {
     .post-container {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1138,106 +1604,10 @@ body {
     .mc-truck-gallery {
         height: 145px;
     }
-
-    .mc-truck-content {
-        padding: 9px;
-    }
-
-    .mc-truck-title {
-        font-size: 13px;
-    }
-
-    .mc-truck-sale-actions {
-        gap: 5px;
-    }
-
-    .mc-truck-button {
-        padding: 7px 3px;
-        font-size: 10px;
-    }
-
-    .footer-links {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 28px;
-    }
 }
 
-/* =========================================================
-   MOBILE
-   One card per row
-========================================================= */
-
+/* MOBILE: ONE CARD PER ROW, BUTTONS SIDE BY SIDE */
 @media (max-width: 768px) {
-    .header {
-        min-height: 56px;
-        height: 56px;
-        padding: 10px 14px;
-    }
-
-    .title {
-        font-size: 22px;
-    }
-
-    .menu-btn {
-        font-size: 22px;
-    }
-
-    .top-actions {
-        gap: 8px;
-    }
-
-    .auth-buttons {
-        gap: 6px;
-    }
-
-    .login-btn,
-    .signup-btn {
-        padding: 7px 10px;
-        font-size: 12px;
-    }
-
-    .profile-btn {
-        gap: 6px;
-        padding: 7px 9px;
-        font-size: 12px;
-    }
-
-    .profile-btn i {
-        font-size: 13px;
-    }
-
-    .profile-menu {
-        width: min(245px, calc(100vw - 20px));
-    }
-
-    .mobile-menu {
-        top: 60px;
-    }
-
-    .category-nav {
-        top: 56px;
-        justify-content: flex-start;
-        gap: 8px;
-        padding: 10px 8px;
-    }
-
-    .category-nav a {
-        padding: 7px 12px;
-        font-size: 12px;
-    }
-
-    .category-search {
-        margin-top: 110px;
-        padding: 10px;
-    }
-
-    .search-input {
-        width: 100%;
-        max-width: 100%;
-        padding: 12px 16px;
-        font-size: 14px;
-    }
-
     .post-container {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -1245,41 +1615,15 @@ body {
         padding: 10px 12px 20px;
     }
 
-    .post-card.mc-truck-card {
+    .mc-truck-card {
         width: 100%;
         max-width: 100%;
     }
 
-    .post-author-header {
-        padding: 10px 12px;
-    }
-
-    .post-author-avatar-link {
-        width: 40px;
-        height: 40px;
-    }
-
-    .post-author-name {
-        font-size: 13px;
-    }
-
-    .post-author-category {
-        font-size: 11px;
-    }
-
-    .post-author-time {
-        font-size: 10px;
-    }
-
-    .follow-btn {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-
     .mc-truck-gallery {
         height: 190px;
-        grid-template-columns: minmax(0, 1.7fr) minmax(0, .8fr);
-        margin: 0 10px;
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.8fr);
+        margin: 10px 10px 0;
     }
 
     .mc-truck-content {
@@ -1288,162 +1632,36 @@ body {
 
     .mc-truck-title {
         font-size: 18px;
-        margin-bottom: 9px;
-    }
-
-    .mc-truck-details {
-        gap: 7px;
-        margin-bottom: 10px;
-    }
-
-    .mc-truck-detail {
-        padding: 7px;
-    }
-
-    .mc-truck-label {
-        font-size: 10px;
-    }
-
-    .mc-truck-value {
-        font-size: 12px;
     }
 
     .mc-truck-price {
-        margin: 4px 0 9px;
         font-size: 21px;
     }
 
-    .mc-truck-description {
-        font-size: 13px;
-        line-height: 1.6;
-    }
-
-    .mc-truck-see-more {
-        font-size: 12px;
-    }
-
-    .mc-truck-engagement {
-        gap: 14px;
-        padding: 10px 0;
-    }
-
-    .mc-truck-engagement-btn {
-        gap: 5px;
-        font-size: 12px;
-    }
-
-    .mc-truck-view-details {
-        margin-top: 10px;
-        padding: 11px 8px;
-        font-size: 12px;
-    }
-
-    /* Keep both actions on the same row on mobile */
     .mc-truck-sale-actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
-        margin-top: 9px;
     }
 
     .mc-truck-button {
         min-height: 40px;
-        padding: 8px 5px;
+        padding: 8px 4px;
         font-size: 11px;
-    }
-
-    .footer {
-        padding: 45px 16px 18px;
-    }
-
-    .footer-top {
-        margin-bottom: 25px;
-    }
-
-    .footer-logo {
-        font-size: 24px;
-    }
-
-    .footer-text {
-        font-size: 14px;
-    }
-
-    .footer-links {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 24px;
-        padding-bottom: 25px;
-        text-align: left;
-    }
-
-    .footer-column h3 {
-        margin-bottom: 10px;
-    }
-
-    .social-box a {
-        width: 40px;
-        height: 40px;
-    }
-
-    .footer-bottom {
-        margin-top: 10px;
     }
 }
 
-/* =========================================================
-   VERY SMALL PHONES
-========================================================= */
-
+/* VERY SMALL MOBILE SCREENS */
 @media (max-width: 360px) {
-    .header {
-        padding-right: 9px;
-        padding-left: 10px;
-    }
-
-    .title {
-        font-size: 20px;
-    }
-
-    .top-actions {
-        gap: 5px;
-    }
-
-    .login-btn,
-    .signup-btn {
-        padding: 6px 8px;
-        font-size: 11px;
-    }
-
-    .profile-btn {
-        padding: 6px 7px;
-    }
-
     .mc-truck-gallery {
         height: 175px;
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, .8fr);
-    }
-
-    .mc-truck-content {
-        padding: 10px;
-    }
-
-    .mc-truck-title {
-        font-size: 16px;
-    }
-
-    .mc-truck-price {
-        font-size: 19px;
     }
 
     .mc-truck-engagement {
-        gap: 9px;
+        gap: 8px;
     }
 
     .mc-truck-button {
-        gap: 3px;
-        padding: 7px 3px;
         font-size: 10px;
-    }
-
-    .mc-truck-button i {
-        font-size: 10px;
+        padding: 7px 2px;
     }
 }
