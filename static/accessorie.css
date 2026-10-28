@@ -1,144 +1,1391 @@
-
 /* =========================================================
-   MOTTECK ACCESSORIES — COMPACT CARDS
-   Paste at the very bottom of accessorie.css
+   MOTTECK ACCESSORIES
+   Clean stylesheet
+   Black / white / grey with blue accents
 ========================================================= */
 
-/* DESKTOP: 4 compact cards per row */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    background: #f8f8f8;
+    color: #171717;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    color: inherit;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-height: 58px;
+    padding: 8px 20px;
+
+    background: rgb(16, 17, 19);
+}
+
+.title {
+    color: #fff;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.title a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+
+    font-size: 26px;
+    cursor: pointer;
+}
+
+/* =========================================================
+   LOGIN / SIGN UP
+========================================================= */
+
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-btn,
+.signup-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 18px;
+    border-radius: 30px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: background .2s ease, transform .2s ease;
+}
+
+.login-btn {
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+}
+
+.signup-btn {
+    background: #2196f3;
+    color: #fff;
+}
+
+.signup-btn:hover {
+    background: #1976d2;
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   PROFILE DROPDOWN
+========================================================= */
+
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 9px 14px;
+    border: 2px solid #fff;
+    border-radius: 30px;
+
+    background: transparent;
+    color: #fff;
+
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.profile-btn:hover {
+    background: #252525;
+}
+
+.profile-arrow {
+    font-size: 11px !important;
+    transition: transform .2s ease;
+}
+
+.profile-dropdown.active .profile-arrow {
+    transform: rotate(180deg);
+}
+
+.profile-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 3000;
+
+    width: 245px;
+    overflow: hidden;
+
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+
+    transition: opacity .2s ease, transform .2s ease,
+                visibility .2s ease;
+}
+
+.profile-dropdown.active .profile-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.profile-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: #f7f7f7;
+}
+
+.profile-menu-header > i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    background: #2196f3;
+    color: #fff;
+}
+
+.profile-menu-header div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.profile-menu-header strong {
+    overflow: hidden;
+    color: #222;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-menu-header small {
+    margin-top: 3px;
+    color: #777;
+    font-size: 12px;
+}
+
+.profile-menu-divider {
+    height: 1px;
+    background: #eee;
+}
+
+.profile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    padding: 12px 15px;
+
+    color: #222;
+    font-size: 14px;
+    text-decoration: none;
+
+    transition: background .2s ease;
+}
+
+.profile-menu-item i {
+    width: 20px;
+    color: #555;
+    text-align: center;
+}
+
+.profile-menu-item:hover {
+    background: #f1f7ff;
+}
+
+.profile-menu-item:hover i {
+    color: #2196f3;
+}
+
+.profile-menu-item.logout-item,
+.profile-menu-item.logout-item i {
+    color: #d32f2f;
+}
+
+.profile-menu-item.logout-item:hover {
+    background: #fff1f1;
+}
+
+/* =========================================================
+   CATEGORY NAVIGATION
+========================================================= */
+
+.category-nav {
+    position: fixed;
+    top: 58px;
+    left: 0;
+    z-index: 999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    width: 100%;
+    padding: 12px 10px;
+
+    background: rgb(16, 17, 19);
+
+    overflow-x: auto;
+    flex-wrap: nowrap;
+}
+
+.category-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.category-nav a {
+    flex-shrink: 0;
+
+    padding: 8px 14px;
+    border-radius: 20px;
+
+    background: #444;
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: background .2s ease;
+}
+
+.category-nav a:hover,
+.category-nav a.active {
+    background: #2196f3;
+    color: #fff;
+}
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+.mobile-menu {
+    position: fixed;
+    top: 65px;
+    right: 10px;
+    z-index: 2000;
+
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+
+    min-width: 190px;
+    padding: 10px;
+
+    border-radius: 10px;
+    background: #111;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
+}
+
+.mobile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px;
+    border-radius: 6px;
+
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+
+    transition: background .2s ease;
+}
+
+.mobile-menu a:hover {
+    background: #2196f3;
+}
+
+/* =========================================================
+   MAIN CONTENT AND SEARCH
+========================================================= */
+
+.main-section {
+    width: 100%;
+    flex: 1;
+}
+
+.category-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    margin-top: 140px;
+    padding: 10px 16px 0;
+}
+
+.search-input {
+    width: 90%;
+    max-width: 500px;
+    min-width: 0;
+
+    padding: 14px 20px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    outline: none;
+
+    background: #fff;
+    color: #171717;
+
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.search-input:focus {
+    border-color: #2196f3;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, .15);
+}
+
+/* =========================================================
+   ACCESSORY POST GRID
+   Four desktop columns, two tablet columns,
+   one mobile column
+========================================================= */
+
 #accessoriePost.post-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: start;
-    gap: 14px;
-    padding: 16px;
+    gap: 16px;
+
+    width: 100%;
+    padding: 18px;
 }
 
 #accessoriePost .accessory-card {
-    align-self: start;
-    height: auto;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
     min-width: 0;
+    height: auto;
+
     overflow: hidden;
-    border-radius: 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .06);
+
+    transition: box-shadow .2s ease, transform .2s ease;
 }
 
-/* Seller information */
+#accessoriePost .accessory-card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .1);
+}
+
+/* =========================================================
+   AUTHOR HEADER
+========================================================= */
+
 #accessoriePost .post-author-header {
-    padding: 8px;
-    gap: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    order: 1;
+    min-width: 0;
+    padding: 10px;
+
+    background: #fff;
 }
 
-#accessoriePost .post-author-avatar-link,
+#accessoriePost .post-author-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    min-width: 0;
+}
+
+#accessoriePost .post-author-avatar-link {
+    display: block;
+    flex-shrink: 0;
+
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    overflow: hidden;
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+#accessoriePost .post-author-avatar {
+    display: block;
+
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0;
+    min-height: 0;
+
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
 #accessoriePost .post-author-avatar-placeholder {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    border-radius: 50%;
+    background: #e9e9e9;
+    color: #777;
+    font-size: 15px;
+}
+
+#accessoriePost .post-author-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.25;
 }
 
 #accessoriePost .post-author-name {
-    font-size: 11px;
+    overflow: hidden;
+    color: #171717;
+    font-size: 12px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-#accessoriePost .post-author-category,
+#accessoriePost .post-author-category {
+    margin-top: 3px;
+    color: #777;
+    font-size: 10px;
+}
+
 #accessoriePost .post-author-time {
-    font-size: 9px;
+    margin-top: 2px;
+    color: #999;
+    font-size: 10px;
+}
+
+#accessoriePost .post-author-right {
+    flex-shrink: 0;
 }
 
 #accessoriePost .follow-btn {
-    padding: 5px 8px;
+    padding: 5px 9px;
+    border: 1px solid #2196f3;
+    border-radius: 20px;
+
+    background: #2196f3;
+    color: #fff;
+
     font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
 }
 
-/* Compact product gallery */
+#accessoriePost .follow-btn.following {
+    background: #fff;
+    color: #2196f3;
+}
+
+#accessoriePost .follow-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   SPONSORED / FEATURED BADGES
+========================================================= */
+
+#accessoriePost .accessory-badges {
+    order: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    padding: 8px 10px 0;
+}
+
+#accessoriePost .accessory-badges:empty {
+    display: none;
+}
+
+#accessoriePost .accessory-badges .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 4px 8px;
+    border-radius: 5px;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+#accessoriePost .accessory-badges .sponsored {
+    background: #171717;
+    color: #fff;
+}
+
+#accessoriePost .accessory-badges .featured {
+    background: #f4c542;
+    color: #171717;
+}
+
+/* =========================================================
+   IMAGE GALLERY
+========================================================= */
+
 #accessoriePost .accessory-gallery,
 #accessoriePost .accessory-gallery-single {
-    height: 145px;
-    min-height: 145px;
+    position: relative;
+    order: 2;
+
+    width: 100%;
+    height: 160px;
+    min-height: 160px;
+
+    overflow: hidden;
+    background: #f2f2f2;
 }
 
-/* Compact product information */
+#accessoriePost .accessory-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+    gap: 4px;
+}
+
+#accessoriePost .accessory-gallery-single {
+    display: block;
+}
+
+#accessoriePost .accessory-image-link {
+    position: relative;
+
+    display: block;
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+    background: #f2f2f2;
+    text-decoration: none;
+}
+
+#accessoriePost .accessory-gallery-main {
+    width: 100%;
+    height: 100%;
+}
+
+#accessoriePost .accessory-gallery-side {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#accessoriePost .accessory-gallery-thumb {
+    position: relative;
+    display: block;
+
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+    background: #e9e9e9;
+}
+
+#accessoriePost .accessory-gallery-main img,
+#accessoriePost .accessory-gallery-thumb img,
+#accessoriePost .accessory-gallery-single img {
+    display: block;
+
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0;
+    min-height: 0;
+
+    border-radius: 0 !important;
+    object-fit: cover !important;
+    object-position: center;
+
+    transition: transform .2s ease;
+}
+
+#accessoriePost .accessory-gallery-main:hover img,
+#accessoriePost .accessory-gallery-thumb:hover img,
+#accessoriePost .accessory-gallery-single:hover img {
+    transform: scale(1.025);
+}
+
+/* Photo count */
+
+#accessoriePost .accessory-photo-total {
+    position: absolute;
+    bottom: 7px;
+    left: 7px;
+    z-index: 5;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 5px 8px;
+    border-radius: 20px;
+
+    background: rgba(0, 0, 0, .76);
+    color: #fff;
+
+    font-size: 10px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+/* Additional photos overlay */
+
+#accessoriePost .accessory-more-photos {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, .6);
+    color: #fff;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   ACCESSORY CONTENT
+========================================================= */
+
 #accessoriePost .accessory-content {
-    padding: 9px;
+    order: 3;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    width: 100%;
+    min-width: 0;
+    padding: 11px;
+}
+
+#accessoriePost .accessory-title-link {
+    display: block;
+    min-width: 0;
+
+    margin-bottom: 5px;
+    color: #111;
+    text-decoration: none;
 }
 
 #accessoriePost .accessory-title {
-    font-size: 14px;
-    line-height: 1.35;
+    margin: 0;
+
+    color: #111;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
 }
 
 #accessoriePost .accessory-price {
-    margin: 3px 0 5px;
-    font-size: 17px;
+    margin: 4px 0 7px;
+
+    color: #000;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
 }
 
+/* =========================================================
+   PRODUCT DETAIL PILLS
+========================================================= */
+
 #accessoriePost .accessory-details {
-    gap: 5px;
-    margin: 5px 0;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    width: 100%;
+    margin: 7px 0;
+    padding: 0;
+
+    background: transparent;
 }
 
 #accessoriePost .accessory-detail {
-    padding: 5px 7px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 3px;
+
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+    padding: 6px 9px;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 999px;
+
+    background: #f7f7f7;
+    font-size: 10px;
+    line-height: 1.2;
 }
+
+#accessoriePost .accessory-detail-label {
+    color: #777;
+    font-size: 9px;
+    line-height: 1.2;
+}
+
+#accessoriePost .accessory-detail-value {
+    max-width: 100%;
+
+    color: #171717;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: left;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   DESCRIPTION AND SEE MORE
+========================================================= */
 
 #accessoriePost .accessory-description {
-    font-size: 11px;
-    line-height: 1.4;
+    margin: 5px 0 0;
+
+    color: #555;
+    font-size: 12px;
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
 }
+
+#accessoriePost .accessory-description.collapsed {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+}
+
+#accessoriePost .accessory-see-more {
+    align-self: flex-start;
+
+    margin-top: 6px;
+    padding: 0;
+    border: 0;
+
+    background: transparent;
+    color: #171717;
+
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#accessoriePost .accessory-see-more:hover {
+    color: #2196f3;
+}
+
+/* =========================================================
+   LIKE / SHARE / VIEWS
+========================================================= */
 
 #accessoriePost .accessory-post-actions {
-    gap: 8px;
-    margin: 6px 0 4px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin: 9px 0 6px;
+    padding-top: 4px;
 }
+
+#accessoriePost .accessory-post-actions .post-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    padding: 5px 2px;
+    border: 0;
+    border-radius: 5px;
+
+    background: transparent;
+    color: #555;
+
+    font-size: 11px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#accessoriePost .accessory-post-actions .post-action-btn:hover {
+    color: #2196f3;
+}
+
+#accessoriePost .accessory-post-actions .like-action.liked {
+    color: #e63946;
+}
+
+#accessoriePost .accessory-post-actions .views {
+    cursor: default;
+}
+
+/* =========================================================
+   VIEW DETAILS
+========================================================= */
 
 #accessoriePost .accessory-read-more {
-    margin: 4px 0;
-    padding: 8px;
+    display: block;
+    align-self: stretch;
+
+    margin: 5px 0;
+    padding: 9px 10px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+
+    background: #f1f1f1;
+    color: #171717;
+
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+
+    transition: background .2s ease, color .2s ease;
 }
 
-/* Keep Buy Now and Request MOTTECK */
+#accessoriePost .accessory-read-more:hover {
+    background: #e7e7e7;
+}
+
+/* =========================================================
+   BUY NOW + REQUEST MOTTECK
+========================================================= */
+
 #accessoriePost .accessory-purchase-actions {
-    gap: 6px;
-    margin-top: 6px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+
+    width: 100%;
+    margin-top: 8px;
 }
 
 #accessoriePost .accessory-purchase-actions a {
-    min-height: 36px;
-    padding: 7px 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    padding: 8px 5px;
+
+    border: 1px solid transparent;
+    border-radius: 7px;
+
     font-size: 10px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+
+    overflow-wrap: anywhere;
+
+    transition: opacity .2s ease, transform .2s ease;
 }
 
-/* TABLET: 3 cards per row */
+#accessoriePost .accessory-purchase-actions a:hover {
+    opacity: .9;
+    transform: translateY(-1px);
+}
+
+#accessoriePost .accessory-buy-btn {
+    border-color: #111;
+    background: #111;
+    color: #fff;
+}
+
+#accessoriePost .accessory-request-btn {
+    border-color: #1746a2;
+    background: #1746a2;
+    color: #fff;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+#accessoriePost .no-posts {
+    grid-column: 1 / -1;
+
+    padding: 40px 20px;
+    color: #777;
+    text-align: center;
+}
+
+#accessoriePost .no-posts h3 {
+    margin-bottom: 8px;
+    color: #222;
+    font-size: 20px;
+}
+
+#accessoriePost .no-posts p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   SHARE POPUP
+========================================================= */
+
+.motteck-share-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    background: rgba(0, 0, 0, .65);
+}
+
+.motteck-share-box {
+    width: 100%;
+    max-width: 380px;
+    padding: 20px;
+
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, .25);
+}
+
+.motteck-share-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+.motteck-share-header h3 {
+    color: #171717;
+    font-size: 18px;
+}
+
+.motteck-share-close {
+    border: 0;
+    background: transparent;
+    color: #555;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.motteck-share-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.motteck-share-options .share-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-width: 0;
+    padding: 12px 8px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+
+    background: #f8f8f8;
+    color: #222;
+
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.motteck-share-options .share-option:hover {
+    background: #eee;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+    margin-top: auto;
+    padding: 55px 20px 20px;
+
+    border-top: 1px solid #222;
+    background: #0f0f0f;
+    color: #fff;
+}
+
+.footer-top {
+    max-width: 1200px;
+    margin: 0 auto 35px;
+    text-align: center;
+}
+
+.footer-logo {
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.footer-text {
+    max-width: 700px;
+    margin: 0 auto;
+
+    color: #bdbdbd;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 35px;
+
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0 30px;
+}
+
+.footer-column h3 {
+    margin-bottom: 14px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.footer-column a {
+    display: block;
+
+    margin-bottom: 10px;
+    color: #bdbdbd;
+
+    font-size: 14px;
+    text-decoration: none;
+
+    transition: color .2s ease, transform .2s ease;
+}
+
+.footer-column a:hover {
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.footer-column p {
+    margin-bottom: 8px;
+    color: #bdbdbd;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.footer-column .small-text {
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.social-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.social-box p {
+    width: 100%;
+    margin-bottom: 0;
+    color: #fff;
+    font-weight: 600;
+}
+
+.social-box a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+    margin-bottom: 0;
+
+    border-radius: 50%;
+    background: #1a1a1a;
+    color: #fff;
+
+    text-decoration: none;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.social-box a i {
+    font-size: 18px;
+}
+
+.social-box a:hover {
+    background: #2b2b2b;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    padding-top: 18px;
+    border-top: 1px solid #222;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #9c9c9c;
+    font-size: 13px;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
 @media (min-width: 601px) and (max-width: 1000px) {
     #accessoriePost.post-container {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        padding: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        padding: 14px;
     }
 
     #accessoriePost .accessory-gallery,
     #accessoriePost .accessory-gallery-single {
-        height: 150px;
-        min-height: 150px;
+        height: 180px;
+        min-height: 180px;
     }
 
-    #accessoriePost .accessory-content {
-        padding: 8px;
-    }
-
-    #accessoriePost .accessory-title {
-        font-size: 13px;
-    }
-
-    #accessoriePost .accessory-price {
-        font-size: 16px;
+    .footer-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px;
     }
 }
 
-/* MOBILE: 1 card per row */
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 600px) {
+    .header {
+        min-height: 56px;
+        padding: 8px 14px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .top-actions {
+        gap: 8px;
+    }
+
+    .menu-btn {
+        font-size: 22px;
+    }
+
+    .auth-buttons {
+        gap: 6px;
+    }
+
+    .login-btn,
+    .signup-btn {
+        padding: 7px 10px;
+        font-size: 12px;
+    }
+
+    .profile-btn {
+        gap: 5px;
+        padding: 7px 9px;
+        font-size: 12px;
+    }
+
+    .profile-menu {
+        width: min(245px, calc(100vw - 20px));
+    }
+
+    .category-nav {
+        top: 56px;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 10px 8px;
+    }
+
+    .category-nav a {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+
+    .mobile-menu {
+        top: 62px;
+    }
+
+    .category-search {
+        margin-top: 110px;
+        padding: 10px;
+    }
+
+    .search-input {
+        width: 100%;
+        max-width: none;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
     #accessoriePost.post-container {
         grid-template-columns: minmax(0, 1fr);
         gap: 14px;
         padding: 10px;
+    }
+
+    #accessoriePost .accessory-card {
+        width: 100%;
+    }
+
+    #accessoriePost .post-author-header {
+        padding: 10px 12px;
+    }
+
+    #accessoriePost .post-author-avatar-link,
+    #accessoriePost .post-author-avatar-placeholder {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+
+    #accessoriePost .post-author-name {
+        font-size: 13px;
+    }
+
+    #accessoriePost .post-author-category {
+        font-size: 11px;
+    }
+
+    #accessoriePost .post-author-time {
+        font-size: 10px;
+    }
+
+    #accessoriePost .follow-btn {
+        padding: 6px 10px;
+        font-size: 11px;
     }
 
     #accessoriePost .accessory-gallery,
@@ -159,8 +1406,22 @@
         font-size: 20px;
     }
 
+    #accessoriePost .accessory-detail {
+        padding: 7px 10px;
+    }
+
+    #accessoriePost .accessory-post-actions {
+        gap: 12px;
+    }
+
+    #accessoriePost .accessory-post-actions .post-action-btn {
+        font-size: 12px;
+    }
+
+    /* Keep Buy Now and Request MOTTECK side-by-side */
     #accessoriePost .accessory-purchase-actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
     }
 
     #accessoriePost .accessory-purchase-actions a {
@@ -168,15 +1429,66 @@
         padding: 9px 6px;
         font-size: 11px;
     }
+
+    .footer {
+        padding: 45px 16px 18px;
+    }
+
+    .footer-top {
+        margin-bottom: 25px;
+    }
+
+    .footer-logo {
+        font-size: 24px;
+    }
+
+    .footer-text {
+        font-size: 14px;
+    }
+
+    .footer-links {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+        text-align: left;
+    }
+
+    .footer-column h3 {
+        margin-bottom: 10px;
+    }
+
+    .social-box a {
+        width: 40px;
+        height: 40px;
+    }
+
+    .footer-bottom {
+        margin-top: 10px;
+    }
 }
 
-/* VERY NARROW PHONES */
+/* =========================================================
+   VERY NARROW PHONES
+========================================================= */
+
 @media (max-width: 360px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .top-actions {
+        gap: 5px;
+    }
+
+    .profile-btn {
+        padding: 6px 7px;
+    }
+
     #accessoriePost .accessory-purchase-actions {
         gap: 5px;
     }
 
     #accessoriePost .accessory-purchase-actions a {
+        gap: 3px;
         padding: 8px 3px;
         font-size: 10px;
     }
