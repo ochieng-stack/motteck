@@ -1465,6 +1465,14 @@ function createPostCard(post) {
         `;
     }
 
+    /* Total photo count — matching the Cars page */
+    const photoCountHTML = `
+        <span class="mc-photo-total">
+            <i class="fa-regular fa-images"></i>
+            ${images.length} photo${images.length === 1 ? "" : "s"}
+        </span>
+    `;
+
     /* -----------------------------------------------------
        BUY NOW + REQUEST MOTTECK
        Spare parts use the purchase flow, not vehicle
