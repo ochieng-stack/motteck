@@ -977,7 +977,9 @@ function initViewTracking() {
    Three visible cards on desktop, one on mobile.
    Automatically advances; users can still swipe/scroll.
 ========================================================= */
+
 let featuredCarouselTimer = null;
+let featuredCarouselResetTimer = null;
 
 function initFeaturedCarousel() {
     const carousel = document.getElementById("featured-posts");
@@ -988,50 +990,116 @@ function initFeaturedCarousel() {
         featuredCarouselTimer = null;
     }
 
-    const cards = carousel.querySelectorAll(".mc-post-card");
+    if (featuredCarouselResetTimer) {
+        clearTimeout(featuredCarouselResetTimer);
+        featuredCarouselResetTimer = null;
+    }
+
+    // Remove a clone left by an earlier initialization.
+    carousel.querySelectorAll("[data-carousel-clone='true']")
+        .forEach(clone => clone.remove());
+
+    const cards = Array.from(carousel.querySelectorAll(".mc-post-card"));
+
     if (cards.length < 2) return;
 
-    const advanceCarousel = () => {
+    // Clone the first card so the last transition looks continuous.
+    const firstClone = cards[0].cloneNode(true);
+    firstClone.dataset.carouselClone = "true";
+    firstClone.setAttribute("aria-hidden", "true");
+
+    // Prevent duplicate element IDs from the cloned card.
+    firstClone.removeAttribute("id");
+    firstClone.querySelectorAll("[id]").forEach(element => {
+        element.removeAttribute("id");
+    });
+
+    carousel.appendChild(firstClone);
+
+    let isPaused = false;
+    let isResetting = false;
+
+    const getStep = () => {
         const firstCard = carousel.querySelector(".mc-post-card");
-        if (!firstCard) return;
+        if (!firstCard) return 0;
 
         const styles = window.getComputedStyle(carousel);
         const gap = parseFloat(styles.columnGap || styles.gap) || 0;
-        const step = firstCard.getBoundingClientRect().width + gap;
-        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
-        if (maxScroll <= 4) return;
+        return firstCard.getBoundingClientRect().width + gap;
+    };
 
-        if (carousel.scrollLeft >= maxScroll - 8) {
-            carousel.scrollTo({ left: 0, behavior: "smooth" });
+    const advanceCarousel = () => {
+        if (isPaused || isResetting) return;
+
+        const step = getStep();
+        if (!step) return;
+
+        const originalCards = carousel.querySelectorAll(
+            ".mc-post-card:not([data-carousel-clone='true'])"
+        );
+
+        const lastOriginalIndex = originalCards.length - 1;
+        const currentIndex = Math.round(carousel.scrollLeft / step);
+
+        if (currentIndex >= lastOriginalIndex) {
+            // Move onto the clone, then silently reset to the real first card.
+            isResetting = true;
+
+            carousel.scrollTo({
+                left: step * (lastOriginalIndex + 1),
+                behavior: "smooth"
+            });
+
+            featuredCarouselResetTimer = setTimeout(() => {
+                carousel.scrollTo({
+                    left: 0,
+                    behavior: "instant"
+                });
+
+                isResetting = false;
+                featuredCarouselResetTimer = null;
+            }, 550);
         } else {
-            carousel.scrollBy({ left: step, behavior: "smooth" });
+            carousel.scrollTo({
+                left: step * (currentIndex + 1),
+                behavior: "smooth"
+            });
         }
     };
 
-    featuredCarouselTimer = setInterval(advanceCarousel, 4500);
+    const startCarousel = () => {
+        if (featuredCarouselTimer) {
+            clearInterval(featuredCarouselTimer);
+        }
 
-    // Pause while the visitor is interacting with the carousel.
-    carousel.onmouseenter = () => {
-        if (featuredCarouselTimer) clearInterval(featuredCarouselTimer);
-        featuredCarouselTimer = null;
-    };
-
-    carousel.onmouseleave = () => {
-        if (featuredCarouselTimer) clearInterval(featuredCarouselTimer);
         featuredCarouselTimer = setInterval(advanceCarousel, 4500);
     };
 
-    carousel.ontouchstart = () => {
-        if (featuredCarouselTimer) clearInterval(featuredCarouselTimer);
-        featuredCarouselTimer = null;
+    const pauseCarousel = () => {
+        isPaused = true;
+
+        if (featuredCarouselTimer) {
+            clearInterval(featuredCarouselTimer);
+            featuredCarouselTimer = null;
+        }
     };
 
-    carousel.ontouchend = () => {
-        if (featuredCarouselTimer) clearInterval(featuredCarouselTimer);
-        featuredCarouselTimer = setInterval(advanceCarousel, 4500);
+    const resumeCarousel = () => {
+        isPaused = false;
+        startCarousel();
     };
+
+    carousel.onmouseenter = pauseCarousel;
+    carousel.onmouseleave = resumeCarousel;
+    carousel.ontouchstart = pauseCarousel;
+    carousel.ontouchend = resumeCarousel;
+    carousel.onfocusin = pauseCarousel;
+    carousel.onfocusout = resumeCarousel;
+
+    startCarousel();
 }
+
 
 /* =========================================================
    RENDER HOMEPAGE DATA
