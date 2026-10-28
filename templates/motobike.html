@@ -1279,20 +1279,23 @@ function createPostCard(post) {
     if (transmission) {
         details.push(["Transmission", transmission]);
     }
-
+    
     const detailsHTML = details.length
         ? `
             <div class="mc-bike-details">
                 ${details.map(([label, value]) => `
                     <div class="mc-bike-detail">
-                        <span class="mc-bike-detail-label">${escapeHTML(label)}</span>
-                        <strong>${escapeHTML(value)}</strong>
-                    </div>
-                `).join("")}
-            </div>
+                         <span class="mc-bike-detail-label">
+                             ${escapeHTML(label)}
+                         </span>
+                         <strong class="mc-bike-detail-value">
+                             ${escapeHTML(value)}
+                         </strong>
+                     </div>
+                 `).join("")}
+             </div>
         `
         : "";
-
     /* -----------------------------------------------------
        PRICE
     ----------------------------------------------------- */
@@ -1409,75 +1412,94 @@ function createPostCard(post) {
     const visibleImages = images.slice(0, 3);
     const remainingImages = Math.max(0, images.length - 3);
 
-    let galleryHTML = "";
+    const photoCountHTML = images.length
+        ? `
+            <span class="mc-bike-photo-total">
+                <i class="fa-regular fa-images"></i>
+                ${images.length} photo${images.length === 1 ? "" : "s"}
+            </span>
+        `
+        : "";
 
-    if (visibleImages.length <= 1) {
+     let galleryHTML = "";
 
-        galleryHTML = `
-            <a href="/post/${encodeURIComponent(postId)}" class="mc-bike-main-image-link">
-                <img
-                    src="${escapeHTML(mainImage)}"
-                    class="post-image mc-bike-main-image"
-                    alt="${title}"
-                    loading="lazy"
-                    decoding="async"
-                    onerror="this.onerror=null;this.src='${fallbackImage}';"
-                >
-            </a>
-        `;
+     if (visibleImages.length <= 1) {
 
-    } else {
+         galleryHTML = `
+             <div class="mc-bike-gallery mc-bike-gallery-single">
 
-        galleryHTML = `
-            <div class="mc-bike-gallery">
-
-                <a
+                 <a
                     href="/post/${encodeURIComponent(postId)}"
                     class="mc-bike-gallery-main"
-                >
+                 >
                     <img
-                        src="${escapeHTML(visibleImages[0])}"
+                        src="${escapeHTML(mainImage)}"
                         alt="${title}"
                         loading="lazy"
                         decoding="async"
                         onerror="this.onerror=null;this.src='${fallbackImage}';"
                     >
-                </a>
+                 </a>
 
-                <div class="mc-bike-gallery-side">
+                 ${photoCountHTML}
 
-                    ${visibleImages.slice(1).map((image, index) => {
-                        const isLastVisible =
-                            index === visibleImages.slice(1).length - 1;
+             </div>
+        `;
 
-                        return `
-                            <a
-                                href="/post/${encodeURIComponent(postId)}"
-                                class="mc-bike-gallery-thumb"
-                            >
-                                <img
-                                    src="${escapeHTML(image)}"
-                                    alt="${title} photo ${index + 2}"
-                                    loading="lazy"
-                                    decoding="async"
-                                    onerror="this.onerror=null;this.src='${fallbackImage}';"
-                                >
+     } else {
 
-                                ${isLastVisible && remainingImages > 0 ? `
-                                    <span class="mc-bike-more-photos">
-                                        +${remainingImages}
-                                    </span>
-                                ` : ""}
-                            </a>
-                        `;
-                    }).join("")}
+         galleryHTML = `
+             <div class="mc-bike-gallery">
 
-                </div>
+                 <a
+                     href="/post/${encodeURIComponent(postId)}"
+                     class="mc-bike-gallery-main"
+                 >
+                     <img
+                         src="${escapeHTML(visibleImages[0])}"
+                         alt="${title}"
+                         loading="lazy"
+                         decoding="async"
+                         onerror="this.onerror=null;this.src='${fallbackImage}';"
+                     >
+                 </a>
 
-            </div>
+                 <div class="mc-bike-gallery-side">
+
+                     ${visibleImages.slice(1).map((image, index) => {
+
+                         const isLastVisible =
+                             index === visibleImages.slice(1).length - 1;
+
+                         return `
+                             <a
+                                 href="/post/${encodeURIComponent(postId)}"
+                                 class="mc-bike-gallery-thumb"
+                             >
+                                 <img
+                                     src="${escapeHTML(image)}"
+                                     alt="${title} photo ${index + 2}"
+                                     loading="lazy"
+                                     decoding="async"
+                                     onerror="this.onerror=null;this.src='${fallbackImage}';"
+                                 >
+
+                                 ${isLastVisible && remainingImages > 0 ? `
+                                     <span class="mc-bike-more-photos">
+                                         +${remainingImages}
+                                     </span>
+                                 ` : ""}
+                              </a>
+                         `;
+                     }).join("")}
+
+                 </div>
+
+                 ${photoCountHTML}
+
+             </div>
         `;
     }
-
     /* -----------------------------------------------------
        COMPLETE CARD
     ----------------------------------------------------- */
