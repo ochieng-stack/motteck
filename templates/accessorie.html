@@ -1203,10 +1203,10 @@ function createPostCard(post) {
         ? `
             <a
                 href="/post/${encodeURIComponent(postId)}"
-                class="accessory-image-link accessory-gallery-single"
+                class="accessory-image-link"
             >
                 <img
-                    src="${escapeHTML(visibleImages[0])}"
+                    src="${galleryHTML}"
                     class="post-image accessory-main-image"
                     alt="${title}"
                     loading="lazy"
