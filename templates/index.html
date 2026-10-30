@@ -671,7 +671,7 @@ function createPostCard(post) {
         const vehicleType = firstValue(
             post.vehicle_type, post.body_type, post.make_model, post.type
         );
-        const year = firstValue(post.year, post.vehicle_year);
+        const vehicle_year = firstValue(post.vehicle_year);
         const mileage = firstValue(post.mileage, post.kilometers, post.kilometres);
         const condition = firstValue(post.condition, post.vehicle_condition);
         const fuel = firstValue(post.fuel_type, post.fuel);
@@ -679,7 +679,7 @@ function createPostCard(post) {
 
         detailsHTML = [
             detail("Type", vehicleType),
-            detail("Year", year),
+            detail("vehicle_year", vehicle_year),
             detail("Mileage", mileage ? (
                 /km|kilomet/i.test(mileage) ? mileage : mileage + " km"
             ) : ""),

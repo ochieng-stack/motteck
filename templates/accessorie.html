@@ -1109,482 +1109,774 @@ async function toggleFollow(userId, button) {
 function createPostCard(post) {
 
     const postId = String(post.id || "");
+    const safeId = escapeHTML(postId);
 
-    const safePostId = escapeHTML(postId);
+    const titleText =
+        String(post.title || "Accessory");
 
-    const title = escapeHTML(
-        post.title || "Accessory"
-    );
+    const title =
+        escapeHTML(titleText);
 
-    const description = post.description || "";
+    const description =
+        String(post.description || "");
 
 
-    /* -----------------------------------------
-       ACCESSORY IMAGE GALLERY
-    ----------------------------------------- */
+    /* =========================================================
+       BADGES
+    ========================================================= */
 
-    const imageCandidates = [
-        post.image_url,
-        post.image,
-        post.cover_image
-    ];
+    let badges = "";
 
-    function addImageCandidate(value) {
-        if (!value) return;
-
-        if (Array.isArray(value)) {
-            value.forEach(addImageCandidate);
-            return;
-        }
-
-        if (typeof value === "string") {
-            const trimmed = value.trim();
-
-            if (!trimmed) return;
-
-            try {
-                const parsed = JSON.parse(trimmed);
-
-                if (Array.isArray(parsed)) {
-                    parsed.forEach(addImageCandidate);
-                    return;
-                }
-            } catch (error) {
-                // This is a normal image URL/path.
-            }
-
-            imageCandidates.push(trimmed);
-        }
+    if (
+        post.is_featured === true ||
+        post.is_featured === 1
+    ) {
+        badges += `
+            <span class="mc-badge mc-featured">
+                FEATURED
+            </span>
+        `;
     }
 
-    addImageCandidate(post.images);
-    addImageCandidate(post.image_urls);
-    addImageCandidate(post.photos);
-    addImageCandidate(post.gallery);
-    addImageCandidate(post.additional_images);
+    if (
+        post.is_sponsored === true ||
+        post.is_sponsored === 1
+    ) {
+        badges += `
+            <span class="mc-badge mc-sponsored">
+                SPONSORED
+            </span>
+        `;
+    }
+
+
+    /* =========================================================
+       IMAGE GALLERY
+    ========================================================= */
+
+    let uploadedImages = [];
+
+
+    const possibleImageArrays = [
+        post.images,
+        post.image_urls,
+        post.photos,
+        post.gallery,
+        post.additional_images
+    ];
+
+
+    for (
+        const candidate
+        of possibleImageArrays
+    ) {
+
+        if (
+            Array.isArray(candidate) &&
+            candidate.length
+        ) {
+
+            uploadedImages = candidate;
+            break;
+
+        }
+
+
+        if (
+            typeof candidate === "string" &&
+            candidate.trim()
+        ) {
+
+            try {
+
+                const parsed =
+                    JSON.parse(candidate);
+
+                if (
+                    Array.isArray(parsed) &&
+                    parsed.length
+                ) {
+
+                    uploadedImages = parsed;
+                    break;
+
+                }
+
+            } catch (error) {
+
+                // Ignore non-JSON image strings.
+
+            }
+
+        }
+
+    }
+
+
+    const primaryImage =
+        post.image_url ||
+        post.image ||
+        post.cover_image ||
+        "";
+
+
+    if (primaryImage) {
+
+        uploadedImages.unshift(
+            primaryImage
+        );
+
+    }
+
 
     const images = [
         ...new Set(
-            imageCandidates
-                .filter(value => typeof value === "string")
-                .map(value => value.trim())
+            uploadedImages
                 .filter(Boolean)
-                .map(value => {
+                .map(image =>
+                    String(image).trim()
+                )
+                .filter(Boolean)
+                .map(image => {
+
                     if (
-                        !value.startsWith("http://") &&
-                        !value.startsWith("https://") &&
-                        !value.startsWith("/")
+                        !image.startsWith("http://") &&
+                        !image.startsWith("https://") &&
+                        !image.startsWith("/")
                     ) {
-                        return "/static/" + value;
+
+                        return "/static/" + image;
+
                     }
 
-                    return value;
+                    return image;
+
                 })
         )
     ];
 
+
     if (!images.length) {
-        images.push("/static/images/default.jpg");
+
+        images.push(
+            "/static/images/default.jpg"
+        );
+
     }
 
-    const visibleImages = images.slice(0, 3);
-    const remainingImages = Math.max(0, images.length - 3);
 
-    const photoCountHTML = images.length
-        ? `
-            <span class="accessory-photo-total">
-                <i class="fa-regular fa-images"></i>
-                ${images.length} photo${images.length === 1 ? "" : "s"}
-            </span>
-        `
-        : "";
+    const mainImage =
+        escapeHTML(images[0]);
 
 
-const galleryHTML = visibleImages.length === 1
-    ? `
-        <a
-            href="/post/${encodeURIComponent(postId)}"
-            class="accessory-image-link"
-        >
-            <img
-                src="${escapeHTML(visibleImages[0])}"
-                class="post-image accessory-main-image"
-                alt="${title}"
-                loading="lazy"
-                decoding="async"
-                width="400"
-                height="250"
-                onerror="this.onerror=null;this.src='/static/images/default.jpg';"
-            >
+    const thumbnailImages =
+        images.slice(1, 3);
 
-            ${photoCountHTML}
-        </a>
-    `
-    : `
-        <div class="accessory-gallery">
+
+    const remainingImages =
+        Math.max(
+            0,
+            images.length - 3
+        );
+
+
+    let galleryHTML = `
+
+        <div class="mc-gallery">
 
             <a
+                class="mc-main-image"
                 href="/post/${encodeURIComponent(postId)}"
-                class="accessory-image-link accessory-gallery-main"
+                aria-label="View ${title}"
             >
+
                 <img
-                    src="${escapeHTML(visibleImages[0])}"
-                    class="post-image accessory-main-image"
+                    src="${mainImage}"
                     alt="${title}"
                     loading="lazy"
                     decoding="async"
-                    width="400"
-                    height="250"
                     onerror="this.onerror=null;this.src='/static/images/default.jpg';"
                 >
+
+                ${
+                    images.length > 1
+                        ? `
+                            <span class="mc-photo-count">
+
+                                <i class="fa-regular fa-images"></i>
+
+                                ${images.length} photos
+
+                            </span>
+                        `
+                        : ""
+                }
+
             </a>
 
-            <div class="accessory-gallery-side">
 
-                ${visibleImages.slice(1).map((src, index) => {
-                    const isLast =
-                        index === visibleImages.slice(1).length - 1;
+            <div class="mc-thumbnails">
 
-                    return `
-                        <a
-                            href="/post/${encodeURIComponent(postId)}"
-                            class="accessory-gallery-thumb"
-                        >
-                            <img
-                                src="${escapeHTML(src)}"
-                                alt="${title} photo ${index + 2}"
-                                loading="lazy"
-                                decoding="async"
-                                onerror="this.onerror=null;this.src='/static/images/default.jpg';"
-                            >
-
-                            ${
-                                isLast && remainingImages > 0
-                                    ? `<span class="accessory-more-photos">+${remainingImages}</span>`
-                                    : ""
-                            }
-                        </a>
-                    `;
-                }).join("")}
-
-            </div>
-
-            ${photoCountHTML}
-
-        </div>
     `;
 
 
-    /* -----------------------------------------
+    thumbnailImages.forEach(
+        (url, index) => {
+
+            const safeUrl =
+                escapeHTML(url);
+
+            const isLastVisible =
+                index === 1 &&
+                remainingImages > 0;
+
+
+            galleryHTML += `
+
+                <a
+                    href="${safeUrl}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mc-thumbnail ${
+                        isLastVisible
+                            ? "mc-more-photos"
+                            : ""
+                    }"
+                    aria-label="View accessory photo ${index + 2}"
+                >
+
+                    <img
+                        src="${safeUrl}"
+                        alt="${title} photo ${index + 2}"
+                        loading="lazy"
+                        decoding="async"
+                        onerror="this.onerror=null;this.src='/static/images/default.jpg';"
+                    >
+
+                    ${
+                        isLastVisible
+                            ? `
+                                <span>
+                                    +${remainingImages}
+                                </span>
+                            `
+                            : ""
+                    }
+
+                </a>
+
+            `;
+
+        }
+    );
+
+
+    if (images.length === 1) {
+
+        galleryHTML += `
+
+            <div class="mc-thumbnail mc-gallery-placeholder">
+
+                <i class="fa-regular fa-images"></i>
+
+                <span>
+                    1 photo
+                </span>
+
+            </div>
+
+        `;
+
+    }
+
+
+    galleryHTML += `
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    /* =========================================================
+       ACCESSORY DETAILS
+       
+       THESE MATCH THE SUBMISSION FORM FIELDS
+    ========================================================= */
+
+    function firstValue(...values) {
+
+        for (
+            const value
+            of values
+        ) {
+
+            if (
+                value !== null &&
+                value !== undefined &&
+                String(value).trim() !== ""
+            ) {
+
+                return String(value).trim();
+
+            }
+
+        }
+
+        return "";
+
+    }
+
+
+    function detail(label, value) {
+
+        if (!value) {
+            return "";
+        }
+
+
+        return `
+
+            <span class="mc-detail">
+
+                <span class="mc-detail-label">
+                    ${escapeHTML(label)}
+                </span>
+
+                <strong>
+                    ${escapeHTML(value)}
+                </strong>
+
+            </span>
+
+        `;
+
+    }
+
+
+    const productName =
+        firstValue(
+            post.product_name
+        );
+
+
+    const accessoryType =
+        firstValue(
+            post.accessory_type
+        );
+
+
+    const accessoryBrand =
+        firstValue(
+            post.accessory_brand
+        );
+
+
+    const compatibleVehicle =
+        firstValue(
+            post.compatible_vehicle
+        );
+
+
+    const accessoryCondition =
+        firstValue(
+            post.accessory_condition
+        );
+
+
+    const location =
+        firstValue(
+            post.location,
+            post.town
+        );
+
+
+    const detailsHTML = [
+
+        detail(
+            "Product",
+            productName
+        ),
+
+        detail(
+            "Type",
+            accessoryType
+        ),
+
+        detail(
+            "Brand",
+            accessoryBrand
+        ),
+
+        detail(
+            "Fits",
+            compatibleVehicle
+        ),
+
+        detail(
+            "Condition",
+            accessoryCondition
+        ),
+
+        detail(
+            "Location",
+            location
+        )
+
+    ].join("");
+
+
+    /* =========================================================
        PRICE
-    ----------------------------------------- */
+    ========================================================= */
 
     const rawPrice =
-        post.price ??
-        post.selling_price ??
-        post.product_price ??
-        post.amount ??
-        "";
+        firstValue(
+            post.price,
+            post.selling_price,
+            post.product_price,
+            post.amount
+        );
+
 
     let priceHTML = "";
 
-    if (
-        rawPrice !== "" &&
-        rawPrice !== null &&
-        rawPrice !== undefined
-    ) {
 
-        const priceText = String(rawPrice).trim();
-
-        const hasCurrency =
-            /ksh|kes|shilling/i.test(priceText);
+    if (rawPrice) {
 
         const numericPrice =
-            Number(priceText.replace(/,/g, ""));
+            Number(
+                rawPrice.replace(
+                    /,/g,
+                    ""
+                )
+            );
 
-        let formattedPrice = priceText;
 
-        if (
-            !hasCurrency &&
-            priceText !== "" &&
+        const displayPrice =
             Number.isFinite(numericPrice)
-        ) {
-            formattedPrice =
-                "KSh " +
-                new Intl.NumberFormat("en-KE", {
-                    maximumFractionDigits: 2
-                }).format(numericPrice);
-        }
+                ? "KSh " +
+                  numericPrice.toLocaleString(
+                      "en-KE"
+                  )
+                : rawPrice;
+
 
         priceHTML = `
-            <div class="accessory-price">
-                ${escapeHTML(formattedPrice)}
-            </div>
-        `;
-    }
 
-    /* -----------------------------------------
-       SPONSORED / FEATURED BADGES
-    ----------------------------------------- */
+            <div class="mc-price">
 
-    let badgesHTML = "";
+                ${escapeHTML(displayPrice)}
 
-    if (
-        post.is_sponsored === true ||
-        String(post.post_type || "").toLowerCase() === "sponsored"
-    ) {
-        badgesHTML += `
-            <span class="badge sponsored">
-                <i class="fa-solid fa-bullhorn"></i>
-                Sponsored
-            </span>
-        `;
-    }
-
-    if (
-        post.is_featured === true ||
-        String(post.post_type || "").toLowerCase() === "featured"
-    ) {
-        badgesHTML += `
-            <span class="badge featured">
-                <i class="fa-solid fa-star"></i>
-                Featured
-            </span>
-        `;
-    }
-
-    /* -----------------------------------------
-       ACCESSORY DETAILS
-       Display only fields that actually exist.
-    ----------------------------------------- */
-
-    const details = [
-        {
-            label: "Brand",
-            value: post.brand || post.make
-        },
-        {
-            label: "Condition",
-            value: post.condition
-        },
-        {
-            label: "Compatible with",
-            value:
-                post.compatibility ||
-                post.compatible_vehicle ||
-                post.vehicle_model
-        },
-        {
-            label: "Part number",
-            value:
-                post.part_number ||
-                post.product_code ||
-                post.sku
-        },
-        {
-            label: "Location",
-            value: post.location || post.town
-        }
-    ].filter(item =>
-        item.value !== null &&
-        item.value !== undefined &&
-        String(item.value).trim() !== ""
-    );
-
-    const detailsHTML = details.length
-        ? `
-            <div class="accessory-details">
-                ${details.map(item => `
-                    <div class="accessory-detail">
-                        <span class="accessory-detail-label">
-                            ${escapeHTML(item.label)}
-                        </span>
-                        <span class="accessory-detail-value">
-                            ${escapeHTML(item.value)}
-                        </span>
-                    </div>
-                `).join("")}
-            </div>
-        `
-        : "";
-
-    /* -----------------------------------------
-       DESCRIPTION PREVIEW
-    ----------------------------------------- */
-
-    const descriptionHTML = description
-        ? `
-            <div
-                id="accessory-description-${safePostId}"
-                class="accessory-description collapsed"
-            >
-                ${formatText(description)}
             </div>
 
-            <button
-                type="button"
-                class="accessory-see-more"
-                onclick="toggleAccessoryDescription('${safePostId}', this)"
-            >
-                See more
-            </button>
-        `
-        : "";
+        `;
 
-    /* -----------------------------------------
-       BUY / REQUEST ACTIONS
+    }
 
-       No Contact Seller button on this page.
-       The post page should handle the actual
-       checkout and payment validation.
-    ----------------------------------------- */
 
-    const saleActions = `
-        <div class="accessory-purchase-actions">
+    /* =========================================================
+       DESCRIPTION
+    ========================================================= */
+
+    let descriptionHTML = "";
+
+
+    if (description) {
+
+        const descriptionId =
+            `accessory-description-${safeId}`;
+
+
+        const isLongDescription =
+            description.length > 160;
+
+
+        const shortDescription =
+            isLongDescription
+                ? description
+                    .slice(0, 160)
+                    .replace(/\s+\S*$/, "") +
+                  "..."
+                : description;
+
+
+        descriptionHTML = `
+
+            <div class="mc-description">
+
+                <div
+                    id="${descriptionId}"
+                    class="mc-description-text"
+                    data-full-description="${escapeHTML(description)}"
+                >
+
+                    ${escapeHTML(shortDescription)}
+
+                </div>
+
+
+                ${
+                    isLongDescription
+                        ? `
+                            <button
+                                type="button"
+                                class="mc-see-more"
+                                aria-expanded="false"
+                                aria-controls="${descriptionId}"
+                                onclick="toggleAccessoryDescription('${safeId}', this)"
+                            >
+                                See more
+                            </button>
+                        `
+                        : ""
+                }
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =========================================================
+       PURCHASE BUTTONS
+    ========================================================= */
+
+    const actionButtons = `
+
+        <div class="mc-contact-actions">
 
             <a
                 href="/post/${encodeURIComponent(postId)}?buy=now"
-                class="accessory-buy-btn"
+                class="mc-button mc-buy-now"
             >
+
                 <i class="fa-solid fa-cart-shopping"></i>
+
                 Buy Now
+
             </a>
+
 
             <a
                 href="/post/${encodeURIComponent(postId)}?request=motteck"
-                class="accessory-request-btn"
+                class="mc-button mc-request-motteck"
             >
+
                 <i class="fa-solid fa-handshake"></i>
+
                 Request MOTTECK
+
             </a>
 
         </div>
+
     `;
 
-    /* -----------------------------------------
-       CARD
-    ----------------------------------------- */
+
+    /* =========================================================
+       FINAL ACCESSORY CARD
+    ========================================================= */
 
     return `
+
         <article
-            class="post-card accessory-card"
-            id="post-${safePostId}"
+            class="post-card mc-post-card"
+            id="post-${safeId}"
             data-post-type="accessory"
+            data-category="accessorie"
         >
 
-            <div class="accessory-badges">
-                ${badgesHTML}
-            </div>
+
+            ${
+                badges
+                    ? `
+                        <div class="mc-badges">
+                            ${badges}
+                        </div>
+                    `
+                    : ""
+            }
+
 
             ${createAuthorHeader(post)}
 
-            <a
-                href="/post/${encodeURIComponent(postId)}"
-                class="accessory-image-link"
-            >
-                <img
-                    src="${galleryHTML}"
-                    class="post-image accessory-main-image"
-                    alt="${title}"
-                    loading="lazy"
-                    decoding="async"
-                    width="400"
-                    height="250"
-                    onerror="this.onerror=null;this.src='/static/images/default.jpg';"
-                >
-            </a>
 
-            <div class="post-content accessory-content">
+            <!-- CORRECT GALLERY INSERTION -->
+
+            ${galleryHTML}
+
+
+            <div class="post-content mc-post-content">
+
 
                 <a
                     href="/post/${encodeURIComponent(postId)}"
-                    class="accessory-title-link"
+                    class="mc-title-link"
                 >
-                    <h3 class="post-title accessory-title">
+
+                    <h3 class="post-title mc-title">
+
                         ${title}
+
                     </h3>
+
                 </a>
+
+
+                ${
+                    detailsHTML
+                        ? `
+                            <div class="mc-details">
+
+                                ${detailsHTML}
+
+                            </div>
+                        `
+                        : ""
+                }
+
 
                 ${priceHTML}
 
-                ${detailsHTML}
 
                 ${descriptionHTML}
 
-                <div class="post-actions accessory-post-actions">
+
+                <!-- LIKE / VIEW / SHARE -->
+
+                <div class="post-actions mc-post-actions">
+
 
                     <button
                         type="button"
-                        id="like-btn-${safePostId}"
+                        id="like-btn-${safeId}"
                         class="post-action-btn like-action"
-                        onclick="likePost('${safePostId}')"
+                        onclick="likePost('${safeId}')"
                         aria-label="Like accessory"
                     >
+
                         <i class="fa-regular fa-heart"></i>
 
-                        <span id="like-count-${safePostId}">
+                        <span id="like-count-${safeId}">
                             ${Number(post.likes || 0)}
                         </span>
+
                     </button>
+
+
+                    <span class="post-action-btn views">
+
+                        <i class="fa-regular fa-eye"></i>
+
+                        <span id="view-count-${safeId}">
+                            ${Number(post.views || 0)}
+                        </span>
+
+                    </span>
+
 
                     <button
                         type="button"
                         class="post-action-btn share-action"
-                        onclick="sharePost('${safePostId}', ${JSON.stringify(post.title || "MOTTECK Accessory")})"
+                        onclick="sharePost(
+                            '${safeId}',
+                            ${JSON.stringify(titleText)}
+                        )"
                         aria-label="Share accessory"
                     >
+
                         <i class="fa-solid fa-share-nodes"></i>
-                        <span>Share</span>
+
+                        <span>
+                            Share
+                        </span>
+
                     </button>
 
-                    <span class="views post-action-btn">
-                        <i class="fa-regular fa-eye"></i>
-
-                        <span id="view-count-${safePostId}">
-                            ${Number(post.views || 0)}
-                        </span>
-                    </span>
 
                 </div>
 
-                <a
-                    href="/post/${encodeURIComponent(postId)}"
-                    class="see-more-btn accessory-read-more"
-                >
-                    View Details
-                </a>
 
-                ${saleActions}
+                ${actionButtons}
+
 
             </div>
 
         </article>
+
     `;
 }
-
-
 /* =========================================================
    EXPAND / COLLAPSE ACCESSORY DESCRIPTION
 ========================================================= */
 
 function toggleAccessoryDescription(postId, button) {
 
-    const description = document.getElementById(
-        `accessory-description-${postId}`
-    );
+    const description =
+        document.getElementById(
+            `accessory-description-${postId}`
+        );
 
     if (!description || !button) {
         return;
     }
 
-    const isCollapsed =
-        description.classList.contains("collapsed");
 
-    description.classList.toggle("collapsed");
+    const expanded =
+        button.getAttribute(
+            "aria-expanded"
+        ) === "true";
 
-    button.textContent = isCollapsed
-        ? "See less"
-        : "See more";
+
+    if (!expanded) {
+
+        description.textContent =
+            description.dataset.fullDescription || "";
+
+        button.textContent =
+            "See less";
+
+        button.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+    } else {
+
+        const fullText =
+            description.dataset.fullDescription || "";
+
+        let preview =
+            fullText;
+
+
+        if (fullText.length > 160) {
+
+            preview =
+                fullText
+                    .slice(0, 160)
+                    .replace(/\s+\S*$/, "") +
+                "...";
+
+        }
+
+
+        description.textContent =
+            preview;
+
+        button.textContent =
+            "See more";
+
+        button.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+    }
+
 }
 
 

@@ -1220,7 +1220,7 @@ function createPostCard(post) {
         post.motorbike_type ||
         post.body_type;
 
-    const year = post.year;
+    const vehicle_year = post.vehicle_year;
 
     const mileage =
         post.mileage ??
@@ -1247,8 +1247,8 @@ function createPostCard(post) {
         details.push(["Bike Type", bikeType]);
     }
 
-    if (year) {
-        details.push(["Year", year]);
+    if (vehicle_year) {
+        details.push(["vehicle_year", vehicle_year]);
     }
 
     if (mileage !== undefined && mileage !== null && mileage !== "") {
