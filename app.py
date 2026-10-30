@@ -2240,7 +2240,7 @@ def submit_post():
         or ""
     ).strip()
 
-    year_raw = request.form.get("year", "").strip()
+    year_raw = request.form.get("vehicle_year", "").strip()
     mileage_raw = request.form.get("mileage", "").strip()
 
     condition = (
