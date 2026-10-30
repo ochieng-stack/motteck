@@ -546,36 +546,78 @@ def admin_submissions():
 
             user_id = submission.get("user_id")
 
-            if user_id:
-                try:
-                    profile_response = (
-                        supabase
-                        .table("profiles")
-                        .select("full_name,email")
-                        .eq("id", user_id)
-                        .single()
-                        .execute()
+            # Default values
+            submission["submitter_name"] = "Unknown user"
+            submission["submitter_email"] = "Not available"
+            submission["submitter_phone"] = "Not available"
+            submission["submitter_account_type"] = "Not available"
+
+            if not user_id:
+                continue
+
+            try:
+                # Get registered profile information
+                profile_response = (
+                    supabase
+                    .table("profiles")
+                    .select(
+                        "full_name,phone,account_type"
                     )
+                    .eq("id", user_id)
+                    .single()
+                    .execute()
+                )
 
-                    profile = profile_response.data or {}
+                profile = profile_response.data or {}
 
-                    submission["submitter_name"] = (
-                        profile.get("full_name")
-                        or "Unknown user"
-                    )
+                submission["submitter_name"] = (
+                    profile.get("full_name")
+                    or "Unknown user"
+                )
 
+                submission["submitter_phone"] = (
+                    profile.get("phone")
+                    or "Not available"
+                )
+
+                submission["submitter_account_type"] = (
+                    profile.get("account_type")
+                    or "Not available"
+                )
+
+            except Exception as profile_error:
+                print(
+                    "ADMIN PROFILE LOOKUP ERROR:",
+                    repr(profile_error)
+                )
+
+            # Get email from Supabase Auth
+            try:
+                user_response = supabase.auth.admin.get_user_by_id(
+                    user_id
+                )
+
+                auth_user = getattr(
+                    user_response,
+                    "user",
+                    None
+                )
+
+                if auth_user:
                     submission["submitter_email"] = (
-                        profile.get("email")
+                        getattr(
+                            auth_user,
+                            "email",
+                            None
+                        )
                         or "Not available"
                     )
 
-                except Exception:
-                    submission["submitter_name"] = "Unknown user"
-                    submission["submitter_email"] = "Not available"
-
-            else:
-                submission["submitter_name"] = "Unknown user"
-                submission["submitter_email"] = "Not available"
+            except Exception as auth_error:
+                print(
+                    "ADMIN AUTH USER LOOKUP ERROR:",
+                    repr(auth_error)
+                )
 
         return jsonify({
             "success": True,
@@ -583,10 +625,13 @@ def admin_submissions():
         })
 
     except Exception as e:
-        print("ADMIN SUBMISSIONS ERROR:", e)
+        print(
+            "ADMIN SUBMISSIONS ERROR:",
+            repr(e)
+        )
 
         return jsonify({
-            "error": str(e)
+            "error": "Unable to load submissions."
         }), 500
 # =========================================================
 # ADMIN - MOTTECK LEADS
@@ -1018,16 +1063,38 @@ def approve_submission(submission_id):
 
         # Transfer extra fields added by the submission form.
         extra_fields = (
+
+             # General listing details
             "price",
-            "vehicle_type",
-            "year",
-            "mileage",
+            "location",
             "condition",
+
+            # Vehicle details
+            "vehicle_type",
+            "vehicle_year",
+            "mileage",
+            "fuel",
+            "transmission",
+      
+            # Accessories
             "product_name",
-            "brand",
+            "accessory_type",
+            "accessory_brand",
+            "compatible_vehicle",
+            "accessory_condition",
+
+            # Spare parts
+            "part_name",
+            "part_type",
+            "part_make",
+            "compatible_model",
+            "part_year",
             "part_number",
-            "compatibility",
-            "location"
+            "part_condition",
+            
+            # Other existing product details
+            "brand",
+            "compatibility"
         )
 
         for field in extra_fields:
@@ -2235,6 +2302,23 @@ def submit_post():
         or ""
     ).strip()
 
+    # ---------------- EXTRA OPTIONAL FIELDS ----------------
+
+    fuel = request.form.get("fuel", "").strip()
+    transmission = request.form.get("transmission", "").strip()
+
+    accessory_type = request.form.get("accessory_type", "").strip()
+    accessory_brand = request.form.get("accessory_brand", "").strip()
+    compatible_vehicle = request.form.get("compatible_vehicle", "").strip()
+    accessory_condition = request.form.get("accessory_condition", "").strip()
+
+    part_name = request.form.get("part_name", "").strip()
+    part_type = request.form.get("part_type", "").strip()
+    part_make = request.form.get("part_make", "").strip()
+    compatible_model = request.form.get("compatible_model", "").strip()
+    part_year = request.form.get("part_year", "").strip()
+    part_condition = request.form.get("part_condition", "").strip()
+
     # ---------------- ACCOUNT / POST RULES ----------------
 
     requested_type = request.form.get(
@@ -2444,18 +2528,33 @@ def submit_post():
         "promotion_price": promotion_price,
         "status": "pending"
     }
-
+    
     optional_fields = {
         "price": price,
         "vehicle_type": vehicle_type or None,
-        "year": year,
+        "vehicle_year": year,
         "mileage": mileage,
+        "fuel": fuel or None,
+        "transmission": transmission or None,
         "condition": condition or None,
+
         "product_name": product_name or None,
         "brand": brand or None,
         "part_number": part_number or None,
         "compatibility": compatibility or None,
-        "location": location or None
+        "location": location or None,
+
+        "accessory_type": accessory_type or None,
+        "accessory_brand": accessory_brand or None,
+        "compatible_vehicle": compatible_vehicle or None,
+        "accessory_condition": accessory_condition or None,
+
+        "part_name": part_name or None,
+        "part_type": part_type or None,
+        "part_make": part_make or None,
+        "compatible_model": compatible_model or None,
+        "part_year": part_year or None,
+        "part_condition": part_condition or None
     }
 
     submission_data.update(optional_fields)
@@ -3283,7 +3382,6 @@ def analytics():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ================= EDIT POST =================
 
 # ================= EDIT POST =================
 @app.route('/edit_post/<int:post_id>', methods=['POST'])
