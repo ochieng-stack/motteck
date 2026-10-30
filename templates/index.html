@@ -692,20 +692,18 @@ function createPostCard(post) {
         // Accessory-specific information.
         detailsHTML = [
             detail("Type", firstValue(
-                post.accessory_type, post.product_type, post.product_name,
-                post.product_category, post.type
+                post.accessory_type,
             )),
-            detail("Brand", firstValue(post.brand, post.manufacturer)),
+            detail("Brand", firstValue(post.brand, post.accessory_brand)),
             detail("Fits", firstValue(
-                post.compatibility, post.vehicle_compatibility,
-                post.compatible_vehicle, post.fits, post.vehicle_model
+                post.compatible_vehicle, post.fits, 
             )),
             detail("Condition", firstValue(
-                post.condition, post.product_condition
+                post.accessory_condition
             )),
-            detail("Material", firstValue(post.material, post.product_material)),
-            detail("Colour", firstValue(post.colour, post.color)),
-            detail("Size", firstValue(post.size, post.product_size))
+            detail("Product", firstValue(
+            post.product_name
+            )),            
         ].join("");
 
     } else if (isSparePart) {
@@ -715,17 +713,16 @@ function createPostCard(post) {
                 post.part_name, post.part_type, post.product_name, post.type
             )),
             detail("Brand", firstValue(post.brand, post.manufacturer)),
-            detail("Fits", firstValue(
-                post.compatibility, post.vehicle_compatibility,
-                post.compatible_vehicle, post.fits, post.vehicle_model,
-                post.make_model
+            detail("Fits", firstValue( post.vehicle_compatibility,
+                post.compatible_model
             )),
             detail("Part No.", firstValue(
-                post.part_number, post.oem_number, post.oem, post.sku
+                post.part_number,
             )),
             detail("Condition", firstValue(
-                post.condition, post.product_condition
+                post.part_condition,
             )),
+            detail("Year", firstValue(post.part_year)),
             detail("Position", firstValue(
                 post.part_position, post.position, post.side
             )),
