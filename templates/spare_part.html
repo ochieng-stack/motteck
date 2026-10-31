@@ -1222,84 +1222,30 @@ function createPostCard(post) {
     }
 
     /* -----------------------------------------------------
-       PRODUCT DETAILS
+       SPARE PART DETAILS
     ----------------------------------------------------- */
 
-    const details = [];
-
-    const partNumber =
-        post.part_number ||
-        post.oem_number ||
-        post.serial_number;
-
-    const compatibleMake =
-        post.compatible_make ||
-        post.vehicle_make ||
-        post.make;
-
-    const compatibleModel =
-        post.compatible_model ||
-        post.vehicle_model ||
-        post.model;
-
-    const compatibleYear =
-        post.compatible_year ||
-        post.vehicle_year ||
-        post.year;
-
-    const condition = post.condition;
-
-    const brand =
-        post.brand ||
-        post.part_brand ||
-        post.manufacturer;
-
-    const location =
-        post.location ||
-        post.town;
-
-    const partType =
-        post.part_type ||
-        post.product_type;
-
-    if (partType) {
-        details.push(["Part Type", partType]);
-    }
-
-    if (brand) {
-        details.push(["Brand", brand]);
-    }
-
-    if (partNumber) {
-        details.push(["Part Number", partNumber]);
-    }
-
-    if (compatibleMake) {
-        details.push(["Vehicle Make", compatibleMake]);
-    }
-
-    if (compatibleModel) {
-        details.push(["Vehicle Model", compatibleModel]);
-    }
-
-    if (compatibleYear) {
-        details.push(["Compatible Year", compatibleYear]);
-    }
-
-    if (condition) {
-        details.push(["Condition", condition]);
-    }
-
-    if (location) {
-        details.push(["Location", location]);
-    }
+    const details = [
+        { label: "Part Name", value: post.part_name },
+        { label: "Part Type", value: post.part_type },
+        { label: "Make", value: post.part_make },
+        { label: "Compatible Model", value: post.compatible_model },
+        { label: "Year", value: post.part_year },
+        { label: "Part Number", value: post.part_number },
+        { label: "Condition", value: post.part_condition },
+        { label: "Location", value: post.location || post.town }
+    ].filter(item =>
+        item.value !== null &&
+        item.value !== undefined &&
+        String(item.value).trim() !== ""
+    );
 
     const detailsHTML = details.length ? `
         <div class="mc-part-details">
-            ${details.map(([label, value]) => `
+            ${details.map(item => `
                 <div class="mc-part-detail">
-                    <span>${escapeHTML(label)}</span>
-                    <strong>${escapeHTML(value)}</strong>
+                    <span>${escapeHTML(item.label)}</span>
+                    <strong>${escapeHTML(item.value)}</strong>
                 </div>
             `).join("")}
         </div>

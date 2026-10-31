@@ -1518,24 +1518,6 @@ function createPostCard(post) {
                     </div>
                 ` : ""}
 
-                ${description ? `
-                    <div
-                        id="mc-description-${escapeHTML(postId)}"
-                        class="mc-car-description"
-                    >
-                        ${descriptionText}
-                    </div>
-
-                    <button
-                        type="button"
-                        class="mc-car-see-more"
-                        aria-expanded="false"
-                        onclick="toggleCarDescription('${escapeHTML(postId)}', this)"
-                    >
-                        See more
-                    </button>
-                ` : ""}
-
                 <div class="mc-car-engagement">
 
                     <button
