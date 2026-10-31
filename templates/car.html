@@ -1312,21 +1312,6 @@ function createCarDetails(post) {
 }
 
 
-/* Expand and collapse the description */
-function toggleCarDescription(postId, button) {
-    const description = document.getElementById(
-        "mc-description-" + postId
-    );
-
-    if (!description || !button) return;
-
-    const expanded = description.classList.toggle("mc-expanded");
-
-    button.textContent = expanded ? "See less" : "See more";
-    button.setAttribute("aria-expanded", String(expanded));
-}
-
-
 /* Build the photo gallery */
 function createCarGallery(post, postId, title) {
     const images = getPostImages(post);

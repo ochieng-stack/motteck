@@ -1742,9 +1742,6 @@ function createPostCard(post) {
                 ${priceHTML}
 
 
-                ${descriptionHTML}
-
-
                 <!-- LIKE / VIEW / SHARE -->
 
                 <div class="post-actions mc-post-actions">
@@ -1809,77 +1806,6 @@ function createPostCard(post) {
 
     `;
 }
-/* =========================================================
-   EXPAND / COLLAPSE ACCESSORY DESCRIPTION
-========================================================= */
-
-function toggleAccessoryDescription(postId, button) {
-
-    const description =
-        document.getElementById(
-            `accessory-description-${postId}`
-        );
-
-    if (!description || !button) {
-        return;
-    }
-
-
-    const expanded =
-        button.getAttribute(
-            "aria-expanded"
-        ) === "true";
-
-
-    if (!expanded) {
-
-        description.textContent =
-            description.dataset.fullDescription || "";
-
-        button.textContent =
-            "See less";
-
-        button.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-
-    } else {
-
-        const fullText =
-            description.dataset.fullDescription || "";
-
-        let preview =
-            fullText;
-
-
-        if (fullText.length > 160) {
-
-            preview =
-                fullText
-                    .slice(0, 160)
-                    .replace(/\s+\S*$/, "") +
-                "...";
-
-        }
-
-
-        description.textContent =
-            preview;
-
-        button.textContent =
-            "See more";
-
-        button.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-    }
-
-}
-
-
 
 
 /* =========================================================

@@ -749,35 +749,6 @@ function createPostCard(post) {
         priceHTML = `<div class="mc-price">${escapeHTML(displayPrice)}</div>`;
     }
 
-    /* Description */
-    const description = String(post.description || "");
-    const descriptionId = `mc-description-${safeId}`;
-    const isLongDescription = description.length > 160;
-
-    const shortDescription = isLongDescription
-        ? description.slice(0, 160).replace(/\s+\S*$/, "") + "..."
-        : description;
-
-    const descriptionHTML = `
-        <div class="mc-description">
-            <div
-                id="${descriptionId}"
-                class="mc-description-text"
-                data-full-description="${escapeHTML(description)}"
-            >${escapeHTML(shortDescription)}</div>
-
-            ${isLongDescription ? `
-                <button
-                    type="button"
-                    class="mc-see-more"
-                    aria-expanded="false"
-                    aria-controls="${descriptionId}"
-                    onclick="togglePostDescription(this)"
-                >See more</button>
-            ` : ""}
-        </div>
-    `;
-
     /* Category-specific buttons */
     let actionButtons = "";
 
@@ -841,7 +812,6 @@ function createPostCard(post) {
 
                 ${detailsHTML ? `<div class="mc-details">${detailsHTML}</div>` : ""}
                 ${priceHTML}
-                ${descriptionHTML}
 
                 <div class="post-actions mc-post-actions">
                     <button
@@ -870,40 +840,19 @@ function createPostCard(post) {
                         <span>Share</span>
                     </button>
                 </div>
-
+                <a
+                    href="/post/${encodeURIComponent(postId)}"
+                    class="mc-home-view-details"
+                >
+                    View Details
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
                 ${actionButtons}
             </div>
         </article>
     `;
 }
 
-/* =========================================================
-   DESCRIPTION EXPAND/COLLAPSE
-========================================================= */
-function togglePostDescription(button) {
-    const descriptionId = button.getAttribute("aria-controls");
-    const element = document.getElementById(descriptionId);
-    if (!element) return;
-
-    const expanded = button.getAttribute("aria-expanded") === "true";
-
-    if (!expanded) {
-        element.textContent = element.dataset.fullDescription || "";
-        button.textContent = "See less";
-        button.setAttribute("aria-expanded", "true");
-    } else {
-        const fullText = element.dataset.fullDescription || "";
-        let preview = fullText;
-
-        if (fullText.length > 160) {
-            preview = fullText.slice(0, 160).replace(/\s+\S*$/, "") + "...";
-        }
-
-        element.textContent = preview;
-        button.textContent = "See more";
-        button.setAttribute("aria-expanded", "false");
-    }
-}
 
 /* =========================================================
    FOLLOW

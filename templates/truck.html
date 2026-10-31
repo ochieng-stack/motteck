@@ -1306,21 +1306,6 @@ function createTruckDetails(post) {
 }
 
 
-/* Description expansion */
-function toggleTruckDescription(postId, button) {
-    const description = document.getElementById(
-        "mc-truck-description-" + postId
-    );
-
-    if (!description || !button) return;
-
-    const expanded = description.classList.toggle("mc-truck-expanded");
-
-    button.textContent = expanded ? "See less" : "See more";
-    button.setAttribute("aria-expanded", String(expanded));
-}
-
-
 /* Truck / bus photo gallery */
 function createTruckGallery(post, postId, title) {
     const images = getTruckPostImages(post);
@@ -1498,24 +1483,6 @@ function createPostCard(post) {
                     <div class="mc-truck-price">
                         ${price}
                     </div>
-                ` : ""}
-
-                ${description ? `
-                    <div
-                        id="mc-truck-description-${escapeHTML(postId)}"
-                        class="mc-truck-description"
-                    >
-                        ${formatText(description)}
-                    </div>
-
-                    <button
-                        type="button"
-                        class="mc-truck-see-more"
-                        aria-expanded="false"
-                        onclick="toggleTruckDescription('${escapeHTML(postId)}', this)"
-                    >
-                        See more
-                    </button>
                 ` : ""}
 
                 <div class="mc-truck-engagement">

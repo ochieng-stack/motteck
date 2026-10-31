@@ -1482,8 +1482,6 @@ function createPostCard(post) {
 
                 ${priceHTML}
 
-                ${descriptionHTML}
-
                 <div class="post-actions mc-part-post-actions">
 
                     <button
@@ -1532,41 +1530,6 @@ function createPostCard(post) {
         </article>
     `;
 }
-
-
-/* =========================================================
-   DESCRIPTION SEE MORE / SEE LESS
-========================================================= */
-
-function togglePartDescription(descriptionId, button) {
-
-    const description =
-        document.getElementById(descriptionId);
-
-    if (!description || !button) {
-        return;
-    }
-
-    const isCurrentlyCollapsed =
-        description.classList.contains(
-            "mc-part-description-collapsed"
-        );
-
-    description.classList.toggle(
-        "mc-part-description-collapsed"
-    );
-
-    button.textContent =
-        isCurrentlyCollapsed ? "See less" : "See more";
-
-    button.setAttribute(
-        "aria-expanded",
-        String(isCurrentlyCollapsed)
-    );
-}
-
-
-
 
 /* =========================================================
    FOLLOW

@@ -1375,33 +1375,7 @@ function createPostCard(post) {
 
         </div>
     ` : "";
-
-    /* -----------------------------------------------------
-       DESCRIPTION PREVIEW
-    ----------------------------------------------------- */
-
-    const descriptionId = "bike-description-" +
-        postId.replace(/[^a-zA-Z0-9_-]/g, "");
-
-    const needsToggle = description.trim().length > 160;
-
-    const descriptionHTML = description.trim()
-        ? `
-            <div class="mc-bike-description-wrap ${needsToggle ? "mc-bike-description-collapsed" : ""}"
-                 id="${escapeHTML(descriptionId)}">
-                <div class="mc-bike-description-text">${safeDescription}</div>
-            </div>
-
-            ${needsToggle ? `
-                <button
-                    type="button"
-                    class="mc-bike-see-more"
-                    aria-expanded="false"
-                    onclick="toggleBikeDescription('${escapeHTML(descriptionId)}', this)"
-                >See more</button>
-            ` : ""}
-        `
-        : "";
+ 
 
     /* -----------------------------------------------------
        IMAGE GALLERY
@@ -1529,8 +1503,6 @@ function createPostCard(post) {
                 ${detailsHTML}
 
                 ${priceHTML}
-
-                ${descriptionHTML}
 
                 <div class="post-actions mc-bike-post-actions">
 
