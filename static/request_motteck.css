@@ -14,7 +14,7 @@ body {
 .request-header {
     height: 70px;
     background: #f5f5f5;
-    border-bottom: 1px solid #292929;
+    border-bottom: 1px solid #9b9797;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -65,8 +65,8 @@ body {
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background: #181818;
-    border: 1px solid #333;
+    background: #fff;
+    border: 1px solid #0f0f0f;
     margin: 0 auto 18px;
     display: flex;
     align-items: center;
@@ -85,13 +85,13 @@ body {
 .page-heading p {
     max-width: 620px;
     margin: auto;
-    color: #999;
+    color: black;
     font-size: 14px;
 }
 
 .request-card {
     background: #121212;
-    border: 1px solid #292929;
+    border: 1px solid #fff;
     border-radius: 14px;
     padding: 25px;
     margin-bottom: 20px;
@@ -106,7 +106,7 @@ body {
 
 .card-heading > i {
     font-size: 19px;
-    color: #aaa;
+    color: #fff;
 }
 
 .card-heading h2 {
@@ -115,7 +115,7 @@ body {
 
 .card-heading span {
     display: block;
-    color: #777;
+    color: #fff;
     font-size: 12px;
     margin-top: 2px;
 }
@@ -134,7 +134,7 @@ body {
 }
 
 .listing-label {
-    color: #777;
+    color: #fff;
     font-size: 10px;
     letter-spacing: 1px;
 }
@@ -145,7 +145,7 @@ body {
 }
 
 .listing-details p {
-    color: #999;
+    color: #fff;
     font-size: 13px;
 }
 
@@ -221,8 +221,8 @@ body {
 }
 
 .cancel-button {
-    color: #ec0606d8;
-    background: #ffffff;
+    color: #fff;
+    background: #ec0606d8;
     border: 1px solid #ec0606d8;
 }
 
@@ -234,7 +234,7 @@ body {
 }
 
 .submit-request:hover {
-    background: #d5d5d5;
+    background: #0557f0;
 }
 
 @media (max-width: 650px) {
