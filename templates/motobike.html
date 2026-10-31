@@ -124,6 +124,19 @@
                     </span>
 
                 </a>
+                
+                <a
+                    href="{{ url_for('public_profile') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>
+                        View Public Profile
+                    </span>
+
+                </a>
 
 
                 <a
@@ -1379,12 +1392,12 @@ function createPostCard(post) {
 
     /* -----------------------------------------------------
        IMAGE GALLERY
-       Show up to 3 photos. The overlay shows how many
+       Show up to 10 photos. The overlay shows how many
        additional photos are available beyond those shown.
     ----------------------------------------------------- */
 
-    const visibleImages = images.slice(0, 3);
-    const remainingImages = Math.max(0, images.length - 3);
+    const visibleImages = images.slice(0, 10);
+    const remainingImages = Math.max(0, images.length - 10);
 
     const photoCountHTML = images.length
         ? `
