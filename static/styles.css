@@ -1977,7 +1977,25 @@ body {
     font-size: 10px;
     gap: 4px;
 }
+.mc-home-view-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 13px;
+    padding: 11px 12px;
+    border: 1px solid #d8d8d8;
+    border-radius: 7px;
+    color: #222;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
 
+.mc-home-view-details:hover {
+    background: #f5f5f5;
+}
 
 /* =========================
    FEATURED - DESKTOP 4 COLUMNS
