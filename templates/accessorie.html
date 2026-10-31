@@ -126,7 +126,7 @@
                 </a>
 
                 <a
-                    href="{{ url_for('public_profile') }}"
+                    href="{{ url_for('public_profile', user_id=session.get('user_id')) }}"
                     class="profile-menu-item"
                 >
 
