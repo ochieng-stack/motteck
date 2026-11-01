@@ -1849,3 +1849,83 @@ body{
         font-size: 12px;
     }
 }
+/* =========================================
+   MOTTECK CARS — SINGLE MAIN PHOTO GALLERY
+   Show only the first photo on the card.
+   Photo count shows the total uploaded photos.
+========================================= */
+
+#carPost .mc-car-gallery {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 155px;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    background: #eee;
+}
+
+#carPost .mc-car-main-image {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+#carPost .mc-car-main-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Photo count badge */
+#carPost .mc-photo-count {
+    position: absolute;
+    left: 9px;
+    bottom: 8px;
+    z-index: 2;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 5px 9px;
+    border-radius: 6px;
+
+    background: rgba(20, 20, 20, 0.9);
+    color: #fff;
+
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* No side photos on the card */
+#carPost .mc-car-side-images {
+    display: none !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    #carPost .mc-car-gallery {
+        height: 190px;
+    }
+
+    #carPost .mc-photo-count {
+        left: 9px;
+        bottom: 8px;
+        padding: 5px 9px;
+        font-size: 11px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+    #carPost .mc-car-gallery {
+        height: 185px;
+    }
+}
