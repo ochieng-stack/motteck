@@ -1848,29 +1848,27 @@ body{
         padding: 9px 8px;
         font-size: 12px;
     }
-}
-/* =========================================
+}/* =========================================
    MOTTECK CARS — SINGLE MAIN PHOTO GALLERY
-   Show only the first photo on the card.
-   Photo count shows the total uploaded photos.
+   One main photo only.
+   Photo count stays BELOW the image.
 ========================================= */
 
 #carPost .mc-car-gallery {
     display: block;
-    position: relative;
     width: 100%;
-    height: 155px;
+    height: auto;
     min-height: 0;
     margin: 0;
     overflow: hidden;
     background: #eee;
 }
 
+/* Main car photo */
 #carPost .mc-car-main-image {
-    position: relative;
     display: block;
     width: 100%;
-    height: 100%;
+    height: 155px;
     overflow: hidden;
     text-decoration: none;
 }
@@ -1882,21 +1880,23 @@ body{
     object-fit: cover;
 }
 
-/* Photo count badge */
-#carPost .mc-photo-count {
-    position: absolute;
-    left: 9px;
-    bottom: 8px;
-    z-index: 2;
+/* =========================================
+   PHOTO COUNT — SEPARATE FROM THE IMAGE
+========================================= */
 
-    display: inline-flex;
+#carPost .mc-photo-count {
+    position: static;
+
+    display: flex;
     align-items: center;
     gap: 5px;
 
-    padding: 5px 9px;
-    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
 
-    background: rgba(20, 20, 20, 0.9);
+    padding: 7px 9px;
+
+    background: #111;
     color: #fff;
 
     font-size: 11px;
@@ -1904,28 +1904,34 @@ body{
     line-height: 1;
 }
 
-/* No side photos on the card */
+/* No side photos */
 #carPost .mc-car-side-images {
     display: none !important;
 }
 
-/* Mobile */
+/* =========================================
+   MOBILE
+========================================= */
+
 @media (max-width: 768px) {
-    #carPost .mc-car-gallery {
+
+    #carPost .mc-car-main-image {
         height: 190px;
     }
 
     #carPost .mc-photo-count {
-        left: 9px;
-        bottom: 8px;
-        padding: 5px 9px;
+        padding: 7px 10px;
         font-size: 11px;
     }
 }
 
-/* Very small screens */
+/* =========================================
+   VERY SMALL SCREENS
+========================================= */
+
 @media (max-width: 360px) {
-    #carPost .mc-car-gallery {
+
+    #carPost .mc-car-main-image {
         height: 185px;
     }
 }
