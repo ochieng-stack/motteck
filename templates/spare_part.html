@@ -2163,10 +2163,10 @@ async function loadCategoryPosts() {
 
 
 /* =========================================================
-   FEATURED AND RECENT CARS
+   FEATURED AND RECENT SPARE PART
 ========================================================= */
 
-function isFeaturedCarPost(post) {
+function isFeaturedSpare_partPost(post) {
 
     return Boolean(
         post.is_featured ||
@@ -2176,7 +2176,7 @@ function isFeaturedCarPost(post) {
 }
 
 
-function isSponsoredCarPost(post) {
+function isSponsoredSpare_partPost(post) {
 
     return Boolean(
         post.is_sponsored ||
