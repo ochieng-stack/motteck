@@ -1957,3 +1957,101 @@ body{
     transform: none !important;
     box-shadow: none !important;
 }
+
+/* Recent cars Header */
+.recent-heaader {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    margin: 25px 0 18px;
+}
+
+/* car icon + Title */
+.recent-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.recent-title i {
+    font-size: 38px;
+    color: #0878ee;
+}
+.recent {
+    font-size: 32px;
+    font-weight: 500;
+    color: #101b32;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* Horizontal strip */
+.recent-line {
+    flex: 1;
+    height: 2px;
+    background: #cbd8e9;
+    min-width: 15px;
+}
+
+/* View All Button */
+.view-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 22px;
+    background: #dcecff;
+    color: #0865c9;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.view-all:hover {
+    background: #0878ee;
+    color: white;
+}
+
+.view-all i {
+    font-size: 17px;
+}
+
+@media (max-width: 600px){
+    .recent-heaader {
+        gap: 9px;
+        margin: 20px 0 15px;
+    }
+
+    .recent-title {
+        gap: 7px;
+    }
+
+    .recent-title i {
+        font-size: 25px;
+    }
+
+    .recent {
+        font-size: 21px;
+        font-weight: 500;
+    }
+
+    .recent-line {
+        min-width: 10px;
+        height: 2px;
+    }
+
+    .view-all {
+        padding: 10px 13px;
+        gap: 6px;
+        font-size: 13px;
+    }
+
+    .view-all i {
+        font-size : 13px;
+    }
+}
