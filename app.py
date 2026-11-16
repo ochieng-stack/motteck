@@ -3730,13 +3730,9 @@ def like_post(post_id):
         })
 
     except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        })
-
-
-# ================= VIEW =================
+        return jsonify({"success": False, "error": str(e)}), 500
+    
+   # View post 
 @app.route('/view/<int:post_id>', methods=['POST'])
 def view_post(post_id):
 
