@@ -1972,15 +1972,15 @@ body{
     display: flex;
     align-items: center;
     gap: 12px;
-    flex-shrink: 0;
+    flex: 0 0 auto;
 }
 
 .recent-title i {
-    font-size: 38px;
+    font-size: 34px;
     color: #0878ee;
 }
 .recent {
-    font-size: 32px;
+    font-size: 27px;
     font-weight: 500;
     color: #101b32;
     margin: 0;
@@ -1989,7 +1989,7 @@ body{
 
 /* Horizontal strip */
 .recent-line {
-    flex: 1;
+    flex: 1 1 auto;
     height: 2px;
     background: #cbd8e9;
     min-width: 15px;
@@ -1997,17 +1997,24 @@ body{
 
 /* View All Button */
 .view-all {
-    display: flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     gap: 10px;
+
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: fit-content;
+
     padding: 15px 22px;
     background: #dcecff;
     color: #0865c9;
+
     border-radius: 30px;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
+
     white-space: nowrap;
     transition: 0.2s ease;
 }
@@ -2019,6 +2026,7 @@ body{
 
 .view-all i {
     font-size: 17px;
+    display: inline-block;
 }
 
 @media (max-width: 600px){
