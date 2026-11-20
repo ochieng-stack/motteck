@@ -2000,14 +2000,14 @@ body{
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin-left: auto !important;
+    gap: 8px;
+    margin-left: 0 !important;
 
     flex: 0 0 auto !important;
     width: auto !important;
     max-width: fit-content;
 
-    padding: 12px 18px;
+    padding: 10px 16px;
     background: #dcecff;
     color: #0865c9;
 
@@ -2018,6 +2018,7 @@ body{
 
     white-space: nowrap;
     transition: 0.2s ease;
+    order: 3;
 }
 
 .view-all:hover {
