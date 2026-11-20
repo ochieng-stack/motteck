@@ -2001,12 +2001,13 @@ body{
     align-items: center;
     justify-content: center;
     gap: 10px;
+    margin-left: auto !important;
 
     flex: 0 0 auto !important;
     width: auto !important;
     max-width: fit-content;
 
-    padding: 15px 22px;
+    padding: 12px 18px;
     background: #dcecff;
     color: #0865c9;
 
