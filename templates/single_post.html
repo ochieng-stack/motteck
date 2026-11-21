@@ -2227,6 +2227,119 @@ document.addEventListener("DOMContentLoaded", function(){
     </div>
 
 </section>
+<script>
+/* =========================================================
+   MOBILE MENU
+========================================================= */
 
+function toggleMenu() {
+
+    const menu =
+        document.getElementById("mobileMenu");
+
+    if (!menu) {
+        return;
+    }
+
+    menu.style.display =
+        menu.style.display === "flex"
+            ? "none"
+            : "flex";
+
+}
+
+
+
+/* =========================================================
+   CLOSE MOBILE MENU
+========================================================= */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const menu =
+            document.getElementById("mobileMenu");
+
+        const button =
+            document.querySelector(".menu-btn");
+
+        if (
+            menu &&
+            button &&
+            !menu.contains(event.target) &&
+            !button.contains(event.target)
+        ) {
+
+            menu.style.display = "none";
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
+   PROFILE DROPDOWN
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        const button =
+            document.getElementById(
+                "profileDropdownBtn"
+            );
+
+        const dropdown =
+            document.querySelector(
+                ".profile-dropdown"
+            );
+
+        if (!button || !dropdown) {
+            return;
+        }
+
+
+        button.addEventListener(
+            "click",
+            function(event) {
+
+                event.stopPropagation();
+
+                dropdown.classList.toggle(
+                    "active"
+                );
+
+            }
+        );
+
+
+        document.addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    !dropdown.contains(
+                        event.target
+                    )
+                ) {
+
+                    dropdown.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+</script>
 </body>
 </html>
