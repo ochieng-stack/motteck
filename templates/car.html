@@ -1447,13 +1447,66 @@ function createPostCard(post) {
 
     const saleActions =  postId ? `
         <div class="mc-car-sale-actions">
-            <a
-                href="/post/${encodeURIComponent(postId)}?contact=seller"
-                class="mc-car-button mc-contact-button"
-            >
-                <i class="fa-solid fa-phone"></i>
-                ${sellerLabel}
-            </a>
+            <div style="position:relative;display:inline-block;">
+                <button
+                    type="button"
+                    class="mc-car-button mc-contact-button"
+                    onclick="
+                        const menu = this.nextElementSibling;
+                        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                    "
+                >
+                    <i class="fa-solid fa-phone"></i>
+                    ${sellerLabel}
+                </button>
+
+                <div
+                    style="
+                        display:none;
+                        position:absolute;
+                        top:100%;
+                        left:0;
+                        min-width:180px;
+                        background:#fff;
+                        border:1px solid #ddd;
+                        border-radius:8px;
+                        box-shadow:0 4px 12px rgba(0,0,0,0.15);
+                        z-index:9999;
+                        padding:8px;
+                    "
+                >
+                
+                    <a
+                        href="tel:${String(post.phone || post.business_phone || post.seller_phone || post.contact_phone || post.whatsapp_number || '').replace(/[^\d+]/g, '')}"
+                        style="
+                            display:block;
+                            padding:12px;
+                            color:#222;
+                            text-decoration:none;
+                        "
+                    >
+                       <i class="fa-solid fa-phone"></i>
+                       Call
+                    </a>
+
+                    <a
+                       href="https://wa.me/${String(post.whatsapp_number || post.business_phone || post.seller_phone || post.phone || post.contact_phone || '').replace(/\D/g, '').replace(/^0/, '254')}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       style="
+                           display:block;
+                           padding:12px;
+                           color:#222;
+                           text-decoration:none;
+                       "
+                    >
+                       <i class="fa-brands fa-whatsapp"></i>
+                       WhatsApp
+                    </a>
+
+                </div>
+
+            </div>
 
             <a
                 href="/post/${encodeURIComponent(postId)}?request=motteck"
