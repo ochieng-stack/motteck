@@ -2065,19 +2065,25 @@ body{
         font-size : 13px;
     }
 }
-/* ==========================================================
-   MOTTECK — FORCE FEATURED CARDS TO MATCH RECENT CARDS
-   ========================================================== */
+/* ============================================================
+   MOTTECK - FEATURED CAR CARDS
+   FORCE MATCH TO THE COMPACT RECENT CAR DESIGN
+   ONLY AFFECTS FEATURED CARDS
+============================================================ */
 
 #featured-section #featured-posts {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 22px !important;
-    padding: 20px !important;
+    padding: 15px 10px !important;
     align-items: start !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-#featured-section #featured-posts .post-card {
+/* RESET FEATURED CARD SIZE */
+
+#featured-section #featured-posts article.mc-car-card {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -2085,160 +2091,452 @@ body{
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-    box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
+    align-self: start !important;
+    box-sizing: border-box !important;
     overflow: hidden !important;
     border-radius: 12px !important;
 }
 
-/* CARD HEADER */
-#featured-section #featured-posts .post-author-header {
-    width: 100% !important;
-    padding: 10px 12px !important;
-    gap: 8px !important;
-    min-height: 0 !important;
-    box-sizing: border-box !important;
+/* REMOVE UNWANTED CARD POSITIONING */
+
+#featured-section #featured-posts .mc-car-card {
+    position: relative !important;
 }
 
-#featured-section #featured-posts .post-author-header img,
-#featured-section #featured-posts .post-author-header .profile-image,
-#featured-section #featured-posts .post-author-header .avatar {
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 40px !important;
-    max-width: 40px !important;
+/* AUTHOR HEADER */
+
+#featured-section #featured-posts .post-author-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 58px !important;
+    padding: 8px 10px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+}
+
+#featured-section #featured-posts .post-author-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+}
+
+#featured-section #featured-posts .post-author-avatar-link {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    display: block !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+}
+
+#featured-section #featured-posts img.post-author-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
     object-fit: cover !important;
     border-radius: 50% !important;
 }
 
-/* FEATURED BADGE */
-#featured-section #featured-posts .featured-badge,
-#featured-section #featured-posts .badge {
-    font-size: 10px !important;
-    padding: 3px 7px !important;
-    max-width: fit-content !important;
+#featured-section #featured-posts .post-author-avatar-placeholder {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
 }
 
-/* CARD IMAGE */
-#featured-section #featured-posts .post-image,
-#featured-section #featured-posts .post-card > img {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 190px !important;
-    min-height: 190px !important;
-    max-height: 190px !important;
-    object-fit: cover !important;
-    display: block !important;
+#featured-section #featured-posts .post-author-info {
+    min-width: 0 !important;
+    height: auto !important;
     margin: 0 !important;
 }
 
-/* CARD CONTENT */
-#featured-section #featured-posts .post-content {
+#featured-section #featured-posts .post-author-name {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+}
+
+#featured-section #featured-posts .post-author-category {
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+    margin: 2px 0 0 !important;
+}
+
+#featured-section #featured-posts .post-author-time {
+    display: none !important;
+}
+
+#featured-section #featured-posts .post-author-right {
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+}
+
+#featured-section #featured-posts .follow-btn {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    border-radius: 20px !important;
+}
+
+/* ============================================================
+   CAR IMAGE GALLERY
+============================================================ */
+
+#featured-section #featured-posts .mc-car-gallery {
     width: 100% !important;
-    padding: 12px !important;
+    height: 155px !important;
+    min-height: 155px !important;
+    max-height: 155px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    position: relative !important;
+    overflow: hidden !important;
+    flex: none !important;
     box-sizing: border-box !important;
+}
+
+#featured-section #featured-posts .mc-car-main-image {
+    width: 100% !important;
+    height: 155px !important;
+    min-height: 155px !important;
+    max-height: 155px !important;
+    display: block !important;
+    position: relative !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: none !important;
+    box-sizing: border-box !important;
+}
+
+#featured-section #featured-posts .mc-car-main-image img {
+    width: 100% !important;
+    height: 155px !important;
+    min-height: 155px !important;
+    max-height: 155px !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    position: relative !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ============================================================
+   PHOTO COUNT - BOTTOM LEFT OF IMAGE
+============================================================ */
+
+#featured-section #featured-posts .mc-photo-count {
+    position: absolute !important;
+    left: 8px !important;
+    bottom: 8px !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+    z-index: 5 !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-width: fit-content !important;
+
+    padding: 4px 7px !important;
+    margin: 0 !important;
+
+    background: rgba(0, 0, 0, 0.72) !important;
+    color: #fff !important;
+
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+
+    border-radius: 4px !important;
+    box-shadow: none !important;
+}
+
+/* ============================================================
+   BADGES
+============================================================ */
+
+#featured-section #featured-posts .mc-car-badges {
+    position: absolute !important;
+    top: 8px !important;
+    left: 8px !important;
+    z-index: 10 !important;
+    display: flex !important;
+    gap: 5px !important;
+    flex-wrap: wrap !important;
+    width: auto !important;
+    max-width: calc(100% - 16px) !important;
+}
+
+#featured-section #featured-posts .mc-car-badge {
+    font-size: 9px !important;
+    padding: 4px 6px !important;
+    height: auto !important;
+    line-height: 1.2 !important;
+}
+
+/* ============================================================
+   CARD CONTENT
+============================================================ */
+
+#featured-section #featured-posts .mc-car-content {
+    width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
     flex: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 8px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
 }
 
 /* TITLE */
-#featured-section #featured-posts .post-title {
-    font-size: 16px !important;
-    line-height: 1.4 !important;
-    margin: 0 0 8px !important;
-    font-weight: 700 !important;
+
+#featured-section #featured-posts .mc-car-title-link {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 5px !important;
+    padding: 0 !important;
 }
 
-/* DESCRIPTION */
-#featured-section #featured-posts .post-description,
-#featured-section #featured-posts .post-text {
-    font-size: 13px !important;
-    line-height: 1.5 !important;
+#featured-section #featured-posts .mc-car-title {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ============================================================
+   SPECIFICATION CHIPS
+============================================================ */
+
+#featured-section #featured-posts .mc-car-details {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 5px !important;
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#featured-section #featured-posts .mc-car-detail {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 4px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 4px 6px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 6px !important;
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
+}
+
+#featured-section #featured-posts .mc-detail-label,
+#featured-section #featured-posts .mc-detail-value {
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
 }
 
 /* PRICE */
-#featured-section #featured-posts .post-price {
-    font-size: 17px !important;
-    margin: 8px 0 !important;
+
+#featured-section #featured-posts .mc-car-price {
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+    margin: 5px 0 8px !important;
+    padding: 0 !important;
 }
 
-/* POST ACTIONS */
-#featured-section #featured-posts .post-actions {
-    width: 100% !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 10px 12px !important;
-    gap: 8px !important;
-    box-sizing: border-box !important;
-    flex-wrap: wrap !important;
-}
+/* ============================================================
+   LIKE, VIEWS, SHARE
+============================================================ */
 
-/* CONTACT BUTTONS */
-#featured-section #featured-posts .sale-contact-actions {
+#featured-section #featured-posts .mc-car-engagement {
     display: flex !important;
     flex-direction: row !important;
-    width: 100% !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
     gap: 8px !important;
-    padding: 10px 12px !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 30px !important;
+    padding: 5px 0 !important;
+    margin: 0 0 7px !important;
     box-sizing: border-box !important;
+    border-top: 1px solid #eee !important;
+    border-bottom: 1px solid #eee !important;
 }
 
-#featured-section #featured-posts .post-contact-btn,
-#featured-section #featured-posts .request-motteck-btn {
+#featured-section #featured-posts .mc-car-engagement-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
     width: auto !important;
-    flex: 1 1 0 !important;
     min-width: 0 !important;
-    height: 38px !important;
-    min-height: 38px !important;
-    max-height: 38px !important;
-    padding: 8px 10px !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 2px 0 !important;
     margin: 0 !important;
-    box-sizing: border-box !important;
-    font-size: 12px !important;
-    line-height: normal !important;
+    font-size: 10px !important;
+    line-height: 1.3 !important;
     white-space: nowrap !important;
+    flex: 0 0 auto !important;
 }
 
-/* SEE MORE */
-#featured-section #featured-posts .see-more,
-#featured-section #featured-posts .see-more-btn {
-    font-size: 12px !important;
+/* ============================================================
+   VIEW DETAILS
+============================================================ */
+
+#featured-section #featured-posts .mc-car-view-details {
+    display: flex !important;
+    width: 100% !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    flex: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    box-sizing: border-box !important;
+    margin: 0 0 8px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    line-height: normal !important;
 }
 
-/* TABLET */
+/* ============================================================
+   CONTACT AND REQUEST BUTTONS
+============================================================ */
+
+#featured-section #featured-posts .mc-car-sale-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 36px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#featured-section #featured-posts .mc-car-sale-actions > div {
+    display: flex !important;
+    position: relative !important;
+    flex: 1 1 0 !important;
+    width: 50% !important;
+    min-width: 0 !important;
+    height: 36px !important;
+    max-height: 36px !important;
+    align-self: auto !important;
+    box-sizing: border-box !important;
+}
+
+#featured-section #featured-posts .mc-car-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    flex: 1 1 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    margin: 0 !important;
+    padding: 6px 5px !important;
+    box-sizing: border-box !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+}
+
+#featured-section #featured-posts .mc-contact-button {
+    border-radius: 9px !important;
+}
+
+#featured-section #featured-posts .mc-request-button {
+    border-radius: 9px !important;
+}
+
+/* ============================================================
+   TABLET
+============================================================ */
+
 @media (max-width: 900px) {
+
     #featured-section #featured-posts {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 15px !important;
     }
 
-    #featured-section #featured-posts .post-image,
-    #featured-section #featured-posts .post-card > img {
-        height: 180px !important;
-        min-height: 180px !important;
-        max-height: 180px !important;
-    }
 }
 
-/* MOBILE */
+/* ============================================================
+   MOBILE
+============================================================ */
+
 @media (max-width: 600px) {
+
     #featured-section #featured-posts {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: minmax(0, 1fr) !important;
         gap: 15px !important;
-        padding: 12px !important;
+        padding: 10px 8px !important;
     }
 
-    #featured-section #featured-posts .post-card {
+    #featured-section #featured-posts article.mc-car-card {
         width: 100% !important;
         max-width: 100% !important;
     }
 
-    #featured-section #featured-posts .post-image,
-    #featured-section #featured-posts .post-card > img {
-        height: 210px !important;
-        min-height: 210px !important;
-        max-height: 210px !important;
+    #featured-section #featured-posts .mc-car-gallery,
+    #featured-section #featured-posts .mc-car-main-image,
+    #featured-section #featured-posts .mc-car-main-image img {
+        height: 155px !important;
+        min-height: 155px !important;
+        max-height: 155px !important;
     }
+
 }
