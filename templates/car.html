@@ -1451,10 +1451,8 @@ function createPostCard(post) {
                 <button
                     type="button"
                     class="mc-car-button mc-contact-button"
-                    onclick="
-                        const menu = this.nextElementSibling;
-                        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-                    "
+                    onclick="openSellerContactMenu(event, this)"
+                    data-phone="${post.phone || post.business_phone || post.seller_phone || post.contact_phone || post.whatsapp_number || ''}"
                 >
                     <i class="fa-solid fa-phone"></i>
                     ${sellerLabel}
@@ -1602,7 +1600,111 @@ function createPostCard(post) {
     `;
 }
 
+/* ==============================================
+CONTROL CONTACT SELLER
+=============================================*/
 
+function openSellerContactMenu(event, button) {
+
+    event.stopPropagation();
+
+    // Close any menu already open
+    const existingMenu = document.getElementById("sellerContactFloatingMenu");
+
+    if (existingMenu) {
+        existingMenu.remove();
+
+        if (existingMenu.dataset.buttonId === button.dataset.buttonId) {
+            return;
+        }
+    }
+
+    const phone = button.dataset.phone || "";
+
+    // Remove formatting from phone number
+    const cleanPhone = phone.replace(/[^\d+]/g, "");
+
+    if (!cleanPhone) {
+        alert("Seller phone number is unavailable.");
+        return;
+    }
+
+    // WhatsApp uses digits only
+    let whatsappNumber = cleanPhone.replace(/\D/g, "");
+
+    if (whatsappNumber.startsWith("0")) {
+        whatsappNumber = "254" + whatsappNumber.substring(1);
+    }
+
+    if (whatsappNumber.startsWith("254")) {
+        // Already in Kenya international format
+    }
+
+    // Floating menu
+    const menu = document.createElement("div");
+
+    menu.id = "sellerContactFloatingMenu";
+    menu.dataset.buttonId = button.dataset.buttonId || "";
+
+    menu.style.cssText = `
+        position:fixed;
+        background:#fff;
+        border:1px solid #ddd;
+        border-radius:8px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.20);
+        z-index:999999;
+        width:180px;
+        padding:6px 0;
+    `;
+
+    menu.innerHTML = `
+        <a href="tel:${cleanPhone}"
+           style="display:block;padding:12px;color:#222;text-decoration:none;">
+            <i class="fa-solid fa-phone"></i> Call
+        </a>
+
+        <a href="https://wa.me/${whatsappNumber}"
+           target="_blank"
+           rel="noopener noreferrer"
+           style="display:block;padding:12px;color:#222;text-decoration:none;">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </a>
+    `;
+
+    document.body.appendChild(menu);
+
+    // Position the floating menu below the clicked button
+    const rect = button.getBoundingClientRect();
+
+    menu.style.left = rect.left + "px";
+    menu.style.top = rect.bottom + "px";
+
+    // Keep the dropdown within the screen
+    const menuRect = menu.getBoundingClientRect();
+
+    if (menuRect.right > window.innerWidth) {
+        menu.style.left = (window.innerWidth - menuRect.width - 10) + "px";
+    }
+
+    if (menuRect.bottom > window.innerHeight) {
+        menu.style.top = (rect.top - menuRect.height) + "px";
+    }
+
+    // Close when clicking elsewhere
+    setTimeout(() => {
+
+        document.addEventListener("click", function closeMenu(e) {
+
+            if (!menu.contains(e.target)) {
+                menu.remove();
+                document.removeEventListener("click", closeMenu);
+            }
+
+        });
+
+    }, 0);
+
+}
 
 /* =========================================================
    FOLLOW
