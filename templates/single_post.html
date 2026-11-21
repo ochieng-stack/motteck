@@ -1806,25 +1806,375 @@ document.addEventListener("DOMContentLoaded", function(){
 
 <body>
 
-<!-- HEADER -->
-<header>
-    <div class="header">
-        <h1 class="title">
-            <a href="{{ url_for('home') }}" style="text-decoration:none; color:inherit;">
-                <i>MOTTECK</i>
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <h1 class="title">
+
+        <a href="{{ url_for('home') }}">
+            MOTTECK
+        </a>
+
+    </h1>
+
+
+    <div class="top-actions">
+
+
+        {% if session.get("user_logged_in") %}
+
+
+        <!-- PROFILE -->
+
+        <div class="profile-dropdown">
+
+            <button
+                type="button"
+                class="profile-btn"
+                id="profileDropdownBtn"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+                <span>
+                    Profile
+                </span>
+
+                <i class="fa-solid fa-chevron-down profile-arrow"></i>
+
+            </button>
+
+
+            <div
+                class="profile-menu"
+                id="profileMenu"
+            >
+
+
+                <div class="profile-menu-header">
+
+                    {% if session.get("account_type") == "business" %}
+
+                    <i class="fa-solid fa-building"></i>
+
+                    <div>
+
+                        <strong>
+                            {{ session.get("full_name") }}
+                        </strong>
+
+                        <small>
+                            Business Account
+                        </small>
+
+                    </div>
+
+                    {% else %}
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <div>
+
+                        <strong>
+                            {{ session.get("full_name") }}
+                        </strong>
+
+                        <small>
+                            Individual Account
+                        </small>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="profile-menu-divider"></div>
+
+
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>
+                        View Profile
+                    </span>
+
+                </a>
+
+                <a
+                    href="{{ url_for('public_profile', user_id=session.get('user_id')) }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>
+                        View Public Profile
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('settings') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('submit_post') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-pen-to-square"></i>
+
+                    <span>
+                        Submit Post
+                    </span>
+
+                </a>
+
+
+                {% if session.get("account_type") == "business" %}
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <span>
+                        Business Dashboard
+                    </span>
+
+                </a>
+
+                {% endif %}
+
+
+                <a
+                    href="{{ url_for('my_submissions') }}"
+                    class="profile-menu-item"
+                >
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    <span>
+                        My Submissions
+                    </span>
+
+                </a>
+
+
+                <div class="profile-menu-divider"></div>
+
+
+                <a
+                    href="{{ url_for('user_logout') }}"
+                    class="profile-menu-item logout-item"
+                >
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- LOGIN / SIGN UP -->
+
+        <div class="auth-buttons">
+
+            <a
+                href="{{ url_for('login_user') }}"
+                class="login-btn"
+            >
+                Login
             </a>
-        </h1>
+
+
+            <a
+                href="{{ url_for('register') }}"
+                class="signup-btn"
+            >
+                Sign Up
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+        <!-- HAMBURGER -->
+
+        <button
+            class="menu-btn"
+            onclick="toggleMenu()"
+            type="button"
+        >
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+
     </div>
 
-    <!-- CATEGORY NAV -->
-    <nav class="category-nav">
-        <a href="{{ url_for('car') }}">CARS</a>
-        <a href="{{ url_for('truck') }}">TRUCKS</a>
-        <a href="{{ url_for('motobike') }}">MOTOBIKE</a>
-        <a href="{{ url_for('accessorie') }}">ACCESSORIE</a>
-        <a href="{{ url_for('spare_part') }}">SPARE PART</a>
-    </nav>
 </header>
+
+
+
+<!-- =========================================================
+     MOBILE MENU
+========================================================= -->
+
+<div
+    id="mobileMenu"
+    class="mobile-menu"
+>
+
+
+    <a href="{{ url_for('home') }}">
+
+        <i class="fa-solid fa-house"></i>
+
+        Home
+
+    </a>
+
+
+    <a href="{{ url_for('about') }}">
+
+        <i class="fa-solid fa-circle-info"></i>
+
+        About
+
+    </a>
+
+
+    <a href="{{ url_for('car') }}">
+
+        <i class="fa-solid fa-car"></i>
+
+        Cars
+
+    </a>
+
+
+    <a href="{{ url_for('truck') }}">
+
+        <i class="fa-solid fa-truck"></i>
+        <i class="fa-solid fa-bus"></i>
+
+        Truck/Bus
+
+    </a>
+
+
+    <a href="{{ url_for('motobike') }}">
+
+        <i class="fa-solid fa-motorcycle"></i>
+
+        Bikes
+
+    </a>
+
+
+    <a href="{{ url_for('accessorie') }}">
+
+        <i class="fa-solid fa-car-side"></i>
+
+        Accessorie
+
+    </a>
+
+
+    <a href="{{ url_for('spare_part') }}">
+
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+
+        Spare Part
+
+    </a>
+
+
+    <a href="{{ url_for('contact') }}">
+
+        <i class="fas fa-envelope"></i>
+
+        Contact
+
+    </a>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     CATEGORY NAVIGATION
+========================================================= -->
+
+<nav class="category-nav">
+
+
+    <a
+        href="{{ url_for('car') }}"
+        class="active"
+    >
+        CAR
+    </a>
+
+
+    <a href="{{ url_for('truck') }}">
+        TRUCK/BUS
+    </a>
+
+
+    <a href="{{ url_for('motobike') }}">
+        BIKES
+    </a>
+
+
+    <a href="{{ url_for('accessorie') }}">
+        ACCESSORIE
+    </a>
+
+
+    <a href="{{ url_for('spare_part') }}">
+        SPARE PARTS
+    </a>
+
+
+</nav>
 
 <!-- SINGLE POST -->
 <section class="post-container" style="max-width:900px; margin:40px auto; padding:20px;">
