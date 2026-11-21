@@ -1460,21 +1460,7 @@ function createPostCard(post) {
                     ${sellerLabel}
                 </button>
 
-                <div
-                    style="
-                        display:none;
-                        position:absolute;
-                        top:100%;
-                        left:0;
-                        min-width:180px;
-                        background:#fff;
-                        border:1px solid #ddd;
-                        border-radius:8px;
-                        box-shadow:0 4px 12px rgba(0,0,0,0.15);
-                        z-index:9999;
-                        padding:8px;
-                    "
-                >
+                <div>
                 
                     <a
                         href="tel:${String(post.phone || post.business_phone || post.seller_phone || post.contact_phone || post.whatsapp_number || '').replace(/[^\d+]/g, '')}"

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -1819,12 +1818,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
     <!-- CATEGORY NAV -->
     <nav class="category-nav">
-        <a href="{{ url_for('cars') }}">CARS</a>
-        <a href="{{ url_for('trucks') }}">TRUCKS</a>
-        <a href="{{ url_for('motobikes') }}">MOTOBIKE</a>
-        <a href="{{ url_for('trains') }}">TRAIN</a>
-        <a href="{{ url_for('plane') }}">PLANE</a>
-        <a href="{{ url_for('services') }}">SERVICES</a>
+        <a href="{{ url_for('car') }}">CARS</a>
+        <a href="{{ url_for('truck') }}">TRUCKS</a>
+        <a href="{{ url_for('motobike') }}">MOTOBIKE</a>
+        <a href="{{ url_for('accessorie') }}">ACCESSORIE</a>
+        <a href="{{ url_for('spare_part') }}">SPARE PART</a>
     </nav>
 </header>
 
@@ -1858,15 +1856,15 @@ document.addEventListener("DOMContentLoaded", function(){
         <a href="/{{ post.category }}s" 
            style="padding:10px 15px; background:black; color:white; text-decoration:none; border-radius:5px;">
            {% if post.category == 'car' %}
-           <a href="/cars">← Back to Cars</a>
+           <a href="/car">← Back to Car</a>
            {% elif post.category == 'truck' %}
-           <a href="/trucks">← Back to Trucks</a>
+           <a href="/truck">← Back to Truck/Bus</a>
            {% elif post.category == 'motobike' %}
-           <a href="/motobikes">← Back to Motobikes</a>
+           <a href="/motobike">← Back to Motobike</a>
            {% elif post.category == 'train' %}
-           <a href="/trains">← Back to Trains</a>
-           {% elif post.category == 'plane' %}
-           <a href="/plane">← Back to Planes</a>
+           <a href="/accessorie">← Back to accessorie</a>
+           {% elif post.category == 'sparepart' %}
+           <a href="/spare_part">← Back to sparepart</a>
            {% endif %}
         </a>
 
@@ -1881,5 +1879,4 @@ document.addEventListener("DOMContentLoaded", function(){
 </section>
 
 </body>
->>>>>>> 726aba7 (update)
 </html>
