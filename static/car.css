@@ -2065,3 +2065,263 @@ body{
         font-size : 13px;
     }
 }
+/* =========================================================
+   MOTTECK FEATURED CARS
+   Make Featured cards match the compact Recent car cards
+   This affects ONLY #featured-posts
+========================================================= */
+
+
+/* FEATURED GRID */
+
+#featured-posts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    padding: 20px;
+    align-items: start;
+}
+
+
+/* FEATURED CARD */
+
+#featured-posts .post-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+
+/* AUTHOR HEADER */
+
+#featured-posts .post-author-header {
+    padding: 10px 12px;
+    gap: 8px;
+    min-height: auto;
+}
+
+
+#featured-posts .post-author-left {
+    gap: 8px;
+    min-width: 0;
+}
+
+
+#featured-posts .post-author-avatar-link {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+}
+
+
+#featured-posts .post-author-avatar {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px;
+}
+
+
+#featured-posts .post-author-name {
+    font-size: 13px;
+}
+
+
+#featured-posts .post-author-category {
+    font-size: 11px;
+}
+
+
+#featured-posts .post-author-time {
+    font-size: 10px;
+}
+
+
+#featured-posts .follow-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+}
+
+
+/* FEATURED BADGE */
+
+#featured-posts .badge {
+    margin: 8px 10px 0;
+    font-size: 11px;
+    padding: 4px 8px;
+}
+
+
+/* CAR IMAGE */
+
+#featured-posts .post-image {
+    display: block;
+    width: 100% !important;
+    height: 190px !important;
+    min-height: 190px;
+    max-height: 190px;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+}
+
+
+/* OTHER CARD IMAGES */
+
+#featured-posts .post-card img {
+    max-width: 100%;
+}
+
+
+/* CARD CONTENT */
+
+#featured-posts .post-content {
+    padding: 12px;
+    gap: 8px;
+    flex: 1;
+}
+
+
+/* CAR TITLE */
+
+#featured-posts .post-title {
+    font-size: 17px;
+    line-height: 1.35;
+    margin: 0;
+}
+
+
+/* DESCRIPTION */
+
+#featured-posts .post-text {
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-line-clamp: 2;
+}
+
+
+/* POST ACTIONS */
+
+#featured-posts .post-actions {
+    gap: 5px;
+    padding-top: 2px;
+}
+
+
+#featured-posts .post-action-btn {
+    padding: 5px 6px;
+    font-size: 12px;
+    gap: 5px;
+}
+
+
+/* CONTACT AND REQUEST BUTTONS */
+
+#featured-posts .sale-contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+
+#featured-posts .post-contact-btn,
+#featured-posts .request-motteck-btn {
+    padding: 8px 11px;
+    font-size: 12px;
+    flex: 0 1 auto;
+    width: auto;
+}
+
+
+/* SEE MORE / DETAILS */
+
+#featured-posts .see-more-btn {
+    padding: 6px 9px;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+    #featured-posts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        padding: 16px;
+    }
+
+    #featured-posts .post-image {
+        height: 180px !important;
+        min-height: 180px;
+        max-height: 180px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    #featured-posts {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 12px;
+    }
+
+    #featured-posts .post-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #featured-posts .post-image {
+        width: 100% !important;
+        height: 210px !important;
+        min-height: 210px;
+        max-height: 210px;
+        object-fit: cover !important;
+    }
+
+    #featured-posts .post-content {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    #featured-posts .post-title {
+        font-size: 16px;
+    }
+
+    #featured-posts .post-text {
+        font-size: 13px;
+        -webkit-line-clamp: 2;
+    }
+
+    #featured-posts .post-author-header {
+        padding: 10px 12px;
+    }
+
+    #featured-posts .sale-contact-actions {
+        gap: 8px;
+    }
+
+    #featured-posts .post-contact-btn,
+    #featured-posts .request-motteck-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+}
