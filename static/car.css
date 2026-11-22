@@ -1601,7 +1601,7 @@ body{
 ========================================================= */
 
 /* DESKTOP: FOUR CARDS PER ROW */
-#carPost #featured-posts .post-container {
+#carPost, #featured-posts .post-container {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: start;
@@ -1611,7 +1611,7 @@ body{
     box-sizing: border-box;
 }
 
-#carPost #featured-posts .mc-car-card {
+#carPost, #featured-posts .mc-car-card {
     width: 100%;
     min-width: 0;
     max-width: 100%;
@@ -1621,116 +1621,116 @@ body{
 }
 
 /* Compact gallery to reduce card height */
-#carPost #featured-posts .mc-car-gallery {
+#carPost, #featured-posts .mc-car-gallery {
     height: 155px;
     min-height: 0;
 }
 
 /* Keep images correctly cropped */
-#carPost #featured-posts .mc-car-main-image img,
-#carPost #featured-posts .mc-car-side-image img {
+#carPost, #featured-posts .mc-car-main-image img,
+#carPost, #featured-posts .mc-car-side-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* Compact author header */
-#carPost #featured-posts .post-author-header {
+#carPost, #featured-posts .post-author-header {
     padding: 9px 10px 8px;
     gap: 6px;
 }
 
-#carPost #featured-posts .post-author-avatar-link,
-#carPost #featured-posts .post-author-avatar {
+#carPost, #featured-posts .post-author-avatar-link,
+#carPost, #featured-posts .post-author-avatar {
     width: 34px !important;
     height: 34px !important;
     min-width: 34px;
     min-height: 34px;
 }
 
-#carPost #featured-posts .post-author-name {
+#carPost, #featured-posts .post-author-name {
     font-size: 12px;
 }
 
-#carPost #featured-posts .post-author-category {
+#carPost, #featured-posts .post-author-category {
     font-size: 10px;
 }
 
-#carPost #featured-posts .post-author-time {
+#carPost, #featured-posts .post-author-time {
     font-size: 10px;
 }
 
-#carPost #featured-posts .follow-btn {
+#carPost, #featured-posts .follow-btn {
     padding: 5px 8px;
     font-size: 10px;
 }
 
 /* Badges */
-#carPost #featured-posts .mc-car-badges {
+#carPost, #featured-posts .mc-car-badges {
     padding: 7px 9px 0;
 }
 
-#carPost #featured-posts .mc-car-badge {
+#carPost, #featured-posts .mc-car-badge {
     padding: 4px 6px;
     font-size: 9px;
 }
 
 /* Reduce content spacing */
-#carPost #featured-posts .mc-car-content {
+#carPost, #featured-posts .mc-car-content {
     padding: 9px 10px 10px;
     min-width: 0;
 }
 
-#carPost #featured-posts .mc-car-title {
+#carPost, #featured-posts .mc-car-title {
     font-size: 14px;
     line-height: 1.35;
     margin-bottom: 7px;
 }
 
-#carPost #featured-posts .mc-car-details {
+#carPost, #featured-posts .mc-car-details {
     gap: 5px;
     margin-bottom: 8px;
 }
 
-#carPost #featured-posts .mc-car-detail {
+#carPost, #featured-posts .mc-car-detail {
     padding: 5px 6px;
     gap: 4px;
 }
 
-#carPost #featured-posts .mc-detail-label {
+#carPost, #featured-posts .mc-detail-label {
     font-size: 9px;
 }
 
-#carPost #featured-posts .mc-detail-value {
+#carPost, #featured-posts .mc-detail-value {
     font-size: 10px;
 }
 
-#carPost #featured-posts .mc-car-price {
+#carPost, #featured-posts .mc-car-price {
     font-size: 18px;
     margin: 3px 0 8px;
 }
 
-#carPost #featured-posts .mc-car-description {
+#carPost, #featured-posts .mc-car-description {
     font-size: 12px;
     line-height: 1.5;
 }
 
-#carPost #featured-posts .mc-car-see-more {
+#carPost, #featured-posts .mc-car-see-more {
     font-size: 11px;
     margin-bottom: 6px;
 }
 
 /* Engagement buttons */
-#carPost #featured-posts .mc-car-engagement {
+#carPost, #featured-posts .mc-car-engagement {
     gap: 8px;
     padding: 7px 0;
 }
 
-#carPost #featured-posts .mc-car-engagement-btn {
+#carPost, #featured-posts .mc-car-engagement-btn {
     font-size: 11px;
 }
 
-#carPost #featured-posts .mc-car-view-details {
+#carPost, #featured-posts .mc-car-view-details {
     font-size: 11px;
     padding: 9px 6px;
     margin-top: 8px;
@@ -1738,7 +1738,7 @@ body{
 
 /* Keep sale buttons compact and inside the card */
 
-#carPost #featured-posts .mc-car-sale-actions {
+#carPost, #featured-posts .mc-car-sale-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
@@ -1748,7 +1748,7 @@ body{
 
 
 
-#carPost #featured-posts .mc-car-button {
+#carPost, #featured-posts .mc-car-button {
     display: inline-flex;
     width: 100%;
     min-width: 0;
@@ -1765,24 +1765,24 @@ body{
 
 /* TABLET: THREE COLUMNS */
 @media (max-width: 1100px) and (min-width: 769px) {
-    #carPost #featured-posts .post-container {
+    #carPost, #featured-posts .post-container {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
         padding: 12px;
     }
 
-    #carPost #featured-posts .mc-car-gallery {
+    #carPost, #featured-posts .mc-car-gallery {
         height: 145px;
     }
 }
 @media (max-width: 768px) {
-    #carPost #featured-posts .mc-car-sale-actions {
+    #carPost, #featured-posts .mc-car-sale-actions {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
     }
 
-    #carPost #featured-posts .mc-car-button {
+    #carPost, #featured-posts .mc-car-button {
         min-height: 40px;
         padding: 8px 4px;
         font-size: 11px;
@@ -1790,47 +1790,47 @@ body{
 }
 /* MOBILE: ONE CARD PER ROW */
 @media (max-width: 768px) {
-    #carPost #featured-posts .post-container {
+    #carPost, #featured-posts .post-container {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         gap: 12px;
         padding: 10px 12px 20px;
     }
 
-    #carPost #featured-posts .mc-car-card {
+    #carPost, #featured-posts .mc-car-card {
         width: 100%;
         max-width: 100%;
     }
 
-    #carPost #featured-posts .mc-car-gallery {
+    #carPost, #featured-posts .mc-car-gallery {
         height: 190px;
     }
 
-    #carPost #featured-posts .post-author-header {
+    #carPost, #featured-posts .post-author-header {
         padding: 10px 12px;
     }
 
-    #carPost #featured-posts .post-author-avatar-link,
-    #carPost #featured-posts .post-author-avatar {
+    #carPost, #featured-posts .post-author-avatar-link,
+    #carPost, #featured-posts .post-author-avatar {
         width: 40px !important;
         height: 40px !important;
         min-width: 40px;
         min-height: 40px;
     }
 
-    #carPost #featured-posts .mc-car-content {
+    #carPost, #featured-posts .mc-car-content {
         padding: 12px;
     }
 
-    #carPost #featured-posts .mc-car-title {
+    #carPost, #featured-posts .mc-car-title {
         font-size: 18px;
     }
 
-    #carPost #featured-posts .mc-car-price {
+    #carPost, #featured-posts .mc-car-price {
         font-size: 21px;
     }
 
-    #carPost #featured-posts .mc-car-button {
+    #carPost, #featured-posts .mc-car-button {
         min-height: 40px;
         padding: 9px 8px;
         font-size: 12px;
@@ -1838,7 +1838,7 @@ body{
 }
 /* MOTTECK CARS — SINGLE PHOTO WITH PHOTO COUNT */
 
-#carPost #featured-posts .mc-car-gallery {
+#carPost, #featured-posts .mc-car-gallery {
     display: block;
     position: relative;
     width: 100%;
@@ -1848,7 +1848,7 @@ body{
     background: #eee;
 }
 
-#carPost #featured-posts .mc-car-main-image {
+#carPost, #featured-posts .mc-car-main-image {
     position: relative;
     display: block;
     width: 100%;
@@ -1857,7 +1857,7 @@ body{
     text-decoration: none;
 }
 
-#carPost #featured-posts .mc-car-main-image img {
+#carPost, #featured-posts .mc-car-main-image img {
     display: block;
     width: 100%;
     height: 100%;
@@ -1865,7 +1865,7 @@ body{
 }
 
 /* Photo count inside the image */
-#carPost #featured-posts .mc-photo-count {
+#carPost, #featured-posts .mc-photo-count {
     position: absolute;
     left: 9px;
     bottom: 8px;
@@ -1887,20 +1887,20 @@ body{
 }
 
 /* Hide side thumbnails */
-#carPost #featured-posts .mc-car-side-images {
+#carPost, #featured-posts .mc-car-side-images {
     display: none !important;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
-    #carPost #featured-posts .mc-car-gallery {
+    #carPost, #featured-posts .mc-car-gallery {
         height: 190px;
     }
 }
 
 /* Very small screens */
 @media (max-width: 360px) {
-    #carPost #featured-posts .mc-car-gallery {
+    #carPost, #featured-posts .mc-car-gallery {
         height: 185px;
     }
 }
@@ -1908,12 +1908,12 @@ body{
    CARS GALLERY — MATCH BIKES PHOTO COUNTER
 ========================================================= */
 
-#carPost #featured-posts .mc-car-gallery .mc-car-main-image {
+#carPost, #featured-posts .mc-car-gallery .mc-car-main-image {
     position: relative !important;
     display: block;
 }
 
-#carPost #featured-posts .mc-car-gallery .mc-car-main-image .mc-photo-count {
+#carPost, #featured-posts .mc-car-gallery .mc-car-main-image .mc-photo-count {
     position: absolute !important;
 
     left: 9px !important;
