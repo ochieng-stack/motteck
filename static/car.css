@@ -1593,25 +1593,27 @@ body{
 }
 
 /* =========================================================
-   MOTTECK CARS CATEGORY — CARD LAYOUT OVERRIDE
+   MOTTECK CARS — CONSOLIDATED CARD LAYOUT
    Desktop: 4 columns
    Tablet: 3 columns
    Mobile: 1 column
-   Scoped to the Cars category only
 ========================================================= */
 
-/* DESKTOP: FOUR CARDS PER ROW */
+/* GRID CONTAINER */
 #carPost .post-container {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    align-items: start !important;
     gap: 14px !important;
     padding: 12px 16px 22px !important;
     width: 100% !important;
-    box-sizing: border-box;
+    box-sizing: border-box !important;
+    align-items: start !important;
 }
 
+/* CARD */
 #carPost .mc-car-card {
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
@@ -1621,10 +1623,10 @@ body{
     overflow: hidden !important;
 }
 
-/* Compact gallery to reduce card height */
+/* IMAGE GALLERY */
 #carPost .mc-car-gallery {
-    display: block !important;
     position: relative !important;
+    display: block !important;
     width: 100% !important;
     height: 155px !important;
     margin: 0 !important;
@@ -1632,285 +1634,198 @@ body{
     background: #eee !important;
 }
 
-/* Keep images correctly cropped */
-#carPost .mc-car-main-image img,
-#carPost .mc-car-side-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* MAIN IMAGE WRAPPER */
+#carPost .mc-car-main-image {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
 }
 
-/* Compact author header */
+/* IMAGE */
+#carPost .mc-car-main-image img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+}
+
+/* AUTHOR HEADER */
 #carPost .post-author-header {
-    padding: 9px 10px 8px;
-    gap: 6px;
+    padding: 9px 10px 8px !important;
+    gap: 6px !important;
 }
 
 #carPost .post-author-avatar-link,
-#carPost .post-author-avatar {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px;
-    min-height: 34px;
+#carPost .post-author-avatar,
+#carPost .post-author-avatar-placeholder {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
 }
 
+/* AUTHOR TEXT */
 #carPost .post-author-name {
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 #carPost .post-author-category {
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
 #carPost .post-author-time {
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
+/* FOLLOW BUTTON */
 #carPost .follow-btn {
-    padding: 5px 8px;
-    font-size: 10px;
+    padding: 5px 8px !important;
+    font-size: 10px !important;
 }
 
-/* Badges */
-#carPost .mc-car-badges {
-    padding: 7px 9px 0;
-}
-
-#carPost .mc-car-badge {
-    padding: 4px 6px;
-    font-size: 9px;
-}
-
-/* Reduce content spacing */
+/* CONTENT */
 #carPost .mc-car-content {
-    padding: 9px 10px 10px;
-    min-width: 0;
+    padding: 10px !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
 }
 
+/* TITLE */
 #carPost .mc-car-title {
-    font-size: 14px;
-    line-height: 1.35;
-    margin-bottom: 7px;
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
 }
 
+/* DETAILS */
 #carPost .mc-car-details {
-    gap: 5px;
-    margin-bottom: 8px;
+    gap: 6px !important;
+    margin-bottom: 8px !important;
 }
 
-#carPost .mc-car-detail {
-    padding: 5px 6px;
-    gap: 4px;
-}
-
-#carPost .mc-detail-label {
-    font-size: 9px;
-}
-
-#carPost .mc-detail-value {
-    font-size: 10px;
-}
-
+/* PRICE */
 #carPost .mc-car-price {
-    font-size: 18px;
-    margin: 3px 0 8px;
+    font-size: 19px !important;
+    margin: 8px 0 !important;
 }
 
-#carPost .mc-car-description {
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-#carPost .mc-car-see-more {
-    font-size: 11px;
-    margin-bottom: 6px;
-}
-
-/* Engagement buttons */
+/* ENGAGEMENT */
 #carPost .mc-car-engagement {
-    gap: 8px;
-    padding: 7px 0;
+    gap: 10px !important;
+    padding: 8px 0 !important;
 }
 
-#carPost .mc-car-engagement-btn {
-    font-size: 11px;
+/* SALE BUTTONS */
+#carPost .mc-car-sale-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    margin-top: 8px !important;
+    align-items: stretch !important;
 }
 
-#carPost .mc-car-view-details {
-    font-size: 11px;
-    padding: 9px 6px;
-    margin-top: 8px;
-}
-
-/* Keep sale buttons compact and inside the card */
-
-#carPost  .mc-car-sale-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: stretch;
-    gap: 6px;
-    margin-top: 8px;
-}
-
-
-
+/* INDIVIDUAL BUTTONS */
 #carPost .mc-car-button {
-    display: inline-flex;
-    width: 100%;
-    min-width: 0;
-    min-height: 36px;
-    padding: 7px 4px;
-    font-size: 10px;
-    line-height: 1.25;
-    text-align: center;
-    justify-content: center;
-    overflow-wrap: anywhere;
-    box-sizing: border-box;
+    display: inline-flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 36px !important;
+    padding: 7px 4px !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
 }
 
+/* =========================================================
+   TABLET — 3 COLUMNS
+========================================================= */
+@media screen and (max-width: 1100px) and (min-width: 769px) {
 
-/* TABLET: THREE COLUMNS */
-@media (max-width: 1100px) and (min-width: 769px) {
     #carPost .post-container {
-        display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         gap: 12px !important;
         padding: 12px !important;
-        align-items: start !important;
     }
 
-    #carPost  .mc-car-gallery {
-        height: 145px;
-    }
-}
-@media (max-width: 768px) {
-    #carPost .mc-car-sale-actions {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+    #carPost .mc-car-gallery {
+        height: 145px !important;
     }
 
-    #carPost .mc-car-button {
-        min-height: 40px;
-        padding: 8px 4px;
-        font-size: 11px;
-    }
 }
-/* MOBILE: ONE CARD PER ROW */
-@media (max-width: 768px) {
+
+/* =========================================================
+   MOBILE — 1 COLUMN
+========================================================= */
+@media screen and (max-width: 768px) {
+
     #carPost .post-container {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-        padding: 10px 12px 20px;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+        padding: 10px 12px 20px !important;
     }
 
     #carPost .mc-car-card {
-        width: 100%;
-        max-width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     #carPost .mc-car-gallery {
-        height: 190px;
-    }
-
-    #carPost .post-author-header {
-        padding: 10px 12px;
-    }
-
-    #carPost .post-author-avatar-link,
-    #carPost .post-author-avatar {
-        width: 40px !important;
-        height: 40px !important;
-        min-width: 40px;
-        min-height: 40px;
+        height: 190px !important;
     }
 
     #carPost .mc-car-content {
-        padding: 12px;
+        padding: 12px !important;
     }
 
     #carPost .mc-car-title {
-        font-size: 18px;
+        font-size: 18px !important;
     }
 
     #carPost .mc-car-price {
-        font-size: 21px;
+        font-size: 21px !important;
+    }
+
+    #carPost .mc-car-sale-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
     }
 
     #carPost .mc-car-button {
-        min-height: 40px;
-        padding: 9px 8px;
-        font-size: 12px;
+        min-height: 40px !important;
+        padding: 9px 8px !important;
+        font-size: 12px !important;
     }
-}
-/* MOTTECK CARS — SINGLE PHOTO WITH PHOTO COUNT */
 
-#carPost .mc-car-gallery {
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 155px;
-    margin: 0;
-    overflow: hidden;
-    background: #eee;
-}
+    #carPost .post-author-header {
+        padding: 10px 12px !important;
+    }
 
-#carPost .mc-car-main-image {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    text-decoration: none;
+    #carPost .post-author-avatar-link,
+    #carPost .post-author-avatar,
+    #carPost .post-author-avatar-placeholder {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
+    }
+
 }
 
-#carPost .mc-car-main-image img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+/* VERY SMALL MOBILE */
+@media screen and (max-width: 360px) {
 
-/* Photo count inside the image */
-#carPost .mc-photo-count {
-    position: absolute;
-    left: 9px;
-    bottom: 8px;
-    z-index: 2;
-
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-
-    padding: 6px 9px;
-    border-radius: 5px;
-
-    background: rgba(0, 0, 0, 0.7);
-    color: #fff;
-
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1;
-}
-
-/* Hide side thumbnails */
-#carPost .mc-car-side-images {
-    display: none !important;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
     #carPost .mc-car-gallery {
-        height: 190px;
+        height: 185px !important;
     }
-}
 
-/* Very small screens */
-@media (max-width: 360px) {
-    #carPost .mc-car-gallery {
-        height: 185px;
-    }
 }
 /* =========================================================
    CARS GALLERY — MATCH BIKES PHOTO COUNTER
