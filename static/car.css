@@ -1602,28 +1602,34 @@ body{
 
 /* DESKTOP: FOUR CARDS PER ROW */
 #carPost .post-container {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    align-items: start;
-    gap: 14px;
-    padding: 12px 16px 22px;
-    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: start !important;
+    gap: 14px !important;
+    padding: 12px 16px 22px !important;
+    width: 100% !important;
     box-sizing: border-box;
 }
 
 #carPost .mc-car-card {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    height: auto;
-    align-self: start;
-    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    align-self: start !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 /* Compact gallery to reduce card height */
 #carPost .mc-car-gallery {
-    height: 155px;
-    min-height: 0;
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: 155px !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background: #eee !important;
 }
 
 /* Keep images correctly cropped */
@@ -1766,9 +1772,11 @@ body{
 /* TABLET: THREE COLUMNS */
 @media (max-width: 1100px) and (min-width: 769px) {
     #carPost .post-container {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        padding: 12px;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        padding: 12px !important;
+        align-items: start !important;
     }
 
     #carPost  .mc-car-gallery {
