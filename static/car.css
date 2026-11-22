@@ -1641,7 +1641,7 @@ body{
 }
 
 #carPost .post-author-avatar-link,
-#carPost.post-author-avatar {
+#carPost .post-author-avatar {
     width: 34px !important;
     height: 34px !important;
     min-width: 34px;
@@ -1776,13 +1776,13 @@ body{
     }
 }
 @media (max-width: 768px) {
-    #carPost  .mc-car-sale-actions {
+    #carPost .mc-car-sale-actions {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
     }
 
-    #carPost  .mc-car-button {
+    #carPost .mc-car-button {
         min-height: 40px;
         padding: 8px 4px;
         font-size: 11px;
@@ -1822,11 +1822,11 @@ body{
         padding: 12px;
     }
 
-    #carPost.mc-car-title {
+    #carPost .mc-car-title {
         font-size: 18px;
     }
 
-    #carPost.mc-car-price {
+    #carPost .mc-car-price {
         font-size: 21px;
     }
 
@@ -1848,7 +1848,7 @@ body{
     background: #eee;
 }
 
-#carPost.mc-car-main-image {
+#carPost .mc-car-main-image {
     position: relative;
     display: block;
     width: 100%;
@@ -1908,7 +1908,7 @@ body{
    CARS GALLERY — MATCH BIKES PHOTO COUNTER
 ========================================================= */
 
-#carPost.mc-car-gallery .mc-car-main-image {
+#carPost .mc-car-gallery .mc-car-main-image {
     position: relative !important;
     display: block;
 }
