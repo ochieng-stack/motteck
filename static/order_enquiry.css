@@ -1,0 +1,195 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f5f8;
+    color: #202938;
+}
+
+.enquiry-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 45px 16px;
+}
+
+.enquiry-card {
+    width: 100%;
+    max-width: 720px;
+    padding: 35px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 35px rgba(20, 35, 55, 0.09);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 25px;
+    color: #1769aa;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.brand {
+    color: #1769aa;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+h1 {
+    margin: 10px 0;
+    font-size: 30px;
+}
+
+.intro {
+    margin: 0 0 25px;
+    color: #657184;
+    line-height: 1.6;
+}
+
+.product-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 25px;
+    padding: 16px;
+    border: 1px solid #dce5ef;
+    border-radius: 10px;
+    background: #f7faff;
+}
+
+.product-summary span,
+.product-summary small {
+    color: #657184;
+    font-size: 13px;
+}
+
+.product-summary strong {
+    color: #1769aa;
+    font-size: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 19px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d5dce5;
+    border-radius: 8px;
+    outline: none;
+    background: #fff;
+    color: #202938;
+    font: inherit;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #1769aa;
+    box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.10);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.privacy-note {
+    margin: 22px 0;
+    color: #697586;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    border: 0;
+    border-radius: 9px;
+    background: #1769aa;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background: #10558d;
+}
+
+.notice {
+    margin: 15px 0;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.notice.success {
+    background: #e8f7ed;
+    color: #176536;
+}
+
+.notice.error {
+    background: #fff0f0;
+    color: #a32929;
+}
+
+/* Hidden honeypot field */
+.website-field {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+@media (max-width: 600px) {
+    .enquiry-wrapper {
+        padding: 18px 10px;
+    }
+
+    .enquiry-card {
+        padding: 23px 18px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+}
