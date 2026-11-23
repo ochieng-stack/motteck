@@ -11,7 +11,10 @@ from supabase import AuthApiError
 import uuid
 from urllib.parse import quote
 import boto3
-
+import sqlite3
+import secrets
+import re
+from flask import abort
 
 from supabase import create_client
 
@@ -3652,31 +3655,19 @@ def single_post(post_id):
             )
 
 
+
+
         # =========================================
         # REQUEST MOTTECK
         #
+        # Allow logged-in and logged-out customers.
         # Do NOT create a lead here.
         # Just open the request form.
         # =========================================
 
         request_action = request.args.get("request")
-
+        
         if request_action == "motteck":
-
-            if not session.get("user_logged_in"):
-
-                flash(
-                    "Please log in to send a MOTTECK request.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "login_user",
-                        next=request.full_path
-                    )
-                )
-
 
             return redirect(
                 url_for(
@@ -3684,6 +3675,7 @@ def single_post(post_id):
                     post_id=post_id
                 )
             )
+
 
 
         # =========================================
@@ -3973,6 +3965,164 @@ def toggle_follow(user_id):
             "success": False,
             "error": str(e)
         }), 500
+
+# ---------------------------------------------------------
+# MOTTECK GUEST ORDER ENQUIRIES
+# ---------------------------------------------------------
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=[]
+)
+
+ORDER_ENQUIRY_DB = os.path.join(
+    app.instance_path,
+    "order_enquiries.sqlite3"
+)
+
+
+def init_order_enquiry_db():
+    os.makedirs(app.instance_path, exist_ok=True)
+
+    with sqlite3.connect(ORDER_ENQUIRY_DB) as connection:
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS order_enquiries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                submission_token TEXT NOT NULL UNIQUE,
+                product_id TEXT NOT NULL,
+                full_name TEXT NOT NULL,
+                phone TEXT NOT NULL,
+                email TEXT,
+                county TEXT NOT NULL,
+                town TEXT NOT NULL,
+                delivery_address TEXT,
+                message TEXT,
+                status TEXT NOT NULL DEFAULT 'Pending',
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        connection.commit()
+
+
+# Create the enquiry table when the application starts.
+with app.app_context():
+    init_order_enquiry_db()
+
+
+@app.route("/order-enquiry/<int:post_id>", methods=["GET", "POST"])
+@limiter.limit("5 per hour")
+def order_enquiry(post_id):
+
+    # Logged-in customers continue through the existing Buy Now flow.
+    if session.get("user_logged_in"):
+        return redirect(f"/post/{post_id}?buy=now")
+
+    if request.method == "GET":
+        if "order_enquiry_csrf" not in session:
+            session["order_enquiry_csrf"] = secrets.token_urlsafe(32)
+
+        return render_template(
+            "order_enquiry.html",
+            product_id=post_id,
+            csrf_token=session["order_enquiry_csrf"],
+            submission_token=uuid.uuid4().hex
+        )
+
+    # Check CSRF token.
+    submitted_csrf = request.form.get("csrf_token", "")
+    saved_csrf = session.get("order_enquiry_csrf", "")
+
+    if not saved_csrf or not secrets.compare_digest(
+        submitted_csrf, saved_csrf
+    ):
+        abort(400, description="Invalid form session. Please reload the page.")
+
+    # Reject automated submissions that fill the hidden field.
+    if request.form.get("website", "").strip():
+        abort(400)
+
+    full_name = request.form.get("full_name", "").strip()
+    phone = request.form.get("phone", "").strip()
+    email = request.form.get("email", "").strip()
+    county = request.form.get("county", "").strip()
+    town = request.form.get("town", "").strip()
+    delivery_address = request.form.get("delivery_address", "").strip()
+    message = request.form.get("message", "").strip()
+    submission_token = request.form.get("submission_token", "").strip()
+
+    # Validate required fields and lengths on the server.
+    if not all([full_name, phone, county, town]):
+        flash("Please complete all required fields.", "error")
+        return redirect(url_for("order_enquiry", post_id=post_id))
+
+    if (
+        len(full_name) > 100
+        or len(phone) > 20
+        or len(email) > 120
+        or len(county) > 80
+        or len(town) > 100
+        or len(delivery_address) > 500
+        or len(message) > 1000
+    ):
+        abort(400, description="One or more fields are too long.")
+
+    if not re.fullmatch(r"[0-9+() .-]{7,20}", phone):
+        flash("Please enter a valid phone number.", "error")
+        return redirect(url_for("order_enquiry", post_id=post_id))
+
+    if email and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        flash("Please enter a valid email address.", "error")
+        return redirect(url_for("order_enquiry", post_id=post_id))
+
+    if not re.fullmatch(r"[a-f0-9]{32}", submission_token):
+        abort(400)
+
+    try:
+        with sqlite3.connect(ORDER_ENQUIRY_DB) as connection:
+            connection.execute("""
+                INSERT INTO order_enquiries (
+                    submission_token,
+                    product_id,
+                    full_name,
+                    phone,
+                    email,
+                    county,
+                    town,
+                    delivery_address,
+                    message
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                submission_token,
+                str(post_id),
+                full_name,
+                phone,
+                email,
+                county,
+                town,
+                delivery_address,
+                message
+            ))
+            connection.commit()
+
+    except sqlite3.IntegrityError:
+        # The same form submission token was already received.
+        flash("This enquiry has already been received.", "success")
+        return redirect(url_for("order_enquiry", post_id=post_id))
+
+    flash(
+        "Your enquiry has been submitted. MOTTECK will contact you shortly.",
+        "success"
+    )
+
+    # Rotate the CSRF token after successful submission.
+    session["order_enquiry_csrf"] = secrets.token_urlsafe(32)
+
+    return redirect(url_for("order_enquiry", post_id=post_id))
+
+
+
  # =========================================================
 # CHECKOUT
 # =========================================================
@@ -4617,6 +4767,8 @@ def order_payment(order_number):
         )
 
         return "Unable to load payment.", 500
+    
+
 # =========================================================
 # REQUEST MOTTECK
 # =========================================================
@@ -4626,25 +4778,6 @@ def order_payment(order_number):
     methods=["GET", "POST"]
 )
 def request_motteck(post_id):
-
-    # =========================================
-    # LOGIN
-    # =========================================
-
-    if not session.get("user_logged_in"):
-
-        flash(
-            "Please log in to send a MOTTECK request.",
-            "error"
-        )
-
-        return redirect(
-            url_for(
-                "login_user",
-                next=request.full_path
-            )
-        )
-
 
     try:
 
@@ -4661,21 +4794,26 @@ def request_motteck(post_id):
             .execute()
         )
 
-
         if not post_response.data:
-
             return "Post not found.", 404
-
 
         post = post_response.data[0]
 
-        seller_id = post.get(
-            "user_id"
+
+        # =========================================
+        # CUSTOMER SESSION
+        # =========================================
+
+        logged_in = bool(
+            session.get("user_logged_in")
         )
 
-        customer_id = session.get(
-            "user_id"
+        customer_id = (
+            session.get("user_id")
+            if logged_in else None
         )
+
+        seller_id = post.get("user_id")
 
 
         # =========================================
@@ -4683,10 +4821,10 @@ def request_motteck(post_id):
         # =========================================
 
         if (
-            seller_id
+            logged_in
+            and seller_id
             and customer_id
-            and str(seller_id)
-            == str(customer_id)
+            and str(seller_id) == str(customer_id)
         ):
 
             flash(
@@ -4695,10 +4833,7 @@ def request_motteck(post_id):
             )
 
             return redirect(
-                url_for(
-                    "single_post",
-                    post_id=post_id
-                )
+                url_for("single_post", post_id=post_id)
             )
 
 
@@ -4711,6 +4846,44 @@ def request_motteck(post_id):
             return render_template(
                 "request_motteck.html",
                 post=post
+            )
+
+
+        # =========================================
+        # SERVER-SIDE ANTI-SPAM
+        # =========================================
+
+        # Honeypot: genuine customers should leave it empty.
+
+        if request.form.get("website", "").strip():
+
+            return "Request could not be processed.", 400
+
+
+        # Reject submissions made too quickly.
+
+        try:
+            form_started_at = int(
+                request.form.get("form_started_at", "0")
+            )
+        except (ValueError, TypeError):
+            form_started_at = 0
+
+        current_time_ms = int(
+            datetime.utcnow().timestamp() * 1000
+        )
+
+        elapsed = current_time_ms - form_started_at
+
+        if elapsed < 2500 or elapsed > 7200000:
+
+            flash(
+                "Please refresh the form and try again.",
+                "error"
+            )
+
+            return redirect(
+                url_for("request_motteck", post_id=post_id)
             )
 
 
@@ -4751,53 +4924,118 @@ def request_motteck(post_id):
         ).strip()
 
 
-        if not customer_name:
+        # =========================================
+        # VALIDATION
+        # =========================================
+
+        if not customer_name or len(customer_name) > 100:
 
             flash(
-                "Please enter your name.",
+                "Please enter a valid full name.",
                 "error"
             )
 
             return redirect(
-                url_for(
-                    "request_motteck",
-                    post_id=post_id
-                )
+                url_for("request_motteck", post_id=post_id)
             )
 
 
-        if not customer_phone:
+        # Kenyan phone number validation.
+
+        phone_clean = customer_phone.replace(
+            " ", ""
+        ).replace("-", "").replace("(", "").replace(")", "")
+
+        if not re.fullmatch(
+            r"(?:\+?254|0)(?:7|1)\d{8}",
+            phone_clean
+        ):
 
             flash(
-                "Please enter your phone number.",
+                "Please enter a valid Kenyan phone number.",
                 "error"
             )
 
             return redirect(
-                url_for(
-                    "request_motteck",
-                    post_id=post_id
-                )
+                url_for("request_motteck", post_id=post_id)
             )
 
 
-        if not request_details:
+        if customer_email:
+
+            if (
+                len(customer_email) > 150
+                or not re.fullmatch(
+                    r"[^@\s]+@[^@\s]+\.[^@\s]+",
+                    customer_email
+                )
+            ):
+
+                flash(
+                    "Please enter a valid email address.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("request_motteck", post_id=post_id)
+                )
+
+
+        if not town or len(town) > 100:
 
             flash(
-                "Please describe what you need.",
+                "Please enter your town or city.",
                 "error"
             )
 
             return redirect(
-                url_for(
-                    "request_motteck",
-                    post_id=post_id
-                )
+                url_for("request_motteck", post_id=post_id)
+            )
+
+
+        if (
+            len(request_details) < 15
+            or len(request_details) > 3000
+        ):
+
+            flash(
+                "Please provide more details about your request.",
+                "error"
+            )
+
+            return redirect(
+                url_for("request_motteck", post_id=post_id)
+            )
+
+
+        if len(preferred_location) > 150:
+
+            flash(
+                "Preferred location is too long.",
+                "error"
+            )
+
+            return redirect(
+                url_for("request_motteck", post_id=post_id)
+            )
+
+
+        # Require customer agreement.
+
+        if request.form.get("agree_terms") != "yes":
+
+            flash(
+                "Please confirm your request information before submitting.",
+                "error"
+            )
+
+            return redirect(
+                url_for("request_motteck", post_id=post_id)
             )
 
 
         # =========================================
-        # CREATE REQUEST
+        # CREATE REQUEST NUMBER
         # =========================================
 
         request_number = (
@@ -4807,6 +5045,14 @@ def request_motteck(post_id):
             + uuid.uuid4().hex[:8].upper()
         )
 
+
+        # =========================================
+        # CREATE MOTTECK REQUEST
+        #
+        # Payment is disabled before launch.
+        # No search should begin until payment
+        # has been enabled and verified.
+        # =========================================
 
         request_data = {
 
@@ -4822,7 +5068,7 @@ def request_motteck(post_id):
 
             "customer_email": customer_email,
 
-            "customer_phone": customer_phone,
+            "customer_phone": phone_clean,
 
             "town": town,
 
@@ -4830,7 +5076,13 @@ def request_motteck(post_id):
 
             "preferred_location": preferred_location,
 
-            "status": "new"
+            "status": "awaiting_payment",
+
+            "search_fee_kes": 50,
+
+            "payment_status": "disabled",
+
+            "payment_method": None
 
         }
 
@@ -4846,38 +5098,18 @@ def request_motteck(post_id):
         if not response.data:
 
             flash(
-                "Unable to send your request. Please try again.",
+                "Unable to save your request. Please try again.",
                 "error"
             )
 
             return redirect(
-                url_for(
-                    "request_motteck",
-                    post_id=post_id
-                )
+                url_for("request_motteck", post_id=post_id)
             )
 
 
         # =========================================
-        # ALSO CREATE LEAD
-        #
-        # This keeps it visible in existing
-        # admin/leads.
+        # CREATE EXISTING ADMIN LEAD
         # =========================================
-
-        lead_data = {
-
-            "post_id": post_id,
-
-            "seller_id": seller_id,
-
-            "interested_user_id": customer_id,
-
-            "lead_type": "request_motteck",
-
-            "status": "new"
-
-        }
 
 
         try:
@@ -4895,13 +5127,16 @@ def request_motteck(post_id):
                 repr(lead_error)
             )
 
-
+        supabase.table("motteck_requests").insert(...)
+        
         # =========================================
         # SUCCESS
         # =========================================
 
         flash(
-            "Your request has been sent to MOTTECK successfully.",
+            "Your MOTTECK request has been recorded successfully. "
+            "The KES 50 payment service is not yet active. "
+            "Your search will begin once payment is enabled and verified.",
             "success"
         )
 
@@ -4930,7 +5165,8 @@ def request_motteck(post_id):
                 "single_post",
                 post_id=post_id
             )
-        )   
+        )
+   
 # =========================================================
 # CUSTOMER INVOICE
 # =========================================================
