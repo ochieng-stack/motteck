@@ -1,7 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,280 +12,615 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-
 </head>
 
 <body>
 
 <header class="request-header">
-
-    <div class="brand">
+    <a href="{{ url_for('single_post', post_id=post.id) }}"
+       class="brand" aria-label="MOTTECK Network">
         <strong>MOTTECK</strong>
         <span>Network</span>
-    </div>
-
-    <a
-        href="{{ url_for('single_post', post_id=post.id) }}"
-        class="back-button">
-
-        <i class="fa-solid fa-arrow-left"></i>
-        Back to Listing
-
     </a>
 
+    <a href="{{ url_for('single_post', post_id=post.id) }}"
+       class="back-button">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Listing
+    </a>
 </header>
 
 
 <main class="request-container">
 
-    <div class="page-heading">
-
+    <section class="page-heading">
         <div class="heading-icon">
             <i class="fa-solid fa-handshake"></i>
         </div>
 
+        <span class="eyebrow">PERSONAL SEARCH ASSISTANCE</span>
+
         <h1>Request MOTTECK</h1>
 
         <p>
-            Can't find exactly what you need? Tell MOTTECK what you are
-            looking for and we'll help connect you with the right option.
+            Can't find exactly what you need? Tell us what you're looking
+            for. MOTTECK will help you find a suitable automotive option.
         </p>
+    </section>
 
-    </div>
 
+    <form id="requestMotteckForm"
+          method="POST"
+          action="{{ url_for('request_motteck', post_id=post.id) }}"
+          novalidate>
 
-    <!-- LISTING INFORMATION -->
-
-    <section class="request-card listing-card">
-
-        <div class="card-heading">
-
-            <i class="fa-solid fa-list"></i>
-
-            <div>
-                <h2>Request From This Listing</h2>
-                <span>Listing #{{ post.id }}</span>
-            </div>
-
+        <!-- ANTI-SPAM: HONEYPOT -->
+        <div class="honeypot-field" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input type="text"
+                   id="website"
+                   name="website"
+                   tabindex="-1"
+                   autocomplete="off">
         </div>
 
+        <input type="hidden" name="form_started_at" id="formStartedAt">
 
-        <div class="listing-details">
 
-            {% if post.images %}
+        <!-- LISTING INFORMATION -->
 
-                <img
-                    src="{{ post.images[0] }}"
-                    alt="{{ post.title }}">
+        <section class="request-card listing-card">
 
-            {% endif %}
+            <div class="card-heading">
+                <div class="section-icon">
+                    <i class="fa-solid fa-list"></i>
+                </div>
 
-            <div>
+                <div>
+                    <h2>Request From This Listing</h2>
+                    <span>Reference listing information</span>
+                </div>
+            </div>
 
-                <span class="listing-label">
-                    LISTING
-                </span>
+            <div class="listing-details">
 
-                <h3>{{ post.title }}</h3>
+                {% if post.images %}
+                <img src="{{ post.images[0] }}"
+                     alt="{{ post.title }}"
+                     class="listing-image">
+                {% endif %}
 
-                {% if post.business_name %}
+                <div class="listing-info">
+                    <span class="listing-label">CURRENT LISTING</span>
+
+                    <h3>{{ post.title }}</h3>
+
+                    {% if post.business_name %}
                     <p>
                         <i class="fa-solid fa-store"></i>
                         {{ post.business_name }}
                     </p>
-                {% elif post.full_name %}
+                    {% elif post.full_name %}
                     <p>
                         <i class="fa-solid fa-user"></i>
                         {{ post.full_name }}
                     </p>
-                {% endif %}
+                    {% endif %}
 
+                    <span class="listing-reference">
+                        Listing #{{ post.id }}
+                    </span>
+                </div>
             </div>
 
-        </div>
-
-    </section>
+        </section>
 
 
-    <form
-        method="POST"
-        action="{{ url_for('request_motteck', post_id=post.id) }}">
-
-
-        <!-- CUSTOMER -->
+        <!-- CUSTOMER INFORMATION -->
 
         <section class="request-card">
 
             <div class="card-heading">
-
-                <i class="fa-solid fa-user"></i>
+                <div class="section-icon">
+                    <i class="fa-solid fa-user"></i>
+                </div>
 
                 <div>
                     <h2>Your Information</h2>
                     <span>How MOTTECK can reach you</span>
                 </div>
-
             </div>
-
 
             <div class="form-grid">
 
                 <div class="form-group">
+                    <label for="customerName">
+                        Full Name <span class="required">*</span>
+                    </label>
 
-                    <label>Full Name</label>
-
-                    <input
-                        type="text"
-                        name="customer_name"
-                        value="{{ session.get('full_name', '') }}"
-                        required>
-
+                    <input type="text"
+                           id="customerName"
+                           name="customer_name"
+                           value="{{ session.get('full_name', '') }}"
+                           placeholder="Enter your full name"
+                           autocomplete="name"
+                           maxlength="100"
+                           required>
                 </div>
 
 
                 <div class="form-group">
+                    <label for="customerPhone">
+                        Contact Phone Number <span class="required">*</span>
+                    </label>
 
-                    <label>Phone Number</label>
+                    <input type="tel"
+                           id="customerPhone"
+                           name="customer_phone"
+                           placeholder="07XXXXXXXX or 2547XXXXXXXX"
+                           value="{{ session.get('phone', '') }}"
+                           autocomplete="tel"
+                           inputmode="tel"
+                           maxlength="15"
+                           required>
 
-                    <input
-                        type="tel"
-                        name="customer_phone"
-                        placeholder="07XXXXXXXX"
-                        required>
-
+                    <small>
+                        This is the number MOTTECK will use to contact you.
+                    </small>
                 </div>
 
 
                 <div class="form-group">
+                    <label for="customerEmail">
+                        Email Address <span class="optional">(Optional)</span>
+                    </label>
 
-                    <label>Email Address</label>
-
-                    <input
-                        type="email"
-                        name="customer_email"
-                        value="{{ session.get('email', '') }}"
-                        required>
-
+                    <input type="email"
+                           id="customerEmail"
+                           name="customer_email"
+                           value="{{ session.get('email', '') }}"
+                           placeholder="example@email.com"
+                           autocomplete="email"
+                           maxlength="150">
                 </div>
 
 
                 <div class="form-group">
+                    <label for="town">
+                        Town / City <span class="required">*</span>
+                    </label>
 
-                    <label>Town / City</label>
-
-                    <input
-                        type="text"
-                        name="town"
-                        placeholder="e.g. Nairobi"
-                        required>
-
+                    <input type="text"
+                           id="town"
+                           name="town"
+                           placeholder="e.g. Nairobi"
+                           autocomplete="address-level2"
+                           maxlength="100"
+                           required>
                 </div>
 
+            </div>
+
+            <div class="help-box">
+                <i class="fa-solid fa-shield-halved"></i>
+                <p>
+                    Your contact information will be used to handle
+                    your request and communicate with you.
+                </p>
             </div>
 
         </section>
 
 
-        <!-- REQUEST -->
+        <!-- REQUEST DETAILS -->
 
         <section class="request-card">
 
             <div class="card-heading">
-
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <div class="section-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
 
                 <div>
                     <h2>What Do You Need?</h2>
-                    <span>Give us enough information to find the right option</span>
+                    <span>Tell us exactly what you are looking for</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <label for="requestDetails">
+                    Describe Your Request <span class="required">*</span>
+                </label>
+
+                <textarea id="requestDetails"
+                          name="request_details"
+                          rows="7"
+                          minlength="15"
+                          maxlength="3000"
+                          placeholder="Example: I am looking for a Toyota Prado, 2018 onwards, preferably in good condition. My budget is KES 3 million."
+                          required></textarea>
+
+                <div class="textarea-footer">
+                    <small>Include make, model, year, specifications,
+                        condition and budget where applicable.</small>
+
+                    <small id="characterCount">0 / 3000</small>
                 </div>
 
             </div>
 
-
-            <div class="form-group">
-
-                <label>Your Request</label>
-
-                <textarea
-                    name="request_details"
-                    rows="7"
-                    placeholder="Describe exactly what you are looking for. Include make, model, year, specifications, quantity, preferred condition, budget or any other important details."
-                    required></textarea>
-
-            </div>
-
-
             <div class="help-box">
-
                 <i class="fa-solid fa-circle-info"></i>
-
                 <p>
-                    The more information you provide, the easier it is for
-                    MOTTECK to find a suitable option for you.
+                    The more information you provide, the easier it is
+                    for MOTTECK to identify suitable options.
                 </p>
-
             </div>
 
         </section>
 
 
-        <!-- DELIVERY -->
+        <!-- PREFERRED LOCATION -->
 
         <section class="request-card">
 
             <div class="card-heading">
-
-                <i class="fa-solid fa-location-dot"></i>
+                <div class="section-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
 
                 <div>
                     <h2>Preferred Location</h2>
                     <span>Where should we look?</span>
                 </div>
-
             </div>
 
-
             <div class="form-group">
+                <label for="preferredLocation">
+                    Preferred Location / Delivery Area
+                    <span class="optional">(Optional)</span>
+                </label>
 
-                <label>Preferred Location / Delivery Area</label>
-
-                <input
-                    type="text"
-                    name="preferred_location"
-                    placeholder="e.g. Nairobi, Mombasa, Kisumu">
-
+                <input type="text"
+                       id="preferredLocation"
+                       name="preferred_location"
+                       placeholder="e.g. Nairobi, Mombasa, Kisumu"
+                       maxlength="150">
             </div>
 
         </section>
 
 
-        <!-- SUBMIT -->
+        <!-- SEARCH FEE -->
+
+        <section class="request-card payment-card">
+
+            <div class="card-heading">
+                <div class="section-icon">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+
+                <div>
+                    <h2>Search Request Fee</h2>
+                    <span>Transparent pricing for MOTTECK search assistance</span>
+                </div>
+            </div>
+
+            <div class="fee-summary">
+                <div>
+                    <span class="fee-label">MOTTECK SEARCH FEE</span>
+                    <p>One-time search request fee</p>
+                </div>
+
+                <strong>KES 50</strong>
+            </div>
+
+            <p class="payment-description">
+                A search request fee of KES 50 will be required
+                before MOTTECK begins processing your search which only takes a max 7 days .
+            </p>
+
+            <div class="payment-methods">
+
+                <div class="payment-method disabled-method">
+                    <div class="payment-logo mpesa-logo">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+
+                    <div class="payment-method-info">
+                        <strong>M-Pesa</strong>
+                        <span>Mobile money payment</span>
+                    </div>
+
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+
+
+                <div class="payment-method disabled-method">
+                    <div class="payment-logo card-logo">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+
+                    <div class="payment-method-info">
+                        <strong>Debit / Credit Card</strong>
+                        <span>Visa, Mastercard and supported cards</span>
+                    </div>
+
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+
+            </div>
+
+            <div class="payment-notice">
+                <i class="fa-solid fa-lock"></i>
+                <p>
+                    Online payments are not yet available.
+                    Payment functionality will be activated when
+                    MOTTECK officially launches.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- TERMS -->
+
+        <section class="request-card terms-card">
+
+            <label class="terms-label">
+                <input type="checkbox"
+                       name="agree_terms"
+                       id="agreeTerms"
+                       value="yes"
+                       required>
+
+                <span>
+                    I confirm that the information provided is accurate
+                    and agree that MOTTECK may contact me regarding
+                    this search request.
+                </span>
+            </label>
+
+        </section>
+
+
+        <!-- SUBMISSION -->
+
+        <div id="formError" class="form-message error-message"
+             role="alert" hidden></div>
 
         <div class="request-actions">
 
-            <a
-                href="{{ url_for('single_post', post_id=post.id) }}"
-                class="cancel-button">
-
+            <a href="{{ url_for('single_post', post_id=post.id) }}"
+               class="cancel-button">
                 Cancel
-
             </a>
 
-            <button
-                type="submit"
-                class="submit-request">
+            <button type="submit"
+                    class="submit-request"
+                    id="submitRequest">
 
                 <i class="fa-solid fa-paper-plane"></i>
-
-                Send Request to MOTTECK
+                <span>Submit Search Request</span>
 
             </button>
 
         </div>
 
+        <p class="submission-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            Your request will be subject to MOTTECK review.
+            No search will begin until the required payment is enabled
+            and verified.
+        </p>
+
     </form>
 
 </main>
 
+
+<script>
+    
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("requestMotteckForm");
+    const submitButton = document.getElementById("submitRequest");
+    const errorBox = document.getElementById("formError");
+    const details = document.getElementById("requestDetails");
+    const characterCount = document.getElementById("characterCount");
+    const phoneInput = document.getElementById("customerPhone");
+    const honeypot = document.getElementById("website");
+    const startedAt = document.getElementById("formStartedAt");
+
+    if (!form) return;
+
+    let submitting = false;
+
+    // Record when the form was opened.
+    if (startedAt) {
+        startedAt.value = Date.now().toString();
+    }
+
+
+    // CHARACTER COUNTER
+
+    if (details && characterCount) {
+
+        details.addEventListener("input", function () {
+
+            characterCount.textContent =
+                `${details.value.length} / 3000`;
+
+        });
+
+    }
+
+
+    // ERROR DISPLAY
+
+    function showError(message) {
+
+        errorBox.textContent = message;
+        errorBox.hidden = false;
+
+        errorBox.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    }
+
+
+    function clearError() {
+
+        errorBox.textContent = "";
+        errorBox.hidden = true;
+
+    }
+
+
+    // KENYAN PHONE NUMBER VALIDATION
+
+    function validKenyanPhone(phone) {
+
+        const cleaned = phone.replace(/[\s\-()]/g, "");
+
+        return /^(?:\+?254|0)(?:7|1)\d{8}$/.test(cleaned);
+
+    }
+
+
+    phoneInput.addEventListener("input", function () {
+
+        phoneInput.classList.remove("invalid");
+        clearError();
+
+    });
+
+
+    // CLEAR FIELD ERRORS
+
+    form.querySelectorAll("input, textarea").forEach(function (field) {
+
+        field.addEventListener("input", function () {
+
+            field.classList.remove("invalid");
+
+        });
+
+        field.addEventListener("change", function () {
+
+            field.classList.remove("invalid");
+
+        });
+
+    });
+
+
+    // FORM SUBMISSION
+
+    form.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        if (submitting) return;
+
+        clearError();
+
+        // 1. HONEYPOT BOT CHECK
+
+        if (honeypot && honeypot.value.trim() !== "") {
+
+            showError("Your request could not be submitted.");
+            return;
+
+        }
+
+
+        // 2. CHECK FORM COMPLETION
+
+        if (!form.checkValidity()) {
+
+            form.reportValidity();
+            return;
+
+        }
+
+
+        // 3. CHECK PHONE NUMBER
+
+        if (!validKenyanPhone(phoneInput.value)) {
+
+            phoneInput.classList.add("invalid");
+
+            showError(
+                "Please enter a valid Kenyan phone number, " +
+                "for example 0712345678 or 254712345678."
+            );
+
+            phoneInput.focus();
+            return;
+
+        }
+
+
+        // 4. CHECK REQUEST DESCRIPTION
+
+        if (details.value.trim().length < 15) {
+
+            details.classList.add("invalid");
+
+            showError(
+                "Please provide more details about what you are looking for."
+            );
+
+            details.focus();
+            return;
+
+        }
+
+
+        // 5. CHECK FORM COMPLETION TIME
+
+        const submittedAt = Date.now();
+        const formOpenedAt = Number(startedAt.value);
+
+        if (
+            !formOpenedAt ||
+            !Number.isFinite(formOpenedAt) ||
+            submittedAt - formOpenedAt < 2500
+        ) {
+
+            showError(
+                "Please take a moment to complete your request before submitting."
+            );
+
+            return;
+
+        }
+
+
+        // 6. PREVENT DUPLICATE SUBMISSIONS
+
+        submitting = true;
+
+        submitButton.disabled = true;
+
+        submitButton.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Submitting Request...</span>
+        `;
+
+
+        // Submit the original Flask form.
+        // Server-side validation is still required.
+
+        form.submit();
+
+    });
+
+});
+</script>
 </body>
 </html>

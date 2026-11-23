@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Enquiry | MOTTECK</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='order_enquiry.css') }}">
+</head>
+<body>
+    <main class="enquiry-wrapper">
+        <section class="enquiry-card">
+            {% elif post.category == 'accessorie' %}
+            <a class="back-link" href="{{ url_for('accessories') }}">
+                &larr; Back to Accessories
+            </a>
+            {% elif post.category == 'sparepart' %}
+            <a class="back-link" href="{{ url_for('spare_part') }}">
+                &larr; Back to Spare part
+            </a>
+
+            <div class="brand">MOTTECK</div>
+            <h1>Order Enquiry</h1>
+            <p class="intro">
+                Interested in this product? Send us your details and our team
+                will contact you to confirm availability and discuss payment.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="notice {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <div class="product-summary">
+                <span>Product reference</span>
+                <strong>#{{ product_id }}</strong>
+                <small>Our team will use this reference to identify the product.</small>
+            </div>
+
+            <form method="POST"
+                  action="{{ url_for('order_enquiry', post_id=product_id) }}"
+                  autocomplete="on">
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="submission_token"
+                       value="{{ submission_token }}">
+
+                <!-- Honeypot field: real customers should leave this empty -->
+                <div class="website-field" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input id="website" type="text" name="website"
+                           tabindex="-1" autocomplete="off">
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="full_name">Full name *</label>
+                        <input id="full_name" name="full_name" type="text"
+                               maxlength="100" required
+                               autocomplete="name"
+                               placeholder="Your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone number *</label>
+                        <input id="phone" name="phone" type="tel"
+                               maxlength="20" required
+                               autocomplete="tel"
+                               placeholder="e.g. 07XX XXX XXX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input id="email" name="email" type="email"
+                               maxlength="120" autocomplete="email"
+                               placeholder="you@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="county">County *</label>
+                        <input id="county" name="county" type="text"
+                               maxlength="80" required
+                               placeholder="Your county">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="town">Town / Area *</label>
+                        <input id="town" name="town" type="text"
+                               maxlength="100" required
+                               placeholder="Where should we reach you?">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="delivery_address">Delivery location / address</label>
+                        <textarea id="delivery_address" name="delivery_address"
+                                  maxlength="500" rows="3"
+                                  placeholder="Describe your preferred delivery location"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="message">Additional message</label>
+                        <textarea id="message" name="message"
+                                  maxlength="1000" rows="3"
+                                  placeholder="Any questions or details about your enquiry?"></textarea>
+                    </div>
+                </div>
+
+                <p class="privacy-note">
+                    By submitting, you agree that MOTTECK may contact you
+                    about this product enquiry. This does not confirm an order
+                    or require payment.
+                </p>
+
+                <button type="submit" class="submit-button">
+                    Submit Order Enquiry
+                </button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
