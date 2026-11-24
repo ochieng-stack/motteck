@@ -14,9 +14,9 @@
 <main class="enquiry-wrapper">
 <section class="enquiry-card">
 
-    {% if product_category == 'accessories' %}
+    {% if product_category == 'accessorie' %}
         <a class="back-link" href="{{ url_for('accessorie') }}">
-            &larr; Back to Accessories
+            &larr; Back to Accessorie
         </a>
     {% else %}
         <a class="back-link" href="{{ url_for('spare_part') }}">
@@ -67,7 +67,7 @@
                    tabindex="-1" autocomplete="off">
         </div>
 
-        {% if product_category == 'accessories' %}
+        {% if product_category == 'accessorie' %}
 
         <!-- ACCESSORIES ORDER FORM -->
 
