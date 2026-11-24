@@ -3,1735 +3,818 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Submit Post | MOTTECK</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='submit_post.css') }}">
+    <title>Submit Listing | MOTTECK</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='submit_post.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
-
 <body>
 
 <div class="submit-container">
 
-    <div class="submit-header">
-        <h1>Submit a Post</h1>
-
-        <p>
-            Share your content with the MOTTECK community.
-        </p>
-    </div>
-
+    <header class="submit-header">
+        <div class="header-icon"><i class="fa-solid fa-car-side"></i></div>
+        <div>
+            <h1>Create Your Listing</h1>
+            <p>Share your vehicle, spare part or accessory with the MOTTECK community.</p>
+        </div>
+    </header>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-
             <div class="messages">
-
                 {% for category, message in messages %}
-
                     <div class="message {{ category }}">
+                        <i class="fa-solid fa-circle-info"></i>
                         {{ message }}
                     </div>
-
                 {% endfor %}
-
             </div>
-
         {% endif %}
     {% endwith %}
 
+    <form action="{{ url_for('submit_post') }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="submit-form"
+          id="submitPostForm">
 
-
-    <form
-        action="{{ url_for('submit_post') }}"
-        method="POST"
-        enctype="multipart/form-data"
-        class="submit-form"
-    >
-
-
-        <!-- =====================================================
-             TITLE
-        ====================================================== -->
-
-        <div class="form-group">
-
-            <label for="title">
-                Post Title
-            </label>
-
-            <input
-                type="text"
-                id="title"
-                name="title"
-                placeholder="Example: Toyota Harrier 2018"
-                maxlength="150"
-                required
-            >
-
-        </div>
-
-
-
-        <!-- =====================================================
-             CATEGORY
-        ====================================================== -->
-
-        <div class="form-group">
-
-            <label for="category">
-                Category
-            </label>
-
-            <select
-                id="category"
-                name="category"
-                required
-            >
-
-                <option value="">
-                    Select a category
-                </option>
-
-                <option value="Car">
-                    Cars
-                </option>
-
-                <option value="Motorbike">
-                    Motorbikes / Bikes
-                </option>
-
-                <option value="Truck">
-                    Trucks / Bus
-                </option>
-
-                <option value="spare_part">
-                    Spare Parts
-                </option>
-
-                <option value="Accessorie">
-                    Accessories
-                </option>
-
-            </select>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             VEHICLE DETAILS
-             Cars / Motorbikes / Trucks
-        ====================================================== -->
-
-        <div
-            id="vehicle-details"
-            style="display:none;"
-        >
-
-            <div class="form-group">
-
-                <label for="vehicle_type">
-                    Type
-                </label>
-
-                <input
-                    type="text"
-                    id="vehicle_type"
-                    name="vehicle_type"
-                    placeholder="Example: SUV, Sedan, Pickup, Sport Bike, Bus"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="vehicle_year">
-                    Year
-                </label>
-
-                <input
-                    type="text"
-                    id="vehicle_year"
-                    name="vehicle_year"
-                    placeholder="Example: 2018"
-                    min="1900"
-                    max="2100"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="mileage">
-                    Mileage
-                </label>
-
-                <input
-                    type="text"
-                    id="mileage"
-                    name="mileage"
-                    placeholder="Example: 85,000 km"
-                >
-
+        <!-- TITLE -->
+        <section class="form-section">
+            <div class="section-heading">
+                <span class="section-number">01</span>
+                <div>
+                    <h2>Listing Information</h2>
+                    <p>Start by giving your listing a clear title.</p>
+                </div>
             </div>
 
             <div class="form-group">
+                <label for="title">Listing Title <span class="required">*</span></label>
+                <input type="text" id="title" name="title"
+                       placeholder="Example: Toyota Harrier 2018"
+                       maxlength="150" required>
+            </div>
 
-                <label for="fuel">
-                    Fuel Type
-                </label>
-
-                <select
-                    id="fuel"
-                    name="fuel"
-                >
-
-                    <option value="fuel">
-                        Select Fuel Type
-                    </option>
-
-                    <option value="petrol">
-                        Petrol
-                    </option>
-
-                    <option value="diseal">
-                        Diseal
-                    </option>
-
-                    <option value="hybrid">
-                        Hybrid 
-                    </option>
-
-                    <option value="plug-inhybrid">
-                        Plug-in Hybrid
-                    </option>
-
-                    <option value="Electric">
-                        Electric
-                    </option>
-
+            <div class="form-group">
+                <label for="category">Category <span class="required">*</span></label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Car">Cars</option>
+                    <option value="Motorbike">Motorbikes / Bikes</option>
+                    <option value="Truck">Trucks / Bus</option>
+                    <option value="spare_part">Spare Parts</option>
+                    <option value="Accessorie">Accessories</option>
                 </select>
+            </div>
+        </section>
 
-            </div>   
-
-            <div class="form-group">
-
-                <label for="transmission">
-                    Transmission
-                </label>
-
-                <select
-                    id="transmission"
-                    name="transmission"
-                >
-
-                    <option value="">
-                        Select transmission
-                    </option>
-
-                    <option value="Manual">
-                        Manual
-                    </option>
-
-                    <option value="Automatic">
-                        Automatic
-                    </option>
-
-                    <option value="Electric">
-                        Electric
-                    </option>
-
-                </select>
-
-            </div>            
-
-            <div class="form-group">
-
-                <label for="vehicle_condition">
-                    Condition
-                </label>
-
-                <select
-                    id="vehicle_condition"
-                    name="vehicle_condition"
-                >
-
-                    <option value="">
-                        Select condition
-                    </option>
-
-                    <option value="New">
-                        New
-                    </option>
-
-                    <option value="Used">
-                        Used
-                    </option>
-
-                    <option value="Foreign Used">
-                        Foreign Used
-                    </option>
-
-                    <option value="Local Used">
-                        Local Used
-                    </option>
-
-                </select>
-
+        <!-- VEHICLE DETAILS -->
+        <section id="vehicle-details" class="form-section conditional-section" hidden>
+            <div class="section-heading">
+                <span class="section-number">02</span>
+                <div>
+                    <h2>Vehicle Details</h2>
+                    <p>Provide details that help buyers understand your vehicle.</p>
+                </div>
             </div>
 
-        </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="vehicle_type">Vehicle Type</label>
+                    <input type="text" id="vehicle_type" name="vehicle_type"
+                           placeholder="SUV, Sedan, Pickup, Sport Bike, Bus">
+                </div>
 
+                <div class="form-group">
+                    <label for="vehicle_year">Year</label>
+                    <input type="text" id="vehicle_year" name="vehicle_year"
+                           placeholder="Example: 2018">
+                </div>
 
+                <div class="form-group">
+                    <label for="mileage">Mileage</label>
+                    <input type="text" id="mileage" name="mileage"
+                           placeholder="Example: 85,000 km">
+                </div>
 
-        <!-- =====================================================
-             ACCESSORY DETAILS
-        ====================================================== -->
+                <div class="form-group">
+                    <label for="fuel">Fuel Type</label>
+                    <select id="fuel" name="fuel">
+                        <option value="">Select fuel type</option>
+                        <option value="petrol">Petrol</option>
+                        <option value="diesel">Diesel</option>
+                        <option value="hybrid">Hybrid</option>
+                        <option value="plug-inhybrid">Plug-in Hybrid</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
 
-        <div
-            id="accessory-details"
-            style="display:none;"
-        >
+                <div class="form-group">
+                    <label for="transmission">Transmission</label>
+                    <select id="transmission" name="transmission">
+                        <option value="">Select transmission</option>
+                        <option value="Manual">Manual</option>
+                        <option value="Automatic">Automatic</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
+                <div class="form-group">
+                    <label for="vehicle_condition">Condition</label>
+                    <select id="vehicle_condition" name="vehicle_condition">
+                        <option value="">Select condition</option>
+                        <option value="New">New</option>
+                        <option value="Used">Used</option>
+                        <option value="Foreign Used">Foreign Used</option>
+                        <option value="Local Used">Local Used</option>
+                    </select>
+                </div>
+            </div>
+        </section>
 
-                <label for="accessory_type">
-                    Accessory Type
-                </label>
-
-                <select
-                    id="accessory_type"
-                    name="accessory_type"
-                >
-
-                    <option value="">
-                        Select accessory type
-                    </option>
-
-                    <option value="Tyres">
-                        Tyres
-                    </option>
-
-                    <option value="Rims">
-                        Rims
-                    </option>
-
-                    <option value="Lights & Lighting">
-                        Lights & Lighting
-                    </option>
-
-                    <option value="Seat Covers">
-                        Seat Covers
-                    </option>
-
-                    <option value="Bull Bars">
-                        Bull Bars
-                    </option>
-
-                    <option value="Window Tints & Sunshades">
-                        Window Tints & Sunshades
-                    </option>
-
-                    <option value="Audio & Speakers">
-                        Audio & Speakers
-                    </option>
-
-                    <option value="Roof Racks & Carriers">
-                        Roof Racks & Carriers
-                    </option>
-
-                    <option value="Security & Anti-theft">
-                        Security & Anti-theft
-                    </option>
-
-                    <option value="Car Care & Cleaning">
-                        Car Care & Cleaning
-                    </option>
-
-                    <option value="Other">
-                        Other
-                    </option>
-
-                </select>
-
+        <!-- ACCESSORY DETAILS -->
+        <section id="accessory-details" class="form-section conditional-section" hidden>
+            <div class="section-heading">
+                <span class="section-number">02</span>
+                <div>
+                    <h2>Accessory Details</h2>
+                    <p>Tell buyers more about your accessory.</p>
+                </div>
             </div>
 
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="accessory_type">Accessory Type</label>
+                    <select id="accessory_type" name="accessory_type">
+                        <option value="">Select accessory type</option>
+                        <option value="Tyres">Tyres</option>
+                        <option value="Rims">Rims</option>
+                        <option value="Lights & Lighting">Lights & Lighting</option>
+                        <option value="Seat Covers">Seat Covers</option>
+                        <option value="Bull Bars">Bull Bars</option>
+                        <option value="Window Tints & Sunshades">Window Tints & Sunshades</option>
+                        <option value="Audio & Speakers">Audio & Speakers</option>
+                        <option value="Roof Racks & Carriers">Roof Racks & Carriers</option>
+                        <option value="Security & Anti-theft">Security & Anti-theft</option>
+                        <option value="Car Care & Cleaning">Car Care & Cleaning</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
+                <div class="form-group">
+                    <label for="accessory_brand">Brand</label>
+                    <input type="text" id="accessory_brand" name="accessory_brand"
+                           placeholder="Example: Michelin, Pioneer, Toyota">
+                </div>
 
-                <label for="accessory_brand">
-                    Brand
-                </label>
+                <div class="form-group">
+                    <label for="compatible_vehicle">Compatible Vehicle</label>
+                    <input type="text" id="compatible_vehicle" name="compatible_vehicle"
+                           placeholder="Example: Toyota Harrier 2018-2022">
+                </div>
 
-                <input
-                    type="text"
-                    id="accessory_brand"
-                    name="accessory_brand"
-                    placeholder="Example: Michelin, Pioneer, Toyota"
-                >
+                <div class="form-group">
+                    <label for="accessory_condition">Condition</label>
+                    <select id="accessory_condition" name="accessory_condition">
+                        <option value="">Select condition</option>
+                        <option value="New">New</option>
+                        <option value="Used">Used</option>
+                    </select>
+                </div>
+            </div>
+        </section>
 
+        <!-- SPARE PART DETAILS -->
+        <section id="spare-part-details" class="form-section conditional-section" hidden>
+            <div class="section-heading">
+                <span class="section-number">02</span>
+                <div>
+                    <h2>Spare Part Details</h2>
+                    <p>Help buyers identify the correct spare part.</p>
+                </div>
             </div>
 
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="part_name">Part Name</label>
+                    <input type="text" id="part_name" name="part_name"
+                           placeholder="Example: Front Brake Pads">
+                </div>
 
-            <div class="form-group">
+                <div class="form-group">
+                    <label for="part_type">Part Type</label>
+                    <input type="text" id="part_type" name="part_type"
+                           placeholder="Brake System, Engine, Suspension">
+                </div>
 
-                <label for="compatible_vehicle">
-                    Compatible Vehicle
-                </label>
+                <div class="form-group">
+                    <label for="part_make">Make / Brand</label>
+                    <input type="text" id="part_make" name="part_make"
+                           placeholder="Example: Toyota, Bosch, Genuine">
+                </div>
 
-                <input
-                    type="text"
-                    id="compatible_vehicle"
-                    name="compatible_vehicle"
-                    placeholder="Example: Toyota Harrier 2018-2022"
-                >
+                <div class="form-group">
+                    <label for="compatible_model">Compatible Model</label>
+                    <input type="text" id="compatible_model" name="compatible_model"
+                           placeholder="Example: Toyota Harrier">
+                </div>
 
+                <div class="form-group">
+                    <label for="part_year">Year / Generation</label>
+                    <input type="text" id="part_year" name="part_year"
+                           placeholder="Example: 2018-2022">
+                </div>
+
+                <div class="form-group">
+                    <label for="part_number">Part Number <span class="optional">(Optional)</span></label>
+                    <input type="text" id="part_number" name="part_number"
+                           placeholder="Example: 04465-0R010">
+                </div>
+
+                <div class="form-group">
+                    <label for="part_condition">Condition</label>
+                    <select id="part_condition" name="part_condition">
+                        <option value="">Select condition</option>
+                        <option value="New">New</option>
+                        <option value="Used">Used</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRICE AND DESCRIPTION -->
+        <section class="form-section">
+            <div class="section-heading">
+                <span class="section-number">03</span>
+                <div>
+                    <h2>Price & Description</h2>
+                    <p>Set your selling price and describe your listing.</p>
+                </div>
             </div>
 
-
             <div class="form-group">
-
-                <label for="accessory_condition">
-                    Condition
-                </label>
-
-                <select
-                    id="accessory_condition"
-                    name="accessory_condition"
-                >
-
-                    <option value="">
-                        Select condition
-                    </option>
-
-                    <option value="New">
-                        New
-                    </option>
-
-                    <option value="Used">
-                        Used
-                    </option>
-
-                </select>
-
+                <label for="price">Selling Price (KSh)</label>
+                <input type="text" class="price" id="price" name="price"
+                       placeholder="Enter price in KSh">
             </div>
 
-        </div>
-
-
-
-        <!-- =====================================================
-             SPARE PART DETAILS
-        ====================================================== -->
-
-        <div
-            id="spare-part-details"
-            style="display:none;"
-        >
-
             <div class="form-group">
+                <label for="description">Description <span class="required">*</span></label>
+                <textarea id="description" name="description" rows="7"
+                          placeholder="Tell buyers about your vehicle, part, accessory or listing..."
+                          required></textarea>
+            </div>
+        </section>
 
-                <label for="part_name">
-                    Part Name
-                </label>
-
-                <input
-                    type="text"
-                    id="part_name"
-                    name="part_name"
-                    placeholder="Example: Front Brake Pads"
-                >
-
+        <!-- PHOTOS -->
+        <section class="form-section">
+            <div class="section-heading">
+                <span class="section-number">04</span>
+                <div>
+                    <h2>Listing Photos</h2>
+                    <p>Upload clear photos to help buyers view your listing.</p>
+                </div>
             </div>
 
+            <div class="form-group upload-group">
+                <label for="images">Upload Photos</label>
 
-            <div class="form-group">
+                {% if account_type == "individual" %}
+                    <p class="upload-info">You can upload up to 5 photos.</p>
+                {% else %}
+                    <p class="upload-info">You can upload up to 10 photos.</p>
+                {% endif %}
 
-                <label for="part_type">
-                    Part Type
+                <label class="upload-box" for="images">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <strong>Click to select photos</strong>
+                    <span>Images only</span>
                 </label>
 
-                <input
-                    type="text"
-                    id="part_type"
-                    name="part_type"
-                    placeholder="Example: Brake System, Engine, Suspension"
-                >
+                <input type="file" id="images" name="images"
+                       accept="image/*" multiple>
 
+                <div id="image-preview" class="image-preview"></div>
             </div>
+        </section>
 
-
-            <div class="form-group">
-
-                <label for="part_make">
-                    Make / Brand
-                </label>
-
-                <input
-                    type="text"
-                    id="part_make"
-                    name="part_make"
-                    placeholder="Example: Toyota, Bosch, Genuine"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="compatible_model">
-                    Compatible Model
-                </label>
-
-                <input
-                    type="text"
-                    id="compatible_model"
-                    name="compatible_model"
-                    placeholder="Example: Toyota Harrier"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="part_year">
-                    Year / Generation
-                </label>
-
-                <input
-                    type="text"
-                    id="part_year"
-                    name="part_year"
-                    placeholder="Example: 2018-2022"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="part_number">
-                    Part Number
-                    <small>(Optional)</small>
-                </label>
-
-                <input
-                    type="text"
-                    id="part_number"
-                    name="part_number"
-                    placeholder="Example: 04465-0R010"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="part_condition">
-                    Condition
-                </label>
-
-                <select
-                    id="part_condition"
-                    name="part_condition"
-                >
-
-                    <option value="">
-                        Select condition
-                    </option>
-
-                    <option value="New">
-                        New
-                    </option>
-
-                    <option value="Used">
-                        Used
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             PRICE
-        ====================================================== -->
-
-        <div class="form-group">
-
-            <label for="price">
-                Price
-            </label>
-
-            <input
-                type="text"
-                class="price"
-                id="price"
-                name="price"
-                placeholder="Enter price in KSh"
-                min="0"
-                step="1"
-            >
-
-        </div>
-
-
-
-        <!-- =====================================================
-             DESCRIPTION
-        ====================================================== -->
-
-        <div class="form-group">
-
-            <label for="description">
-                Description
-            </label>
-
-            <textarea
-                id="description"
-                name="description"
-                rows="8"
-                placeholder="Tell us about your vehicle, part, accessory or listing..."
-                required
-            ></textarea>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             PHOTOS
-        ====================================================== -->
-
-        <div class="form-group">
-
-            <label for="images">
-                Photos
-            </label>
-
-            {% if account_type == "individual" %}
-
-                <p class="upload-info">
-                    You can upload up to 5 photos.
-                </p>
-
-            {% else %}
-
-                <p class="upload-info">
-                    You can upload up to 10 photos.
-                </p>
-
-            {% endif %}
-
-            <input
-                type="file"
-                id="images"
-                name="images"
-                accept="image/*"
-                multiple
-            >
-
-        </div>
-
-
-
-        <!-- =====================================================
-             INDIVIDUAL ACCOUNT
-             ONLY FOR SALE
-        ====================================================== -->
-
+        <!-- INDIVIDUAL -->
         {% if account_type == "individual" %}
-
-        <div class="form-group">
-
-            <label>
-                Post Type
-            </label>
-
-            <div class="post-type-options">
-
-                <!-- FOR SALE -->
-
-                <label class="post-type-card">
-
-                    <input
-                        type="radio"
-                        name="post_type"
-                        value="for_sale"
-                        checked
-                    >
-
-                    <span>
-
-                        <strong>
-                            For Sale
-                        </strong>
-
-                        <small>
-                            Sell your vehicle, accessory or spare part.
-                        </small>
-
-                    </span>
-
-                </label>
-
+        <section class="form-section">
+            <div class="section-heading">
+                <span class="section-number">05</span>
+                <div>
+                    <h2>Sale Listing</h2>
+                    <p>List your item for sale on MOTTECK.</p>
+                </div>
             </div>
 
+            <input type="hidden" name="post_type" value="for_sale">
 
-
-            <!-- =================================================
-                 SALE METHOD
-            ================================================== -->
-
-            <div
-                id="individual-sale-options"
-                class="promotion-duration"
-            >
-
-                <div class="duration-heading">
-
-                    <h3>
-                        How would you like to sell?
-                    </h3>
-
-                    <p>
-                        Choose whether buyers should contact you directly
-                        or whether MOTTECK should handle the buyer request.
-                    </p>
-
+            <div class="selected-sale-card">
+                <div class="sale-icon"><i class="fa-solid fa-tag"></i></div>
+                <div>
+                    <strong>For Sale</strong>
+                    <p>Advertise your item to potential buyers.</p>
                 </div>
-
-
-                <div class="post-type-options">
-
-                    <!-- DIRECT SALE -->
-
-                    <label class="post-type-card">
-
-                        <input
-                            type="radio"
-                            name="sale_method"
-                            value="direct_sale"
-                        >
-
-                        <span>
-
-                            <strong>
-                                Direct Sale
-                            </strong>
-
-                            <small>
-                                Buyers can contact you directly.
-                            </small>
-
-                        </span>
-
-                    </label>
-
-
-                    <!-- MOTTECK SALE -->
-
-                    <label class="post-type-card">
-
-                        <input
-                            type="radio"
-                            name="sale_method"
-                            value="sell_through_motteck"
-                        >
-
-                        <span>
-
-                            <strong>
-                                MOTTECK Sale
-                            </strong>
-
-                            <small>
-                                MOTTECK handles buyer requests and connects
-                                serious buyers with you.
-                            </small>
-
-                        </span>
-
-                    </label>
-
-                </div>
-
-
-
-                <!-- =============================================
-                     DIRECT SALE LISTING DURATION
-                ============================================== -->
-
-                <div
-                    id="direct-listing-duration"
-                    style="display:none; margin-top:20px;"
-                >
-
-                    <div class="duration-heading">
-
-                        <h3>
-                            Choose Listing Duration
-                        </h3>
-
-                        <p>
-                            Your listing fee depends on how long you want
-                            your item advertised.
-                        </p>
-
-                    </div>
-
-
-                    <div class="duration-options">
-
-                        <label class="duration-card">
-
-                            <input
-                                type="radio"
-                                name="listing_duration"
-                                value="1_day"
-                            >
-
-                            <span class="duration-content">
-
-                                <strong>
-                                    1 Day
-                                </strong>
-
-                                <small>
-                                    Fee: KSh 100
-                                </small>
-
-                            </span>
-
-                        </label>
-
-
-                        <label class="duration-card">
-
-                            <input
-                                type="radio"
-                                name="listing_duration"
-                                value="7_days"
-                            >
-
-                            <span class="duration-content">
-
-                                <strong>
-                                    1 Week
-                                </strong>
-
-                                <small>
-                                    Fee: KSh 500
-                                </small>
-
-                            </span>
-
-                        </label>
-
-
-                        <label class="duration-card">
-
-                            <input
-                                type="radio"
-                                name="listing_duration"
-                                value="1_month"
-                            >
-
-                            <span class="duration-content">
-
-                                <strong>
-                                    1 Month
-                                </strong>
-
-                                <small>
-                                    Fee: KSh 1,500
-                                </small>
-
-                            </span>
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =============================================
-                     MOTTECK SALE
-                ============================================== -->
-
-                <div
-                    id="commission-details"
-                    style="display:none; margin-top:20px;"
-                >
-
-                    <div class="promotion-note">
-
-                        <strong>
-                            MOTTECK Sale
-                        </strong>
-
-                        <p>
-                            Buyers will use <strong>Request MOTTECK</strong>
-                            instead of receiving your direct contact details.
-                        </p>
-
-                        <p style="margin-top:10px;">
-                            MOTTECK will handle the buyer request and
-                            connection.
-                        </p>
-
-                    </div>
-
-
-                    <label
-                        class="post-type-card"
-                        style="margin-top:15px;"
-                    >
-
-                        <input
-                            type="checkbox"
-                            id="commission-agreement"
-                            name="commission_agreed"
-                            value="yes"
-                        >
-
-                        <span>
-
-                            <strong>
-                                I agree to the MOTTECK commission terms
-                            </strong>
-
-                            <small>
-                                I understand that MOTTECK may charge the
-                                applicable commission when a sale is completed
-                                through a MOTTECK-generated lead.
-                            </small>
-
-                        </span>
-
-                    </label>
-
-                </div>
-
             </div>
 
-        </div>
+            <div class="form-group duration-group">
+                <label>Choose Listing Period <span class="required">*</span></label>
 
+                <div class="duration-options">
+                    <label class="duration-card">
+                        <input type="radio" name="listing_duration" value="1_day" required>
+                        <span class="duration-content">
+                            <strong>1 Day</strong>
+                            <small>KSh 100</small>
+                        </span>
+                    </label>
+
+                    <label class="duration-card">
+                        <input type="radio" name="listing_duration" value="7_days" required>
+                        <span class="duration-content">
+                            <strong>1 Week</strong>
+                            <small>KSh 500</small>
+                        </span>
+                    </label>
+
+                    <label class="duration-card">
+                        <input type="radio" name="listing_duration" value="1_month" required>
+                        <span class="duration-content">
+                            <strong>1 Month</strong>
+                            <small>KSh 1,500</small>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </section>
         {% endif %}
 
-
-
-        <!-- =====================================================
-             BUSINESS ACCOUNT
-             LISTING / SPONSORED / FEATURED
-        ====================================================== -->
-
+        <!-- BUSINESS -->
         {% if account_type == "business" %}
-
-        <div class="form-group">
-
-            <label>
-                Post Type
-            </label>
-
+        <section class="form-section">
+            <div class="section-heading">
+                <span class="section-number">05</span>
+                <div>
+                    <h2>Listing Visibility</h2>
+                    <p>Select how your business listing should appear.</p>
+                </div>
+            </div>
 
             <div class="post-type-options">
 
-
-                <!-- LISTING -->
-
                 <label class="post-type-card">
-
-                    <input
-                        type="radio"
-                        name="post_type"
-                        value="normal"
-                        checked
-                    >
-
-                    <span>
-
-                        <strong>
-                            Listing
-                        </strong>
-
-                        <small>
-                            Regular business listing on MOTTECK.
-                        </small>
-
+                    <input type="radio" name="post_type" value="normal" checked>
+                    <span class="post-type-text">
+                        <strong>Normal Listing</strong>
+                        <small>Standard listing on MOTTECK.</small>
                     </span>
-
                 </label>
 
-
-
-                <!-- SPONSORED -->
-
-                <label class="post-type-card">
-
-                    <input
-                        type="radio"
-                        name="post_type"
-                        value="sponsored"
-                    >
-
-                    <span>
-
-                        <strong>
-                            Sponsored
-                        </strong>
-
-                        <small>
-                            Promote your business through a sponsored post.
-                        </small>
-
+                <label class="post-type-card" id="sponsored-option">
+                    <input type="radio" name="post_type" value="sponsored">
+                    <span class="post-type-text">
+                        <strong>Sponsored</strong>
+                        <small>Promote your listing through sponsored placement.</small>
                     </span>
-
                 </label>
 
-
-
-                <!-- FEATURED -->
-
-                <label class="post-type-card">
-
-                    <input
-                        type="radio"
-                        name="post_type"
-                        value="featured"
-                    >
-
-                    <span>
-
-                        <strong>
-                            Featured
-                        </strong>
-
-                        <small>
-                            Get premium placement at the top of MOTTECK.
-                        </small>
-
+                <label class="post-type-card" id="featured-option">
+                    <input type="radio" name="post_type" value="featured">
+                    <span class="post-type-text">
+                        <strong>Featured</strong>
+                        <small>Premium placement for increased visibility.</small>
                     </span>
-
                 </label>
 
             </div>
 
-
-
-            <!-- =================================================
-                 BUSINESS PROMOTION DURATION
-            ================================================== -->
-
-            <div
-                id="promotion-duration"
-                class="promotion-duration"
-                style="display:none;"
-            >
-
+            <div id="business-duration" class="duration-group">
                 <div class="duration-heading">
-
-                    <h3>
-                        Choose Promotion Duration
-                    </h3>
-
-                    <p id="duration-description">
-                        Select how long you want your promotion to run.
-                    </p>
-
+                    <h3 id="duration-title">Choose Listing Period</h3>
+                    <p id="duration-description">Select the period for your listing.</p>
                 </div>
-
 
                 <div class="duration-options">
 
-
-                    <!-- 24 HOURS -->
-
                     <label class="duration-card">
-
-                        <input
-                            type="radio"
-                            name="promotion_duration"
-                            value="24_hours"
-                        >
-
+                        <input type="radio" name="promotion_duration" value="24_hours">
                         <span class="duration-content">
-
-                            <strong>
-                                24 Hours
-                            </strong>
-
-                            <small>
-
-                                <span class="sponsored-price">
-                                    Sponsored: KSh 200
-                                </span>
-
-                                <span class="featured-price">
-                                    Featured: KSh 400
-                                </span>
-
-                            </small>
-
+                            <strong>24 Hours</strong>
+                            <small class="duration-price" data-duration="24_hours"></small>
                         </span>
-
                     </label>
 
-
-
-                    <!-- 3 DAYS -->
-
                     <label class="duration-card">
-
-                        <input
-                            type="radio"
-                            name="promotion_duration"
-                            value="3_days"
-                        >
-
+                        <input type="radio" name="promotion_duration" value="3_days">
                         <span class="duration-content">
-
-                            <strong>
-                                3 Days
-                            </strong>
-
-                            <small>
-
-                                <span class="sponsored-price">
-                                    Sponsored: KSh 500
-                                </span>
-
-                                <span class="featured-price">
-                                    Featured: KSh 700
-                                </span>
-
-                            </small>
-
+                            <strong>3 Days</strong>
+                            <small class="duration-price" data-duration="3_days"></small>
                         </span>
-
                     </label>
 
-
-
-                    <!-- 7 DAYS -->
-
                     <label class="duration-card">
-
-                        <input
-                            type="radio"
-                            name="promotion_duration"
-                            value="7_days"
-                        >
-
+                        <input type="radio" name="promotion_duration" value="7_days">
                         <span class="duration-content">
-
-                            <strong>
-                                7 Days
-                            </strong>
-
-                            <small>
-
-                                <span class="sponsored-price">
-                                    Sponsored: KSh 1,000
-                                </span>
-
-                                <span class="featured-price">
-                                    Featured: KSh 1,200
-                                </span>
-
-                            </small>
-
+                            <strong>7 Days</strong>
+                            <small class="duration-price" data-duration="7_days"></small>
                         </span>
-
                     </label>
 
-
-
-                    <!-- 1 MONTH -->
-
                     <label class="duration-card">
-
-                        <input
-                            type="radio"
-                            name="promotion_duration"
-                            value="1_month"
-                        >
-
+                        <input type="radio" name="promotion_duration" value="1_month">
                         <span class="duration-content">
-
-                            <strong>
-                                1 Month
-                            </strong>
-
-                            <small>
-
-                                <span class="sponsored-price">
-                                    Sponsored: KSh 3,000
-                                </span>
-
-                                <span class="featured-price">
-                                    Featured: KSh 3,200
-                                </span>
-
-                            </small>
-
+                            <strong>1 Month</strong>
+                            <small class="duration-price" data-duration="1_month"></small>
                         </span>
-
                     </label>
 
                 </div>
-
-
-                <div class="promotion-note">
-
-                    <strong>
-                        Payment
-                    </strong>
-
-                    <p>
-                        Payment will be requested after submission.
-                        Your promotion will only become active after
-                        payment and MOTTECK approval.
-                    </p>
-
-                </div>
-
             </div>
 
-        </div>
-
+        </section>
         {% endif %}
 
+        <!-- NO LISTING FEE NOTICE -->
+        <section id="commission-product-note" class="product-notice" hidden>
+            <div class="product-notice-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <h3>No Listing Fee</h3>
+                <p>Accessories and spare parts do not require a listing fee.</p>
+                <p>MOTTECK charges a <strong>2% commission</strong> on completed sales handled through MOTTECK.</p>
+                <p>Buyers will see <strong>BUY NOW</strong> and <strong>REQUEST MOTTECK</strong> options.</p>
+            </div>
+        </section>
 
+        <!-- FEE SUMMARY -->
+        <section id="fee-summary" class="fee-card" hidden>
+            <div class="fee-card-header">
+                <div class="fee-icon"><i class="fa-solid fa-receipt"></i></div>
+                <div>
+                    <h3>Listing Fee</h3>
+                    <p>Transparent pricing for your MOTTECK listing</p>
+                </div>
+            </div>
 
-        <!-- =====================================================
-             ACCESSORIES / SPARE PARTS NOTICE
-        ====================================================== -->
+            <div class="fee-total">
+                <div>
+                    <span class="fee-label">MOTTECK LISTING FEE</span>
+                    <p id="fee-description">Selected listing charge</p>
+                </div>
+                <strong id="fee-amount">KES 0</strong>
+            </div>
 
-        <div
-            id="commission-product-note"
-            class="promotion-note"
-            style="display:none;"
-        >
-
-            <strong>
-                MOTTECK Buy & Request
-            </strong>
-
-            <p>
-                Accessories and spare parts do not require a listing fee.
+            <p class="fee-explanation">
+                This is the listing fee for your selected option and period.
             </p>
 
-            <p style="margin-top:10px;">
-                MOTTECK charges a <strong>2% commission</strong> on every
-                completed sale handled through MOTTECK.
-            </p>
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <div class="payment-icon mpesa">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <div class="payment-text">
+                        <strong>M-Pesa</strong>
+                        <small>Mobile money payment</small>
+                    </div>
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
 
-            <p style="margin-top:10px;">
-                Buyers will see <strong>BUY NOW</strong> and
-                <strong>REQUEST MOTTECK</strong> on these products.
-            </p>
+                <div class="payment-method">
+                    <div class="payment-icon card-icon">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <div class="payment-text">
+                        <strong>Debit / Credit Card</strong>
+                        <small>Visa, Mastercard and supported cards</small>
+                    </div>
+                    <span class="coming-soon">Coming Soon</span>
+                </div>
+            </div>
 
-        </div>
+            <div class="payment-unavailable">
+                <i class="fa-solid fa-lock"></i>
+                <p>Online payments are not yet available. Payment functionality will be activated when MOTTECK officially launches.</p>
+            </div>
+        </section>
 
-
-
-        <!-- =====================================================
-             APPROVAL NOTICE
-        ====================================================== -->
-
+        <!-- APPROVAL -->
         <div class="approval-notice">
-
-            <strong>
-                Before you submit
-            </strong>
-
-            <p>
-                All posts are reviewed by MOTTECK before they are published.
-                Please make sure your information is accurate and appropriate.
-            </p>
-
+            <div class="approval-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div>
+                <strong>Before you submit</strong>
+                <p>All posts are reviewed by MOTTECK before they are published. Please make sure your information is accurate and appropriate.</p>
+            </div>
         </div>
 
-
-
-        <!-- =====================================================
-             BUTTONS
-        ====================================================== -->
-
+        <!-- ACTIONS -->
         <div class="form-actions">
-
-            <a
-                href="{{ url_for('profile') }}"
-                class="cancel-btn"
-            >
-                Cancel
+            <a href="{{ url_for('profile') }}" class="cancel-btn">
+                <i class="fa-solid fa-arrow-left"></i> Cancel
             </a>
 
-
-            <button
-                type="submit"
-                class="submit-btn"
-            >
-                Submit Post
+            <button type="submit" class="submit-btn">
+                Submit Listing <i class="fa-solid fa-arrow-right"></i>
             </button>
-
         </div>
 
-
     </form>
-
 </div>
 
-
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
 
+    const category = document.getElementById("category");
+    const vehicleDetails = document.getElementById("vehicle-details");
+    const accessoryDetails = document.getElementById("accessory-details");
+    const sparePartDetails = document.getElementById("spare-part-details");
+    const productNote = document.getElementById("commission-product-note");
+    const feeSummary = document.getElementById("fee-summary");
 
-    /* =========================================================
-       CATEGORY ELEMENTS
-    ========================================================= */
+    const form = document.getElementById("submitPostForm");
 
-    const category =
-        document.getElementById("category");
+    const accountType = "{{ account_type }}";
 
-    const vehicleDetails =
-        document.getElementById("vehicle-details");
+    const price = document.getElementById("price");
 
-    const accessoryDetails =
-        document.getElementById("accessory-details");
+    const normalPrices = {
+        "1_day": 100,
+        "7_days": 500,
+        "1_month": 1500
+    };
 
-    const sparePartDetails =
-        document.getElementById("spare-part-details");
-
-    const commissionProductNote =
-        document.getElementById("commission-product-note");
-
-
-    function updateCategoryFields() {
-
-        const selectedCategory =
-            category ? category.value : "";
-
-
-        /* Hide everything first */
-
-        if (vehicleDetails) {
-            vehicleDetails.style.display = "none";
+    const promotionPrices = {
+        sponsored: {
+            "24_hours": 200,
+            "3_days": 500,
+            "7_days": 1000,
+            "1_month": 3000
+        },
+        featured: {
+            "24_hours": 400,
+            "3_days": 700,
+            "7_days": 1200,
+            "1_month": 3200
         }
+    };
 
-        if (accessoryDetails) {
-            accessoryDetails.style.display = "none";
-        }
+    const businessNormalPrices = {
+        "24_hours": 100,
+        "3_days": 500,
+        "7_days": 500,
+        "1_month": 1500
+    };
 
-        if (sparePartDetails) {
-            sparePartDetails.style.display = "none";
-        }
+    const durationLabels = {
+        "24_hours": "24 Hours",
+        "1_day": "1 Day",
+        "3_days": "3 Days",
+        "7_days": "7 Days",
+        "1_month": "1 Month"
+    };
 
-        if (commissionProductNote) {
-            commissionProductNote.style.display = "none";
-        }
+    function setSectionVisible(section, visible) {
+        if (!section) return;
+        section.hidden = !visible;
 
-
-        /* VEHICLES */
-
-        if (
-            selectedCategory === "Car" ||
-            selectedCategory === "Motorbike" ||
-            selectedCategory === "Truck"
-        ) {
-
-            if (vehicleDetails) {
-                vehicleDetails.style.display = "block";
-            }
-
-        }
-
-
-        /* ACCESSORIES */
-
-        else if (selectedCategory === "Accessorie") {
-
-            if (accessoryDetails) {
-                accessoryDetails.style.display = "block";
-            }
-
-            if (commissionProductNote) {
-                commissionProductNote.style.display = "block";
-            }
-
-        }
-
-
-        /* SPARE PARTS */
-
-        else if (selectedCategory === "spare_part") {
-
-            if (sparePartDetails) {
-                sparePartDetails.style.display = "block";
-            }
-
-            if (commissionProductNote) {
-                commissionProductNote.style.display = "block";
-            }
-
-        }
-
+        section.querySelectorAll("input, select, textarea").forEach(function(el) {
+            el.disabled = !visible;
+        });
     }
 
+    function isProductCategory() {
+        return category.value === "Accessorie" ||
+               category.value === "spare_part";
+    }
+
+    function isVehicleCategory() {
+        return ["Car", "Motorbike", "Truck"].includes(category.value);
+    }
+
+    function updateCategory() {
+
+        setSectionVisible(vehicleDetails, category.value === "Car" ||
+            category.value === "Motorbike" || category.value === "Truck");
+
+        setSectionVisible(accessoryDetails, category.value === "Accessorie");
+
+        setSectionVisible(sparePartDetails, category.value === "spare_part");
+
+        setSectionVisible(productNote, isProductCategory());
+
+        // No listing fee selection is required for accessories or spare parts.
+        if (isProductCategory()) {
+            setSectionVisible(feeSummary, false);
+        }
+
+        if (accountType === "business") {
+            updateBusinessPricing();
+        }
+
+        if (accountType === "individual") {
+            updateIndividualPricing();
+        }
+    }
+
+    function getSelected(name) {
+        return document.querySelector('input[name="' + name + '"]:checked');
+    }
+
+    function formatKES(value) {
+        return "KES " + Number(value).toLocaleString("en-KE");
+    }
+
+    function updateFee(amount, description) {
+        if (!feeSummary) return;
+
+        setSectionVisible(feeSummary, true);
+
+        document.getElementById("fee-amount").textContent = formatKES(amount);
+        document.getElementById("fee-description").textContent = description;
+    }
+
+    function hideFee() {
+        setSectionVisible(feeSummary, false);
+    }
+
+    function updateIndividualPricing() {
+
+        if (isProductCategory()) {
+            hideFee();
+            return;
+        }
+
+        const duration = getSelected("listing_duration");
+
+        if (!duration) {
+            hideFee();
+            return;
+        }
+
+        const amount = normalPrices[duration.value];
+
+        if (amount !== undefined) {
+            updateFee(amount, "For Sale • " + durationLabels[duration.value]);
+        }
+    }
+
+    function updateBusinessPricing() {
+
+        if (isProductCategory()) {
+            hideFee();
+            return;
+        }
+
+        const postType = getSelected("post_type");
+        const duration = getSelected("promotion_duration");
+
+        const durationBox = document.getElementById("business-duration");
+        const durationInputs = document.querySelectorAll('input[name="promotion_duration"]');
+        const durationPrices = document.querySelectorAll(".duration-price");
+
+        if (!postType || !durationBox) {
+            hideFee();
+            return;
+        }
+
+        durationBox.hidden = false;
+
+        durationInputs.forEach(function(input) {
+            input.disabled = false;
+            input.required = true;
+        });
+
+        durationPrices.forEach(function(el) {
+            const key = el.dataset.duration;
+            let amount = 0;
+
+            if (postType.value === "normal") {
+                amount = businessNormalPrices[key] ?? 0;
+                el.textContent = formatKES(amount);
+            } else if (promotionPrices[postType.value]) {
+                amount = promotionPrices[postType.value][key] ?? 0;
+                el.textContent = formatKES(amount);
+            }
+        });
+
+        const title = document.getElementById("duration-title");
+        const description = document.getElementById("duration-description");
+
+        if (postType.value === "normal") {
+            title.textContent = "Choose Listing Period";
+            description.textContent = "Select how long you want your standard listing to run.";
+        } else {
+            title.textContent = "Choose Promotion Duration";
+            description.textContent = "Select how long you want your promotion to run.";
+        }
+
+        if (!duration) {
+            hideFee();
+            return;
+        }
+
+        let amount = 0;
+
+        if (postType.value === "normal") {
+            amount = businessNormalPrices[duration.value] ?? 0;
+        } else if (promotionPrices[postType.value]) {
+            amount = promotionPrices[postType.value][duration.value] ?? 0;
+        }
+
+        const postTypeLabel = postType.value === "normal"
+            ? "Normal Listing"
+            : postType.value === "featured"
+                ? "Featured"
+                : "Sponsored";
+
+        updateFee(amount, postTypeLabel + " • " + durationLabels[duration.value]);
+    }
+
+    function clearSelection(name) {
+        document.querySelectorAll('input[name="' + name + '"]').forEach(function(input) {
+            input.checked = false;
+        });
+    }
+
+    function updatePostType() {
+
+        if (isProductCategory()) {
+            hideFee();
+            return;
+        }
+
+        if (accountType === "business") {
+            const selectedPostType = getSelected("post_type");
+
+            if (selectedPostType) {
+                clearSelection("promotion_duration");
+            }
+
+            updateBusinessPricing();
+        }
+    }
 
     if (category) {
-
-        category.addEventListener(
-            "change",
-            updateCategoryFields
-        );
-
-        updateCategoryFields();
-
+        category.addEventListener("change", updateCategory);
+        updateCategory();
     }
 
-
-
-    /* =========================================================
-       INDIVIDUAL SALE OPTIONS
-    ========================================================= */
-
-    const saleMethodInputs =
-        document.querySelectorAll(
-            'input[name="sale_method"]'
-        );
-
-    const directListingDuration =
-        document.getElementById(
-            "direct-listing-duration"
-        );
-
-    const commissionDetails =
-        document.getElementById(
-            "commission-details"
-        );
-
-    const commissionAgreement =
-        document.getElementById(
-            "commission-agreement"
-        );
-
-    const listingDurationInputs =
-        document.querySelectorAll(
-            'input[name="listing_duration"]'
-        );
-
-
-    function updateSaleMethod() {
-
-        const selectedSaleMethod =
-            document.querySelector(
-                'input[name="sale_method"]:checked'
-            );
-
-
-        if (!selectedSaleMethod) {
-
-            if (directListingDuration) {
-                directListingDuration.style.display = "none";
-            }
-
-            if (commissionDetails) {
-                commissionDetails.style.display = "none";
-            }
-
-            return;
-        }
-
-
-        /* DIRECT SALE */
-
-        if (selectedSaleMethod.value === "direct_sale") {
-
-            if (directListingDuration) {
-                directListingDuration.style.display = "block";
-            }
-
-            if (commissionDetails) {
-                commissionDetails.style.display = "none";
-            }
-
-
-            listingDurationInputs.forEach(
-                function(input) {
-
-                    input.required = true;
-
-                }
-            );
-
-
-            if (commissionAgreement) {
-                commissionAgreement.required = false;
-                commissionAgreement.checked = false;
-            }
-
-        }
-
-
-        /* MOTTECK SALE */
-
-        else if (
-            selectedSaleMethod.value === "sell_through_motteck"
-        ) {
-
-            if (directListingDuration) {
-                directListingDuration.style.display = "none";
-            }
-
-            if (commissionDetails) {
-                commissionDetails.style.display = "block";
-            }
-
-
-            listingDurationInputs.forEach(
-                function(input) {
-
-                    input.required = false;
-                    input.checked = false;
-
-                }
-            );
-
-
-            if (commissionAgreement) {
-                commissionAgreement.required = true;
-            }
-
-        }
-
+    if (accountType === "individual") {
+        document.querySelectorAll('input[name="listing_duration"]').forEach(function(input) {
+            input.addEventListener("change", updateIndividualPricing);
+        });
     }
 
+    if (accountType === "business") {
 
-    saleMethodInputs.forEach(
-        function(input) {
+        document.querySelectorAll('input[name="post_type"]').forEach(function(input) {
+            input.addEventListener("change", updatePostType);
+        });
 
-            input.addEventListener(
-                "change",
-                updateSaleMethod
-            );
+        document.querySelectorAll('input[name="promotion_duration"]').forEach(function(input) {
+            input.addEventListener("change", updateBusinessPricing);
+        });
 
-        }
-    );
-
-
-    if (saleMethodInputs.length > 0) {
-        updateSaleMethod();
+        updateBusinessPricing();
     }
 
+    // Image preview
+    const imageInput = document.getElementById("images");
+    const preview = document.getElementById("image-preview");
 
+    if (imageInput && preview) {
+        imageInput.addEventListener("change", function() {
+            preview.innerHTML = "";
 
-    /* =========================================================
-       BUSINESS SPONSORED / FEATURED
-    ========================================================= */
+            Array.from(imageInput.files).forEach(function(file) {
+                if (!file.type.startsWith("image/")) return;
 
-    const promotionDuration =
-        document.getElementById(
-            "promotion-duration"
-        );
+                const reader = new FileReader();
 
-    const promotionDurationInputs =
-        document.querySelectorAll(
-            'input[name="promotion_duration"]'
-        );
+                reader.onload = function(e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.alt = "Selected image preview";
+                    preview.appendChild(img);
+                };
 
-    const sponsoredPrices =
-        document.querySelectorAll(
-            ".sponsored-price"
-        );
-
-    const featuredPrices =
-        document.querySelectorAll(
-            ".featured-price"
-        );
-
-
-    function updatePromotionDuration() {
-
-        const selectedPostType =
-            document.querySelector(
-                'input[name="post_type"]:checked'
-            );
-
-
-        if (!promotionDuration) {
-            return;
-        }
-
-
-        if (!selectedPostType) {
-            return;
-        }
-
-
-        /* SPONSORED OR FEATURED */
-
-        if (
-            selectedPostType.value === "sponsored" ||
-            selectedPostType.value === "featured"
-        ) {
-
-            promotionDuration.style.display =
-                "block";
-
-
-            promotionDurationInputs.forEach(
-                function(input) {
-
-                    input.required = true;
-
-                }
-            );
-
-
-            if (
-                selectedPostType.value === "sponsored"
-            ) {
-
-                sponsoredPrices.forEach(
-                    function(price) {
-
-                        price.style.display =
-                            "inline";
-
-                    }
-                );
-
-                featuredPrices.forEach(
-                    function(price) {
-
-                        price.style.display =
-                            "none";
-
-                    }
-                );
-
-
-                const description =
-                    document.getElementById(
-                        "duration-description"
-                    );
-
-                if (description) {
-
-                    description.textContent =
-                        "Choose how long you want your sponsored post to run.";
-
-                }
-
-            }
-
-
-            else if (
-                selectedPostType.value === "featured"
-            ) {
-
-                sponsoredPrices.forEach(
-                    function(price) {
-
-                        price.style.display =
-                            "none";
-
-                    }
-                );
-
-                featuredPrices.forEach(
-                    function(price) {
-
-                        price.style.display =
-                            "inline";
-
-                    }
-                );
-
-
-                const description =
-                    document.getElementById(
-                        "duration-description"
-                    );
-
-                if (description) {
-
-                    description.textContent =
-                        "Choose how long you want your featured post to run.";
-
-                }
-
-            }
-
-        }
-
-
-        /* REGULAR BUSINESS LISTING */
-
-        else {
-
-            promotionDuration.style.display =
-                "none";
-
-
-            promotionDurationInputs.forEach(
-                function(input) {
-
-                    input.required = false;
-                    input.checked = false;
-
-                }
-            );
-
-        }
-
+                reader.readAsDataURL(file);
+            });
+        });
     }
 
-
-    const businessPostTypeInputs =
-        document.querySelectorAll(
-            'input[name="post_type"]'
-        );
-
-
-    businessPostTypeInputs.forEach(
-        function(input) {
-
-            input.addEventListener(
-                "change",
-                updatePromotionDuration
-            );
-
-        }
-    );
-
-
-    if (promotionDuration) {
-        updatePromotionDuration();
+    // Ensure disabled/hidden category fields cannot be submitted.
+    if (form) {
+        form.addEventListener("submit", function() {
+            // Browser validation handles enabled required fields.
+        });
     }
 
 });
-
 </script>
-
 
 </body>
 </html>
