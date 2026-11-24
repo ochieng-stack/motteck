@@ -1,4 +1,21 @@
-/* ================= RESET ================= */
+/* =========================================================
+   MOTTECK SUBMISSION FORM
+   ========================================================= */
+
+:root {
+    --mt-black: #111827;
+    --mt-dark: #202633;
+    --mt-text: #252b36;
+    --mt-muted: #687386;
+    --mt-border: #e1e5ec;
+    --mt-bg: #f4f6f9;
+    --mt-white: #ffffff;
+    --mt-gold: #c28a23;
+    --mt-gold-light: #fff7e8;
+    --mt-green: #48a276;
+    --mt-blue: #537bc2;
+    --mt-radius: 12px;
+}
 
 * {
     margin: 0;
@@ -6,220 +23,429 @@
     box-sizing: border-box;
 }
 
-
-/* ================= BODY ================= */
+[hidden] {
+    display: none !important;
+}
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-
-    background: #f5f6f8;
-
-    color: #222;
-
+    background: var(--mt-bg);
+    color: var(--mt-text);
     min-height: 100vh;
-
     padding: 40px 20px;
+    line-height: 1.5;
 }
 
-
-/* ================= CONTAINER ================= */
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
 
 .submit-container {
     width: 100%;
-    max-width: 800px;
-
+    max-width: 900px;
     margin: 0 auto;
-
-    background: #ffffff;
-
-    border-radius: 12px;
-
-    padding: 35px;
-
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background: var(--mt-white);
+    border: 1px solid #e8eaf0;
+    border-radius: 18px;
+    padding: 36px;
+    box-shadow: 0 12px 40px rgba(17, 24, 39, 0.05);
 }
 
-
-/* ================= HEADER ================= */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .submit-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-bottom: 26px;
     margin-bottom: 30px;
+    border-bottom: 1px solid var(--mt-border);
+}
 
-    border-bottom: 1px solid #eeeeee;
-
-    padding-bottom: 20px;
+.header-icon {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mt-black);
+    color: white;
+    border-radius: 14px;
+    font-size: 24px;
 }
 
 .submit-header h1 {
     font-size: 28px;
-
-    margin-bottom: 8px;
+    color: var(--mt-black);
+    font-weight: 750;
+    letter-spacing: -0.5px;
+    margin-bottom: 5px;
 }
 
 .submit-header p {
-    color: #666;
-
-    font-size: 15px;
+    color: var(--mt-muted);
+    font-size: 14px;
 }
 
+/* =========================================================
+   FLASH MESSAGES
+   ========================================================= */
 
-/* ================= FORM ================= */
+.messages {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.message.success {
+    background: #edf8f1;
+    border: 1px solid #cce8d5;
+    color: #286b43;
+}
+
+.message.error {
+    background: #fff0f0;
+    border: 1px solid #f1d1d1;
+    color: #a33131;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
 
 .submit-form {
     width: 100%;
 }
 
+.form-section {
+    margin-bottom: 32px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #edf0f4;
+}
 
-/* ================= FORM GROUP ================= */
+.form-section:last-of-type {
+    border-bottom: none;
+}
+
+.section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.section-number {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f3f6;
+    color: var(--mt-black);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.section-heading h2 {
+    font-size: 20px;
+    color: var(--mt-black);
+    margin-bottom: 4px;
+}
+
+.section-heading p {
+    color: var(--mt-muted);
+    font-size: 13px;
+}
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 22px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
 }
 
 .form-group label {
     display: block;
-
-    font-weight: 600;
-
+    font-size: 14px;
+    font-weight: 650;
+    color: #303847;
     margin-bottom: 8px;
-
-    font-size: 15px;
 }
 
+.required {
+    color: #d33a3a;
+}
 
-/* ================= INPUTS ================= */
+.optional {
+    color: var(--mt-muted);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
 
 .form-group input[type="text"],
+.form-group input[type="number"],
 .form-group select,
 .form-group textarea {
     width: 100%;
-
-    padding: 13px 14px;
-
-    border: 1px solid #d7d7d7;
-
-    border-radius: 7px;
-
-    font-size: 15px;
-
+    min-height: 48px;
+    padding: 13px 15px;
+    border: 1px solid #d9dee7;
+    border-radius: 9px;
+    background: white;
+    color: var(--mt-text);
+    font-size: 14px;
     font-family: inherit;
-
     outline: none;
-
-    background: #fff;
-
-    transition: border-color 0.2s;
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
 }
 
-.form-group input[type="text"]:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: #111;
+.form-group select {
+    cursor: pointer;
 }
 
 .form-group textarea {
     resize: vertical;
-
-    min-height: 160px;
+    min-height: 150px;
+    line-height: 1.6;
 }
 
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #9aa3b1;
+}
 
-/* ================= FILE INPUT ================= */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--mt-black);
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.07);
+}
 
-.form-group input[type="file"] {
-    width: 100%;
+/* =========================================================
+   GRID
+   ========================================================= */
 
-    padding: 12px;
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
 
-    border: 1px dashed #cfcfcf;
+.form-grid .form-group {
+    margin-bottom: 0;
+}
 
-    border-radius: 7px;
+/* =========================================================
+   PRICE
+   ========================================================= */
 
-    background: #fafafa;
+.price {
+    font-size: 16px !important;
+    font-weight: 600;
+}
 
-    cursor: pointer;
+/* =========================================================
+   PHOTO UPLOAD
+   ========================================================= */
+
+.upload-group {
+    margin-bottom: 0;
 }
 
 .upload-info {
-    color: #777;
-
+    color: var(--mt-muted);
     font-size: 13px;
-
-    margin-bottom: 9px;
+    margin-bottom: 12px;
 }
 
+.upload-box {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 170px;
+    padding: 25px;
+    background: #fafbfd;
+    border: 2px dashed #d4dbe5;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-align: center;
+}
 
-/* ================= POST TYPES ================= */
+.upload-box:hover {
+    background: #f4f7fa;
+    border-color: var(--mt-black);
+}
+
+.upload-box i {
+    font-size: 30px;
+    color: #657287;
+}
+
+.upload-box strong {
+    color: var(--mt-black);
+    font-size: 15px;
+}
+
+.upload-box span {
+    font-size: 12px;
+    color: var(--mt-muted);
+}
+
+#images {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.image-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 9px;
+    border: 1px solid var(--mt-border);
+}
+
+/* =========================================================
+   POST TYPES
+   ========================================================= */
 
 .post-type-options {
-    display: flex;
-
-    flex-direction: column;
-
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 12px;
 }
 
 .post-type-card {
     display: flex !important;
-
     align-items: center;
-
-    gap: 12px;
-
-    padding: 15px;
-
-    border: 1px solid #dddddd;
-
-    border-radius: 8px;
-
+    gap: 14px;
+    padding: 17px;
+    border: 1px solid var(--mt-border);
+    background: #fff;
+    border-radius: 12px;
     cursor: pointer;
-
-    transition: 0.2s;
+    transition: border-color 0.2s,
+                background 0.2s,
+                box-shadow 0.2s;
 }
 
 .post-type-card:hover {
-    border-color: #999;
+    border-color: #9aa3b1;
+    background: #fbfcfd;
+}
 
-    background: #fafafa;
+.post-type-card:has(input:checked) {
+    border-color: var(--mt-gold);
+    background: var(--mt-gold-light);
+    box-shadow: 0 0 0 2px rgba(194, 138, 35, 0.08);
 }
 
 .post-type-card input {
     width: 18px;
-
     height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--mt-black);
+    cursor: pointer;
 }
 
+.post-type-text,
 .post-type-card span {
     display: flex;
-
     flex-direction: column;
-
     gap: 4px;
 }
 
 .post-type-card strong {
     font-size: 15px;
+    color: var(--mt-black);
 }
 
 .post-type-card small {
-    color: #777;
-
+    color: var(--mt-muted);
     font-size: 13px;
+    line-height: 1.5;
 }
 
+/* =========================================================
+   SELECTED SALE CARD
+   ========================================================= */
 
-/* ================= PROMOTION DURATION ================= */
+.selected-sale-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    border: 1px solid #e8d9bd;
+    border-radius: 12px;
+    background: #fffaf1;
+    margin-bottom: 24px;
+}
 
-.promotion-duration {
-    margin-top: 20px;
+.sale-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff0d6;
+    color: var(--mt-gold);
+    border-radius: 12px;
+    font-size: 19px;
+}
 
-    padding: 20px;
+.selected-sale-card strong {
+    display: block;
+    font-size: 15px;
+    color: var(--mt-black);
+}
 
-    background: #fafafa;
+.selected-sale-card p {
+    font-size: 13px;
+    color: var(--mt-muted);
+}
 
-    border: 1px solid #e5e5e5;
+/* =========================================================
+   DURATION
+   ========================================================= */
 
-    border-radius: 10px;
+.duration-group {
+    margin-top: 25px;
 }
 
 .duration-heading {
@@ -228,293 +454,516 @@ body {
 
 .duration-heading h3 {
     font-size: 17px;
-
+    color: var(--mt-black);
     margin-bottom: 5px;
 }
 
 .duration-heading p {
-    color: #777;
-
+    color: var(--mt-muted);
     font-size: 13px;
-
-    line-height: 1.5;
 }
 
-
-/* ================= DURATION OPTIONS ================= */
-
 .duration-options {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
 }
 
 .duration-card {
     display: flex !important;
-
     align-items: center;
-
     gap: 12px;
-
-    padding: 14px;
-
-    background: #fff;
-
-    border: 1px solid #dddddd;
-
-    border-radius: 8px;
-
+    padding: 17px;
+    background: white;
+    border: 1px solid var(--mt-border);
+    border-radius: 12px;
     cursor: pointer;
-
-    transition: 0.2s;
+    transition: 0.2s ease;
 }
 
 .duration-card:hover {
-    border-color: #999;
+    border-color: #a0a8b5;
+    background: #fbfcfd;
+}
 
-    background: #fdfdfd;
+.duration-card:has(input:checked) {
+    border-color: var(--mt-gold);
+    background: var(--mt-gold-light);
+    box-shadow: 0 0 0 2px rgba(194, 138, 35, 0.08);
 }
 
 .duration-card input {
     width: 18px;
-
     height: 18px;
-
     flex-shrink: 0;
+    accent-color: var(--mt-black);
+    cursor: pointer;
 }
 
 .duration-content {
     display: flex;
-
     flex-direction: column;
-
     gap: 5px;
 }
 
 .duration-content strong {
     font-size: 15px;
+    color: var(--mt-black);
 }
 
 .duration-content small {
-    color: #555;
-
+    color: #5f6979;
     font-size: 13px;
-
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
+/* =========================================================
+   FEE SUMMARY
+   ========================================================= */
 
-/* ================= PRICE DISPLAY ================= */
-
-.sponsored-price,
-.featured-price {
-    display: none;
+.fee-card {
+    padding: 24px;
+    margin: 30px 0;
+    border: 1px solid #ead9b9;
+    border-radius: 15px;
+    background: #fff;
 }
 
-.sponsored-price {
-    font-weight: 600;
+.fee-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
 }
 
-.featured-price {
-    font-weight: 600;
+.fee-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff3dd;
+    color: #b47a16;
+    border-radius: 12px;
+    font-size: 19px;
 }
 
-
-/* ================= PAYMENT NOTE ================= */
-
-.promotion-note {
-    margin-top: 18px;
-
-    padding: 14px;
-
-    background: #f3f3f3;
-
-    border-radius: 7px;
-
-    border-left: 4px solid #222;
+.fee-card-header h3 {
+    font-size: 17px;
+    color: var(--mt-black);
+    margin-bottom: 3px;
 }
 
-.promotion-note strong {
-    display: block;
-
-    margin-bottom: 5px;
-
-    font-size: 14px;
-}
-
-.promotion-note p {
-    color: #666;
-
+.fee-card-header p {
+    color: var(--mt-muted);
     font-size: 13px;
+}
 
+.fee-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px;
+    background: #fff9ef;
+    border: 1px solid #f0dfc1;
+    border-radius: 12px;
+}
+
+.fee-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #8a611b;
+}
+
+.fee-total p {
+    font-size: 13px;
+    color: var(--mt-muted);
+    margin-top: 5px;
+}
+
+.fee-total strong {
+    font-size: 28px;
+    color: var(--mt-black);
+    white-space: nowrap;
+}
+
+.fee-explanation {
+    margin: 15px 0 20px;
+    font-size: 13px;
+    color: var(--mt-muted);
     line-height: 1.6;
 }
 
+/* =========================================================
+   PAYMENT METHODS
+   ========================================================= */
 
-/* ================= APPROVAL NOTICE ================= */
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid #e4e7ed;
+    background: #f9fafc;
+    border-radius: 12px;
+    min-width: 0;
+}
+
+.payment-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    font-size: 18px;
+}
+
+.payment-icon.mpesa {
+    background: #eaf6ef;
+    color: #39966b;
+}
+
+.payment-icon.card-icon {
+    background: #edf2ff;
+    color: #557ac0;
+}
+
+.payment-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.payment-text strong {
+    color: #333b4a;
+    font-size: 13px;
+}
+
+.payment-text small {
+    color: var(--mt-muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.coming-soon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 9px;
+    margin-left: auto;
+    background: #fff2d8;
+    color: #9c7023;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.payment-unavailable {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 15px;
+    background: #f1f3f6;
+    border-radius: 10px;
+    color: #647083;
+}
+
+.payment-unavailable i {
+    margin-top: 3px;
+}
+
+.payment-unavailable p {
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* =========================================================
+   PRODUCT NOTICE
+   ========================================================= */
+
+.product-notice {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    padding: 22px;
+    margin: 25px 0;
+    background: #f4faf6;
+    border: 1px solid #d9e9df;
+    border-radius: 13px;
+}
+
+.product-notice-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e4f3e9;
+    color: #45956a;
+    border-radius: 11px;
+    font-size: 18px;
+}
+
+.product-notice h3 {
+    color: #2b6745;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.product-notice p {
+    font-size: 13px;
+    color: #557264;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.product-notice p:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   APPROVAL NOTICE
+   ========================================================= */
 
 .approval-notice {
-    background: #f7f7f7;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+    margin: 25px 0;
+    background: #f3f5f8;
+    border: 1px solid #e5e8ed;
+    border-radius: 12px;
+}
 
-    border-left: 4px solid #222;
-
-    padding: 15px;
-
-    margin-top: 10px;
-
-    margin-bottom: 25px;
-
-    border-radius: 5px;
+.approval-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e7ebf1;
+    color: #5d6879;
+    border-radius: 11px;
 }
 
 .approval-notice strong {
     display: block;
-
-    margin-bottom: 6px;
+    color: var(--mt-black);
+    font-size: 14px;
+    margin-bottom: 5px;
 }
 
 .approval-notice p {
-    color: #666;
-
+    color: var(--mt-muted);
     font-size: 13px;
-
     line-height: 1.6;
 }
 
-
-/* ================= BUTTONS ================= */
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 
 .form-actions {
     display: flex;
-
     justify-content: flex-end;
-
+    align-items: center;
     gap: 12px;
-
-    margin-top: 25px;
+    margin-top: 30px;
 }
 
 .cancel-btn,
 .submit-btn {
-    padding: 12px 22px;
-
-    border-radius: 7px;
-
-    font-size: 15px;
-
-    cursor: pointer;
-
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 13px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 650;
+    font-family: inherit;
     text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 
 .cancel-btn {
-    background: #eeeeee;
-
-    color: #333;
+    color: #404958;
+    background: #f1f3f6;
+    border: 1px solid #e1e5ec;
 }
 
 .cancel-btn:hover {
-    background: #dddddd;
+    background: #e6e9ee;
 }
 
 .submit-btn {
-    border: none;
-
-    background: #111;
-
-    color: #fff;
+    color: white;
+    background: var(--mt-black);
+    border: 1px solid var(--mt-black);
 }
 
 .submit-btn:hover {
-    background: #333;
+    background: #2b3443;
+    transform: translateY(-1px);
 }
 
-
-/* ================= FLASH MESSAGES ================= */
-
-.messages {
-    margin-bottom: 20px;
+.submit-btn:active {
+    transform: translateY(0);
 }
 
-.message {
-    padding: 13px 15px;
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
-    border-radius: 7px;
+@media (max-width: 768px) {
 
-    font-size: 14px;
-}
+    body {
+        padding: 25px 14px;
+    }
 
-.message.success {
-    background: #e8f7ed;
+    .submit-container {
+        padding: 28px 22px;
+        border-radius: 15px;
+    }
 
-    color: #21733b;
-}
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
 
-.message.error {
-    background: #fdeaea;
-
-    color: #a12626;
+    .payment-methods {
+        grid-template-columns: 1fr;
+    }
 }
-
-.price {
-    width: 100%;
-    height: 50px;
-    padding: 12px 15px;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    background-color: #fff;
-    color: #222;
-    font-size: 16px;
-    font-family: inherit;
-    outline: none;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
-}
-.price::placeholder {
-    color: #999;
-    font-size: 15px;
-}
-.price:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
-    background-color: #fff;
-}
-.price:hover {
-    border-color: #a1a1aa;
-}
-/* ================= MOBILE ================= */
 
 @media (max-width: 600px) {
 
     body {
-        padding: 20px 12px;
+        padding: 14px 10px;
     }
 
     .submit-container {
-        padding: 22px 18px;
+        padding: 22px 16px;
+        border-radius: 12px;
+    }
 
-        border-radius: 9px;
+    .submit-header {
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 11px;
+        font-size: 20px;
     }
 
     .submit-header h1 {
-        font-size: 24px;
+        font-size: 23px;
+    }
+
+    .submit-header p {
+        font-size: 13px;
+    }
+
+    .section-heading h2 {
+        font-size: 18px;
+    }
+
+    .section-heading p {
+        font-size: 12px;
+    }
+
+    .section-number {
+        width: 34px;
+        height: 34px;
+    }
+
+    .duration-options {
+        grid-template-columns: 1fr;
+    }
+
+    .fee-card {
+        padding: 17px;
+    }
+
+    .fee-total {
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .fee-total strong {
+        font-size: 26px;
+    }
+
+    .payment-method {
+        flex-wrap: wrap;
+    }
+
+    .coming-soon {
+        margin-left: 0;
     }
 
     .form-actions {
-        flex-direction: column;
+        flex-direction: column-reverse;
+        align-items: stretch;
     }
 
     .cancel-btn,
     .submit-btn {
         width: 100%;
-
-        text-align: center;
     }
 
-    .promotion-duration {
+    .product-notice {
         padding: 16px;
     }
 
+    .approval-notice {
+        padding: 15px;
+    }
+
+    .image-preview {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 380px) {
+
+    .submit-container {
+        padding: 18px 13px;
+    }
+
+    .submit-header h1 {
+        font-size: 21px;
+    }
+
+    .fee-total strong {
+        font-size: 23px;
+    }
+
+    .payment-method {
+        padding: 12px;
+    }
 }
