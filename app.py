@@ -2165,8 +2165,8 @@ def choose_account_type():
 
     return render_template("choose_account_type.html")
 
-# ================= SUBMIT POST =================
 
+# ================= SUBMIT POST =================
 
 @app.route("/submit-post", methods=["GET", "POST"])
 def submit_post():
@@ -2181,6 +2181,15 @@ def submit_post():
     if account_type not in ("individual", "business"):
         flash("Unable to determine your account type.", "error")
         return redirect(url_for("profile"))
+
+    # ================= PRICING =================
+
+    INDIVIDUAL_LISTING_PRICES = {
+        "1_day": 100,
+        "7_days": 500,
+        "1_week": 500,
+        "1_month": 1500
+    }
 
     PROMOTION_PRICES = {
         "sponsored": {
@@ -2197,13 +2206,21 @@ def submit_post():
         }
     }
 
+    FREE_LISTING_CATEGORIES = {
+        "spare_part",
+        "spare_parts",
+        "accessorie",
+        "accessory",
+        "accessories"
+    }
+
     if request.method == "GET":
         return render_template(
             "submit_post.html",
             account_type=account_type
         )
 
-    # ---------------- COMMON FIELDS ----------------
+    # ================= COMMON FIELDS =================
 
     title = request.form.get("title", "").strip()
     category = request.form.get("category", "").strip()
@@ -2215,6 +2232,8 @@ def submit_post():
             "error"
         )
         return redirect(url_for("submit_post"))
+
+    # ================= PRICE =================
 
     price_raw = (
         request.form.get("price")
@@ -2234,6 +2253,8 @@ def submit_post():
         except (ValueError, TypeError):
             flash("Please enter a valid price.", "error")
             return redirect(url_for("submit_post"))
+
+    # ================= VEHICLE DETAILS =================
 
     vehicle_type = (
         request.form.get("vehicle_type")
@@ -2282,7 +2303,7 @@ def submit_post():
             flash("Please enter a valid mileage.", "error")
             return redirect(url_for("submit_post"))
 
-    # ---------------- PRODUCT DETAILS ----------------
+    # ================= PRODUCT DETAILS =================
 
     product_name = (
         request.form.get("product_name")
@@ -2305,7 +2326,7 @@ def submit_post():
         or ""
     ).strip()
 
-    # ---------------- EXTRA OPTIONAL FIELDS ----------------
+    # ================= OPTIONAL FIELDS =================
 
     fuel = request.form.get("fuel", "").strip()
     transmission = request.form.get("transmission", "").strip()
@@ -2322,101 +2343,95 @@ def submit_post():
     part_year = request.form.get("part_year", "").strip()
     part_condition = request.form.get("part_condition", "").strip()
 
-    # ---------------- ACCOUNT / POST RULES ----------------
+    # ================= ACCOUNT / POST RULES =================
 
-    requested_type = request.form.get(
-        "post_type", ""
-    ).strip().lower()
+    requested_type = (
+        request.form.get("post_type", "")
+        .strip()
+        .lower()
+    )
 
-    sale_method = ""
-    listing_duration = ""
+    post_type = ""
+    sale_method = None
+    listing_duration = None
     commission_agreed = False
-    promotion_duration = ""
+    promotion_duration = None
     promotion_price = None
+
+    normalized_category = (
+        category.lower()
+        .strip()
+        .replace("-", "_")
+        .replace(" ", "_")
+    )
+
+    is_free_listing_category = (
+        normalized_category in FREE_LISTING_CATEGORIES
+    )
+
+    # ================= INDIVIDUAL =================
 
     if account_type == "individual":
 
-        # Individuals can submit For Sale posts.
+        # Individuals are restricted to For Sale.
         post_type = "for_sale"
 
-        sale_method = request.form.get(
-            "sale_method", ""
-        ).strip().lower()
-
-        listing_duration = request.form.get(
-            "listing_duration", ""
-        ).strip().lower()
-
-        commission_agreed = (
-            request.form.get("commission_agreed", "").lower()
-            in ("true", "1", "yes", "on")
+        listing_duration = (
+            request.form.get("listing_duration", "")
+            .strip()
+            .lower()
         )
 
-        if sale_method not in (
-            "direct_sale",
-            "sell_through_motteck"
-        ):
+        # Support the existing HTML value of 7_days
+        # and the older backend value of 1_week.
+        if listing_duration == "1_week":
+            listing_duration = "7_days"
+
+        if listing_duration not in INDIVIDUAL_LISTING_PRICES:
             flash(
-                "Please choose how you want to sell your item.",
+                "Please choose a valid listing duration.",
                 "error"
             )
             return redirect(url_for("submit_post"))
 
-        if sale_method == "direct_sale":
+        # The listing fee is calculated by Flask.
+        promotion_price = INDIVIDUAL_LISTING_PRICES[
+            listing_duration
+        ]
 
-            if listing_duration not in (
-                "1_day", "1_week", "1_month"
-            ):
-                flash("Please choose a listing duration.", "error")
-                return redirect(url_for("submit_post"))
+        sale_method = None
+        commission_agreed = False
 
-            commission_agreed = False
+    # ================= BUSINESS =================
 
-        elif sale_method == "sell_through_motteck":
+    elif account_type == "business":
 
-            if not commission_agreed:
-                flash(
-                    "Please agree to the MOTTECK sale terms.",
-                    "error"
-                )
-                return redirect(url_for("submit_post"))
-
-            # No direct listing duration for MOTTECK Sale.
-            listing_duration = ""
-
-    else:
-        # Businesses can choose Listing, Sponsored or Featured.
         post_type = requested_type or "normal"
 
         if post_type not in ("normal", "sponsored", "featured"):
             flash("Invalid business post type.", "error")
             return redirect(url_for("submit_post"))
 
-        sale_method = ""
-        listing_duration = ""
+        sale_method = None
+        listing_duration = None
         commission_agreed = False
 
-        # Accessories and spare parts have no normal listing fee.
-        normalized_category = (
-            category.lower().strip().replace("-", "_").replace(" ", "_")
-        )
+        # Normal listings for accessories and spare parts
+        # are free. Sponsored and Featured remain paid.
+        if post_type == "normal":
 
-        if normalized_category in (
-            "spare_part",
-            "spare_parts",
-            "accessorie",
-            "accessory",
-            "accessories"
-        ):
-            if post_type == "normal":
-                promotion_duration = ""
-                promotion_price = None
+            promotion_duration = None
+            promotion_price = None
 
-        if post_type in ("sponsored", "featured"):
+        # Sponsored and Featured are paid for all categories,
+        # including accessories and spare parts.
+        elif post_type in ("sponsored", "featured"):
 
-            promotion_duration = request.form.get(
-                "promotion_duration", ""
-            ).strip().lower()
+            promotion_duration = (
+                request.form.get("promotion_duration", "")
+                .strip()
+                .lower()
+            )
 
             valid_durations = PROMOTION_PRICES[post_type]
 
@@ -2427,9 +2442,12 @@ def submit_post():
                 )
                 return redirect(url_for("submit_post"))
 
-            promotion_price = valid_durations[promotion_duration]
+            # Server-side price calculation.
+            promotion_price = valid_durations[
+                promotion_duration
+            ]
 
-    # ---------------- COLLECT IMAGE FILES ----------------
+    # ================= COLLECT IMAGES =================
 
     image_files = [
         image for image in request.files.getlist("images")
@@ -2445,7 +2463,7 @@ def submit_post():
         )
         return redirect(url_for("submit_post"))
 
-    # ---------------- CLOUDFLARE R2 IMAGE UPLOAD ----------------
+    # ================= CLOUDFLARE R2 UPLOAD =================
 
     image_urls = []
 
@@ -2457,6 +2475,7 @@ def submit_post():
         app.logger.error(
             "R2_PUBLIC_BASE_URL is missing from Render environment variables."
         )
+
         flash(
             "Image storage is not configured. Please try again later.",
             "error"
@@ -2464,6 +2483,7 @@ def submit_post():
         return redirect(url_for("submit_post"))
 
     try:
+
         allowed_extensions = {
             ".jpg", ".jpeg", ".png", ".webp"
         }
@@ -2504,6 +2524,7 @@ def submit_post():
             image_urls.append(image_url)
 
     except Exception:
+
         app.logger.exception(
             "CLOUDFLARE R2 SUBMISSION IMAGE UPLOAD ERROR"
         )
@@ -2514,7 +2535,7 @@ def submit_post():
         )
         return redirect(url_for("submit_post"))
 
-    # ---------------- SUBMISSION DATA ----------------
+    # ================= SUBMISSION DATA =================
 
     submission_data = {
         "user_id": user_id,
@@ -2524,16 +2545,20 @@ def submit_post():
         "description": description,
         "image_urls": image_urls,
         "post_type": post_type,
-        "sale_method": sale_method or None,
-        "listing_duration": listing_duration or None,
+        "sale_method": sale_method,
+        "listing_duration": listing_duration,
         "commission_agreed": commission_agreed,
-        "promotion_duration": promotion_duration or None,
+        "promotion_duration": promotion_duration,
         "promotion_price": promotion_price,
         "status": "pending"
     }
-    
+
+    # ================= OPTIONAL FIELDS =================
+
     optional_fields = {
+
         "price": price,
+
         "vehicle_type": vehicle_type or None,
         "vehicle_year": year,
         "mileage": mileage,
@@ -2562,9 +2587,10 @@ def submit_post():
 
     submission_data.update(optional_fields)
 
-    # ---------------- SAVE TO SUPABASE ----------------
+    # ================= SAVE TO SUPABASE =================
 
     try:
+
         response = (
             supabase.table("post_submissions")
             .insert(submission_data)
@@ -2572,40 +2598,69 @@ def submit_post():
         )
 
         if not response.data:
+
             flash(
                 "Your submission could not be saved. Please try again.",
                 "error"
             )
             return redirect(url_for("submit_post"))
 
-        if (
-            account_type == "business"
-            and post_type in ("sponsored", "featured")
+        # ================= SUCCESS MESSAGES =================
+
+        if account_type == "individual":
+
+            flash(
+                f"Your For Sale submission has been sent for approval. "
+                f"Listing fee: KSh {promotion_price:,}. "
+                f"Payment is Coming Soon.",
+                "success"
+            )
+
+        elif account_type == "business" and post_type in (
+            "sponsored", "featured"
         ):
+
             flash(
                 f"Your {post_type} submission is awaiting review. "
-                f"Promotion price: KSh {promotion_price:,}.",
+                f"Promotion price: KSh {promotion_price:,}. "
+                f"Payment is Coming Soon.",
                 "success"
             )
-        else:
-            flash(
-                "Your submission has been sent for admin approval.",
-                "success"
-            )
+
+        elif account_type == "business" and post_type == "normal":
+
+            if is_free_listing_category:
+
+                flash(
+                    "Your accessory or spare part listing has been "
+                    "submitted for admin approval. Normal listings "
+                    "in this category are free.",
+                    "success"
+                )
+
+            else:
+
+                flash(
+                    "Your business listing has been sent for admin approval.",
+                    "success"
+                )
 
         return redirect(url_for("my_submissions"))
 
     except Exception:
-        app.logger.exception("POST SUBMISSION DATABASE ERROR")
+
+        app.logger.exception(
+            "POST SUBMISSION DATABASE ERROR"
+        )
 
         flash(
-            "Your submission could not be saved. Check the server logs "
-            "for the database error.",
+            "Your submission could not be saved. "
+            "Check the server logs for the database error.",
             "error"
         )
+
         return redirect(url_for("submit_post"))
 
-    
 # ================= MY SUBMISSIONS =================
 @app.route("/my-submissions")
 def my_submissions():
