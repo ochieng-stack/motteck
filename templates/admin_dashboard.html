@@ -213,39 +213,216 @@ const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventLi
         </div>
 </div>
 </div>
-<!-- =========================================================
-     MOTTECK LEADS
-========================================================= -->
-<div class="submissions-box admin-panel" id="leads-page" style="display:none;"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button></div>
-<div class="submission-header">
-<h3>
 
-            MOTTECK Leads
+<!-- =========================================
+     MOTTECK REQUEST MANAGEMENT
+========================================= -->
 
-            <span class="pending-count" id="leadCount">
-                0
-            </span>
-</h3>
-<button class="refresh-btn" onclick="loadLeads()" type="button">
+<div class="admin-panel mreq-panel" id="leads-page" style="display:none;">
 
-            🔄 Refresh
-
+    <!-- TOP NAVIGATION -->
+    <div class="mreq-topbar">
+        <button type="button" class="mreq-back"
+                onclick="backToAdminHome()">
+            <i class="fa-solid fa-arrow-left"></i>
+            Dashboard
         </button>
-</div>
-<div id="leadSummary" style="
-            display:flex;
-            gap:10px;
-            flex-wrap:wrap;
-            margin-bottom:20px;
-        "></div>
-<div id="leads">
-<div class="loading-submissions">
 
-            Loading leads...
+        <span class="mreq-topbar-label">
+            MOTTECK ADMINISTRATION
+        </span>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <div class="mreq-page-header">
+        <div>
+            <span class="mreq-eyebrow">CUSTOMER SERVICE MANAGEMENT</span>
+            <h2>Request MOTTECK</h2>
+            <p>
+                Manage customer search requests from submission
+                to completion.
+            </p>
+        </div>
+
+        <button type="button" class="mreq-refresh"
+                onclick="loadMotteckRequests()">
+            <i class="fa-solid fa-rotate"></i>
+            Refresh
+        </button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="mreq-overview">
+
+        <div class="mreq-stat-card">
+            <div class="mreq-stat-top">
+                <span>Total Requests</span>
+                <div class="mreq-stat-icon total">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+            </div>
+            <strong id="mreqTotalCount">0</strong>
+            <small>All submitted requests</small>
+        </div>
+
+        <div class="mreq-stat-card">
+            <div class="mreq-stat-top">
+                <span>New Requests</span>
+                <div class="mreq-stat-icon new">
+                    <i class="fa-solid fa-inbox"></i>
+                </div>
+            </div>
+            <strong id="mreqNewCount">0</strong>
+            <small>Waiting for your review</small>
+        </div>
+
+        <div class="mreq-stat-card">
+            <div class="mreq-stat-top">
+                <span>In Progress</span>
+                <div class="mreq-stat-icon progress">
+                    <i class="fa-solid fa-spinner"></i>
+                </div>
+            </div>
+            <strong id="mreqProgressCount">0</strong>
+            <small>Currently being handled</small>
+        </div>
+
+        <div class="mreq-stat-card">
+            <div class="mreq-stat-top">
+                <span>Completed</span>
+                <div class="mreq-stat-icon completed">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+            <strong id="mreqCompletedCount">0</strong>
+            <small>Successfully finished</small>
+        </div>
+
+    </div>
+
+    <!-- REQUEST WORKSPACE -->
+    <div class="mreq-workspace">
+
+        <div class="mreq-workspace-heading">
+            <div>
+                <h3>Customer Requests</h3>
+                <p>Find and manage every MOTTECK search request.</p>
+            </div>
+
+            <span class="mreq-live-label">
+                <span></span>
+                Request Centre
+            </span>
+        </div>
+
+        <!-- STATUS TABS -->
+        <div class="mreq-tabs">
+
+            <button type="button"
+                    class="mreq-tab active"
+                    data-status="new">
+                <i class="fa-solid fa-inbox"></i>
+                New Requests
+                <span id="mreqNewTabCount">0</span>
+            </button>
+
+            <button type="button"
+                    class="mreq-tab"
+                    data-status="in_progress">
+                <i class="fa-solid fa-spinner"></i>
+                In Progress
+                <span id="mreqProgressTabCount">0</span>
+            </button>
+
+            <button type="button"
+                    class="mreq-tab"
+                    data-status="completed">
+                <i class="fa-solid fa-circle-check"></i>
+                Completed
+                <span id="mreqCompletedTabCount">0</span>
+            </button>
+
+            <button type="button"
+                    class="mreq-tab"
+                    data-status="all">
+                <i class="fa-solid fa-list"></i>
+                All Requests
+            </button>
 
         </div>
+
+        <!-- SEARCH AND FILTERS -->
+        <div class="mreq-controls">
+
+            <div class="mreq-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search"
+                       id="mreqSearchInput"
+                       placeholder="Search customer, phone or request number...">
+            </div>
+
+            <select id="mreqPaymentFilter"
+                    class="mreq-select">
+                <option value="all">All Payment Statuses</option>
+                <option value="not_invoiced">Not Invoiced</option>
+                <option value="pending">Awaiting Payment</option>
+                <option value="paid">Paid</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+
+            <button type="button"
+                    class="mreq-clear-filter"
+                    id="mreqClearFilters">
+                <i class="fa-solid fa-filter-circle-xmark"></i>
+                Clear
+            </button>
+
+        </div>
+
+        <!-- RESULTS HEADING -->
+        <div class="mreq-results-heading">
+            <div>
+                <h4 id="mreqCurrentView">New Requests</h4>
+                <span id="mreqResultDescription">
+                    Requests waiting for review
+                </span>
+            </div>
+
+            <span id="mreqResultCount">0 requests</span>
+        </div>
+
+        <!-- REQUEST LIST -->
+        <div class="mreq-request-list"
+             id="motteckRequestsList">
+
+            <div class="mreq-empty-state">
+                <div class="mreq-empty-icon">
+                    <i class="fa-solid fa-inbox"></i>
+                </div>
+
+                <h4>No requests to display</h4>
+
+                <p>
+                    New customer search requests will appear here
+                    when submitted through the Request MOTTECK form.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- WORKFLOW NOTE -->
+    <div class="mreq-footer-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>
+            A request is not completed simply because an invoice
+            has been paid. Track payment and search progress separately.
+        </span>
+    </div>
+
 </div>
-</div>
+
 <!-- =========================================================
      ALL PUBLISHED POSTS
 ========================================================= -->
