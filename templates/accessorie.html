@@ -1693,13 +1693,16 @@ function createPostCard(post) {
     /* =========================================================
        PURCHASE BUTTONS
     ========================================================= */
+    // Logged-in user detection
+    const isLoggedIn =
+        {{ 'true' if session.get("user_logged_in") else 'false' }};
+
     const buyNowUrl = isLoggedIn
         ? checkoutUrlTemplate.replace(
             /0$/,
             encodeURIComponent(postId)
           )
         : `/order-enquiry/${encodeURIComponent(postId)}`;
-        
     const actionButtons = `
 
         <div class="mc-contact-actions">
