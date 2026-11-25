@@ -5131,7 +5131,7 @@ def request_motteck(post_id):
 
             "preferred_location": preferred_location,
 
-            "status": "awaiting_payment",
+            "status": "new",
 
             "search_fee_kes": 50,
 
@@ -5161,28 +5161,6 @@ def request_motteck(post_id):
                 url_for("request_motteck", post_id=post_id)
             )
 
-
-        # =========================================
-        # CREATE EXISTING ADMIN LEAD
-        # =========================================
-
-
-        try:
-
-            supabase.table(
-                "leads"
-            ).insert(
-                lead_data
-            ).execute()
-
-        except Exception as lead_error:
-
-            print(
-                "REQUEST LEAD ERROR:",
-                repr(lead_error)
-            )
-
-        supabase.table("motteck_requests").insert(...)
         
         # =========================================
         # SUCCESS
@@ -5221,7 +5199,184 @@ def request_motteck(post_id):
                 post_id=post_id
             )
         )
-   
+
+# =========================================================
+# MOTTECK REQUEST ADMIN API
+# =========================================================
+
+@app.route("/admin/motteck-requests", methods=["GET"])
+def admin_motteck_requests():
+
+    # Admin authentication
+    if not session.get("logged_in"):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+
+        response = (
+            supabase
+            .table("motteck_requests")
+            .select("*")
+            .order("created_at", desc=True)
+            .limit(500)
+            .execute()
+        )
+
+        requests_data = response.data or []
+
+        # Retrieve listing titles from posts table
+        post_ids = list({
+            r.get("post_id")
+            for r in requests_data
+            if r.get("post_id") is not None
+        })
+
+        posts_by_id = {}
+
+        if post_ids:
+
+            posts_response = (
+                supabase
+                .table("posts")
+                .select("id,title,image")
+                .in_("id", post_ids)
+                .execute()
+            )
+
+            posts_by_id = {
+                str(p["id"]): p
+                for p in (posts_response.data or [])
+            }
+
+        # Attach listing information to each request
+        for item in requests_data:
+
+            post = posts_by_id.get(
+                str(item.get("post_id")),
+                {}
+            )
+
+            item["post_title"] = post.get(
+                "title", "Listing unavailable"
+            )
+
+            item["post_image"] = post.get("image")
+
+        summary = {
+            "total": len(requests_data),
+            "new": sum(
+                1 for r in requests_data
+                if r.get("status") == "new"
+            ),
+            "in_progress": sum(
+                1 for r in requests_data
+                if r.get("status") == "in_progress"
+            ),
+            "completed": sum(
+                1 for r in requests_data
+                if r.get("status") == "completed"
+            ),
+            "awaiting_payment": sum(
+                1 for r in requests_data
+                if r.get("payment_status") in (
+                    "pending",
+                    "awaiting_payment"
+                )
+            )
+        }
+
+        return jsonify({
+            "requests": requests_data,
+            "summary": summary
+        })
+
+    except Exception as e:
+
+        print(
+            "ADMIN MOTTECK REQUESTS ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+            "error": "Unable to load MOTTECK requests."
+        }), 500
+
+
+# =========================================================
+# UPDATE MOTTECK REQUEST STATUS
+# =========================================================
+
+@app.route(
+    "/admin/motteck-request-status",
+    methods=["POST"]
+)
+def admin_update_motteck_request_status():
+
+    if not session.get("logged_in"):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+
+        data = request.get_json(silent=True) or {}
+
+        request_number = (
+            data.get("request_number") or ""
+        ).strip()
+
+        new_status = (
+            data.get("status") or ""
+        ).strip()
+
+        allowed_statuses = {
+            "new",
+            "in_progress",
+            "completed"
+        }
+
+        if not request_number:
+            return jsonify({
+                "error": "Request number is required."
+            }), 400
+
+        if new_status not in allowed_statuses:
+            return jsonify({
+                "error": "Invalid request status."
+            }), 400
+
+        response = (
+            supabase
+            .table("motteck_requests")
+            .update({
+                "status": new_status
+            })
+            .eq(
+                "request_number",
+                request_number
+            )
+            .execute()
+        )
+
+        if not response.data:
+            return jsonify({
+                "error": "Request not found or update failed."
+            }), 404
+
+        return jsonify({
+            "success": True,
+            "status": new_status
+        })
+
+    except Exception as e:
+
+        print(
+            "MOTTECK STATUS UPDATE ERROR:",
+            repr(e)
+        )
+
+        return jsonify({
+            "error": "Unable to update request."
+        }), 500
+           
 # =========================================================
 # CUSTOMER INVOICE
 # =========================================================
