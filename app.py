@@ -4708,7 +4708,7 @@ def checkout(post_id):
 
         return redirect(
             url_for(
-                "single_post",
+                "checkout",
                 post_id=post_id
             )
         )
