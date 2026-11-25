@@ -8,7 +8,28 @@
 <link href="{{ url_for('static', filename='admin_dashboard.css') }}" rel="stylesheet"/>
 </head>
 <body><script>
-function openAdminPanel(id){document.querySelectorAll('.admin-home,.admin-panel').forEach(el=>el.style.display='none');const p=document.getElementById(id);if(p)p.style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+function openAdminPanel(id){
+
+    document.querySelectorAll(
+        '.admin-home,.admin-panel'
+    ).forEach(el => el.style.display = 'none');
+
+    const panel = document.getElementById(id);
+
+    if(panel){
+        panel.style.display = 'block';
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+
+    if(id === 'leads-page'){
+        loadMotteckRequests();
+    }
+
+}
 function backToAdminHome(){document.querySelectorAll('.admin-panel').forEach(el=>el.style.display='none');document.getElementById('admin-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
 function updateAdminHubCounts(){const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');const hp=document.getElementById('hubPendingCount');const hl=document.getElementById('hubLeadCount');if(p&&hp)hp.textContent=p.textContent||'0';if(l&&hl)hl.textContent=l.textContent||'0';}
 const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventListener('DOMContentLoaded',()=>{const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');if(p)hubObserver.observe(p,{childList:true,characterData:true,subtree:true});if(l)hubObserver.observe(l,{childList:true,characterData:true,subtree:true});updateAdminHubCounts();});
@@ -214,214 +235,135 @@ const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventLi
 </div>
 </div>
 
-<!-- =========================================
+<!-- =========================================================
      MOTTECK REQUEST MANAGEMENT
-========================================= -->
+========================================================= -->
 
-<div class="admin-panel mreq-panel" id="leads-page" style="display:none;">
+<section
+    class="submissions-box admin-panel"
+    id="leads-page"
+    style="display:none;"
+>
 
-    <!-- TOP NAVIGATION -->
-    <div class="mreq-topbar">
-        <button type="button" class="mreq-back"
-                onclick="backToAdminHome()">
-            <i class="fa-solid fa-arrow-left"></i>
-            Dashboard
+    <div class="admin-section-heading">
+
+        <button
+            class="admin-back"
+            onclick="backToAdminHome()"
+        >
+            ← Back to Admin Dashboard
         </button>
 
-        <span class="mreq-topbar-label">
-            MOTTECK ADMINISTRATION
-        </span>
     </div>
 
-    <!-- PAGE HEADER -->
-    <div class="mreq-page-header">
+    <div class="mreq-header">
+
         <div>
-            <span class="mreq-eyebrow">CUSTOMER SERVICE MANAGEMENT</span>
+
             <h2>Request MOTTECK</h2>
+
             <p>
-                Manage customer search requests from submission
-                to completion.
+                Manage customer search requests.
             </p>
+
         </div>
 
-        <button type="button" class="mreq-refresh"
-                onclick="loadMotteckRequests()">
-            <i class="fa-solid fa-rotate"></i>
+        <button
+            class="refresh-btn"
+            type="button"
+            onclick="loadMotteckRequests()"
+        >
             Refresh
         </button>
+
     </div>
 
-    <!-- OVERVIEW -->
-    <div class="mreq-overview">
 
-        <div class="mreq-stat-card">
-            <div class="mreq-stat-top">
-                <span>Total Requests</span>
-                <div class="mreq-stat-icon total">
-                    <i class="fa-solid fa-layer-group"></i>
-                </div>
-            </div>
-            <strong id="mreqTotalCount">0</strong>
-            <small>All submitted requests</small>
+    <!-- SUMMARY -->
+
+    <div class="mreq-summary">
+
+        <div class="mreq-summary-card">
+
+            <span>Total Requests</span>
+
+            <strong id="mreqTotal">0</strong>
+
         </div>
 
-        <div class="mreq-stat-card">
-            <div class="mreq-stat-top">
-                <span>New Requests</span>
-                <div class="mreq-stat-icon new">
-                    <i class="fa-solid fa-inbox"></i>
-                </div>
-            </div>
-            <strong id="mreqNewCount">0</strong>
-            <small>Waiting for your review</small>
+        <div class="mreq-summary-card">
+
+            <span>New</span>
+
+            <strong id="mreqNew">0</strong>
+
         </div>
 
-        <div class="mreq-stat-card">
-            <div class="mreq-stat-top">
-                <span>In Progress</span>
-                <div class="mreq-stat-icon progress">
-                    <i class="fa-solid fa-spinner"></i>
-                </div>
-            </div>
-            <strong id="mreqProgressCount">0</strong>
-            <small>Currently being handled</small>
+        <div class="mreq-summary-card">
+
+            <span>In Progress</span>
+
+            <strong id="mreqProgress">0</strong>
+
         </div>
 
-        <div class="mreq-stat-card">
-            <div class="mreq-stat-top">
-                <span>Completed</span>
-                <div class="mreq-stat-icon completed">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
-            </div>
-            <strong id="mreqCompletedCount">0</strong>
-            <small>Successfully finished</small>
+        <div class="mreq-summary-card">
+
+            <span>Completed</span>
+
+            <strong id="mreqCompleted">0</strong>
+
         </div>
 
     </div>
 
-    <!-- REQUEST WORKSPACE -->
-    <div class="mreq-workspace">
 
-        <div class="mreq-workspace-heading">
-            <div>
-                <h3>Customer Requests</h3>
-                <p>Find and manage every MOTTECK search request.</p>
-            </div>
+    <!-- FILTERS -->
 
-            <span class="mreq-live-label">
-                <span></span>
-                Request Centre
-            </span>
-        </div>
+    <div class="mreq-controls">
 
-        <!-- STATUS TABS -->
-        <div class="mreq-tabs">
+        <input
+            type="search"
+            id="mreqSearch"
+            placeholder="Search customer, request or listing..."
+        >
 
-            <button type="button"
-                    class="mreq-tab active"
-                    data-status="new">
-                <i class="fa-solid fa-inbox"></i>
-                New Requests
-                <span id="mreqNewTabCount">0</span>
-            </button>
+        <select id="mreqFilter">
 
-            <button type="button"
-                    class="mreq-tab"
-                    data-status="in_progress">
-                <i class="fa-solid fa-spinner"></i>
-                In Progress
-                <span id="mreqProgressTabCount">0</span>
-            </button>
-
-            <button type="button"
-                    class="mreq-tab"
-                    data-status="completed">
-                <i class="fa-solid fa-circle-check"></i>
-                Completed
-                <span id="mreqCompletedTabCount">0</span>
-            </button>
-
-            <button type="button"
-                    class="mreq-tab"
-                    data-status="all">
-                <i class="fa-solid fa-list"></i>
+            <option value="all">
                 All Requests
-            </button>
+            </option>
 
-        </div>
+            <option value="new">
+                New
+            </option>
 
-        <!-- SEARCH AND FILTERS -->
-        <div class="mreq-controls">
+            <option value="in_progress">
+                In Progress
+            </option>
 
-            <div class="mreq-search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="search"
-                       id="mreqSearchInput"
-                       placeholder="Search customer, phone or request number...">
-            </div>
+            <option value="completed">
+                Completed
+            </option>
 
-            <select id="mreqPaymentFilter"
-                    class="mreq-select">
-                <option value="all">All Payment Statuses</option>
-                <option value="not_invoiced">Not Invoiced</option>
-                <option value="pending">Awaiting Payment</option>
-                <option value="paid">Paid</option>
-                <option value="cancelled">Cancelled</option>
-            </select>
+        </select>
 
-            <button type="button"
-                    class="mreq-clear-filter"
-                    id="mreqClearFilters">
-                <i class="fa-solid fa-filter-circle-xmark"></i>
-                Clear
-            </button>
+    </div>
 
-        </div>
 
-        <!-- RESULTS HEADING -->
-        <div class="mreq-results-heading">
-            <div>
-                <h4 id="mreqCurrentView">New Requests</h4>
-                <span id="mreqResultDescription">
-                    Requests waiting for review
-                </span>
-            </div>
+    <!-- REQUEST LIST -->
 
-            <span id="mreqResultCount">0 requests</span>
-        </div>
+    <div id="mreqList">
 
-        <!-- REQUEST LIST -->
-        <div class="mreq-request-list"
-             id="motteckRequestsList">
+        <div class="loading-submissions">
 
-            <div class="mreq-empty-state">
-                <div class="mreq-empty-icon">
-                    <i class="fa-solid fa-inbox"></i>
-                </div>
-
-                <h4>No requests to display</h4>
-
-                <p>
-                    New customer search requests will appear here
-                    when submitted through the Request MOTTECK form.
-                </p>
-            </div>
+            Loading MOTTECK requests...
 
         </div>
 
     </div>
 
-    <!-- WORKFLOW NOTE -->
-    <div class="mreq-footer-note">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>
-            A request is not completed simply because an invoice
-            has been paid. Track payment and search progress separately.
-        </span>
-    </div>
-
-</div>
+</section>
 
 <!-- =========================================================
      ALL PUBLISHED POSTS
@@ -1299,7 +1241,480 @@ function renderLeads(){
     `).join("");
 
 }
+/* =========================================================
+   MOTTECK REQUEST MANAGEMENT
+========================================================= */
 
+let allMotteckRequests = [];
+
+
+/* =========================================================
+   LOAD REQUESTS
+========================================================= */
+
+async function loadMotteckRequests(){
+
+    const list = document.getElementById("mreqList");
+
+    if(!list){
+        return;
+    }
+
+    list.innerHTML = `
+        <div class="loading-submissions">
+            Loading requests...
+        </div>
+    `;
+
+    try{
+
+        const response = await fetch(
+            "/admin/motteck-requests",
+            {
+                method: "GET",
+                credentials: "same-origin"
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error || "Unable to load requests."
+            );
+
+        }
+
+        allMotteckRequests = data.requests || [];
+
+        const summary = data.summary || {};
+
+        document.getElementById("mreqTotal").textContent =
+            summary.total || 0;
+
+        document.getElementById("mreqNew").textContent =
+            summary.new || 0;
+
+        document.getElementById("mreqProgress").textContent =
+            summary.in_progress || 0;
+
+        document.getElementById("mreqCompleted").textContent =
+            summary.completed || 0;
+
+        const leadCountElement =
+            document.getElementById("leadCount");
+
+        if(leadCountElement){
+
+            leadCountElement.textContent =
+                summary.new || 0;
+
+        }
+
+        renderMotteckRequests();
+
+    }catch(error){
+
+        console.error(
+            "LOAD MOTTECK REQUESTS ERROR:",
+            error
+        );
+
+        list.innerHTML = `
+            <div class="loading-submissions">
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER REQUESTS
+========================================================= */
+
+function renderMotteckRequests(){
+
+    const list = document.getElementById("mreqList");
+
+    if(!list){
+        return;
+    }
+
+    const searchInput =
+        document.getElementById("mreqSearch");
+
+    const filterInput =
+        document.getElementById("mreqFilter");
+
+    const search = searchInput
+        ? searchInput.value.trim().toLowerCase()
+        : "";
+
+    const filter = filterInput
+        ? filterInput.value
+        : "all";
+
+
+    const filtered = allMotteckRequests.filter(item => {
+
+        const status = item.status || "new";
+
+        if(filter !== "all" && status !== filter){
+            return false;
+        }
+
+        const searchable = [
+
+            item.request_number,
+            item.customer_name,
+            item.customer_phone,
+            item.customer_email,
+            item.town,
+            item.request_details,
+            item.preferred_location,
+            item.post_title
+
+        ].join(" ").toLowerCase();
+
+        return searchable.includes(search);
+
+    });
+
+
+    if(!filtered.length){
+
+        list.innerHTML = `
+            <div class="loading-submissions">
+                No requests found.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = filtered.map(item => {
+
+        const status = item.status || "new";
+
+        const date = item.created_at
+            ? new Date(item.created_at).toLocaleString()
+            : "Date unavailable";
+
+        const paymentStatus =
+            item.payment_status || "unknown";
+
+        const image = item.post_image
+            ? `
+                <img
+                    class="mreq-listing-image"
+                    src="${escapeHTML(item.post_image)}"
+                    alt="Listing"
+                >
+              `
+            : "";
+
+        return `
+
+            <article class="mreq-card">
+
+                <div class="mreq-card-top">
+
+                    <div>
+
+                        <h3>
+                            ${escapeHTML(
+                                item.request_number || "Request"
+                            )}
+                        </h3>
+
+                        <small>
+                            ${escapeHTML(date)}
+                        </small>
+
+                    </div>
+
+                    <span class="mreq-status">
+
+                        ${escapeHTML(
+                            status.replace(/_/g," ").toUpperCase()
+                        )}
+
+                    </span>
+
+                </div>
+
+
+                <div class="mreq-listing">
+
+                    ${image}
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(
+                                item.post_title || "Listing unavailable"
+                            )}
+                        </strong>
+
+                        <p>
+                            Listing ID:
+                            ${escapeHTML(item.post_id ?? "—")}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mreq-details">
+
+                    <p>
+
+                        <strong>Customer:</strong>
+
+                        ${escapeHTML(
+                            item.customer_name || "Unknown"
+                        )}
+
+                    </p>
+
+                    <p>
+
+                        <strong>Phone:</strong>
+
+                        ${escapeHTML(
+                            item.customer_phone || "Not provided"
+                        )}
+
+                    </p>
+
+                    <p>
+
+                        <strong>Email:</strong>
+
+                        ${escapeHTML(
+                            item.customer_email || "Not provided"
+                        )}
+
+                    </p>
+
+                    <p>
+
+                        <strong>Town:</strong>
+
+                        ${escapeHTML(
+                            item.town || "Not provided"
+                        )}
+
+                    </p>
+
+                    <p>
+
+                        <strong>Preferred Location:</strong>
+
+                        ${escapeHTML(
+                            item.preferred_location || "Not specified"
+                        )}
+
+                    </p>
+
+                    <p>
+
+                        <strong>Search Fee:</strong>
+
+                        KSh ${Number(
+                            item.search_fee_kes || 0
+                        ).toLocaleString()}
+
+                    </p>
+
+                    <p>
+
+                        <strong>Payment:</strong>
+
+                        ${escapeHTML(paymentStatus.toUpperCase())}
+
+                    </p>
+
+                </div>
+
+
+                <div class="mreq-description">
+
+                    <strong>Customer Request</strong>
+
+                    <p>
+                        ${escapeHTML(
+                            item.request_details || "No details provided."
+                        )}
+                    </p>
+
+                </div>
+
+
+                <div class="mreq-actions">
+
+                    <label for="mreq-status-${escapeHTML(item.request_number)}">
+
+                        Request Status
+
+                    </label>
+
+                    <select
+                        id="mreq-status-${escapeHTML(item.request_number)}"
+                        class="mreq-status-select"
+                    >
+
+                        <option
+                            value="new"
+                            ${status === "new" ? "selected" : ""}
+                        >
+                            New
+                        </option>
+
+                        <option
+                            value="in_progress"
+                            ${status === "in_progress" ? "selected" : ""}
+                        >
+                            In Progress
+                        </option>
+
+                        <option
+                            value="completed"
+                            ${status === "completed" ? "selected" : ""}
+                        >
+                            Completed
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        type="button"
+                        class="mreq-save-status"
+                        onclick="updateMotteckRequestStatus(
+                            '${escapeHTML(item.request_number)}'
+                        )"
+                    >
+                        Save Status
+                    </button>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   UPDATE REQUEST STATUS
+========================================================= */
+
+async function updateMotteckRequestStatus(requestNumber){
+
+    const select = document.getElementById(
+        "mreq-status-" + requestNumber
+    );
+
+    if(!select){
+        return;
+    }
+
+    const newStatus = select.value;
+
+    try{
+
+        const response = await fetch(
+            "/admin/motteck-request-status",
+            {
+                method: "POST",
+
+                credentials: "same-origin",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    request_number: requestNumber,
+
+                    status: newStatus
+
+                })
+
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error || "Status update failed."
+            );
+
+        }
+
+        alert("Request status updated successfully.");
+
+        await loadMotteckRequests();
+
+    }catch(error){
+
+        console.error(
+            "UPDATE MOTTECK STATUS ERROR:",
+            error
+        );
+
+        alert(error.message);
+
+    }
+
+}
+
+
+/* =========================================================
+   SEARCH AND FILTER EVENTS
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const search =
+        document.getElementById("mreqSearch");
+
+    const filter =
+        document.getElementById("mreqFilter");
+
+    if(search){
+
+        search.addEventListener(
+            "input",
+            renderMotteckRequests
+        );
+
+    }
+
+    if(filter){
+
+        filter.addEventListener(
+            "change",
+            renderMotteckRequests
+        );
+
+    }
+
+});
 
 </script>
 </body>
