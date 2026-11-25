@@ -1476,7 +1476,7 @@ function createPostCard(post) {
        Spare parts use the purchase flow, not vehicle
        seller-contact buttons.
     ----------------------------------------------------- */
-    const buyNowUrl = idloggedIn
+    const buyNowUrl = isloggedIn
         ? checkoutUrlTemplate.replace(
           /0$/,
         encodeURIComponent(postId)
