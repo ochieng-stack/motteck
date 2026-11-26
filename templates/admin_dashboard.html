@@ -449,9 +449,7 @@ document.addEventListener('click', function(event) {
      MOTTECK INVOICE MANAGEMENT CENTRE
 ========================================= -->
 
-<section class="admin-panel inv-panel"
-         id="invoices-page"
-         style="display:none;">
+<section class="admin-panel inv-panel" id="invoices-page"style="display:none;">
 
     <!-- HEADER -->
     <div class="inv-header">
@@ -655,19 +653,190 @@ document.addEventListener('click', function(event) {
 
     </div>
 </div>
-<!-- =========================================================
-     SPONSORED ADS TRACKER
-========================================================= -->
-<div class="form-box admin-panel" id="sponsored-page" style="display:none;"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button></div>
-<h3>
-        Sponsored Ads Tracker
-    </h3>
-<div id="sponsorTable">
 
-        Loading sponsored ads...
+<!-- =========================================
+     MOTTECK SPONSORED & FEATURED MANAGEMENT
+========================================= -->
+
+<section class="admin-panel promo-panel"
+         id="sponsored-page"
+         style="display:none;">
+
+    <!-- HEADER -->
+    <div class="promo-header">
+
+        <div>
+            <span class="promo-eyebrow">MARKETING MANAGEMENT</span>
+            <h2>Sponsored & Featured</h2>
+            <p>Monitor promoted listings, owners and expiry dates.</p>
+        </div>
+
+        <button type="button"
+                class="admin-back"
+                onclick="backToAdminHome()">
+            ← Back to Dashboard
+        </button>
 
     </div>
-</div>
+
+
+    <!-- SUMMARY -->
+    <div class="promo-summary">
+
+        <div class="promo-stat">
+            <span class="promo-stat-icon">★</span>
+            <div>
+                <small>Sponsored Posts</small>
+                <strong id="sponsoredTotal">0</strong>
+            </div>
+        </div>
+
+        <div class="promo-stat">
+            <span class="promo-stat-icon featured-icon">✦</span>
+            <div>
+                <small>Featured Posts</small>
+                <strong id="featuredTotal">0</strong>
+            </div>
+        </div>
+
+        <div class="promo-stat">
+            <span class="promo-stat-icon active-icon">✓</span>
+            <div>
+                <small>Active Promotions</small>
+                <strong id="activePromotions">0</strong>
+            </div>
+        </div>
+
+        <div class="promo-stat">
+            <span class="promo-stat-icon expiry-icon">◷</span>
+            <div>
+                <small>Expired Promotions</small>
+                <strong id="expiredPromotions">0</strong>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SPONSORED POSTS -->
+    <div class="promo-register">
+
+        <div class="promo-register-heading">
+
+            <div>
+                <span class="promo-label sponsored-label">
+                    SPONSORED LISTINGS
+                </span>
+
+                <h3>Sponsored Posts</h3>
+
+                <p>
+                    Track sponsored listings, promotion periods
+                    and expiry dates.
+                </p>
+            </div>
+
+            <span class="promo-heading-icon">★</span>
+
+        </div>
+
+
+        <div class="promo-table-wrap">
+
+            <table class="promo-table">
+
+                <thead>
+                    <tr>
+                        <th>Post / Listing</th>
+                        <th>Owner</th>
+                        <th>Start Date</th>
+                        <th>Duration</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="sponsoredPostsBody">
+
+                    <tr>
+                        <td colspan="6">
+                            <div class="promo-empty">
+                                <strong>No sponsored posts loaded</strong>
+                                <p>Sponsored listings will appear here.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- FEATURED POSTS -->
+    <div class="promo-register featured-register">
+
+        <div class="promo-register-heading">
+
+            <div>
+                <span class="promo-label featured-label">
+                    FEATURED LISTINGS
+                </span>
+
+                <h3>Featured Posts</h3>
+
+                <p>
+                    Monitor featured listings, their owners,
+                    promotion periods and expiry dates.
+                </p>
+            </div>
+
+            <span class="promo-heading-icon featured-heading-icon">
+                ✦
+            </span>
+
+        </div>
+
+
+        <div class="promo-table-wrap">
+
+            <table class="promo-table">
+
+                <thead>
+                    <tr>
+                        <th>Post / Listing</th>
+                        <th>Owner</th>
+                        <th>Start Date</th>
+                        <th>Duration</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="featuredPostsBody">
+
+                    <tr>
+                        <td colspan="6">
+                            <div class="promo-empty">
+                                <strong>No featured posts loaded</strong>
+                                <p>Featured listings will appear here.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
 
 <!-- =========================================================
      CREATE ADMIN POST
