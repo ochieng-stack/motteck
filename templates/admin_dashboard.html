@@ -648,6 +648,11 @@ document.addEventListener('click', function(event) {
 <section class="admin-panel analytics-panel"
          id="analytics-page"
          style="display:none;">
+         <button class="admin-back"
+                 type="button"
+                 onclick="backToAdminHome()">
+                ← Back to Dashboard
+         </button>
 
     <!-- HEADER -->
     <div class="analytics-header">
@@ -1206,6 +1211,12 @@ document.addEventListener('click', function(event) {
 
     <div class="pending-header">
         <div>
+            <button class="admin-back"
+                    type="button"
+                    onclick="backToAdminHome()">
+                 ← Back to Dashboard
+            </button>
+
             <span class="pending-eyebrow">CONTENT MODERATION</span>
             <h2>Submitted Posts</h2>
             <p>Review submitted listings before they appear on MOTTECK.</p>
