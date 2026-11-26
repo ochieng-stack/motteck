@@ -8,6 +8,33 @@
 <link href="{{ url_for('static', filename='admin_dashboard.css') }}" rel="stylesheet"/>
 </head>
 <body>
+<script>
+function openAdminPanel(id){
+
+    document.querySelectorAll(
+        '.admin-home,.admin-panel'
+    ).forEach(el => el.style.display = 'none');
+
+    const panel = document.getElementById(id);
+
+    if(panel){
+        panel.style.display = 'block';
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+
+    if(id === 'leads-page'){
+        loadMotteckRequests();
+    }
+
+}
+function backToAdminHome(){document.querySelectorAll('.admin-panel').forEach(el=>el.style.display='none');document.getElementById('admin-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+function updateAdminHubCounts(){const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');const hp=document.getElementById('hubPendingCount');const hl=document.getElementById('hubLeadCount');if(p&&hp)hp.textContent=p.textContent||'0';if(l&&hl)hl.textContent=l.textContent||'0';}
+const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventListener('DOMContentLoaded',()=>{const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');if(p)hubObserver.observe(p,{childList:true,characterData:true,subtree:true});if(l)hubObserver.observe(l,{childList:true,characterData:true,subtree:true});updateAdminHubCounts();});
+</script>
 <header>
 <h2>
         Motteck Admin Dashboard
@@ -27,6 +54,7 @@
 <button class="admin-tile" onclick="openAdminPanel('sponsored-page')"><span class="tile-icon">★</span><span class="tile-title">Sponsored &amp; Featured</span><span class="tile-description">Promotion tracking</span></button>
 <button class="admin-tile admin-tile-wide" onclick="openAdminPanel('published-page')"><span class="tile-icon">▤</span><span class="tile-title">All Submitted Posts</span><span class="tile-description">Browse and manage published posts</span></button>
 <button class="admin-tile" onclick="openAdminPanel('analytics-page')"><span class="tile-icon">⌁</span><span class="tile-title">Analytics</span><span class="tile-description">Website performance</span></button>
+
 
 <!-- =====================================================
      MOTTECK ORDERS / BUY NOW MANAGEMENT
@@ -328,6 +356,91 @@
     </div>
 
 </div>
+
+
+<script>
+/* SWITCH BETWEEN THE TWO ORDER SECTIONS */
+
+function showOrderSection(sectionId, button) {
+
+    document.querySelectorAll('#orders-page .orders-section')
+        .forEach(section => section.classList.remove('active'));
+
+    document.querySelectorAll('#orders-page .orders-tab')
+        .forEach(tab => tab.classList.remove('active'));
+
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+        section.classList.add('active');
+    }
+
+    if (button) {
+        button.classList.add('active');
+    }
+}
+
+
+/* SEARCH AND FILTER TABLE ROWS */
+
+function filterAdminOrders(type) {
+
+    const isCheckout = type === 'checkout';
+
+    const searchInput = document.getElementById(
+        isCheckout ? 'checkoutOrderSearch' : 'orderEnquirySearch'
+    );
+
+    const statusSelect = document.getElementById(
+        isCheckout ? 'checkoutOrderStatus' : 'orderEnquiryStatus'
+    );
+
+    const tableBody = document.getElementById(
+        isCheckout ? 'checkoutOrdersBody' : 'orderEnquiriesBody'
+    );
+
+    const search = searchInput.value.toLowerCase().trim();
+    const status = statusSelect.value.toLowerCase();
+
+    tableBody.querySelectorAll('tr:not(.orders-empty-row)').forEach(row => {
+
+        const rowText = row.textContent.toLowerCase();
+        const rowStatus = (row.dataset.status || '').toLowerCase();
+
+        const matchesSearch = rowText.includes(search);
+        const matchesStatus = !status || rowStatus === status;
+
+        row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+    });
+}
+
+
+/* ORDER DETAILS MODAL */
+
+function openAdminOrderModal(html) {
+
+    document.getElementById('adminOrderDetails').innerHTML = html;
+
+    document.getElementById('adminOrderModal')
+        .classList.add('show');
+}
+
+function closeAdminOrderModal() {
+
+    document.getElementById('adminOrderModal')
+        .classList.remove('show');
+}
+
+document.addEventListener('click', function(event) {
+
+    const modal = document.getElementById('adminOrderModal');
+
+    if (event.target === modal) {
+        closeAdminOrderModal();
+    }
+
+});
+</script>
 
 
 <!-- =========================================================
@@ -871,120 +984,8 @@ let pendingAction = null;
 
 let pendingSubmissionId = null;
 
-/* =========================================================
-   ADMIN PANEL
-========================================================= */
-function openAdminPanel(id){
 
-    document.querySelectorAll(
-        '.admin-home,.admin-panel'
-    ).forEach(el => el.style.display = 'none');
-
-    const panel = document.getElementById(id);
-
-    if(panel){
-        panel.style.display = 'block';
-    }
-
-    window.scrollTo({
-        top:0,
-        behavior:'smooth'
-    });
-
-    if(id === 'leads-page'){
-        loadMotteckRequests();
-    }
-
-}
-function backToAdminHome(){document.querySelectorAll('.admin-panel').forEach(el=>el.style.display='none');document.getElementById('admin-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
-function updateAdminHubCounts(){const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');const hp=document.getElementById('hubPendingCount');const hl=document.getElementById('hubLeadCount');if(p&&hp)hp.textContent=p.textContent||'0';if(l&&hl)hl.textContent=l.textContent||'0';}
-const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventListener('DOMContentLoaded',()=>{const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');if(p)hubObserver.observe(p,{childList:true,characterData:true,subtree:true});if(l)hubObserver.observe(l,{childList:true,characterData:true,subtree:true});updateAdminHubCounts();});
-
-/* =========================================================
-   BUY NOW AND ORDER ENQUIRY
-========================================================= */
-/* SWITCH BETWEEN THE TWO ORDER SECTIONS */
-
-function showOrderSection(sectionId, button) {
-
-    document.querySelectorAll('#orders-page .orders-section')
-        .forEach(section => section.classList.remove('active'));
-
-    document.querySelectorAll('#orders-page .orders-tab')
-        .forEach(tab => tab.classList.remove('active'));
-
-    const section = document.getElementById(sectionId);
-
-    if (section) {
-        section.classList.add('active');
-    }
-
-    if (button) {
-        button.classList.add('active');
-    }
-}
-
-
-/* SEARCH AND FILTER TABLE ROWS */
-
-function filterAdminOrders(type) {
-
-    const isCheckout = type === 'checkout';
-
-    const searchInput = document.getElementById(
-        isCheckout ? 'checkoutOrderSearch' : 'orderEnquirySearch'
-    );
-
-    const statusSelect = document.getElementById(
-        isCheckout ? 'checkoutOrderStatus' : 'orderEnquiryStatus'
-    );
-
-    const tableBody = document.getElementById(
-        isCheckout ? 'checkoutOrdersBody' : 'orderEnquiriesBody'
-    );
-
-    const search = searchInput.value.toLowerCase().trim();
-    const status = statusSelect.value.toLowerCase();
-
-    tableBody.querySelectorAll('tr:not(.orders-empty-row)').forEach(row => {
-
-        const rowText = row.textContent.toLowerCase();
-        const rowStatus = (row.dataset.status || '').toLowerCase();
-
-        const matchesSearch = rowText.includes(search);
-        const matchesStatus = !status || rowStatus === status;
-
-        row.style.display = matchesSearch && matchesStatus ? '' : 'none';
-    });
-}
-
-
-/* ORDER DETAILS MODAL */
-
-function openAdminOrderModal(html) {
-
-    document.getElementById('adminOrderDetails').innerHTML = html;
-
-    document.getElementById('adminOrderModal')
-        .classList.add('show');
-}
-
-function closeAdminOrderModal() {
-
-    document.getElementById('adminOrderModal')
-        .classList.remove('show');
-}
-
-document.addEventListener('click', function(event) {
-
-    const modal = document.getElementById('adminOrderModal');
-
-    if (event.target === modal) {
-        closeAdminOrderModal();
-    }
-
-});
-
+/
 /* =========================================================
    CATEGORY HELPERS
 ========================================================= */
