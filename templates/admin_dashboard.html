@@ -7,33 +7,7 @@
 <title>Admin Dashboard - Motteck</title>
 <link href="{{ url_for('static', filename='admin_dashboard.css') }}" rel="stylesheet"/>
 </head>
-<body><script>
-function openAdminPanel(id){
-
-    document.querySelectorAll(
-        '.admin-home,.admin-panel'
-    ).forEach(el => el.style.display = 'none');
-
-    const panel = document.getElementById(id);
-
-    if(panel){
-        panel.style.display = 'block';
-    }
-
-    window.scrollTo({
-        top:0,
-        behavior:'smooth'
-    });
-
-    if(id === 'leads-page'){
-        loadMotteckRequests();
-    }
-
-}
-function backToAdminHome(){document.querySelectorAll('.admin-panel').forEach(el=>el.style.display='none');document.getElementById('admin-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
-function updateAdminHubCounts(){const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');const hp=document.getElementById('hubPendingCount');const hl=document.getElementById('hubLeadCount');if(p&&hp)hp.textContent=p.textContent||'0';if(l&&hl)hl.textContent=l.textContent||'0';}
-const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventListener('DOMContentLoaded',()=>{const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');if(p)hubObserver.observe(p,{childList:true,characterData:true,subtree:true});if(l)hubObserver.observe(l,{childList:true,characterData:true,subtree:true});updateAdminHubCounts();});
-</script>
+<body>
 <header>
 <h2>
         Motteck Admin Dashboard
@@ -53,7 +27,309 @@ const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventLi
 <button class="admin-tile" onclick="openAdminPanel('sponsored-page')"><span class="tile-icon">★</span><span class="tile-title">Sponsored &amp; Featured</span><span class="tile-description">Promotion tracking</span></button>
 <button class="admin-tile admin-tile-wide" onclick="openAdminPanel('published-page')"><span class="tile-icon">▤</span><span class="tile-title">All Submitted Posts</span><span class="tile-description">Browse and manage published posts</span></button>
 <button class="admin-tile" onclick="openAdminPanel('analytics-page')"><span class="tile-icon">⌁</span><span class="tile-title">Analytics</span><span class="tile-description">Website performance</span></button>
-</div><div class="admin-coming-note">Orders and Invoices will be connected when we build their management sections.</div></section><section class="admin-panel" id="orders-page" style="display:none"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button><h2>Orders / Buy Now</h2><p>Order management will be added here.</p></div><div class="admin-placeholder">This section is reserved for order requests, product details and payment statuses.</div></section><section class="admin-panel" id="invoices-page" style="display:none"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button><h2>Invoices</h2><p>Central invoice register</p></div><div class="admin-placeholder">Invoice management will be added here.</div></section>
+
+<!-- =====================================================
+     MOTTECK ORDERS / BUY NOW MANAGEMENT
+===================================================== -->
+
+<section class="admin-panel" id="orders-page">
+
+    <div class="orders-header">
+        <div>
+            <span class="orders-eyebrow">CUSTOMER PURCHASES</span>
+            <h2>Orders / Buy Now</h2>
+            <p>Manage customer orders, guest enquiries and payment progress.</p>
+        </div>
+
+        <button class="orders-refresh-btn" onclick="location.reload()">
+            ↻ Refresh
+        </button>
+    </div>
+
+    <!-- TWO MAIN SECTIONS -->
+    <div class="orders-main-tabs">
+
+        <button class="orders-tab active"
+                onclick="showOrderSection('checkout-orders', this)">
+            <span class="orders-tab-icon">🛒</span>
+            <span>
+                <strong>Checkout Orders</strong>
+                <small>Orders from logged-in customers</small>
+            </span>
+        </button>
+
+        <button class="orders-tab"
+                onclick="showOrderSection('order-enquiries', this)">
+            <span class="orders-tab-icon">📩</span>
+            <span>
+                <strong>Order Enquiries</strong>
+                <small>Orders from guest customers</small>
+            </span>
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         SECTION 1: CHECKOUT ORDERS
+    ================================================== -->
+
+    <div class="orders-section active" id="checkout-orders">
+
+        <div class="orders-section-heading">
+            <div>
+                <h3>Checkout Orders</h3>
+                <p>Manage purchases submitted through the Buy Now checkout.</p>
+            </div>
+        </div>
+
+        <!-- CHECKOUT ORDER STATUS CARDS -->
+
+        <div class="orders-stats-grid">
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon orange">🛒</span>
+                <div>
+                    <small>Total Orders</small>
+                    <strong id="totalCheckoutOrders">0</strong>
+                </div>
+            </div>
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon blue">⏳</span>
+                <div>
+                    <small>In Progress</small>
+                    <strong id="checkoutInProgress">0</strong>
+                </div>
+            </div>
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon purple">🚚</span>
+                <div>
+                    <small>Being Delivered</small>
+                    <strong id="checkoutBeingDelivered">0</strong>
+                </div>
+            </div>
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon green">✓</span>
+                <div>
+                    <small>Delivered</small>
+                    <strong id="checkoutDelivered">0</strong>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CHECKOUT ORDER FILTERS -->
+
+        <div class="orders-toolbar">
+
+            <div class="orders-search">
+                <span>⌕</span>
+                <input type="search"
+                       id="checkoutOrderSearch"
+                       placeholder="Search order number, customer or phone..."
+                       oninput="filterAdminOrders('checkout')">
+            </div>
+
+            <select id="checkoutOrderStatus"
+                    onchange="filterAdminOrders('checkout')">
+                <option value="">All Order Statuses</option>
+                <option value="awaiting_payment">Awaiting Payment</option>
+                <option value="in_progress">In Progress</option>
+                <option value="being_delivered">Being Delivered</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+
+        </div>
+
+        <!-- CHECKOUT ORDERS TABLE -->
+
+        <div class="orders-table-container">
+
+            <table class="orders-table" id="checkoutOrdersTable">
+
+                <thead>
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                        <th>Order Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="checkoutOrdersBody">
+
+                    <tr class="orders-empty-row">
+                        <td colspan="8">
+                            <div class="orders-empty">
+                                <span>🛒</span>
+                                <strong>No checkout orders yet</strong>
+                                <p>Orders placed by logged-in customers will appear here.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         SECTION 2: GUEST ORDER ENQUIRIES
+    ================================================== -->
+
+    <div class="orders-section" id="order-enquiries">
+
+        <div class="orders-section-heading">
+            <div>
+                <h3>Order Enquiries</h3>
+                <p>Manage Buy Now enquiries submitted by customers without logging in.</p>
+            </div>
+        </div>
+
+        <!-- ENQUIRY STATUS CARDS -->
+
+        <div class="orders-stats-grid enquiry-stats">
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon orange">📩</span>
+                <div>
+                    <small>New Enquiries</small>
+                    <strong id="newOrderEnquiries">0</strong>
+                </div>
+            </div>
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon blue">👤</span>
+                <div>
+                    <small>Awaiting Confirmation</small>
+                    <strong id="awaitingCustomerConfirmation">0</strong>
+                </div>
+            </div>
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon purple">💳</span>
+                <div>
+                    <small>Awaiting Payment</small>
+                    <strong id="enquiriesAwaitingPayment">0</strong>
+                </div>
+            </div>
+
+            <div class="orders-stat-card">
+                <span class="orders-stat-icon green">✓</span>
+                <div>
+                    <small>Converted to Orders</small>
+                    <strong id="convertedOrderEnquiries">0</strong>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ENQUIRY FILTERS -->
+
+        <div class="orders-toolbar">
+
+            <div class="orders-search">
+                <span>⌕</span>
+                <input type="search"
+                       id="orderEnquirySearch"
+                       placeholder="Search customer, phone or product..."
+                       oninput="filterAdminOrders('enquiries')">
+            </div>
+
+            <select id="orderEnquiryStatus"
+                    onchange="filterAdminOrders('enquiries')">
+                <option value="">All Enquiry Statuses</option>
+                <option value="pending">New Enquiries</option>
+                <option value="awaiting_confirmation">Awaiting Customer Confirmation</option>
+                <option value="awaiting_payment">Awaiting Payment</option>
+                <option value="converted">Converted to Orders</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+
+        </div>
+
+        <!-- GUEST ENQUIRIES TABLE -->
+
+        <div class="orders-table-container">
+
+            <table class="orders-table" id="orderEnquiriesTable">
+
+                <thead>
+                    <tr>
+                        <th>Enquiry ID</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="orderEnquiriesBody">
+
+                    <tr class="orders-empty-row">
+                        <td colspan="8">
+                            <div class="orders-empty">
+                                <span>📩</span>
+                                <strong>No guest enquiries yet</strong>
+                                <p>Guest Buy Now enquiries will appear here.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ORDER DETAILS MODAL
+===================================================== -->
+
+<div class="orders-modal-overlay" id="adminOrderModal">
+
+    <div class="orders-modal">
+
+        <div class="orders-modal-header">
+            <div>
+                <span class="orders-eyebrow">ORDER MANAGEMENT</span>
+                <h3>Order Details</h3>
+            </div>
+
+            <button type="button"
+                    class="orders-modal-close"
+                    onclick="closeAdminOrderModal()">×</button>
+        </div>
+
+        <div class="orders-modal-content" id="adminOrderDetails">
+            <p>Select an order to view its details.</p>
+        </div>
+
+    </div>
+
+</div>
+
+
 <!-- =========================================================
      ANALYTICS
 ========================================================= -->
@@ -595,7 +871,119 @@ let pendingAction = null;
 
 let pendingSubmissionId = null;
 
+/* =========================================================
+   ADMIN PANEL
+========================================================= */
+function openAdminPanel(id){
 
+    document.querySelectorAll(
+        '.admin-home,.admin-panel'
+    ).forEach(el => el.style.display = 'none');
+
+    const panel = document.getElementById(id);
+
+    if(panel){
+        panel.style.display = 'block';
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+
+    if(id === 'leads-page'){
+        loadMotteckRequests();
+    }
+
+}
+function backToAdminHome(){document.querySelectorAll('.admin-panel').forEach(el=>el.style.display='none');document.getElementById('admin-home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+function updateAdminHubCounts(){const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');const hp=document.getElementById('hubPendingCount');const hl=document.getElementById('hubLeadCount');if(p&&hp)hp.textContent=p.textContent||'0';if(l&&hl)hl.textContent=l.textContent||'0';}
+const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventListener('DOMContentLoaded',()=>{const p=document.getElementById('pendingCount');const l=document.getElementById('leadCount');if(p)hubObserver.observe(p,{childList:true,characterData:true,subtree:true});if(l)hubObserver.observe(l,{childList:true,characterData:true,subtree:true});updateAdminHubCounts();});
+
+/* =========================================================
+   BUY NOW AND ORDER ENQUIRY
+========================================================= */
+/* SWITCH BETWEEN THE TWO ORDER SECTIONS */
+
+function showOrderSection(sectionId, button) {
+
+    document.querySelectorAll('#orders-page .orders-section')
+        .forEach(section => section.classList.remove('active'));
+
+    document.querySelectorAll('#orders-page .orders-tab')
+        .forEach(tab => tab.classList.remove('active'));
+
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+        section.classList.add('active');
+    }
+
+    if (button) {
+        button.classList.add('active');
+    }
+}
+
+
+/* SEARCH AND FILTER TABLE ROWS */
+
+function filterAdminOrders(type) {
+
+    const isCheckout = type === 'checkout';
+
+    const searchInput = document.getElementById(
+        isCheckout ? 'checkoutOrderSearch' : 'orderEnquirySearch'
+    );
+
+    const statusSelect = document.getElementById(
+        isCheckout ? 'checkoutOrderStatus' : 'orderEnquiryStatus'
+    );
+
+    const tableBody = document.getElementById(
+        isCheckout ? 'checkoutOrdersBody' : 'orderEnquiriesBody'
+    );
+
+    const search = searchInput.value.toLowerCase().trim();
+    const status = statusSelect.value.toLowerCase();
+
+    tableBody.querySelectorAll('tr:not(.orders-empty-row)').forEach(row => {
+
+        const rowText = row.textContent.toLowerCase();
+        const rowStatus = (row.dataset.status || '').toLowerCase();
+
+        const matchesSearch = rowText.includes(search);
+        const matchesStatus = !status || rowStatus === status;
+
+        row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+    });
+}
+
+
+/* ORDER DETAILS MODAL */
+
+function openAdminOrderModal(html) {
+
+    document.getElementById('adminOrderDetails').innerHTML = html;
+
+    document.getElementById('adminOrderModal')
+        .classList.add('show');
+}
+
+function closeAdminOrderModal() {
+
+    document.getElementById('adminOrderModal')
+        .classList.remove('show');
+}
+
+document.addEventListener('click', function(event) {
+
+    const modal = document.getElementById('adminOrderModal');
+
+    if (event.target === modal) {
+        closeAdminOrderModal();
+    }
+
+});
 
 /* =========================================================
    CATEGORY HELPERS
