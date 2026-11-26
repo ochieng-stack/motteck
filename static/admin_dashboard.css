@@ -2357,3 +2357,344 @@ th, td {
         min-width: 850px;
     }
 }
+
+/* =========================================
+   MOTTECK SPONSORED & FEATURED MANAGEMENT
+========================================= */
+
+.promo-panel {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    color: #171717;
+    border-radius: 14px;
+}
+
+.promo-panel *,
+.promo-panel *::before,
+.promo-panel *::after {
+    box-sizing: border-box;
+}
+
+/* HEADER */
+
+.promo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.promo-eyebrow {
+    color: #e87518;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.promo-header h2 {
+    font-size: 25px;
+    margin: 7px 0;
+}
+
+.promo-header p {
+    color: #777;
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+/* SUMMARY CARDS */
+
+.promo-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 13px;
+    margin-bottom: 28px;
+}
+
+.promo-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 17px;
+    border: 1px solid #e8e8e8;
+    border-radius: 11px;
+    background: #fff;
+}
+
+.promo-stat-icon {
+    width: 41px;
+    height: 41px;
+    min-width: 41px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff3e8;
+    color: #e87518;
+    border-radius: 10px;
+    font-size: 19px;
+}
+
+.promo-stat-icon.featured-icon {
+    background: #f2edff;
+    color: #8055c8;
+}
+
+.promo-stat-icon.active-icon {
+    background: #e9f8ee;
+    color: #168446;
+}
+
+.promo-stat-icon.expiry-icon {
+    background: #fff0ef;
+    color: #d94b43;
+}
+
+.promo-stat small {
+    display: block;
+    color: #777;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.promo-stat strong {
+    display: block;
+    font-size: 23px;
+}
+
+/* PROMOTION REGISTERS */
+
+.promo-register {
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 19px;
+    margin-bottom: 22px;
+    background: #fff;
+}
+
+.promo-register-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 19px;
+}
+
+.promo-register-heading h3 {
+    font-size: 18px;
+    margin: 7px 0;
+}
+
+.promo-register-heading p {
+    color: #777;
+    font-size: 12px;
+    margin: 5px 0;
+    line-height: 1.6;
+}
+
+.promo-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.sponsored-label {
+    color: #e87518;
+}
+
+.featured-label {
+    color: #8055c8;
+}
+
+.promo-heading-icon {
+    width: 43px;
+    height: 43px;
+    min-width: 43px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 11px;
+    background: #fff3e8;
+    color: #e87518;
+    font-size: 22px;
+}
+
+.featured-heading-icon {
+    background: #f2edff;
+    color: #8055c8;
+}
+
+/* TABLE */
+
+.promo-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.promo-table {
+    width: 100%;
+    min-width: 790px;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.promo-table thead {
+    background: #f7f7f7;
+}
+
+.promo-table th {
+    padding: 14px 12px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    white-space: nowrap;
+}
+
+.promo-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    vertical-align: middle;
+}
+
+.promo-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* EMPTY STATE */
+
+.promo-empty {
+    text-align: center;
+    padding: 28px 12px;
+}
+
+.promo-empty strong {
+    font-size: 13px;
+    color: #333;
+}
+
+.promo-empty p {
+    font-size: 11px;
+    color: #888;
+    margin-top: 7px;
+}
+
+/* STATUS BADGES
+   Use these classes when rendering actual rows.
+*/
+
+.promo-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.promo-status.active {
+    background: #e9f8ee;
+    color: #168446;
+}
+
+.promo-status.expiring {
+    background: #fff3df;
+    color: #bd7812;
+}
+
+.promo-status.expired {
+    background: #ffeded;
+    color: #c43e3e;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .promo-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .promo-panel {
+        padding: 13px 10px;
+        min-width: 0;
+    }
+
+    .promo-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 13px;
+    }
+
+    .promo-header h2 {
+        font-size: 21px;
+    }
+
+    .promo-header p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .promo-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .promo-stat {
+        padding: 12px 9px;
+        gap: 8px;
+    }
+
+    .promo-stat-icon {
+        width: 31px;
+        height: 31px;
+        min-width: 31px;
+        font-size: 14px;
+    }
+
+    .promo-stat small {
+        font-size: 9px;
+    }
+
+    .promo-stat strong {
+        font-size: 19px;
+    }
+
+    .promo-register {
+        padding: 12px 9px;
+        margin-bottom: 16px;
+    }
+
+    .promo-register-heading h3 {
+        font-size: 16px;
+    }
+
+    .promo-register-heading p {
+        font-size: 11px;
+    }
+
+    .promo-heading-icon {
+        width: 35px;
+        height: 35px;
+        min-width: 35px;
+        font-size: 18px;
+    }
+
+    .promo-table {
+        min-width: 790px;
+    }
+
+}
