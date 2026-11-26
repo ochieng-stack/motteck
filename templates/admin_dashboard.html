@@ -46,7 +46,7 @@ const hubObserver=new MutationObserver(updateAdminHubCounts);document.addEventLi
 <div class="container admin-layout"><section class="admin-home" id="admin-home">
 <div class="admin-welcome"><div><p class="admin-eyebrow">CONTROL CENTRE</p><h1>MOTTECK Admin</h1><p>Manage your marketplace from one place.</p></div><div class="admin-home-mark">M</div></div>
 <div class="admin-grid">
-<button class="admin-tile" onclick="openAdminPanel('approval-page')"><span class="tile-icon">▣</span><span class="tile-title">Posts Awaiting Approval</span><span class="tile-description">Review and approve listings</span><span class="tile-count" id="hubPendingCount">0</span></button>
+<button class="admin-tile" onclick="openAdminPanel('pending-posts-page')"><span class="tile-icon">▣</span><span class="tile-title">Posts Awaiting Approval</span><span class="tile-description">Review and approve listings</span><span class="tile-count" id="hubPendingCount">0</span></button>
 <button class="admin-tile" onclick="openAdminPanel('leads-page')"><span class="tile-icon">↗</span><span class="tile-title">Request MOTTECK</span><span class="tile-description">Manage customer enquiries</span><span class="tile-count" id="hubLeadCount">0</span></button>
 <button class="admin-tile" onclick="openAdminPanel('orders-page')"><span class="tile-icon">🛒</span><span class="tile-title">Orders / Buy Now</span><span class="tile-description">Orders and payment statuses</span><span class="tile-count">—</span></button>
 <button class="admin-tile" onclick="openAdminPanel('invoices-page')"><span class="tile-icon">▤</span><span class="tile-title">Invoices</span><span class="tile-description">Invoice register</span></button>
@@ -1197,33 +1197,194 @@ document.addEventListener('click', function(event) {
         </button>
 </form>
 </div>
+
 <!-- =========================================================
-     PENDING USER SUBMISSIONS
+     POSTS PENDING APROVAL
 ========================================================= -->
-<div class="submissions-box admin-panel" id="approval-page" style="display:none;"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button></div>
-<div class="submission-header">
-<h3>
 
-            Submitted Posts
+<section class="admin-panel" id="pending-posts-page" style="display:none;">
 
-            <span class="pending-count" id="pendingCount">
-                0
-            </span>
-</h3>
-<button class="refresh-btn" onclick="loadSubmissions()" type="button">
+    <div class="pending-header">
+        <div>
+            <span class="pending-eyebrow">CONTENT MODERATION</span>
+            <h2>Submitted Posts</h2>
+            <p>Review submitted listings before they appear on MOTTECK.</p>
+        </div>
 
-            🔄 Refresh
+        <div class="pending-header-count">
+            <span id="pendingTotal">0</span>
+            <small>Waiting for approval</small>
+        </div>
+    </div>
 
+    <div class="pending-summary">
+        <div class="pending-stat">
+            <span class="pending-stat-icon">◷</span>
+            <div>
+                <strong id="pendingWaiting">0</strong>
+                <small>Pending review</small>
+            </div>
+        </div>
+
+        <div class="pending-stat">
+            <span class="pending-stat-icon">✓</span>
+            <div>
+                <strong id="pendingApproved">0</strong>
+                <small>Approved</small>
+            </div>
+        </div>
+
+        <div class="pending-stat">
+            <span class="pending-stat-icon">✕</span>
+            <div>
+                <strong id="pendingRejected">0</strong>
+                <small>Rejected</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="pending-toolbar">
+        <div class="pending-search">
+            <span>⌕</span>
+            <input type="text" id="pendingSearch"
+                   placeholder="Search post, submitter or category...">
+        </div>
+
+        <select id="pendingCategory">
+            <option value="">All categories</option>
+            <option value="vehicle">Vehicles</option>
+            <option value="property">Property</option>
+            <option value="electronics">Electronics</option>
+            <option value="accessories">Accessories</option>
+            <option value="other">Other</option>
+        </select>
+
+        <button type="button" class="pending-refresh"
+                onclick="loadPendingPosts()">
+            ↻ Refresh
         </button>
-</div>
-<div id="submissions">
-<div class="loading-submissions">
+    </div>
 
-            Loading submitted posts...
+    <div class="pending-table-wrap">
+        <table class="pending-table">
+            <thead>
+                <tr>
+                    <th>SUBMISSION</th>
+                    <th>SUBMITTED BY</th>
+                    <th>CATEGORY</th>
+                    <th>DATE SUBMITTED</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+
+            <tbody id="pendingPostsBody">
+                <tr>
+                    <td colspan="6" class="pending-empty">
+                        Pending submissions will appear here.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Submission details modal -->
+    <div class="pending-modal" id="pendingDetailsModal">
+        <div class="pending-modal-content">
+
+            <div class="pending-modal-header">
+                <div>
+                    <span class="pending-eyebrow">SUBMISSION REVIEW</span>
+                    <h3>Post Details</h3>
+                </div>
+                <button type="button" class="pending-close"
+                        onclick="closePendingDetails()">×</button>
+            </div>
+
+            <div class="pending-modal-body">
+
+                <div class="pending-photo-section">
+                    <h4>Uploaded Photos</h4>
+                    <div class="pending-photo-gallery" id="pendingPhotoGallery">
+                        <!-- Photos inserted here -->
+                    </div>
+                </div>
+
+                <div class="pending-detail-section">
+                    <h4>Post Information</h4>
+
+                    <div class="pending-detail-grid">
+                        <div>
+                            <small>Post title</small>
+                            <strong id="detailPostTitle">—</strong>
+                        </div>
+                        <div>
+                            <small>Category</small>
+                            <strong id="detailPostCategory">—</strong>
+                        </div>
+                        <div>
+                            <small>Price</small>
+                            <strong id="detailPostPrice">—</strong>
+                        </div>
+                        <div>
+                            <small>Location</small>
+                            <strong id="detailPostLocation">—</strong>
+                        </div>
+                    </div>
+
+                    <div class="pending-description">
+                        <small>Description</small>
+                        <p id="detailPostDescription">—</p>
+                    </div>
+                </div>
+
+                <div class="pending-detail-section">
+                    <h4>Submitted By</h4>
+
+                    <div class="pending-submitter-card">
+                        <div class="pending-avatar" id="detailSubmitterInitials">?</div>
+
+                        <div class="pending-submitter-info">
+                            <strong id="detailSubmitterName">—</strong>
+                            <span id="detailSubmitterEmail">—</span>
+                            <span id="detailSubmitterPhone">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pending-detail-section">
+                    <h4>Submission Record</h4>
+                    <div class="pending-detail-grid">
+                        <div>
+                            <small>Submission ID</small>
+                            <strong id="detailPostId">—</strong>
+                        </div>
+                        <div>
+                            <small>Date submitted</small>
+                            <strong id="detailSubmittedDate">—</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pending-modal-footer">
+                <button type="button" class="pending-reject-btn"
+                        id="pendingRejectBtn">
+                    Reject Post
+                </button>
+
+                <button type="button" class="pending-approve-btn"
+                        id="pendingApproveBtn">
+                    ✓ Approve Post
+                </button>
+            </div>
 
         </div>
-</div>
-</div>
+    </div>
+
+</section>
+
 
 <!-- =========================================================
      MOTTECK REQUEST MANAGEMENT
