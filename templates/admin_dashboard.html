@@ -640,19 +640,251 @@ document.addEventListener('click', function(event) {
 </section>
 
 
-<!-- =========================================================
-     ANALYTICS
-========================================================= -->
-<div class="form-box admin-panel" id="analytics-page" style="display:none;"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button></div>
-<h3>
-        Analytics
-    </h3>
-<div id="analytics">
 
-        Loading analytics...
+<!-- =========================================
+     MOTTECK ADMIN ANALYTICS DASHBOARD
+========================================= -->
+
+<section class="admin-panel analytics-panel"
+         id="analytics-page"
+         style="display:none;">
+
+    <!-- HEADER -->
+    <div class="analytics-header">
+        <div>
+            <span class="analytics-eyebrow">BUSINESS INTELLIGENCE</span>
+            <h2>Marketplace Analytics</h2>
+            <p>Monitor your marketplace performance and growth.</p>
+        </div>
+
+        <button type="button"
+                class="analytics-refresh"
+                onclick="loadAnalytics()">
+            ↻ Refresh Analytics
+        </button>
+    </div>
+
+    <!-- PERIOD FILTER -->
+    <div class="analytics-toolbar">
+        <div>
+            <strong>Performance Overview</strong>
+            <small>Key marketplace statistics</small>
+        </div>
+
+        <select id="analyticsPeriod"
+                onchange="loadAnalytics()">
+            <option value="7">Last 7 days</option>
+            <option value="30" selected>Last 30 days</option>
+            <option value="90">Last 90 days</option>
+            <option value="365">Last 12 months</option>
+        </select>
+    </div>
+
+    <!-- MAIN STATISTICS -->
+    <div class="analytics-stats-grid">
+
+        <div class="analytics-stat-card">
+            <div class="analytics-stat-top">
+                <span>Total Users</span>
+                <span class="analytics-icon orange">♙</span>
+            </div>
+            <strong id="analyticsUsers">0</strong>
+            <small>Registered marketplace users</small>
+        </div>
+
+        <div class="analytics-stat-card">
+            <div class="analytics-stat-top">
+                <span>Total Listings</span>
+                <span class="analytics-icon purple">▤</span>
+            </div>
+            <strong id="analyticsListings">0</strong>
+            <small>All marketplace posts</small>
+        </div>
+
+        <div class="analytics-stat-card">
+            <div class="analytics-stat-top">
+                <span>Total Orders</span>
+                <span class="analytics-icon blue">🛒</span>
+            </div>
+            <strong id="analyticsOrders">0</strong>
+            <small>Buy Now transactions</small>
+        </div>
+
+        <div class="analytics-stat-card">
+            <div class="analytics-stat-top">
+                <span>Total Revenue</span>
+                <span class="analytics-icon green">KSh</span>
+            </div>
+            <strong id="analyticsRevenue">KSh 0</strong>
+            <small>Recorded marketplace revenue</small>
+        </div>
 
     </div>
-</div>
+
+    <!-- LISTING PERFORMANCE -->
+    <div class="analytics-section">
+        <div class="analytics-section-heading">
+            <div>
+                <h3>Listing Performance</h3>
+                <p>Overview of marketplace listing activity.</p>
+            </div>
+        </div>
+
+        <div class="analytics-listing-grid">
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot green-dot"></span>
+                <div>
+                    <small>Approved Posts</small>
+                    <strong id="analyticsApproved">0</strong>
+                </div>
+            </div>
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot orange-dot"></span>
+                <div>
+                    <small>Pending Approval</small>
+                    <strong id="analyticsPending">0</strong>
+                </div>
+            </div>
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot red-dot"></span>
+                <div>
+                    <small>Rejected Posts</small>
+                    <strong id="analyticsRejected">0</strong>
+                </div>
+            </div>
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot purple-dot"></span>
+                <div>
+                    <small>Sponsored & Featured</small>
+                    <strong id="analyticsPromoted">0</strong>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- REVENUE AND ACTIVITY -->
+    <div class="analytics-charts-grid">
+
+        <div class="analytics-chart-card">
+            <div class="analytics-section-heading">
+                <div>
+                    <h3>Revenue Performance</h3>
+                    <p>Monthly revenue overview</p>
+                </div>
+            </div>
+
+            <div class="analytics-chart-placeholder"
+                 id="analyticsRevenueChart">
+                <span>▥</span>
+                <strong>Revenue chart</strong>
+                <small>Revenue data will appear here when connected.</small>
+            </div>
+        </div>
+
+        <div class="analytics-chart-card">
+            <div class="analytics-section-heading">
+                <div>
+                    <h3>Marketplace Activity</h3>
+                    <p>Listings and orders overview</p>
+                </div>
+            </div>
+
+            <div class="analytics-chart-placeholder"
+                 id="analyticsActivityChart">
+                <span>▥</span>
+                <strong>Activity chart</strong>
+                <small>Marketplace activity will appear here when connected.</small>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ORDER AND ENQUIRY PERFORMANCE -->
+    <div class="analytics-section">
+        <div class="analytics-section-heading">
+            <div>
+                <h3>Sales & Enquiries</h3>
+                <p>Track customer purchasing activity.</p>
+            </div>
+        </div>
+
+        <div class="analytics-listing-grid">
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot blue-dot"></span>
+                <div>
+                    <small>Buy Now Orders</small>
+                    <strong id="analyticsBuyNow">0</strong>
+                </div>
+            </div>
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot orange-dot"></span>
+                <div>
+                    <small>Order Enquiries</small>
+                    <strong id="analyticsEnquiries">0</strong>
+                </div>
+            </div>
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot green-dot"></span>
+                <div>
+                    <small>Paid Orders</small>
+                    <strong id="analyticsPaidOrders">0</strong>
+                </div>
+            </div>
+
+            <div class="analytics-mini-card">
+                <span class="analytics-dot red-dot"></span>
+                <div>
+                    <small>Unpaid Orders</small>
+                    <strong id="analyticsUnpaidOrders">0</strong>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="analytics-section analytics-activity-section">
+        <div class="analytics-section-heading">
+            <div>
+                <h3>Recent Marketplace Activity</h3>
+                <p>Latest recorded marketplace events.</p>
+            </div>
+        </div>
+
+        <div class="analytics-table-wrapper">
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Customer / Owner</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody id="analyticsRecentActivity">
+                    <tr>
+                        <td colspan="4">
+                            <div class="analytics-empty">
+                                No activity data loaded.
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
 
 <!-- =========================================
      MOTTECK SPONSORED & FEATURED MANAGEMENT
