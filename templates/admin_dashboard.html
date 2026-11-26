@@ -1075,133 +1075,380 @@ document.addEventListener('click', function(event) {
 </section>
 
 
-<!-- =========================================================
-     CREATE ADMIN POST
-========================================================= -->
-<div class="form-box admin-panel" id="create-page" style="display:none;"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button></div>
-<h3>
-        Create Post
-    </h3>
-<form enctype="multipart/form-data" id="postForm">
-<!-- TITLE -->
-<input name="title" placeholder="Title" required="" type="text"/>
-<!-- CATEGORY -->
-<select id="create_category" name="category" onchange="updateCreateFields()" required="">
-<option value="">
-                Select Category
-            </option>
-<option value="car">
-                Car
-            </option>
+<!-- =====================================================
+     ADMIN CREATE CONTENT
+===================================================== -->
+<div class="form-box admin-panel admin-create-content" id="create-page" style="display:none;">
 
-<option value="motorbike">
-                Motorbike / Bike
-            </option>
-
-<option value="truck">
-                Truck / Bus
-            </option>
-
-<option value="spare_part">
-                Spare Part
-            </option>
-
-<option value="Accessorie">
-                Accessorie
-            </option>
-
-</select>
-<!-- =================================================
-             VEHICLE INFORMATION
-        ================================================== -->
-<div id="createVehicleFields" style="display:none;">
-<h4>
-                Vehicle Information
-            </h4>
-<!-- VEHICLE TYPE -->
-<input id="create_vehicle_type" name="vehicle_type" placeholder="Vehicle Type e.g. Sedan, SUV, Pickup" type="text"/>
-<!-- YEAR -->
-<input id="create_year" max="2100" min="1900" name="year" placeholder="Year e.g. 2022" type="number"/>
-<!-- MILEAGE -->
-<input id="create_mileage" name="mileage" placeholder="Mileage e.g. 85,000 KM" type="text"/>
-<!-- CONDITION -->
-<select id="create_condition" name="condition">
-<option value="">
-                    Select Condition
-                </option>
-<option value="New">
-                    New
-                </option>
-<option value="Used">
-                    Used
-                </option>
-<option value="Foreign Used">
-                    Foreign Used
-                </option>
-<option value="Local Used">
-                    Local Used
-                </option>
-</select>
-</div>
-<!-- =================================================
-             POST TYPE
-        ================================================== -->
-<select id="create_post_type" name="post_type">
-<option value="normal">
-                Normal Listing
-            </option>
-<option value="sponsored">
-                Sponsored
-            </option>
-<option value="featured">
-                Featured
-            </option>
-</select>
-<!-- =================================================
-             PROMOTION DURATION
-        ================================================== -->
-<select id="create_promotion_duration" name="promotion_duration">
-<option value="">
-                No Promotion
-            </option>
-<option value="24_hours">
-                24 Hours
-            </option>
-<option value="3_days">
-                3 Days
-            </option>
-<option value="1_week">
-                1 Week
-            </option>
-<option value="1_month">
-                1 Month
-            </option>
-</select>
-<!-- IMAGE -->
-<input accept="image/*" name="image" required="" type="file"/>
-<!-- DESCRIPTION -->
-<textarea name="description" placeholder="Description" required=""></textarea>
-<!-- FEATURED -->
-<label>
-<input name="is_featured" type="checkbox"/>
-
-            Featured
-
-        </label>
-<!-- SPONSORED -->
-<label>
-<input name="is_sponsored" type="checkbox"/>
-
-            Sponsored
-
-        </label>
-<button id="publishBtn" type="submit">
-
-            Publish
-
+    <div class="admin-section-heading">
+        <button class="admin-back" type="button" onclick="backToAdminHome()">
+            ← Back to Admin Dashboard
         </button>
-</form>
+    </div>
+
+    <div class="create-header">
+        <div>
+            <span class="create-eyebrow">ADMINISTRATION</span>
+            <h3>Create Content</h3>
+            <p>Publish product listings or manage business advertisements.</p>
+        </div>
+        <span class="create-status">Admin Publishing</span>
+    </div>
+
+    <!-- CONTENT TYPE SWITCH -->
+    <div class="create-type-switch">
+        <button type="button" class="create-type-btn active"
+                id="productModeBtn" onclick="switchCreateMode('product')">
+            <span class="mode-icon">🚗</span>
+            <span>
+                <strong>Product Post</strong>
+                <small>Vehicles, parts & accessories</small>
+            </span>
+        </button>
+
+        <button type="button" class="create-type-btn"
+                id="bannerModeBtn" onclick="switchCreateMode('banner')">
+            <span class="mode-icon">📢</span>
+            <span>
+                <strong>Banner Advertisement</strong>
+                <small>Business advertising & promotions</small>
+            </span>
+        </button>
+    </div>
+
+
+    <!-- =================================================
+         PRODUCT POST FORM
+    ================================================== -->
+    <div id="productCreateSection">
+
+        <div class="create-form-heading">
+            <h4>Create Product Listing</h4>
+            <p>Add a product to the MOTTECK marketplace.</p>
+        </div>
+
+        <form enctype="multipart/form-data" id="postForm">
+
+            <div class="create-field">
+                <label>Post Title *</label>
+                <input name="title" placeholder="e.g. Toyota Harrier 2022"
+                       required type="text">
+            </div>
+
+            <div class="create-form-grid">
+
+                <div class="create-field">
+                    <label>Category *</label>
+                    <select id="create_category" name="category"
+                            onchange="updateCreateFields()" required>
+                        <option value="">Select Category</option>
+                        <option value="car">Car</option>
+                        <option value="motorbike">Motorbike / Bike</option>
+                        <option value="truck">Truck / Bus</option>
+                        <option value="spare_part">Spare Part</option>
+                        <option value="Accessorie">Accessorie</option>
+                    </select>
+                </div>
+
+                <div class="create-field">
+                    <label>Post Type *</label>
+                    <select id="create_post_type" name="post_type"
+                            onchange="syncProductPromotion()" required>
+                        <option value="normal">Normal Listing</option>
+                        <option value="sponsored">Sponsored</option>
+                        <option value="featured">Featured</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Compatibility with existing Flask checkbox checks -->
+            <input type="hidden" name="is_featured" id="create_is_featured" value="">
+            <input type="hidden" name="is_sponsored" id="create_is_sponsored" value="">
+
+            <div class="create-field" id="promotionDurationField">
+                <label>Promotion Duration</label>
+                <select id="create_promotion_duration" name="promotion_duration">
+                    <option value="">No Promotion</option>
+                    <option value="24_hours">24 Hours</option>
+                    <option value="3_days">3 Days</option>
+                    <option value="1_week">1 Week</option>
+                    <option value="1_month">1 Month</option>
+                </select>
+            </div>
+
+            <!-- VEHICLE FIELDS -->
+            <div id="createVehicleFields" style="display:none;">
+
+                <div class="create-section-divider">
+                    <h4>Vehicle Information</h4>
+                    <p>Enter additional vehicle details.</p>
+                </div>
+
+                <div class="create-form-grid">
+
+                    <div class="create-field">
+                        <label>Vehicle Type</label>
+                        <input id="create_vehicle_type" name="vehicle_type"
+                               placeholder="e.g. Sedan, SUV, Pickup">
+                    </div>
+
+                    <div class="create-field">
+                        <label>Year</label>
+                        <input id="create_year" name="year"
+                               type="number" min="1900" max="2100"
+                               placeholder="e.g. 2022">
+                    </div>
+
+                    <div class="create-field">
+                        <label>Mileage</label>
+                        <input id="create_mileage" name="mileage"
+                               placeholder="e.g. 85,000 KM">
+                    </div>
+
+                    <div class="create-field">
+                        <label>Condition</label>
+                        <select id="create_condition" name="condition">
+                            <option value="">Select Condition</option>
+                            <option value="New">New</option>
+                            <option value="Used">Used</option>
+                            <option value="Foreign Used">Foreign Used</option>
+                            <option value="Local Used">Local Used</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="create-field">
+                <label>Product Image *</label>
+                <div class="create-upload-box">
+                    <input type="file" name="image" id="productImage"
+                           accept="image/*" required>
+                    <label for="productImage" class="upload-label">
+                        <span>📷</span>
+                        <strong>Choose Product Image</strong>
+                        <small>Upload a clear product photograph.</small>
+                    </label>
+                    <img id="productImagePreview" class="create-image-preview"
+                         alt="Product preview" style="display:none;">
+                </div>
+            </div>
+
+            <div class="create-field">
+                <label>Description *</label>
+                <textarea name="description" rows="5"
+                          placeholder="Describe this product..."
+                          required></textarea>
+            </div>
+
+            <button type="submit" id="publishBtn" class="create-submit-btn">
+                Publish Product
+            </button>
+
+        </form>
+    </div>
+
+
+    <!-- =================================================
+         BANNER ADVERTISEMENT FORM
+    ================================================== -->
+    <div id="bannerCreateSection" style="display:none;">
+
+        <div class="create-form-heading">
+            <h4>Create Banner Advertisement</h4>
+            <p>Publish advertising campaigns for automotive businesses.</p>
+        </div>
+
+        <form enctype="multipart/form-data" id="bannerForm">
+
+            <div class="banner-notice">
+                <strong>📢 Business Advertising</strong>
+                <p>
+                    This content is an advertisement, not a product listing.
+                    It will not use Buy Now or Request MOTTECK buttons.
+                </p>
+            </div>
+
+            <div class="create-form-grid">
+
+                <div class="create-field">
+                    <label>Business Name *</label>
+                    <input type="text" name="business_name"
+                           placeholder="e.g. Auto Express" required>
+                </div>
+
+                <div class="create-field">
+                    <label>Business Category *</label>
+                    <select name="business_category" required>
+                        <option value="">Select Business Category</option>
+                        <option value="insurance">Insurance</option>
+                        <option value="car_wash">Car Wash</option>
+                        <option value="garage">Garage & Repairs</option>
+                        <option value="inspection">Vehicle Inspection</option>
+                        <option value="tracking">Vehicle Tracking</option>
+                        <option value="financing">Vehicle Financing</option>
+                        <option value="driving_school">Driving School</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="create-field">
+                <label>Advertisement Title *</label>
+                <input type="text" name="title"
+                       placeholder="e.g. Affordable Vehicle Insurance"
+                       required>
+            </div>
+
+            <div class="create-field">
+                <label>Advertisement Description *</label>
+                <textarea name="description" rows="4"
+                          placeholder="Describe the business and its services..."
+                          required></textarea>
+            </div>
+
+            <!-- BANNER IMAGE -->
+            <div class="create-field">
+                <label>Banner Artwork *</label>
+
+                <div class="create-upload-box banner-upload-box">
+                    <input type="file" name="image" id="bannerImage"
+                           accept="image/*" required>
+
+                    <label for="bannerImage" class="upload-label">
+                        <span>🖼️</span>
+                        <strong>Upload Advertisement Banner</strong>
+                        <small>Use a high-quality landscape banner image.</small>
+                    </label>
+
+                    <img id="bannerImagePreview"
+                         class="create-image-preview banner-preview"
+                         alt="Banner preview" style="display:none;">
+                </div>
+            </div>
+
+            <!-- BANNER PLACEMENT -->
+            <div class="create-section-divider">
+                <h4>Advertisement Placement</h4>
+                <p>Select where this banner should appear on MOTTECK.</p>
+            </div>
+
+            <div class="banner-placement-grid">
+
+                <label class="placement-option">
+                    <input type="checkbox" name="placements" value="homepage">
+                    <span>🏠 Homepage</span>
+                </label>
+
+                <label class="placement-option">
+                    <input type="checkbox" name="placements" value="car">
+                    <span>🚗 Vehicles</span>
+                </label>
+
+                <label class="placement-option">
+                    <input type="checkbox" name="placements" value="motorbike">
+                    <span>🏍️ Motorbikes</span>
+                </label>
+
+                <label class="placement-option">
+                    <input type="checkbox" name="placements" value="truck">
+                    <span>🚚 Trucks & Buses</span>
+                </label>
+
+                <label class="placement-option">
+                    <input type="checkbox" name="placements" value="spare_part">
+                    <span>🔧 Spare Parts</span>
+                </label>
+
+                <label class="placement-option">
+                    <input type="checkbox" name="placements" value="Accessorie">
+                    <span>⚙️ Accessories</span>
+                </label>
+
+            </div>
+
+            <!-- ACTION BUTTON -->
+            <div class="create-section-divider">
+                <h4>Advertisement Action</h4>
+                <p>Choose what customers can do after viewing the banner.</p>
+            </div>
+
+            <div class="create-form-grid">
+
+                <div class="create-field">
+                    <label>Call-to-Action Button *</label>
+                    <select name="button_text" required>
+                        <option value="Learn More">Learn More</option>
+                        <option value="Call Now">Call Now</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Get a Quote">Get a Quote</option>
+                        <option value="Book Now">Book Now</option>
+                        <option value="Visit Website">Visit Website</option>
+                    </select>
+                </div>
+
+                <div class="create-field">
+                    <label>Business Phone</label>
+                    <input type="tel" name="business_phone"
+                           placeholder="e.g. 0712345678">
+                </div>
+
+            </div>
+
+            <div class="create-field">
+                <label>Destination Website / URL</label>
+                <input type="url" name="destination_url"
+                       placeholder="https://www.example.com">
+            </div>
+
+            <div class="create-field">
+                <label>WhatsApp Number</label>
+                <input type="tel" name="whatsapp_number"
+                       placeholder="e.g. 254712345678">
+            </div>
+
+            <!-- CAMPAIGN DATES -->
+            <div class="create-section-divider">
+                <h4>Campaign Schedule</h4>
+                <p>Control when this advertisement becomes active and expires.</p>
+            </div>
+
+            <div class="create-form-grid">
+
+                <div class="create-field">
+                    <label>Start Date *</label>
+                    <input type="date" name="start_date"
+                           id="bannerStartDate" required>
+                </div>
+
+                <div class="create-field">
+                    <label>Expiry Date *</label>
+                    <input type="date" name="expiry_date"
+                           id="bannerExpiryDate" required>
+                </div>
+
+            </div>
+
+            <div class="create-field">
+                <label>Advertisement Status</label>
+                <select name="status">
+                    <option value="draft">Save as Draft</option>
+                    <option value="active">Active</option>
+                </select>
+            </div>
+
+            <button type="submit" id="publishBannerBtn"
+                    class="create-submit-btn banner-submit-btn">
+                Publish Banner Advertisement
+            </button>
+
+        </form>
+    </div>
+
 </div>
+
 
 <!-- =========================================================
      POSTS PENDING APROVAL
@@ -2933,6 +3180,262 @@ function filterInvoiceRows() {
                 : "none";
     });
 }
+
+/* =====================================================
+   ADMIN CREATE CONTENT JAVASCRIPT
+===================================================== */
+
+// SWITCH BETWEEN PRODUCT AND BANNER FORMS
+function switchCreateMode(mode) {
+
+    const productSection = document.getElementById("productCreateSection");
+    const bannerSection = document.getElementById("bannerCreateSection");
+
+    const productBtn = document.getElementById("productModeBtn");
+    const bannerBtn = document.getElementById("bannerModeBtn");
+
+    if (!productSection || !bannerSection) return;
+
+    if (mode === "banner") {
+
+        productSection.style.display = "none";
+        bannerSection.style.display = "block";
+
+        productBtn.classList.remove("active");
+        bannerBtn.classList.add("active");
+
+    } else {
+
+        bannerSection.style.display = "none";
+        productSection.style.display = "block";
+
+        bannerBtn.classList.remove("active");
+        productBtn.classList.add("active");
+
+    }
+}
+
+
+// SHOW VEHICLE FIELDS ONLY FOR VEHICLE CATEGORIES
+function updateCreateFields() {
+
+    const category = document.getElementById("create_category");
+    const vehicleFields = document.getElementById("createVehicleFields");
+
+    if (!category || !vehicleFields) return;
+
+    const vehicleCategories = ["car", "motorbike", "truck"];
+
+    const showVehicleFields = vehicleCategories.includes(category.value);
+
+    vehicleFields.style.display = showVehicleFields ? "block" : "none";
+
+    // Enable or disable vehicle inputs
+    vehicleFields.querySelectorAll("input, select").forEach(field => {
+        field.disabled = !showVehicleFields;
+
+        if (!showVehicleFields) {
+            field.value = "";
+        }
+    });
+}
+
+
+// SYNC PRODUCT PROMOTION VALUES
+function syncProductPromotion() {
+
+    const postType = document.getElementById("create_post_type");
+    const duration = document.getElementById("create_promotion_duration");
+
+    const featured = document.getElementById("create_is_featured");
+    const sponsored = document.getElementById("create_is_sponsored");
+
+    if (!postType) return;
+
+    const selectedType = postType.value;
+
+    if (featured) {
+        featured.value = selectedType === "featured" ? "1" : "";
+    }
+
+    if (sponsored) {
+        sponsored.value = selectedType === "sponsored" ? "1" : "";
+    }
+
+    if (duration) {
+        const isPromoted = selectedType !== "normal";
+
+        duration.disabled = !isPromoted;
+
+        if (!isPromoted) {
+            duration.value = "";
+        }
+    }
+}
+
+
+// IMAGE PREVIEW FUNCTION
+function setupCreateImagePreview(inputId, previewId) {
+
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+
+    if (!input || !preview) return;
+
+    let currentImageURL = null;
+
+    input.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (currentImageURL) {
+            URL.revokeObjectURL(currentImageURL);
+            currentImageURL = null;
+        }
+
+        if (!file) {
+            preview.removeAttribute("src");
+            preview.style.display = "none";
+            return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select a valid image.");
+            this.value = "";
+            preview.style.display = "none";
+            return;
+        }
+
+        currentImageURL = URL.createObjectURL(file);
+
+        preview.src = currentImageURL;
+        preview.style.display = "block";
+
+    });
+}
+
+
+// SET UP BOTH IMAGE PREVIEWS
+setupCreateImagePreview("productImage", "productImagePreview");
+
+setupCreateImagePreview("bannerImage", "bannerImagePreview");
+
+
+// SET MINIMUM BANNER DATE TO TODAY
+function getLocalDateString() {
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+const bannerStartDate = document.getElementById("bannerStartDate");
+const bannerExpiryDate = document.getElementById("bannerExpiryDate");
+
+if (bannerStartDate && bannerExpiryDate) {
+
+    bannerStartDate.min = getLocalDateString();
+    bannerExpiryDate.min = getLocalDateString();
+
+    bannerStartDate.addEventListener("change", function () {
+
+        bannerExpiryDate.min = this.value || getLocalDateString();
+
+        if (
+            bannerExpiryDate.value &&
+            bannerExpiryDate.value < this.value
+        ) {
+            bannerExpiryDate.value = "";
+        }
+
+    });
+}
+
+
+// VALIDATE BANNER BEFORE SUBMISSION
+const bannerForm = document.getElementById("bannerForm");
+
+if (bannerForm) {
+
+    bannerForm.addEventListener("submit", function (event) {
+
+        const placements = bannerForm.querySelectorAll(
+            'input[name="placements"]:checked'
+        );
+
+        const startDate = document.getElementById("bannerStartDate").value;
+        const expiryDate = document.getElementById("bannerExpiryDate").value;
+
+        if (placements.length === 0) {
+
+            event.preventDefault();
+
+            alert("Please select at least one banner placement.");
+
+            return;
+        }
+
+        if (expiryDate < startDate) {
+
+            event.preventDefault();
+
+            alert("Expiry date cannot be earlier than the start date.");
+
+            return;
+        }
+
+        const publishBtn = document.getElementById("publishBannerBtn");
+
+        if (publishBtn) {
+
+            publishBtn.disabled = true;
+            publishBtn.textContent = "Submitting Advertisement...";
+
+        }
+
+        // The browser will now submit the form to its configured endpoint.
+    });
+
+}
+// PREVENT HIDDEN FORM FIELDS FROM BLOCKING SUBMISSION
+function setCreateFormMode(mode) {
+
+    const productForm = document.getElementById("postForm");
+    const bannerForm = document.getElementById("bannerForm");
+
+    if (!productForm || !bannerForm) return;
+
+    productForm.querySelectorAll("input, select, textarea, button")
+        .forEach(el => el.disabled = mode !== "product");
+
+    bannerForm.querySelectorAll("input, select, textarea, button")
+        .forEach(el => el.disabled = mode !== "banner");
+
+    if (mode === "product") {
+        updateCreateFields();
+        syncProductPromotion();
+    }
+}
+
+// Wrap the existing mode switch
+const originalSwitchCreateMode = switchCreateMode;
+
+switchCreateMode = function(mode) {
+    originalSwitchCreateMode(mode);
+    setCreateFormMode(mode);
+};
+
+// Start in product mode
+switchCreateMode("product");
+
+// INITIALISE PRODUCT FORM
+updateCreateFields();
+syncProductPromotion();
 
 </script>
 </body>
