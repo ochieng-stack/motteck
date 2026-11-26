@@ -1115,229 +1115,689 @@ th, td {
         flex-direction: column;
     }
 }
+
+
 /* =========================================================
-   MOTTECK REQUEST MANAGEMENT
+   MOTTECK REQUEST MANAGEMENT - PROFESSIONAL DESIGN
 ========================================================= */
 
-.mreq-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
-    flex-wrap:wrap;
-    margin-bottom:25px;
+#leads-page {
+    width: 100%;
+    background: #fff;
+    border-radius: 15px;
+    padding: 24px;
+    box-sizing: border-box;
 }
 
-.mreq-header h2{
-    margin-bottom:8px;
+/* HEADER */
+
+.mreq-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 30px 0 26px;
 }
 
-.mreq-header p{
-    color:#777;
-    margin:0;
+.mreq-eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    color: #87909d;
+    margin-bottom: 8px;
 }
 
-.mreq-summary{
-    display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:15px;
-    margin-bottom:25px;
+.mreq-header h2 {
+    font-size: 25px;
+    color: #151b26;
+    margin: 0 0 7px;
 }
 
-.mreq-summary-card{
-    background:#f5f5f5;
-    border:1px solid #e5e5e5;
-    border-radius:12px;
-    padding:20px;
+.mreq-header p {
+    color: #818895;
+    font-size: 13px;
+    margin: 0;
 }
 
-.mreq-summary-card span{
-    display:block;
-    font-size:13px;
-    color:#666;
-    margin-bottom:10px;
+.mreq-header .refresh-btn {
+    border: 1px solid #e1e5eb;
+    background: #f7f8fa;
+    color: #252c37;
+    padding: 12px 17px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 650;
+    font-size: 12px;
+    transition: .2s;
 }
 
-.mreq-summary-card strong{
-    font-size:26px;
-    color:#111;
+.mreq-header .refresh-btn:hover {
+    background: #edf1f6;
+    border-color: #cbd3df;
 }
 
-.mreq-controls{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-bottom:25px;
+/* SUMMARY CARDS */
+
+.mreq-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 27px;
 }
 
-.mreq-controls input,
-.mreq-controls select{
-    flex:1;
-    min-width:180px;
-    padding:13px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    background:#fff;
-    color:#111;
+.mreq-summary-card {
+    background: #fff;
+    border: 1px solid #e6e9ee;
+    border-radius: 11px;
+    padding: 19px;
+    min-width: 0;
+    transition: .2s;
 }
 
-.mreq-card{
-    border:1px solid #e4e4e4;
-    border-radius:14px;
-    background:#fff;
-    padding:22px;
-    margin-bottom:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.04);
+.mreq-summary-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 14px rgba(20, 35, 55, .04);
 }
 
-.mreq-card-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:15px;
-    margin-bottom:20px;
+.mreq-stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 13px;
 }
 
-.mreq-card-top h3{
-    margin:0 0 8px;
-    word-break:break-word;
+.mreq-stat-top > span:first-child {
+    color: #747e8d;
+    font-size: 12px;
+    font-weight: 600;
 }
 
-.mreq-card-top small{
-    color:#777;
+.mreq-stat-icon {
+    width: 31px;
+    height: 31px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: #f0f2f5;
+    color: #526176;
+    font-size: 16px;
 }
 
-.mreq-status{
-    display:inline-block;
-    padding:8px 12px;
-    border-radius:30px;
-    background:#eee;
-    color:#222;
-    font-size:12px;
-    font-weight:700;
+.mreq-stat-icon.new-icon {
+    color: #b7791f;
+    background: #fff7e7;
 }
 
-.mreq-listing{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    margin-bottom:20px;
-    padding:15px;
-    background:#f7f7f7;
-    border-radius:10px;
+.mreq-stat-icon.progress-icon {
+    color: #2563eb;
+    background: #edf4ff;
 }
 
-.mreq-listing-image{
-    width:110px;
-    height:85px;
-    object-fit:cover;
-    border-radius:8px;
-    background:#eee;
+.mreq-stat-icon.completed-icon {
+    color: #16834c;
+    background: #eaf8f0;
 }
 
-.mreq-listing p{
-    margin:8px 0 0;
-    color:#777;
-    font-size:13px;
+.mreq-summary-card strong {
+    display: block;
+    font-size: 27px;
+    color: #171d28;
+    font-weight: 750;
+    line-height: 1.2;
+    margin-bottom: 7px;
 }
 
-.mreq-details{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px 20px;
+.mreq-summary-card > small {
+    display: block;
+    color: #9299a4;
+    font-size: 11px;
 }
 
-.mreq-details p{
-    margin:0;
-    padding:10px 0;
-    border-bottom:1px solid #eee;
-    overflow-wrap:anywhere;
+/* MANAGEMENT PANEL */
+
+.mreq-management {
+    background: #fff;
+    border: 1px solid #e5e8ed;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-.mreq-description{
-    background:#f7f7f7;
-    padding:18px;
-    border-radius:10px;
-    margin-top:20px;
+.mreq-panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 21px 22px;
+    border-bottom: 1px solid #edf0f3;
 }
 
-.mreq-description p{
-    white-space:pre-wrap;
-    overflow-wrap:anywhere;
-    line-height:1.6;
-    margin-bottom:0;
+.mreq-panel-heading h3 {
+    color: #202938;
+    font-size: 16px;
+    margin: 0 0 6px;
 }
 
-.mreq-actions{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-top:20px;
-    padding-top:20px;
-    border-top:1px solid #eee;
+.mreq-panel-heading p {
+    color: #858e9b;
+    font-size: 12px;
+    margin: 0;
 }
 
-.mreq-actions label{
-    font-weight:600;
+.mreq-live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #687486;
+    font-size: 11px;
+    font-weight: 600;
 }
 
-.mreq-status-select{
-    padding:12px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    background:#fff;
+.mreq-live-indicator span {
+    width: 7px;
+    height: 7px;
+    background: #16a36a;
+    border-radius: 50%;
 }
 
-.mreq-save-status{
-    padding:12px 18px;
-    background:#111;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:600;
+/* FILTERS */
+
+.mreq-controls {
+    display: flex;
+    align-items: end;
+    gap: 14px;
+    padding: 19px 22px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #edf0f3;
 }
 
-.mreq-save-status:hover{
-    background:#333;
+.mreq-search-wrapper {
+    flex: 1;
+    min-width: 230px;
+    position: relative;
 }
 
-@media(max-width:800px){
+.mreq-search-wrapper > span {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8b95a4;
+    font-size: 22px;
+    pointer-events: none;
+}
 
-    .mreq-summary{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+.mreq-search-wrapper input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border: 1px solid #dfe4ea;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 12px;
+    outline: none;
+    color: #202938;
+    box-sizing: border-box;
+}
+
+.mreq-search-wrapper input:focus,
+.mreq-filter-wrapper select:focus {
+    border-color: #839fc4;
+    box-shadow: 0 0 0 3px rgba(59, 104, 166, .07);
+}
+
+.mreq-filter-wrapper {
+    width: 210px;
+}
+
+.mreq-filter-wrapper label {
+    display: block;
+    font-size: 11px;
+    color: #657184;
+    font-weight: 650;
+    margin-bottom: 7px;
+}
+
+.mreq-filter-wrapper select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dfe4ea;
+    border-radius: 8px;
+    background: #fff;
+    color: #263244;
+    font-size: 12px;
+    outline: none;
+}
+
+/* TABLE HEADING */
+
+.mreq-table-heading {
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.mreq-table-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mreq-table-heading strong {
+    color: #283344;
+    font-size: 13px;
+}
+
+.mreq-table-heading > div span {
+    color: #87909d;
+    font-size: 11px;
+}
+
+.mreq-table-hint {
+    font-size: 11px;
+    color: #939ba7;
+}
+
+/* TABLE */
+
+.mreq-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.mreq-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.mreq-table thead {
+    background: #f7f8fa;
+}
+
+.mreq-table th {
+    padding: 14px 17px;
+    color: #778293;
+    font-size: 10px;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: .45px;
+    border-top: 1px solid #edf0f3;
+    border-bottom: 1px solid #edf0f3;
+    white-space: nowrap;
+}
+
+.mreq-table td {
+    padding: 15px 17px;
+    color: #3c4655;
+    font-size: 12px;
+    border-bottom: 1px solid #edf0f3;
+    vertical-align: middle;
+}
+
+.mreq-table tbody tr:hover {
+    background: #fafbfd;
+}
+
+.mreq-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.mreq-request-number {
+    font-weight: 750;
+    color: #253b5c;
+    white-space: nowrap;
+}
+
+.mreq-customer-name {
+    color: #273244;
+    font-weight: 650;
+    margin-bottom: 4px;
+}
+
+.mreq-customer-phone {
+    font-size: 11px;
+    color: #8a94a2;
+}
+
+.mreq-listing-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 180px;
+}
+
+.mreq-listing-image {
+    width: 48px;
+    height: 43px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #edf0f3;
+    flex-shrink: 0;
+}
+
+.mreq-listing-title {
+    font-weight: 600;
+    color: #374151;
+    line-height: 1.4;
+}
+
+.mreq-date-cell {
+    white-space: nowrap;
+    color: #758091;
+    font-size: 11px;
+}
+
+/* STATUS BADGES */
+
+.mreq-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 750;
+    white-space: nowrap;
+    text-transform: capitalize;
+}
+
+.mreq-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+.mreq-status.status-new {
+    color: #a66b12;
+    background: #fff4db;
+}
+
+.mreq-status.status-in_progress {
+    color: #2563c9;
+    background: #eaf2ff;
+}
+
+.mreq-status.status-completed {
+    color: #16834c;
+    background: #e7f7ed;
+}
+
+/* VIEW DETAILS BUTTON */
+
+.mreq-view-btn {
+    border: 1px solid #dce3ed;
+    background: #fff;
+    color: #344968;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 650;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: .2s;
+}
+
+.mreq-view-btn:hover {
+    background: #f0f5fc;
+    border-color: #a8bad3;
+}
+
+/* EXPANDED DETAILS */
+
+.mreq-detail-row {
+    display: none;
+    background: #fafbfd;
+}
+
+.mreq-detail-row.open {
+    display: table-row;
+}
+
+.mreq-detail-row > td {
+    padding: 0 !important;
+}
+
+.mreq-expanded-content {
+    padding: 23px;
+    border-bottom: 1px solid #e5eaf0;
+}
+
+.mreq-expanded-heading {
+    font-size: 13px;
+    font-weight: 750;
+    color: #283548;
+    margin-bottom: 17px;
+}
+
+.mreq-expanded-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.mreq-expanded-item {
+    min-width: 0;
+}
+
+.mreq-expanded-item span {
+    display: block;
+    font-size: 10px;
+    color: #87909e;
+    margin-bottom: 6px;
+}
+
+.mreq-expanded-item strong {
+    display: block;
+    font-size: 12px;
+    color: #344054;
+    overflow-wrap: anywhere;
+}
+
+.mreq-description {
+    margin-top: 19px;
+    background: #fff;
+    border: 1px solid #e8ecf1;
+    border-radius: 9px;
+    padding: 15px;
+}
+
+.mreq-description strong {
+    color: #344054;
+    font-size: 12px;
+}
+
+.mreq-description p {
+    color: #687386;
+    font-size: 12px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 8px 0 0;
+}
+
+.mreq-expanded-image {
+    max-width: 220px;
+    max-height: 150px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-top: 14px;
+    background: #edf0f3;
+}
+
+/* STATUS UPDATE CONTROLS */
+
+.mreq-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 17px;
+    border-top: 1px solid #e9edf2;
+}
+
+.mreq-actions label {
+    color: #657184;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.mreq-status-select {
+    padding: 9px 12px;
+    border: 1px solid #dce3eb;
+    background: #fff;
+    color: #344054;
+    border-radius: 7px;
+    font-size: 11px;
+}
+
+.mreq-save-status {
+    padding: 10px 16px;
+    background: #172b4d;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.mreq-save-status:hover {
+    background: #29466f;
+}
+
+.mreq-save-status:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+/* EMPTY AND LOADING STATES */
+
+.mreq-state-message {
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    color: #87909e;
+    font-size: 13px;
+    text-align: center;
+    padding: 25px;
+}
+
+.mreq-loading-spinner {
+    width: 23px;
+    height: 23px;
+    border: 3px solid #e4e9ef;
+    border-top-color: #456b9e;
+    border-radius: 50%;
+    animation: mreqSpin .8s linear infinite;
+}
+
+@keyframes mreqSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* MOBILE */
+
+@media(max-width: 850px) {
+
+    .mreq-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .mreq-details{
-        grid-template-columns:1fr;
+    .mreq-expanded-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
 }
 
-@media(max-width:500px){
+@media(max-width: 600px) {
 
-    .mreq-card{
-        padding:15px;
+    #leads-page {
+        padding: 14px;
     }
 
-    .mreq-listing-image{
-        width:85px;
-        height:75px;
+    .mreq-header {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .mreq-actions{
-        align-items:stretch;
-        flex-direction:column;
+    .mreq-header .refresh-btn {
+        width: 100%;
+    }
+
+    .mreq-summary {
+        gap: 9px;
+    }
+
+    .mreq-summary-card {
+        padding: 13px;
+    }
+
+    .mreq-summary-card strong {
+        font-size: 23px;
+    }
+
+    .mreq-controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+    }
+
+    .mreq-search-wrapper,
+    .mreq-filter-wrapper {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .mreq-panel-heading {
+        padding: 16px;
+    }
+
+    .mreq-table-heading {
+        padding: 15px;
+    }
+
+    .mreq-expanded-content {
+        padding: 15px;
+    }
+
+    .mreq-expanded-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mreq-actions {
+        align-items: stretch;
+        flex-direction: column;
     }
 
     .mreq-status-select,
-    .mreq-save-status{
-        width:100%;
+    .mreq-save-status {
+        width: 100%;
     }
 
 }
+
+@media(max-width: 360px) {
+
+    .mreq-summary {
+        grid-template-columns: 1fr;
+    }
+
+}
+
 
 /* =====================================================
    MOTTECK ORDERS / BUY NOW ADMIN
