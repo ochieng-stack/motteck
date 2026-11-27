@@ -1783,172 +1783,379 @@ document.addEventListener('click', function(event) {
 
 </section>
 
+<!-- =====================================================
+     ALL PUBLISHED POSTS - MOTTECK ADMIN
+===================================================== -->
+<div class="posts-box admin-panel published-management"
+     id="published-page"
+     style="display:none;">
 
-<!-- =========================================================
-     ALL PUBLISHED POSTS
-========================================================= -->
-<div class="posts-box admin-panel" id="published-page" style="display:none;"><div class="admin-section-heading"><button class="admin-back" onclick="backToAdminHome()">← Back to Admin Dashboard</button></div>
-<h3>
-        All Posts
-    </h3>
-<div id="posts"></div>
+    <!-- HEADER -->
+    <div class="published-topbar">
+        <div>
+            <span class="published-eyebrow">CONTENT MANAGEMENT</span>
+            <h2>Published Posts</h2>
+            <p>Manage, review and update all live marketplace listings.</p>
+        </div>
+
+        <button class="admin-back" onclick="backToAdminHome()">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Dashboard
+        </button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="published-stats">
+
+        <div class="published-stat-card">
+            <div class="published-stat-icon blue">
+                <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <div>
+                <span>Total Published Posts</span>
+                <strong id="publishedTotal">—</strong>
+            </div>
+        </div>
+
+        <div class="published-stat-card">
+            <div class="published-stat-icon green">
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <div>
+                <span>Featured Posts</span>
+                <strong id="publishedFeatured">—</strong>
+            </div>
+        </div>
+
+        <div class="published-stat-card">
+            <div class="published-stat-icon purple">
+                <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div>
+                <span>Sponsored Posts</span>
+                <strong id="publishedSponsored">—</strong>
+            </div>
+        </div>
+
+        <div class="published-stat-card">
+            <div class="published-stat-icon orange">
+                <i class="fa-solid fa-car"></i>
+            </div>
+            <div>
+                <span>Normal Listings</span>
+                <strong id="publishedNormal">—</strong>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- POSTS PANEL -->
+    <div class="published-content-panel">
+
+        <div class="published-panel-heading">
+            <div>
+                <h3>Marketplace Listings</h3>
+                <p>View and manage listings currently visible on MOTTECK.</p>
+            </div>
+
+            <span class="published-live-indicator">
+                <span></span> Published Content
+            </span>
+        </div>
+
+        <!-- SEARCH AND FILTERS -->
+        <div class="published-toolbar">
+
+            <div class="published-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search"
+                       id="publishedSearch"
+                       placeholder="Search by title, seller or post ID..."
+                       oninput="filterPublishedPosts()">
+            </div>
+
+            <select id="publishedCategoryFilter"
+                    onchange="filterPublishedPosts()">
+                <option value="">All Categories</option>
+                <option value="car">Cars</option>
+                <option value="motorbike">Motorbikes / Bikes</option>
+                <option value="truck">Trucks / Buses</option>
+                <option value="spare_part">Spare Parts</option>
+                <option value="accessorie">Accessories</option>
+            </select>
+
+            <select id="publishedTypeFilter"
+                    onchange="filterPublishedPosts()">
+                <option value="">All Listing Types</option>
+                <option value="normal">Normal</option>
+                <option value="featured">Featured</option>
+                <option value="sponsored">Sponsored</option>
+            </select>
+
+            <button type="button"
+                    class="published-refresh"
+                    onclick="loadPublishedPosts()">
+                <i class="fa-solid fa-rotate"></i>
+                Refresh
+            </button>
+
+        </div>
+
+        <!-- LISTINGS CONTAINER -->
+        <div id="posts" class="published-posts-grid">
+
+            <div class="published-loading">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <p>Loading published posts...</p>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-</div>
-<!-- =========================================================
+
+
+<!-- =====================================================
      EDIT POST MODAL
-========================================================= -->
-<div class="modal" id="editModal">
-<div class="modal-content">
-<h3>
-            Edit Post
-        </h3>
-<form enctype="multipart/form-data" id="editForm">
-<input id="edit_id" name="post_id" type="hidden"/>
-<!-- TITLE -->
-<input id="edit_title" name="title" placeholder="Title" required="" type="text"/>
-<!-- CATEGORY -->
-<select id="edit_category" name="category" onchange="updateEditFields()">
-<option value="car">
-                    Car
-                </option>
-<option value="motorbike">
-                    Motorbike / Bike
-                </option>
-<option value="truck">
-                    Truck / Bus
-                </option>
-<option value="train">
-                    Train / Rail
-                </option>
-<option value="plane">
-                    Aviation
-                </option>
-<option value="spare_part">
-                    Spare Part
-                </option>
-<option value="Accessorie">
-                    Accessorie
-                </option>
-<option value="service">
-                    Service
-                </option>
-</select>
-<!-- VEHICLE FIELDS -->
-<div id="editVehicleFields" style="display:none;">
-<h4>
-                    Vehicle Information
-                </h4>
-<input id="edit_vehicle_type" name="vehicle_type" placeholder="Vehicle Type" type="text"/>
-<input id="edit_year" max="2100" min="1900" name="year" placeholder="Year" type="number"/>
-<input id="edit_mileage" name="mileage" placeholder="Mileage" type="text"/>
-<select id="edit_condition" name="condition">
-<option value="">
-                        Select Condition
-                    </option>
-<option value="New">
-                    New
-                </option>
-<option value="Used">
-                    Used
-                </option>
-<option value="Foreign Used">
-                    Foreign Used
-                </option>
-<option value="Local Used">
-                    Local Used
-                </option>
-</select>
-</div>
-<!-- POST TYPE -->
-<select id="edit_post_type" name="post_type">
-<option value="normal">
-                    Normal Listing
-                </option>
-<option value="sponsored">
-                    Sponsored
-                </option>
-<option value="featured">
-                    Featured
-                </option>
-</select>
-<!-- PROMOTION -->
-<select id="edit_promotion_duration" name="promotion_duration">
-<option value="">
-                    No Promotion
-                </option>
-<option value="24_hours">
-                    24 Hours
-                </option>
-<option value="3_days">
-                    3 Days
-                </option>
-<option value="1_week">
-                    1 Week
-                </option>
-<option value="1_month">
-                    1 Month
-                </option>
-</select>
-<!-- DESCRIPTION -->
-<textarea id="edit_description" name="description" placeholder="Description"></textarea>
-<!-- IMAGE -->
-<input accept="image/*" name="image" type="file"/>
-<!-- FEATURED -->
-<label>
-<input id="edit_featured" name="is_featured" type="checkbox"/>
+===================================================== -->
+<div class="modal published-modal" id="editModal">
 
-                Featured
+    <div class="modal-content published-modal-content">
 
-            </label>
-<!-- SPONSORED -->
-<label>
-<input id="edit_sponsored" name="is_sponsored" type="checkbox"/>
+        <div class="published-modal-header">
+            <div>
+                <span class="published-eyebrow">LISTING MANAGEMENT</span>
+                <h3>Edit Published Post</h3>
+                <p>Update listing information and promotional settings.</p>
+            </div>
 
-                Sponsored
-
-            </label>
-<button type="submit">
-
-                Save Changes
-
+            <button type="button"
+                    class="published-modal-close"
+                    onclick="closeModal()">
+                <i class="fa-solid fa-xmark"></i>
             </button>
-<button onclick="closeModal()" type="button">
+        </div>
 
-                Close
+        <form enctype="multipart/form-data" id="editForm">
 
-            </button>
-</form>
+            <input id="edit_id" name="post_id" type="hidden"/>
+
+            <div class="published-form-section">
+                <h4><i class="fa-solid fa-pen-to-square"></i> Basic Information</h4>
+
+                <div class="published-form-group">
+                    <label for="edit_title">Listing Title</label>
+                    <input id="edit_title"
+                           name="title"
+                           placeholder="Enter listing title"
+                           required
+                           type="text">
+                </div>
+
+                <div class="published-form-grid">
+
+                    <div class="published-form-group">
+                        <label for="edit_category">Category</label>
+
+                        <select id="edit_category"
+                                name="category"
+                                onchange="updateEditFields()">
+                            <option value="car">Car</option>
+                            <option value="motorbike">Motorbike / Bike</option>
+                            <option value="truck">Truck / Bus</option>
+                            <option value="spare_part">Spare Part</option>
+                            <option value="Accessorie">Accessory</option>
+                        </select>
+                    </div>
+
+                    <div class="published-form-group">
+                        <label for="edit_post_type">Listing Type</label>
+
+                        <select id="edit_post_type" name="post_type">
+                            <option value="normal">Normal Listing</option>
+                            <option value="sponsored">Sponsored</option>
+                            <option value="featured">Featured</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- VEHICLE INFORMATION -->
+            <div id="editVehicleFields"
+                 class="published-form-section"
+                 style="display:none;">
+
+                <h4><i class="fa-solid fa-car-side"></i> Vehicle Information</h4>
+
+                <div class="published-form-grid">
+
+                    <div class="published-form-group">
+                        <label for="edit_vehicle_type">Vehicle Type</label>
+                        <input id="edit_vehicle_type"
+                               name="vehicle_type"
+                               placeholder="e.g. SUV">
+                    </div>
+
+                    <div class="published-form-group">
+                        <label for="edit_year">Year</label>
+                        <input id="edit_year"
+                               name="year"
+                               type="number"
+                               min="1900"
+                               max="2100"
+                               placeholder="e.g. 2022">
+                    </div>
+
+                    <div class="published-form-group">
+                        <label for="edit_mileage">Mileage</label>
+                        <input id="edit_mileage"
+                               name="mileage"
+                               placeholder="e.g. 45,000 km">
+                    </div>
+
+                    <div class="published-form-group">
+                        <label for="edit_condition">Condition</label>
+
+                        <select id="edit_condition" name="condition">
+                            <option value="">Select Condition</option>
+                            <option value="New">New</option>
+                            <option value="Used">Used</option>
+                            <option value="Foreign Used">Foreign Used</option>
+                            <option value="Local Used">Local Used</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PROMOTION -->
+            <div class="published-form-section">
+
+                <h4><i class="fa-solid fa-bullhorn"></i> Promotion Settings</h4>
+
+                <div class="published-form-group">
+                    <label for="edit_promotion_duration">Promotion Duration</label>
+
+                    <select id="edit_promotion_duration"
+                            name="promotion_duration">
+                        <option value="">No Promotion</option>
+                        <option value="24_hours">24 Hours</option>
+                        <option value="3_days">3 Days</option>
+                        <option value="1_week">1 Week</option>
+                        <option value="1_month">1 Month</option>
+                    </select>
+                </div>
+
+                <div class="published-checkbox-group">
+
+                    <label>
+                        <input id="edit_featured"
+                               name="is_featured"
+                               type="checkbox">
+                        <span>
+                            <strong>Featured Listing</strong>
+                            <small>Highlight this listing on MOTTECK.</small>
+                        </span>
+                    </label>
+
+                    <label>
+                        <input id="edit_sponsored"
+                               name="is_sponsored"
+                               type="checkbox">
+                        <span>
+                            <strong>Sponsored Listing</strong>
+                            <small>Mark this listing as sponsored.</small>
+                        </span>
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- DESCRIPTION AND IMAGE -->
+            <div class="published-form-section">
+
+                <h4><i class="fa-solid fa-image"></i> Content & Media</h4>
+
+                <div class="published-form-group">
+                    <label for="edit_description">Description</label>
+
+                    <textarea id="edit_description"
+                              name="description"
+                              rows="5"
+                              placeholder="Enter listing description"></textarea>
+                </div>
+
+                <div class="published-form-group">
+                    <label for="edit_image">Replace Listing Image</label>
+
+                    <input id="edit_image"
+                           accept="image/*"
+                           name="image"
+                           type="file">
+                    <small>Leave empty to retain the existing image.</small>
+                </div>
+
+            </div>
+
+            <div class="published-modal-actions">
+
+                <button type="button"
+                        class="published-cancel-btn"
+                        onclick="closeModal()">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="published-save-btn">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 </div>
-</div>
-<!-- =========================================================
-     APPROVE / REJECT MODAL
-========================================================= -->
-<div class="action-modal" id="actionModal">
-<div class="action-modal-content">
-<h3 id="actionTitle">
 
-            Confirm Action
 
-        </h3>
-<p id="actionMessage">
+<!-- =====================================================
+     APPROVE / REJECT CONFIRMATION MODAL
+===================================================== -->
+<div class="action-modal published-action-modal" id="actionModal">
 
-            Are you sure?
+    <div class="action-modal-content published-action-content">
 
+        <div class="published-action-icon">
+            <i class="fa-solid fa-circle-question"></i>
+        </div>
+
+        <h3 id="actionTitle">Confirm Action</h3>
+
+        <p id="actionMessage">
+            Are you sure you want to continue?
         </p>
-<div class="modal-actions">
-<button class="cancel-action" onclick="closeActionModal()" type="button">
 
+        <div class="modal-actions">
+
+            <button class="cancel-action"
+                    onclick="closeActionModal()"
+                    type="button">
                 Cancel
-
             </button>
-<button id="confirmActionBtn" type="button">
 
+            <button id="confirmActionBtn" type="button">
                 Confirm
-
             </button>
+
+        </div>
+
+    </div>
 </div>
-</div>
-</div>
+
 <script>
 
 /* =========================================================
