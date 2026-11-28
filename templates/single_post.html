@@ -424,7 +424,7 @@
         <!-- VEHICLE ACTIONS -->
         <div class="post-contact-actions">
 
-            <a href="{{ url_for('single_post', post_id=post.id, contact='contact') }}"
+            <a href="{{ url_for('contact', post_id=post.id,)}}"
                class="post-contact-btn contact-seller">
 
                 <i class="fa-solid fa-phone"></i>
@@ -432,7 +432,7 @@
 
             </a>
 
-            <a href="{{ url_for('single_post', post_id=post.id, request='request_motteck') }}"
+            <a href="{{ url_for('request_motteck', post_id=post.id)}}"
                class="post-contact-btn request-motteck">
 
                 <i class="fa-solid fa-handshake"></i>
@@ -532,12 +532,14 @@
         <!-- PRODUCT ACTIONS -->
         <div class="post-contact-actions">
 
-            <a href="{{ url_for('single_post', post_id=post.id) }}?buy="${buyNowUrl}"
-               class="post-contact-btn buy-now">
-
+            <a href="{% if session.get('user_logged_in') %}
+               {{ url_for('checkout', post_id=post.id) }}
+            {% else %}
+               {{ url_for('order_enquiry', post_id=post.id) }}
+            {% endif %}"
+            class="post-contact-btn buy-now">
                 <i class="fa-solid fa-cart-shopping"></i>
                 Buy Now
-
             </a>
 
             <a href="{{ url_for('single_post', post_id=post.id, request='request_motteck') }}"
