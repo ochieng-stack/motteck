@@ -424,7 +424,7 @@
         <!-- VEHICLE ACTIONS -->
         <div class="post-contact-actions">
 
-            <a href="{{ url_for('single_post', post_id=post.id, contact='seller') }}"
+            <a href="{{ url_for('single_post', post_id=post.id, contact='contact') }}"
                class="post-contact-btn contact-seller">
 
                 <i class="fa-solid fa-phone"></i>
@@ -432,7 +432,7 @@
 
             </a>
 
-            <a href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+            <a href="{{ url_for('single_post', post_id=post.id, request='request_motteck') }}"
                class="post-contact-btn request-motteck">
 
                 <i class="fa-solid fa-handshake"></i>
@@ -532,7 +532,7 @@
         <!-- PRODUCT ACTIONS -->
         <div class="post-contact-actions">
 
-            <a href="{{ url_for('single_post', post_id=post.id) }}?buy=now"
+            <a href="{{ url_for('single_post', post_id=post.id) }}?buy="${buyNowUrl}"
                class="post-contact-btn buy-now">
 
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -540,7 +540,7 @@
 
             </a>
 
-            <a href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+            <a href="{{ url_for('single_post', post_id=post.id, request='request_motteck') }}"
                class="post-contact-btn request-motteck">
 
                 <i class="fa-solid fa-handshake"></i>
@@ -957,76 +957,117 @@ document.addEventListener("DOMContentLoaded", function () {
     const postTitle = document.body.dataset.postTitle || "MOTTECK Post";
 
 
-    /* =====================================================
-       PROFILE DROPDOWN
-    ===================================================== */
+/* =========================================================
+   MOBILE MENU
+========================================================= */
 
-    const profileDropdownBtn =
-        document.getElementById("profileDropdownBtn");
-
-    const profileMenu =
-        document.getElementById("profileMenu");
-
-    if (profileDropdownBtn && profileMenu) {
-
-        profileDropdownBtn.addEventListener("click", function (e) {
-
-            e.stopPropagation();
-
-            profileMenu.classList.toggle("show");
-
-        });
-
-        document.addEventListener("click", function (e) {
-
-            if (
-                !profileMenu.contains(e.target) &&
-                !profileDropdownBtn.contains(e.target)
-            ) {
-
-                profileMenu.classList.remove("show");
-
-            }
-
-        });
-
-    }
-
-
-    /* =====================================================
-       MOBILE MENU
-    ===================================================== */
-
-    const menuBtn =
-        document.querySelector(".menu-btn");
+function toggleMenu() {
 
     const menu =
         document.getElementById("mobileMenu");
 
-    if (menuBtn && menu) {
+    if (!menu) {
+        return;
+    }
 
-        menuBtn.addEventListener("click", function (e) {
+    menu.style.display =
+        menu.style.display === "flex"
+            ? "none"
+            : "flex";
 
-            e.stopPropagation();
+}
 
-            menu.classList.toggle("show");
 
-        });
 
-        document.addEventListener("click", function (e) {
+/* =========================================================
+   CLOSE MOBILE MENU
+========================================================= */
 
-            if (
-                !menu.contains(e.target) &&
-                !menuBtn.contains(e.target)
-            ) {
+document.addEventListener(
+    "click",
+    function(event) {
 
-                menu.classList.remove("show");
+        const menu =
+            document.getElementById("mobileMenu");
 
-            }
+        const button =
+            document.querySelector(".menu-btn");
 
-        });
+        if (
+            menu &&
+            button &&
+            !menu.contains(event.target) &&
+            !button.contains(event.target)
+        ) {
+
+            menu.style.display = "none";
+
+        }
 
     }
+);
+
+
+
+/* =========================================================
+   PROFILE DROPDOWN
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        const button =
+            document.getElementById(
+                "profileDropdownBtn"
+            );
+
+        const dropdown =
+            document.querySelector(
+                ".profile-dropdown"
+            );
+
+        if (!button || !dropdown) {
+            return;
+        }
+
+
+        button.addEventListener(
+            "click",
+            function(event) {
+
+                event.stopPropagation();
+
+                dropdown.classList.toggle(
+                    "active"
+                );
+
+            }
+        );
+
+
+        document.addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    !dropdown.contains(
+                        event.target
+                    )
+                ) {
+
+                    dropdown.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
 
 
     /* =====================================================
