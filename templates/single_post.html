@@ -1,71 +1,39 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ post.title }} | Motteck</title>
 
-
     <!-- CATEGORY CSS -->
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='car.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='motobike.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='accessorie.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='truck.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='spare_part.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='car.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='motobike.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='accessorie.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='truck.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='spare_part.css') }}">
 
     <!-- SINGLE POST CSS -->
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='single_post.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='single_post.css') }}">
 
     <!-- FONT AWESOME -->
-
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
-
     <!-- PRELOAD FIRST IMAGE -->
-
     {% if post.image_urls %}
-
         {% if post.image_urls[0] %}
-
-        <link rel="preload"
-              as="image"
-              href="{{ post.image_urls[0] }}">
-
+            <link rel="preload" as="image" href="{{ post.image_urls[0] }}">
         {% endif %}
-
     {% elif post.image_url %}
-
-        <link rel="preload"
-              as="image"
-              href="{{ post.image_url }}">
-
+        <link rel="preload" as="image" href="{{ post.image_url }}">
     {% endif %}
 
 </head>
 
-
 <body>
-
 
 <!-- =========================================================
      HEADER
@@ -74,49 +42,27 @@
 <header class="header">
 
     <h1 class="title">
-
-        <a href="{{ url_for('home') }}">
-            MOTTECK
-        </a>
-
+        <a href="{{ url_for('home') }}">MOTTECK</a>
     </h1>
-
 
     <div class="top-actions">
 
-
-        <!-- =================================================
-             LOGGED IN PROFILE DROPDOWN
-        ================================================== -->
-
+        <!-- LOGGED IN PROFILE -->
         {% if session.get("user_logged_in") %}
 
         <div class="profile-dropdown">
 
-            <button
-                type="button"
-                class="profile-btn"
-                id="profileDropdownBtn">
+            <button type="button"
+                    class="profile-btn"
+                    id="profileDropdownBtn">
 
                 <i class="fa-solid fa-user"></i>
-
-                <span>
-                    Profile
-                </span>
-
+                <span>Profile</span>
                 <i class="fa-solid fa-chevron-down"></i>
 
             </button>
 
-
-            <!-- PROFILE DROPDOWN MENU -->
-
-            <div
-                class="profile-menu"
-                id="profileMenu">
-
-
-                <!-- PROFILE HEADER -->
+            <div class="profile-menu" id="profileMenu">
 
                 <div class="profile-menu-header">
 
@@ -125,15 +71,8 @@
                     <i class="fa-solid fa-building"></i>
 
                     <div>
-
-                        <strong>
-                            {{ session.get("full_name") }}
-                        </strong>
-
-                        <small>
-                            Business Account
-                        </small>
-
+                        <strong>{{ session.get("full_name") }}</strong>
+                        <small>Business Account</small>
                     </div>
 
                     {% else %}
@@ -141,177 +80,82 @@
                     <i class="fa-solid fa-user"></i>
 
                     <div>
-
-                        <strong>
-                            {{ session.get("full_name") }}
-                        </strong>
-
-                        <small>
-                            Individual Account
-                        </small>
-
+                        <strong>{{ session.get("full_name") }}</strong>
+                        <small>Individual Account</small>
                     </div>
 
                     {% endif %}
 
                 </div>
 
-
                 <div class="profile-menu-divider"></div>
 
-
-                <!-- VIEW PROFILE -->
-
-                <a
-                    href="{{ url_for('profile') }}"
-                    class="profile-menu-item">
-
+                <a href="{{ url_for('profile') }}" class="profile-menu-item">
                     <i class="fa-solid fa-user"></i>
-
-                    <span>
-                        View Profile
-                    </span>
-
+                    <span>View Profile</span>
                 </a>
 
-                <a
-                    href="{{ url_for('public_profile', user_id=session.get('user_id')) }}"
-                    class="profile-menu-item">
-
+                <a href="{{ url_for('public_profile', user_id=session.get('user_id')) }}"
+                   class="profile-menu-item">
                     <i class="fa-solid fa-user"></i>
-
-                    <span>
-                        View Public Profile
-                    </span>
-
+                    <span>View Public Profile</span>
                 </a>
 
-
-                <!-- SETTINGS -->
-
-                <a
-                    href="{{ url_for('settings') }}"
-                    class="profile-menu-item">
-
+                <a href="{{ url_for('settings') }}" class="profile-menu-item">
                     <i class="fa-solid fa-gear"></i>
-
-                    <span>
-                        Settings
-                    </span>
-
+                    <span>Settings</span>
                 </a>
 
-
-                <!-- SUBMIT POST -->
-
-                <a
-                    href="{{ url_for('submit_post') }}"
-                    class="profile-menu-item">
-
+                <a href="{{ url_for('submit_post') }}" class="profile-menu-item">
                     <i class="fa-solid fa-pen-to-square"></i>
-
-                    <span>
-                        Submit Post
-                    </span>
-
+                    <span>Submit Post</span>
                 </a>
-
-
-                <!-- BUSINESS DASHBOARD -->
 
                 {% if session.get("account_type") == "business" %}
-
-                <a
-                    href="{{ url_for('dashboard') }}"
-                    class="profile-menu-item">
-
+                <a href="{{ url_for('dashboard') }}" class="profile-menu-item">
                     <i class="fa-solid fa-chart-line"></i>
-
-                    <span>
-                        Business Dashboard
-                    </span>
-
+                    <span>Business Dashboard</span>
                 </a>
-
                 {% endif %}
 
-
-                <!-- MY SUBMISSIONS -->
-
-                <a
-                    href="{{ url_for('my_submissions') }}"
-                    class="profile-menu-item">
-
+                <a href="{{ url_for('my_submissions') }}" class="profile-menu-item">
                     <i class="fa-solid fa-file-lines"></i>
-
-                    <span>
-                        My Submissions
-                    </span>
-
+                    <span>My Submissions</span>
                 </a>
-
 
                 <div class="profile-menu-divider"></div>
 
-
-                <!-- LOGOUT -->
-
-                <a
-                    href="{{ url_for('user_logout') }}"
-                    class="profile-menu-item logout-item">
-
+                <a href="{{ url_for('user_logout') }}"
+                   class="profile-menu-item logout-item">
                     <i class="fa-solid fa-right-from-bracket"></i>
-
-                    <span>
-                        Logout
-                    </span>
-
+                    <span>Logout</span>
                 </a>
 
             </div>
 
         </div>
 
-
         {% else %}
 
-
-        <!-- =================================================
-             LOGGED OUT BUTTONS
-        ================================================== -->
-
+        <!-- LOGGED OUT BUTTONS -->
         <div class="auth-buttons">
 
-            <a
-                href="{{ url_for('login_user') }}"
-                class="login-btn">
-
+            <a href="{{ url_for('login_user') }}" class="login-btn">
                 Login
-
             </a>
 
-
-            <a
-                href="{{ url_for('register') }}"
-                class="signup-btn">
-
+            <a href="{{ url_for('register') }}" class="signup-btn">
                 Sign Up
-
             </a>
 
         </div>
 
         {% endif %}
 
-
-        <!-- =================================================
-             HAMBURGER
-        ================================================== -->
-
-        <button
-            class="menu-btn"
-            type="button"
-            aria-label="Open menu">
+        <!-- HAMBURGER -->
+        <button class="menu-btn"
+                type="button"
+                aria-label="Open menu">
 
             <i class="fa-solid fa-bars"></i>
 
@@ -322,136 +166,69 @@
 </header>
 
 
-
 <!-- =========================================================
      CATEGORY NAVIGATION
 ========================================================= -->
 
 <nav class="category-nav">
 
-    <a href="{{ url_for('car') }}">
-        CAR
-    </a>
-
-    <a href="{{ url_for('truck') }}">
-        TRUCK/BUS
-    </a>
-
-    <a href="{{ url_for('motobike') }}">
-        BIKE
-    </a>
-
-    <a href="{{ url_for('accessorie') }}">
-        ACCESSORIE
-    </a>
-
-    <a href="{{ url_for('spare_part') }}">
-        SPARE PARTS
-    </a>
+    <a href="{{ url_for('car') }}">CAR</a>
+    <a href="{{ url_for('truck') }}">TRUCK/BUS</a>
+    <a href="{{ url_for('motobike') }}">BIKE</a>
+    <a href="{{ url_for('accessorie') }}">ACCESSORIE</a>
+    <a href="{{ url_for('spare_part') }}">SPARE PARTS</a>
 
 </nav>
-
 
 
 <!-- =========================================================
      MOBILE MENU
 ========================================================= -->
 
-<div
-    id="mobileMenu"
-    class="mobile-menu">
-
+<div id="mobileMenu" class="mobile-menu">
 
     <a href="{{ url_for('home') }}">
-
         <i class="fa-solid fa-house"></i>
-
-        <span>
-            Home
-        </span>
-
+        <span>Home</span>
     </a>
-
 
     <a href="{{ url_for('car') }}">
-
         <i class="fa-solid fa-car"></i>
-
-        <span>
-            Cars
-        </span>
-
+        <span>Cars</span>
     </a>
-
 
     <a href="{{ url_for('truck') }}">
-
         <i class="fa-solid fa-truck"></i>
         <i class="fa-solid fa-bus"></i>
-
-        <span>
-            Truck/ Bus
-        </span>
-
+        <span>Truck/Bus</span>
     </a>
-
 
     <a href="{{ url_for('motobike') }}">
-
         <i class="fa-solid fa-motorcycle"></i>
-
-        <span>
-            Bikes
-        </span>
-
+        <span>Bikes</span>
     </a>
-
 
     <a href="{{ url_for('accessorie') }}">
-
         <i class="fa-solid fa-car-side"></i>
-
-        <span>
-            ACCESSORIE
-        </span>
-
+        <span>ACCESSORIE</span>
     </a>
-
 
     <a href="{{ url_for('spare_part') }}">
-
         <i class="fa-solid fa-wrench"></i>
-
-        <span>
-            Spare Parts
-        </span>
-
+        <span>Spare Parts</span>
     </a>
-
 
     <a href="{{ url_for('about') }}">
-
         <i class="fa-solid fa-circle-info"></i>
-
-        <span>
-            About
-        </span>
-
+        <span>About</span>
     </a>
 
-
     <a href="{{ url_for('contact') }}">
-
         <i class="fa-solid fa-envelope"></i>
-
-        <span>
-            Contact
-        </span>
-
+        <span>Contact</span>
     </a>
 
 </div>
-
 
 
 <!-- =========================================================
@@ -460,61 +237,45 @@
 
 <main class="single-post-page">
 
-
     <article class="single-post">
 
-
-        <!-- =================================================
-             PROFILE / POST HEADER
-        ================================================== -->
-
+        <!-- PROFILE / POST HEADER -->
         <div class="post-user-header">
-
 
             <div class="post-user-left">
 
-
-                <a
-                    href="/profile/{{ post.user_id }}"
-                    class="post-profile-link"
-                    aria-label="View {{ post.full_name or post.business_name or 'MOTTECK User' }}'s profile">
-
+                <a href="/profile/{{ post.user_id }}"
+                   class="post-profile-link"
+                   aria-label="View {{ post.full_name or post.business_name or 'MOTTECK User' }}'s profile">
 
                     {% if post.profile_image %}
 
-                    <img
-                        src="{{ post.profile_image }}"
-                        alt="Profile"
-                        class="post-profile-image"
-                        loading="eager"
-                        decoding="async"
-                        onerror="this.onerror=null;this.src='/static/images/default-avatar.png';">
+                    <img src="{{ post.profile_image }}"
+                         alt="Profile"
+                         class="post-profile-image"
+                         loading="eager"
+                         decoding="async"
+                         onerror="this.onerror=null;this.src='/static/images/default-avatar.png';">
 
                     {% else %}
 
-                    <img
-                        src="{{ url_for('static', filename='images/default-avatar.png') }}"
-                        alt="Profile"
-                        class="post-profile-image"
-                        loading="eager"
-                        decoding="async">
+                    <img src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                         alt="Profile"
+                         class="post-profile-image"
+                         loading="eager"
+                         decoding="async">
 
                     {% endif %}
 
                 </a>
 
-
-
                 <!-- USER INFORMATION -->
-
                 <div class="post-user-info">
-
 
                     <div class="post-user-name">
 
-                        <a
-                            href="/profile/{{ post.user_id }}"
-                            class="post-user-name-link">
+                        <a href="/profile/{{ post.user_id }}"
+                           class="post-user-name-link">
 
                             {{ post.full_name
                                 or post.business_name
@@ -525,20 +286,13 @@
 
                     </div>
 
-
                     <div class="post-user-meta">
 
-                        <span>
-                            {{ post.category.upper() }}
-                        </span>
+                        <span>{{ post.category.upper() }}</span>
 
-                        <span class="dot">
-                            •
-                        </span>
+                        <span class="dot">•</span>
 
-                        <span>
-                            {{ post.time_ago }}
-                        </span>
+                        <span>{{ post.time_ago }}</span>
 
                     </div>
 
@@ -546,25 +300,17 @@
 
             </div>
 
-
-
-            <!-- =================================================
-                 FOLLOW BUTTON
-            ================================================== -->
-
+            <!-- FOLLOW BUTTON -->
             {% if session.get("user_logged_in") %}
 
-            <button
-                type="button"
-                class="follow-button"
-                id="followButton"
-                data-user-id="{{ post.user_id }}">
+            <button type="button"
+                    class="follow-button"
+                    id="followButton"
+                    data-user-id="{{ post.user_id }}">
 
                 <i class="fa-solid fa-user-plus"></i>
 
-                <span id="followText">
-                    Follow
-                </span>
+                <span id="followText">Follow</span>
 
             </button>
 
@@ -573,29 +319,18 @@
         </div>
 
 
-
-        <!-- =================================================
-             POST TITLE
-        ================================================== -->
-
+        <!-- POST TITLE -->
         {% if post.title %}
 
         <h1 class="single-post-title">
-
             {{ post.title }}
-
         </h1>
 
         {% endif %}
 
 
-
-        <!-- =================================================
-             CATEGORY-SPECIFIC DETAILS
-        ================================================== -->
-
+        <!-- CATEGORY-SPECIFIC DETAILS -->
         {% set current_category = (post.category or '')|lower %}
-
 
         {% set vehicle_categories = [
             'car',
@@ -604,7 +339,6 @@
             'motorbike',
             'bike'
         ] %}
-
 
         {% set product_categories = [
             'accessorie',
@@ -615,106 +349,69 @@
         ] %}
 
 
-
-        <!-- =================================================
-             VEHICLE DETAILS
-        ================================================== -->
-
+        <!-- VEHICLE DETAILS -->
         {% if current_category in vehicle_categories %}
 
         <div class="post-details">
 
-
             <div class="post-details-grid">
-
 
                 {% if post.vehicle_type %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-car-side"></i>
-
                     <span>
                         Type:
-                        <strong>
-                            {{ post.vehicle_type }}
-                        </strong>
+                        <strong>{{ post.vehicle_type }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
-
-
 
                 {% if post.year is defined and post.year is not none and post.year != '' %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-calendar"></i>
-
                     <span>
                         Year:
-                        <strong>
-                            {{ post.year }}
-                        </strong>
+                        <strong>{{ post.year }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
-
-
 
                 {% if post.mileage is defined and post.mileage is not none and post.mileage != '' %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-road"></i>
-
                     <span>
                         Mileage:
-                        <strong>
-                            {{ "{:,}".format(post.mileage|int) }} km
-                        </strong>
+                        <strong>{{ "{:,}".format(post.mileage|int) }} km</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
-
-
 
                 {% if post.condition %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-circle-check"></i>
-
                     <span>
                         Condition:
-                        <strong>
-                            {{ post.condition }}
-                        </strong>
+                        <strong>{{ post.condition }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
 
-
             </div>
 
-
             <!-- PRICE -->
-
             {% if post.price is defined and post.price is not none and post.price != '' %}
 
             <div class="post-price">
 
-                <span class="post-price-label">
-                    Price
-                </span>
+                <span class="post-price-label">Price</span>
 
                 KSh {{ "{:,.0f}".format(post.price|float) }}
 
@@ -722,162 +419,107 @@
 
             {% endif %}
 
-
         </div>
 
-
         <!-- VEHICLE ACTIONS -->
-
         <div class="post-contact-actions">
 
-
-            <a
-                href="{{ url_for('single_post', post_id=post.id, contact='seller') }}"
-                class="post-contact-btn contact-seller">
+            <a href="{{ url_for('single_post', post_id=post.id, contact='seller') }}"
+               class="post-contact-btn contact-seller">
 
                 <i class="fa-solid fa-phone"></i>
-
                 Contact Seller
 
             </a>
 
-
-            <a
-                href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
-                class="post-contact-btn request-motteck">
+            <a href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+               class="post-contact-btn request-motteck">
 
                 <i class="fa-solid fa-handshake"></i>
-
                 Request MOTTECK
 
             </a>
-
 
         </div>
 
         {% endif %}
 
 
-
-        <!-- =================================================
-             PRODUCT DETAILS
-             ACCESSORIES / SPARE PARTS
-        ================================================== -->
-
+        <!-- PRODUCT DETAILS: ACCESSORIES / SPARE PARTS -->
         {% if current_category in product_categories %}
 
         <div class="post-details">
 
-
             <div class="post-details-grid">
-
 
                 {% if post.product_name %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-box"></i>
-
                     <span>
                         Product:
-                        <strong>
-                            {{ post.product_name }}
-                        </strong>
+                        <strong>{{ post.product_name }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
-
-
 
                 {% if post.brand %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-tag"></i>
-
                     <span>
                         Brand:
-                        <strong>
-                            {{ post.brand }}
-                        </strong>
+                        <strong>{{ post.brand }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
-
-
 
                 {% if post.part_number %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-barcode"></i>
-
                     <span>
                         Part No:
-                        <strong>
-                            {{ post.part_number }}
-                        </strong>
+                        <strong>{{ post.part_number }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
-
-
 
                 {% if post.compatibility %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-car"></i>
-
                     <span>
                         Fits:
-                        <strong>
-                            {{ post.compatibility }}
-                        </strong>
+                        <strong>{{ post.compatibility }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
-
-
 
                 {% if post.location %}
 
                 <div class="post-detail-item">
-
                     <i class="fa-solid fa-location-dot"></i>
-
                     <span>
                         Location:
-                        <strong>
-                            {{ post.location }}
-                        </strong>
+                        <strong>{{ post.location }}</strong>
                     </span>
-
                 </div>
 
                 {% endif %}
 
-
             </div>
 
-
             <!-- PRICE -->
-
             {% if post.price is defined and post.price is not none and post.price != '' %}
 
             <div class="post-price">
 
-                <span class="post-price-label">
-                    Price
-                </span>
+                <span class="post-price-label">Price</span>
 
                 KSh {{ "{:,.0f}".format(post.price|float) }}
 
@@ -885,60 +527,40 @@
 
             {% endif %}
 
-
         </div>
 
-
         <!-- PRODUCT ACTIONS -->
-
         <div class="post-contact-actions">
 
-
-            <!-- BUY NOW -->
-
-            <a
-                href="{{ url_for('single_post', post_id=post.id) }}?buy=now"
-                class="post-contact-btn buy-now">
+            <a href="{{ url_for('single_post', post_id=post.id) }}?buy=now"
+               class="post-contact-btn buy-now">
 
                 <i class="fa-solid fa-cart-shopping"></i>
-
                 Buy Now
 
             </a>
 
-
-            <!-- REQUEST MOTTECK -->
-
-            <a
-                href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
-                class="post-contact-btn request-motteck">
+            <a href="{{ url_for('single_post', post_id=post.id, request='motteck') }}"
+               class="post-contact-btn request-motteck">
 
                 <i class="fa-solid fa-handshake"></i>
-
                 Request MOTTECK
 
             </a>
-
 
         </div>
 
         {% endif %}
 
 
-
-        <!-- =================================================
-             POST DESCRIPTION
-        ================================================== -->
-
+        <!-- POST DESCRIPTION -->
         {% if post.description %}
 
         <div class="single-post-description">
 
-
             {% for paragraph in post.description.split('\n') %}
 
                 {% set line = paragraph.strip() %}
-
 
                 {% if line %}
 
@@ -950,9 +572,7 @@
                         or line.endswith('.webp')
                     ) %}
 
-                    <p>
-                        {{ line }}
-                    </p>
+                    <p>{{ line }}</p>
 
                     {% endif %}
 
@@ -960,26 +580,15 @@
 
             {% endfor %}
 
-
         </div>
 
         {% endif %}
 
 
-
-        <!-- =================================================
-             PHOTO GALLERY
-             ALL UPLOADED IMAGES
-             SHOWN IN UPLOAD ORDER
-        ================================================== -->
-
+        <!-- PHOTO GALLERY -->
         <div class="post-photo-gallery">
 
-
-            <!-- =================================================
-                 NEW IMAGE ARRAY
-            ================================================== -->
-
+            <!-- NEW IMAGE ARRAY -->
             {% if post.image_urls %}
 
                 {% for image in post.image_urls %}
@@ -988,57 +597,82 @@
 
                     <div class="post-photo">
 
-                        <img
-                            src="{{ image }}"
-                            alt="{{ post.title or 'MOTTECK Post Image' }}"
-                            {% if loop.first %}
-                            loading="eager"
-                            fetchpriority="high"
-                            {% else %}
-                            loading="lazy"
-                            {% endif %}
-                            decoding="async">
+                        <img src="{{ image }}"
+                             alt="{{ post.title or 'MOTTECK Post Image' }}"
+                             {% if loop.first %}
+                             loading="eager"
+                             fetchpriority="high"
+                             {% else %}
+                             loading="lazy"
+                             {% endif %}
+                             decoding="async">
 
                     </div>
 
                     {% endif %}
 
                 {% endfor %}
+            <!-- =========================================
+                   IMAGE LIGHTBOX
+            ========================================= -->
 
+        <div class="post-lightbox"
+             id="postLightbox"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Image viewer">
 
-            <!-- =================================================
-                 OLD POSTS FALLBACK
-                 SINGLE IMAGE_URL
-            ================================================== -->
+             <button type="button"
+                     class="lightbox-close"
+                     id="lightboxClose"
+                     aria-label="Close image viewer">
+                 &times;
+              </button>
 
+              <button type="button"
+                      class="lightbox-prev"
+                      id="lightboxPrev"
+                      aria-label="Previous image">
+                 &#10094;
+              </button>
+
+              <img src=""
+                   alt="Expanded MOTTECK post image"
+                   class="post-lightbox-image"
+                   id="lightboxImage">
+
+               <button type="button"
+                       class="lightbox-next"
+                       id="lightboxNext"
+                       aria-label="Next image">
+                   &#10095;
+                </button>
+
+                <div class="lightbox-counter" id="lightboxCounter"></div>
+
+            </div>
+            <!-- OLD POSTS FALLBACK -->
             {% elif post.image_url %}
 
             <div class="post-photo">
 
-                <img
-                    src="{{ post.image_url }}"
-                    alt="{{ post.title or 'MOTTECK Post Image' }}"
-                    loading="eager"
-                    fetchpriority="high"
-                    decoding="async">
+                <img src="{{ post.image_url }}"
+                     alt="{{ post.title or 'MOTTECK Post Image' }}"
+                     loading="eager"
+                     fetchpriority="high"
+                     decoding="async">
 
             </div>
 
             {% endif %}
 
 
-
-            <!-- =================================================
-                 OLD ADDITIONAL IMAGES
-                 STORED INSIDE DESCRIPTION
-            ================================================== -->
-
+            <!-- OLD ADDITIONAL IMAGES STORED IN DESCRIPTION -->
             {% if not post.image_urls and post.description %}
 
                 {% for paragraph in post.description.split('\n') %}
 
                     {% set line = paragraph.strip() %}
-
 
                     {% if line %}
 
@@ -1052,11 +686,10 @@
 
                         <div class="post-photo">
 
-                            <img
-                                src="{{ line }}"
-                                alt="{{ post.title or 'MOTTECK Post Image' }}"
-                                loading="lazy"
-                                decoding="async">
+                            <img src="{{ line }}"
+                                 alt="{{ post.title or 'MOTTECK Post Image' }}"
+                                 loading="lazy"
+                                 decoding="async">
 
                         </div>
 
@@ -1068,35 +701,26 @@
 
             {% endif %}
 
-
         </div>
 
 
-
-        <!-- =================================================
-             ENGAGEMENT
-        ================================================== -->
-
+        <!-- ENGAGEMENT -->
         <div class="post-engagement">
 
-
             <!-- COUNTS -->
-
             <div class="engagement-counts">
-
 
                 <span>
 
                     <i class="fa-solid fa-eye"></i>
 
-                    <span id="viewCount">
+                    <span id="post-view-count">
                         {{ post.views or 0 }}
                     </span>
 
                     views
 
                 </span>
-
 
                 <span>
 
@@ -1110,147 +734,87 @@
 
                 </span>
 
-
             </div>
-
 
 
             <!-- BUTTONS -->
-
             <div class="engagement-buttons">
 
-
                 <!-- LIKE -->
-
-                <button
-                    type="button"
-                    class="engagement-btn like-btn"
-                    id="likeButton">
+                <button type="button"
+                        class="engagement-btn like-btn"
+                        id="likeButton">
 
                     <i class="fa-regular fa-heart"></i>
-
-                    <span>
-                        Like
-                    </span>
+                    <span>Like</span>
 
                 </button>
-
 
                 <!-- SHARE -->
-
-                <button
-                    type="button"
-                    class="engagement-btn"
-                    id="shareButton">
+                <button type="button"
+                        class="engagement-btn"
+                        id="shareButton">
 
                     <i class="fa-solid fa-share"></i>
-
-                    <span>
-                        Share
-                    </span>
+                    <span>Share</span>
 
                 </button>
 
-
             </div>
-
 
         </div>
 
 
-
-        <!-- =================================================
-             BACK BUTTONS
-        ================================================== -->
-
+        <!-- BACK BUTTONS -->
         <div class="actions">
-
 
             {% if current_category == 'car' %}
 
-            <a
-                href="{{ url_for('car') }}"
-                class="btn">
-
+            <a href="{{ url_for('car') }}" class="btn">
                 <i class="fa-solid fa-arrow-left"></i>
-
                 Back to Car
-
             </a>
-
 
             {% elif current_category == 'truck' %}
 
-            <a
-                href="{{ url_for('truck') }}"
-                class="btn">
-
+            <a href="{{ url_for('truck') }}" class="btn">
                 <i class="fa-solid fa-arrow-left"></i>
-
                 Back to Truck
-
             </a>
-
 
             {% elif current_category in ['motobike', 'motorbike', 'bike'] %}
 
-            <a
-                href="{{ url_for('motobike') }}"
-                class="btn">
-
+            <a href="{{ url_for('motobike') }}" class="btn">
                 <i class="fa-solid fa-arrow-left"></i>
-
                 Back to Bike
-
             </a>
-
 
             {% elif current_category in ['accessorie', 'accessory', 'accessories'] %}
 
-            <a
-                href="{{ url_for('accessorie') }}"
-                class="btn">
-
+            <a href="{{ url_for('accessorie') }}" class="btn">
                 <i class="fa-solid fa-arrow-left"></i>
-
                 Back to Accessorie
-
             </a>
-
 
             {% elif current_category in ['spare_part', 'sparepart'] %}
 
-            <a
-                href="{{ url_for('spare_part') }}"
-                class="btn">
-
+            <a href="{{ url_for('spare_part') }}" class="btn">
                 <i class="fa-solid fa-arrow-left"></i>
-
                 Back to Spare Parts
-
             </a>
 
             {% endif %}
 
-
-            <a
-                href="{{ url_for('home') }}"
-                class="btn secondary">
-
+            <a href="{{ url_for('home') }}" class="btn secondary">
                 <i class="fa-solid fa-house"></i>
-
                 Home
-
             </a>
 
-
         </div>
-
 
     </article>
 
 </main>
-
 
 
 <!-- =========================================================
@@ -1259,193 +823,113 @@
 
 <footer class="footer">
 
-
     <div class="footer-top">
 
-        <h2 class="footer-logo">
-            Motteck
-        </h2>
-
+        <h2 class="footer-logo">Motteck</h2>
 
         <p class="footer-text">
-
             MOTTECK is a Kenyan marketplace and connection platform
             helping customers discover vehicles, products, services and
             businesses while helping businesses reach potential customers.
-
         </p>
 
     </div>
 
 
-
     <div class="footer-links">
 
-
         <!-- COMPANY -->
-
         <div class="footer-column">
 
-            <h3>
-                Company
-            </h3>
+            <h3>Company</h3>
 
+            <a href="{{ url_for('contact') }}">Contact Us</a>
 
-            <a href="{{ url_for('contact') }}">
-                Contact Us
-            </a>
+            <a href="{{ url_for('partner_with_us') }}">Partner With Us</a>
 
-
-            <a href="{{ url_for('partner_with_us') }}">
-                Partner With Us
-            </a>
-
-
-            <a href="{{ url_for('advertise') }}">
-                Advertise With Us
-            </a>
+            <a href="{{ url_for('advertise') }}">Advertise With Us</a>
 
         </div>
-
 
 
         <!-- LEGAL -->
-
         <div class="footer-column">
 
-            <h3>
-                Legal
-            </h3>
+            <h3>Legal</h3>
 
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
 
-            <a href="{{ url_for('privacy') }}">
-                Privacy Policy
-            </a>
+            <a href="{{ url_for('term') }}">Terms & Conditions</a>
 
-
-            <a href="{{ url_for('term') }}">
-                Terms & Conditions
-            </a>
-
-
-            <a href="{{ url_for('cookies') }}">
-                Cookie Policy
-            </a>
+            <a href="{{ url_for('cookies') }}">Cookie Policy</a>
 
         </div>
-
 
 
         <!-- DISCLAIMER -->
-
         <div class="footer-column">
 
-            <h3>
-                Disclaimer
-            </h3>
-
+            <h3>Disclaimer</h3>
 
             <p class="small-text">
-
                 Information published on Motteck is for general
                 informational purposes only. Please verify details
                 independently before making decisions.
-
             </p>
 
         </div>
 
 
-
         <!-- CONTACT -->
-
         <div class="footer-column">
 
-            <h3>
-                Contact
-            </h3>
+            <h3>Contact</h3>
 
+            <p>Email: mottecknetwork@gmail.com</p>
 
-            <p>
-                Email: mottecknetwork@gmail.com
-            </p>
+            <p>Call: +254742022263</p>
 
-
-            <p>
-                Call: +254742022263
-            </p>
-
-
-            <p>
-                Location: Nairobi, Kenya
-            </p>
-
-
+            <p>Location: Nairobi, Kenya</p>
 
             <div class="social-box">
 
-                <p>
-                    Follow Us
-                </p>
+                <p>Follow Us</p>
 
-
-                <a
-                    href="https://www.instagram.com/mott_eck"
-                    target="_blank"
-                    rel="noopener">
-
+                <a href="https://www.instagram.com/mott_eck"
+                   target="_blank"
+                   rel="noopener">
                     <i class="fa-brands fa-instagram"></i>
-
                 </a>
 
-
-                <a
-                    href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09"
-                    target="_blank"
-                    rel="noopener">
-
+                <a href="https://x.com/motteck254?t=s82tjwt08Vy2TJAObwS63Q&s=09"
+                   target="_blank"
+                   rel="noopener">
                     <i class="fa-brands fa-square-x-twitter"></i>
-
                 </a>
 
-
-                <a
-                    href="https://www.facebook.com/profile.php?id=100064234773365"
-                    target="_blank"
-                    rel="noopener">
-
+                <a href="https://www.facebook.com/profile.php?id=100064234773365"
+                   target="_blank"
+                   rel="noopener">
                     <i class="fa-brands fa-facebook"></i>
-
                 </a>
 
-
-                <a
-                    href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
-                    target="_blank"
-                    rel="noopener">
-
+                <a href="https://whatsapp.com/channel/0029Vb7vT0hBFLgNCIzEJg2v"
+                   target="_blank"
+                   rel="noopener">
                     <i class="fa-brands fa-whatsapp"></i>
-
                 </a>
 
-
-                <a
-                    href="https://www.tiktok.com/@motteckauto"
-                    target="_blank"
-                    rel="noopener">
-
+                <a href="https://www.tiktok.com/@motteckauto"
+                   target="_blank"
+                   rel="noopener">
                     <i class="fa-brands fa-tiktok"></i>
-
                 </a>
-
 
             </div>
 
         </div>
 
-
     </div>
-
 
 
     <div class="footer-bottom">
@@ -1456,9 +940,7 @@
 
     </div>
 
-
 </footer>
-
 
 
 <!-- =========================================================
@@ -1467,7 +949,12 @@
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function(){
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // GET POST INFORMATION FROM HTML
+    const postId = document.body.dataset.postId;
+    const postTitle = document.body.dataset.postTitle || "MOTTECK Post";
 
 
     /* =====================================================
@@ -1480,39 +967,30 @@ document.addEventListener("DOMContentLoaded", function(){
     const profileMenu =
         document.getElementById("profileMenu");
 
+    if (profileDropdownBtn && profileMenu) {
 
-    if(profileDropdownBtn && profileMenu){
+        profileDropdownBtn.addEventListener("click", function (e) {
 
-        profileDropdownBtn.addEventListener(
-            "click",
-            function(e){
+            e.stopPropagation();
 
-                e.stopPropagation();
+            profileMenu.classList.toggle("show");
 
-                profileMenu.classList.toggle("show");
+        });
 
-            }
-        );
+        document.addEventListener("click", function (e) {
 
+            if (
+                !profileMenu.contains(e.target) &&
+                !profileDropdownBtn.contains(e.target)
+            ) {
 
-        document.addEventListener(
-            "click",
-            function(e){
-
-                if(
-                    !profileMenu.contains(e.target) &&
-                    !profileDropdownBtn.contains(e.target)
-                ){
-
-                    profileMenu.classList.remove("show");
-
-                }
+                profileMenu.classList.remove("show");
 
             }
-        );
+
+        });
 
     }
-
 
 
     /* =====================================================
@@ -1525,39 +1003,30 @@ document.addEventListener("DOMContentLoaded", function(){
     const menu =
         document.getElementById("mobileMenu");
 
+    if (menuBtn && menu) {
 
-    if(menuBtn && menu){
+        menuBtn.addEventListener("click", function (e) {
 
-        menuBtn.addEventListener(
-            "click",
-            function(e){
+            e.stopPropagation();
 
-                e.stopPropagation();
+            menu.classList.toggle("show");
 
-                menu.classList.toggle("show");
+        });
 
-            }
-        );
+        document.addEventListener("click", function (e) {
 
+            if (
+                !menu.contains(e.target) &&
+                !menuBtn.contains(e.target)
+            ) {
 
-        document.addEventListener(
-            "click",
-            function(e){
-
-                if(
-                    !menu.contains(e.target) &&
-                    !menuBtn.contains(e.target)
-                ){
-
-                    menu.classList.remove("show");
-
-                }
+                menu.classList.remove("show");
 
             }
-        );
+
+        });
 
     }
-
 
 
     /* =====================================================
@@ -1567,44 +1036,32 @@ document.addEventListener("DOMContentLoaded", function(){
     const followButton =
         document.getElementById("followButton");
 
+    if (followButton) {
 
-    if(followButton){
+        followButton.addEventListener("click", function () {
 
-        followButton.addEventListener(
-            "click",
-            function(){
+            const followText =
+                document.getElementById("followText");
 
-                const followText =
-                    document.getElementById("followText");
+            if (!followText) return;
 
+            if (followText.textContent.trim() === "Follow") {
 
-                if(
-                    followText.textContent.trim() === "Follow"
-                ){
+                followText.textContent = "Following";
 
-                    followText.textContent =
-                        "Following";
+                followButton.classList.add("following");
 
-                    followButton.classList.add(
-                        "following"
-                    );
+            } else {
 
-                }else{
+                followText.textContent = "Follow";
 
-                    followText.textContent =
-                        "Follow";
-
-                    followButton.classList.remove(
-                        "following"
-                    );
-
-                }
+                followButton.classList.remove("following");
 
             }
-        );
+
+        });
 
     }
-
 
 
     /* =====================================================
@@ -1614,61 +1071,162 @@ document.addEventListener("DOMContentLoaded", function(){
     const shareButton =
         document.getElementById("shareButton");
 
+    if (shareButton) {
 
-    if(shareButton){
+        shareButton.addEventListener("click", async function () {
 
-        shareButton.addEventListener(
-            "click",
-            async function(){
+            const shareData = {
 
-                const shareData = {
+                title: postTitle,
 
-                    title:
-                        "{{ post.title|e }}",
+                text: "Check out this post on MOTTECK",
 
-                    text:
-                        "Check out this post on MOTTECK",
+                url: window.location.href
 
-                    url:
+            };
+
+            try {
+
+                if (navigator.share) {
+
+                    await navigator.share(shareData);
+
+                } else if (navigator.clipboard) {
+
+                    await navigator.clipboard.writeText(
                         window.location.href
-
-                };
-
-
-                try{
-
-                    if(navigator.share){
-
-                        await navigator.share(
-                            shareData
-                        );
-
-                    }else{
-
-                        await navigator.clipboard.writeText(
-                            window.location.href
-                        );
-
-                        alert(
-                            "Post link copied!"
-                        );
-
-                    }
-
-                }catch(error){
-
-                    console.log(
-                        "Share cancelled"
                     );
+
+                    alert("Post link copied!");
+
+                } else {
+
+                    alert("Unable to share this link on your browser.");
 
                 }
 
+            } catch (error) {
+
+                console.log("Share cancelled or failed:", error);
+
             }
-        );
+
+        });
+
+    }
+    /* =====================================================
+       IMAGE GALLERY LIGHTBOX
+       ===================================================== */
+
+    const galleryImages = Array.from(
+        document.querySelectorAll(".post-photo-gallery img")
+    );
+
+    const lightbox = document.getElementById("postLightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+    const lightboxClose = document.getElementById("lightboxClose");
+    const lightboxPrev = document.getElementById("lightboxPrev");
+    const lightboxNext = document.getElementById("lightboxNext");
+    const lightboxCounter = document.getElementById("lightboxCounter");
+
+    let currentImageIndex = 0;
+
+    function showLightboxImage(index) {
+
+        if (!galleryImages.length) return;
+
+        currentImageIndex =
+            (index + galleryImages.length) % galleryImages.length;
+
+        const selectedImage = galleryImages[currentImageIndex];
+
+        lightboxImage.src = selectedImage.src;
+        lightboxImage.alt = selectedImage.alt || "MOTTECK post image";
+
+        lightboxCounter.textContent =
+            `${currentImageIndex + 1} / ${galleryImages.length}`;
 
     }
 
+    function openLightbox(index) {
 
+        if (!lightbox || !galleryImages.length) return;
+
+        showLightboxImage(index);
+
+        lightbox.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+    }
+
+    function closeLightbox() {
+
+        if (!lightbox) return;
+
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "";
+
+        lightboxImage.src = "";
+
+    }
+
+    galleryImages.forEach((img, index) => {
+
+        img.addEventListener("click", function () {
+            openLightbox(index);
+        });
+
+    });
+
+    if (lightboxClose) {
+        lightboxClose.addEventListener("click", closeLightbox);
+    }
+
+    if (lightboxPrev) {
+        lightboxPrev.addEventListener("click", function () {
+             showLightboxImage(currentImageIndex - 1);
+        });
+    }
+
+    if (lightboxNext) {
+        lightboxNext.addEventListener("click", function () {
+             showLightboxImage(currentImageIndex + 1);
+        });
+    }
+
+    /* Close when clicking the dark background */
+    if (lightbox) {
+
+        lightbox.addEventListener("click", function (event) {
+
+            if (event.target === lightbox) {
+                closeLightbox();
+            }
+
+        });
+
+    }
+
+    /* Keyboard controls */
+    document.addEventListener("keydown", function (event) {
+
+        if (!lightbox || !lightbox.classList.contains("active")) {
+            return;
+        }
+
+        if (event.key === "Escape") {
+            closeLightbox();
+        }
+
+        if (event.key === "ArrowLeft") {
+            showLightboxImage(currentImageIndex - 1);
+        }
+
+        if (event.key === "ArrowRight") {
+            showLightboxImage(currentImageIndex + 1);
+        }
+
+    });
 
     /* =====================================================
        LIKE
@@ -1680,666 +1238,98 @@ document.addEventListener("DOMContentLoaded", function(){
     const likeCount =
         document.getElementById("likeCount");
 
+    if (likeButton && likeCount && postId) {
 
-    if(likeButton && likeCount){
+        likeButton.addEventListener("click", async function () {
 
-        likeButton.addEventListener(
-            "click",
-            async function(){
+            try {
 
-                try{
-
-                    const response =
-                        await fetch(
-                            "/like/{{ post.id }}",
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type":
-                                        "application/json"
-                                }
-                            }
-                        );
-
-
-                    if(response.ok){
-
-                        const data =
-                            await response.json();
-
-
-                        if(
-                            data.likes !== undefined
-                        ){
-
-                            likeCount.textContent =
-                                data.likes;
-
+                const response = await fetch(
+                    `/like/${encodeURIComponent(postId)}`,
+                    {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "application/json"
                         }
-
-
-                        likeButton.classList.add(
-                            "liked"
-                        );
-
                     }
+                );
 
-                }catch(error){
+                if (!response.ok) {
+                    throw new Error("Like request failed");
+                }
 
-                    console.log(
-                        "Like error:",
-                        error
-                    );
+                const data = await response.json();
+
+                if (data.likes !== undefined) {
+
+                    likeCount.textContent = data.likes;
 
                 }
 
+                likeButton.classList.add("liked");
+
+            } catch (error) {
+
+                console.error("Like error:", error);
+
             }
-        );
+
+        });
 
     }
-
 
 
     /* =====================================================
        VIEW TRACKING
     ===================================================== */
 
-    let startTime =
-        Date.now();
+    async function trackPostView() {
 
-    let counted =
-        false;
+        const viewCount =
+            document.getElementById("post-view-count");
 
+        if (!postId) return;
 
-    setTimeout(
-        function(){
+        try {
 
-            counted = true;
+            const response = await fetch(
+                `/view/${encodeURIComponent(postId)}`,
+                {
+                    method: "POST",
+                    credentials: "same-origin"
+                }
+            );
 
-        },
-        10000
-    );
+            if (!response.ok) {
+                throw new Error("View tracking request failed");
+            }
 
+            const data = await response.json();
 
-    window.addEventListener(
-        "beforeunload",
-        function(){
+            if (data.success && viewCount) {
 
-            let timeSpent =
-                Math.floor(
-                    (Date.now() - startTime) / 1000
-                );
-
-
-            if(
-                counted &&
-                timeSpent > 10
-            ){
-
-                navigator.sendBeacon(
-                    "/view/{{ post.id }}"
-                );
+                viewCount.textContent = data.views;
 
             }
 
-        }
-    );
+        } catch (error) {
 
+            console.error(
+                "MOTTECK view tracking error:",
+                error
+            );
+
+        }
+
+    }
+
+    trackPostView();
 
 });
 
+
 </script>
 
-
-</body>
-
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ post.title }} | Motteck</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='cars.css') }}">
-</head>
-
-<body>
-
-<!-- =========================================================
-     HEADER
-========================================================= -->
-
-<header class="header">
-
-    <h1 class="title">
-
-        <a href="{{ url_for('home') }}">
-            MOTTECK
-        </a>
-
-    </h1>
-
-
-    <div class="top-actions">
-
-
-        {% if session.get("user_logged_in") %}
-
-
-        <!-- PROFILE -->
-
-        <div class="profile-dropdown">
-
-            <button
-                type="button"
-                class="profile-btn"
-                id="profileDropdownBtn"
-            >
-
-                <i class="fa-solid fa-user"></i>
-
-                <span>
-                    Profile
-                </span>
-
-                <i class="fa-solid fa-chevron-down profile-arrow"></i>
-
-            </button>
-
-
-            <div
-                class="profile-menu"
-                id="profileMenu"
-            >
-
-
-                <div class="profile-menu-header">
-
-                    {% if session.get("account_type") == "business" %}
-
-                    <i class="fa-solid fa-building"></i>
-
-                    <div>
-
-                        <strong>
-                            {{ session.get("full_name") }}
-                        </strong>
-
-                        <small>
-                            Business Account
-                        </small>
-
-                    </div>
-
-                    {% else %}
-
-                    <i class="fa-solid fa-user"></i>
-
-                    <div>
-
-                        <strong>
-                            {{ session.get("full_name") }}
-                        </strong>
-
-                        <small>
-                            Individual Account
-                        </small>
-
-                    </div>
-
-                    {% endif %}
-
-                </div>
-
-
-                <div class="profile-menu-divider"></div>
-
-
-                <a
-                    href="{{ url_for('profile') }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-user"></i>
-
-                    <span>
-                        View Profile
-                    </span>
-
-                </a>
-
-                <a
-                    href="{{ url_for('public_profile', user_id=session.get('user_id')) }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-user"></i>
-
-                    <span>
-                        View Public Profile
-                    </span>
-
-                </a>
-
-
-                <a
-                    href="{{ url_for('settings') }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-gear"></i>
-
-                    <span>
-                        Settings
-                    </span>
-
-                </a>
-
-
-                <a
-                    href="{{ url_for('submit_post') }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-pen-to-square"></i>
-
-                    <span>
-                        Submit Post
-                    </span>
-
-                </a>
-
-
-                {% if session.get("account_type") == "business" %}
-
-                <a
-                    href="{{ url_for('dashboard') }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-chart-line"></i>
-
-                    <span>
-                        Business Dashboard
-                    </span>
-
-                </a>
-
-                {% endif %}
-
-
-                <a
-                    href="{{ url_for('my_submissions') }}"
-                    class="profile-menu-item"
-                >
-
-                    <i class="fa-solid fa-file-lines"></i>
-
-                    <span>
-                        My Submissions
-                    </span>
-
-                </a>
-
-
-                <div class="profile-menu-divider"></div>
-
-
-                <a
-                    href="{{ url_for('user_logout') }}"
-                    class="profile-menu-item logout-item"
-                >
-
-                    <i class="fa-solid fa-right-from-bracket"></i>
-
-                    <span>
-                        Logout
-                    </span>
-
-                </a>
-
-
-            </div>
-
-        </div>
-
-
-        {% else %}
-
-
-        <!-- LOGIN / SIGN UP -->
-
-        <div class="auth-buttons">
-
-            <a
-                href="{{ url_for('login_user') }}"
-                class="login-btn"
-            >
-                Login
-            </a>
-
-
-            <a
-                href="{{ url_for('register') }}"
-                class="signup-btn"
-            >
-                Sign Up
-            </a>
-
-        </div>
-
-
-        {% endif %}
-
-
-        <!-- HAMBURGER -->
-
-        <button
-            class="menu-btn"
-            onclick="toggleMenu()"
-            type="button"
-        >
-
-            <i class="fa-solid fa-bars"></i>
-
-        </button>
-
-
-    </div>
-
-</header>
-
-
-
-<!-- =========================================================
-     MOBILE MENU
-========================================================= -->
-
-<div
-    id="mobileMenu"
-    class="mobile-menu"
->
-
-
-    <a href="{{ url_for('home') }}">
-
-        <i class="fa-solid fa-house"></i>
-
-        Home
-
-    </a>
-
-
-    <a href="{{ url_for('about') }}">
-
-        <i class="fa-solid fa-circle-info"></i>
-
-        About
-
-    </a>
-
-
-    <a href="{{ url_for('car') }}">
-
-        <i class="fa-solid fa-car"></i>
-
-        Cars
-
-    </a>
-
-
-    <a href="{{ url_for('truck') }}">
-
-        <i class="fa-solid fa-truck"></i>
-        <i class="fa-solid fa-bus"></i>
-
-        Truck/Bus
-
-    </a>
-
-
-    <a href="{{ url_for('motobike') }}">
-
-        <i class="fa-solid fa-motorcycle"></i>
-
-        Bikes
-
-    </a>
-
-
-    <a href="{{ url_for('accessorie') }}">
-
-        <i class="fa-solid fa-car-side"></i>
-
-        Accessorie
-
-    </a>
-
-
-    <a href="{{ url_for('spare_part') }}">
-
-        <i class="fa-solid fa-screwdriver-wrench"></i>
-
-        Spare Part
-
-    </a>
-
-
-    <a href="{{ url_for('contact') }}">
-
-        <i class="fas fa-envelope"></i>
-
-        Contact
-
-    </a>
-
-
-</div>
-
-
-
-<!-- =========================================================
-     CATEGORY NAVIGATION
-========================================================= -->
-
-<nav class="category-nav">
-
-
-    <a
-        href="{{ url_for('car') }}"
-        class="active"
-    >
-        CAR
-    </a>
-
-
-    <a href="{{ url_for('truck') }}">
-        TRUCK/BUS
-    </a>
-
-
-    <a href="{{ url_for('motobike') }}">
-        BIKES
-    </a>
-
-
-    <a href="{{ url_for('accessorie') }}">
-        ACCESSORIE
-    </a>
-
-
-    <a href="{{ url_for('spare_part') }}">
-        SPARE PARTS
-    </a>
-
-
-</nav>
-
-<!-- SINGLE POST -->
-<section class="post-container" style="max-width:900px; margin:40px auto; padding:20px;">
-
-    <!-- TITLE -->
-    <h1 style="margin-bottom:20px;">{{ post.title }}</h1>
-
-    <!-- IMAGE -->
-    {% if post.image_url %}
-    <img src="{{ post.image_url }}" 
-         alt="{{ post.title }}" 
-         style="width:100%; border-radius:10px; margin-bottom:20px;">
-    {% endif %}
-
-    <!-- CATEGORY -->
-    <p style="color:gray; margin-bottom:10px;">
-        Category: {{ post.category.upper() }}
-    </p>
-
-    <!-- CONTENT -->
-    <p style="line-height:1.8; font-size:16px;">
-        {{ post.description | replace('\n', '<br>') | safe }}
-    </p>
-
-    <!-- ACTIONS -->
-    <div style="margin-top:30px; display:flex; gap:15px; flex-wrap:wrap;">
-
-        <!-- BACK BUTTON -->
-        <a href="/{{ post.category }}s" 
-           style="padding:10px 15px; background:black; color:white; text-decoration:none; border-radius:5px;">
-           {% if post.category == 'car' %}
-           <a href="/car">← Back to Car</a>
-           {% elif post.category == 'truck' %}
-           <a href="/truck">← Back to Truck/Bus</a>
-           {% elif post.category == 'motobike' %}
-           <a href="/motobike">← Back to Motobike</a>
-           {% elif post.category == 'accessorie' %}
-           <a href="/accessorie">← Back to accessorie</a>
-           {% elif post.category == 'sparepart' %}
-           <a href="/spare_part">← Back to sparepart</a>
-           {% endif %}
-        </a>
-
-        <!-- HOME BUTTON -->
-        <a href="/" 
-           style="padding:10px 15px; background:#ddd; color:black; text-decoration:none; border-radius:5px;">
-            Home
-        </a>
-
-    </div>
-
-</section>
-<script>
-/* =========================================================
-   MOBILE MENU
-========================================================= */
-
-function toggleMenu() {
-
-    const menu =
-        document.getElementById("mobileMenu");
-
-    if (!menu) {
-        return;
-    }
-
-    menu.style.display =
-        menu.style.display === "flex"
-            ? "none"
-            : "flex";
-
-}
-
-
-
-/* =========================================================
-   CLOSE MOBILE MENU
-========================================================= */
-
-document.addEventListener(
-    "click",
-    function(event) {
-
-        const menu =
-            document.getElementById("mobileMenu");
-
-        const button =
-            document.querySelector(".menu-btn");
-
-        if (
-            menu &&
-            button &&
-            !menu.contains(event.target) &&
-            !button.contains(event.target)
-        ) {
-
-            menu.style.display = "none";
-
-        }
-
-    }
-);
-
-
-
-/* =========================================================
-   PROFILE DROPDOWN
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        const button =
-            document.getElementById(
-                "profileDropdownBtn"
-            );
-
-        const dropdown =
-            document.querySelector(
-                ".profile-dropdown"
-            );
-
-        if (!button || !dropdown) {
-            return;
-        }
-
-
-        button.addEventListener(
-            "click",
-            function(event) {
-
-                event.stopPropagation();
-
-                dropdown.classList.toggle(
-                    "active"
-                );
-
-            }
-        );
-
-
-        document.addEventListener(
-            "click",
-            function(event) {
-
-                if (
-                    !dropdown.contains(
-                        event.target
-                    )
-                ) {
-
-                    dropdown.classList.remove(
-                        "active"
-                    );
-
-                }
-
-            }
-        );
-
-    }
-);
-
-
-</script>
 </body>
 </html>

@@ -1364,17 +1364,19 @@ function createCarDetails(post) {
 function createCarGallery(post, postId, title) {
     const images = getPostImages(post);
 
-    if (!images.length) {
-        images.push("/static/images/default.jpg");
-    }
+    // Count only photos actually uploaded by the seller
+    const photoCount = images.length;
+
+    // Use a default image only for display, never for counting
+    const mainImage = photoCount > 0
+        ? images[0]
+        : "/static/images/default.jpg";
 
     const safeTitle = escapeHTML(title || "Car for sale");
     const postURL = "/post/" + encodeURIComponent(postId);
-    const mainImage = images[0];
 
     return `
         <div class="mc-car-gallery">
-
             <a
                 class="mc-car-main-image"
                 href="${postURL}"
@@ -1388,15 +1390,17 @@ function createCarGallery(post, postId, title) {
                     onerror="this.onerror=null;this.src='/static/images/default.jpg';"
                 >
 
-                <span class="mc-photo-count">
-                    <i class="fa-regular fa-images"></i>
-                    ${images.length} photo${images.length === 1 ? "" : "s"}
-                </span>
+                ${photoCount > 0 ? `
+                    <span class="mc-photo-count">
+                        <i class="fa-regular fa-images"></i>
+                        ${photoCount} photo${photoCount === 1 ? "" : "s"}
+                    </span>
+                ` : ""}
             </a>
-
         </div>
     `;
 }
+
 
 /* Main car card */
 function createPostCard(post) {
